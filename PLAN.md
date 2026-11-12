@@ -1,6 +1,6 @@
 # Dib4t — Rewrite plan: Node/React ➜ .NET (ASP.NET Core + Blazor WebAssembly)
 
-> Status: **Plan / not started** · Created 2026-11-12
+> Status: **Plan / not started** · Created 2026-11-12 · Updated 2026-11-12 (two databases: legacy untouched, new app on MongoDB 9.0.8 fed by legacy backups; port 3010; latest packages; test policy; responsive layout)
 > Source of truth for the behavior: `../back-end` (Node/Express/Mongoose) and `../front-end` (React 17 / MUI v4).
 
 ---
@@ -12,12 +12,15 @@ Rebuild the Dib4t ERP web app (budgets, jobs, entities, settings, dashboard, rea
 | # | Constraint | What it means in practice |
 |---|------------|---------------------------|
 | C1 | **.NET, WebAssembly, server side** | ASP.NET Core server (REST API + host) and a Blazor WebAssembly client. |
-| C2 | **Same database** | The same MongoDB database (`dib4t`), same collections, same document shapes. |
-| C3 | **Old and new app run at the same time** | Both apps read and write the same documents at once. Every document the new app writes must be 100% readable and editable by the Mongoose app, and the other way round. |
-| C4 | **No new data or fields in the DB** | No new collections, fields, indexes, validators, lock documents or migration markers. The new app stores nothing the old app does not already store. |
+| C2 | **Two databases, same data model** | The old app keeps its database (`mongo:4.1.4`). The new app has **its own database** on the latest stable MongoDB (**9.0.8**, Docker, x86-64). Same database name (`dib4t`), collections and document shapes, so legacy data works as-is. (§2.2) |
+| C3 | **Old and new app run at the same time; data moves by backup** | Both apps run side by side, each on its own database. **A backup (`.dibbak`) downloaded from the old app must always import into the new app** (restore), with every feature working on the imported data. This is the only data path between them (§4). |
+| C4 | **No new data or fields in the DB** | No new collections, fields, indexes, validators, lock documents or migration markers. The new app stores nothing the old app does not already store, so its data stays in the legacy model. |
 | C5 | **Same color theme** | Same palettes (dark by default, light toggle), same status colors, same logos and imagery. |
 | C6 | **Production-only logic kept** | Everything guarded by `NODE_ENV === "prod"` (SSH folder management on the NAS, label printing, production DB/port, print endpoint guard) must be reproduced and guarded by the .NET environment (`Production`). |
 | C7 | **Senior-level .NET practices** | Clean layering, DI, async with cancellation, options pattern, no DB access from UI components, tests. See §3. |
+| C8 | **Tests ship with every feature** | No feature is done without **unit tests** and an **end-to-end (Playwright) test**. E2E tests also run the same scenario against the **old app** and compare behavior (§11). See the Definition of Done in §10. |
+| C9 | **Fix the legacy layout bugs** | The old UI breaks when the browser font size or zoom changes and at other screen resolutions. The new UI must be responsive and scale with font size and zoom (§8.4). Colors stay the same (C5); layout is allowed to differ. |
+| C10 | **No changes to the old app** | The legacy front-end, back-end, configuration and database (`mongo:4.1.4`, port 4002) stay exactly as they are. Tests and tooling use the old app as-is. |
 
 ---
 
@@ -25,23 +28,72 @@ Rebuild the Dib4t ERP web app (budgets, jobs, entities, settings, dashboard, rea
 
 | Concern | Choice | Why |
 |---|---|---|
-| Runtime | **.NET 10 (LTS)** | Current LTS, supported until Nov 2028. |
-| Server | ASP.NET Core 10, **Controllers** (API) + Blazor Web App host | Controllers suit a large, existing REST surface that has to stay identical. |
-| Client | **Blazor WebAssembly** (Blazor Web App template, `InteractiveWebAssembly` render mode for all pages, **prerendering off**) | Meets "WebAssembly". With prerendering off, auth can stay in `sessionStorage` (same as today). |
+| Runtime | **.NET 11** (SDK 11.0.100) | Newest release. It is STS, but its end of support (2028-11-14) is the **same date as .NET 10 LTS**, so it costs no support time. Fallback: .NET 10 LTS if a library blocks (see MudBlazor in §2.1). |
+| Server | ASP.NET Core 11, **Controllers** (API) + Blazor Web App host | Controllers suit a large, existing REST surface that has to stay identical. |
+| Client | **Blazor WebAssembly** (Blazor Web App template, `InteractiveWebAssembly` render mode for all pages, **prerendering off**) | Meets "WebAssembly". With prerendering off, the token lives in browser storage (`localStorage`, so the user stays logged in, §4.6). |
 | UI kit | **MudBlazor** (Material Design) | Closest to MUI: same components (AppBar, Drawer, Tabs, Table, Dialog, Snackbar, DatePicker) and palette model, so the look carries over. |
-| DB driver | **MongoDB.Driver** (official C# driver) | Fine-grained control over BSON types and `$set` updates, which compatibility depends on (§4). Version depends on the server version, see Phase 0. |
+| DB driver | **MongoDB.Driver** (official C# driver) | Fine-grained control over BSON types and `$set` updates, which compatibility depends on (§4). **3.13.0** (latest). Fully supports MongoDB 9.0 (since 3.10). See §2.2. |
 | Validation | **FluentValidation** | Ports the Joi schemas. Shared between server and client where useful. |
-| Auth | Custom `x-auth-token` authentication handler + HS256 JWT | Tokens compatible with the old API (§4.6). |
+| Auth | `Microsoft.AspNetCore.Authentication.JwtBearer`, token read from the `x-auth-token` header | Same header and claims as the old API; its own key (§4.6). |
 | Passwords | **BCrypt.Net-Next** | Reads and writes the bcryptjs `$2a/$2b$10$` hashes already in `users`. |
 | SSH (prod) | **SSH.NET** (`Renci.SshNet`) | Replaces `ssh2-promise` for NAS folder operations. |
 | Label printer (prod) | `System.Net.Sockets.TcpClient` | Replaces `telnet-client` (raw TCP to port 9100, no negotiation, 1500 ms timeout). |
 | PDF | **PDFsharp 6 (MIT)** | The legacy PDF is laid out with absolute coordinates. PDFsharp draws at exact points, so it matches 1:1. QuestPDF is an option if its license fits. |
 | Logging | **Serilog** (console + rolling file) | Replaces winston; keeps an `uncaughtExceptions` style file sink. |
 | Charts | MudBlazor `MudChart` (pie) | Replaces react-google-charts on the dashboard. |
-| Tests | xUnit v3, FluentAssertions/Shouldly, **Testcontainers (MongoDB)**, **bUnit**, **Playwright** | Unit, integration, component and E2E coverage. |
-| Packaging | Docker (`mcr.microsoft.com/dotnet/aspnet:10.0`) | Same deployment style as the current apps. |
+| Tests | xUnit v3, **AwesomeAssertions**, NSubstitute, **Testcontainers (`mongo:9.0.8`)**, **bUnit**, **Playwright** + axe-core | Unit, integration, component and E2E coverage. AwesomeAssertions is the Apache-2.0 fork of FluentAssertions, which became commercial in v8. |
+| Packaging | Docker (`mcr.microsoft.com/dotnet/aspnet:11.0`) | Same deployment style as the current apps. |
 
 > Avoid MediatR and AutoMapper (both moved to commercial licenses in 2025). Use plain application services and explicit mapping (or Mapperly, a source generator under MIT).
+
+### 2.1 Package versions (latest stable on 2026-11-12, managed in `Directory.Packages.props`)
+
+| Package | Version | Note |
+|---|---|---|
+| .NET SDK / runtime, `Microsoft.AspNetCore.*`, `Microsoft.Extensions.*` | **11.0.x** (SDK 11.0.100) | `Components.WebAssembly`, `Components.WebAssembly.Server`, `Mvc.Testing`, `TimeProvider.Testing` at 11.0.0 |
+| **MongoDB.Driver** | **3.13.0** | Latest; supports server 9.0. |
+| MudBlazor | 9.12.0 | Ships `net8.0`/`net9.0`/`net10.0` builds, no `net11.0` build yet; the `net10.0` build runs on .NET 11. Verified in Phase 1 (smoke test of every component used); if it fails, the solution falls back to .NET 10 LTS. |
+| FluentValidation (+ DependencyInjectionExtensions) | 12.2.0 | |
+| BCrypt.Net-Next | 4.2.1 | |
+| SSH.NET | 2026.0.0 | |
+| PDFsharp | 6.5.0 | |
+| Serilog.AspNetCore / Serilog.Sinks.File | 10.0.0 / 7.0.0 | |
+| Riok.Mapperly | 4.3.1 | |
+| xunit.v3 / xunit.runner.visualstudio / Microsoft.NET.Test.Sdk | 4.0.3 / 4.0.1 / 18.12.0 | |
+| AwesomeAssertions | 9.6.0 | |
+| NSubstitute | 6.2.0 | |
+| Testcontainers.MongoDb | 4.16.0 | Image pinned to `mongo:9.0.8`, platform `linux/amd64` in CI (§2.2) |
+| bunit | 2.15.2 | Has a `net11.0` build |
+| Microsoft.Playwright / Deque.AxeCore.Playwright | 1.64.1 / 4.14.0 | |
+| NetArchTest.Rules | 1.3.2 | |
+| coverlet.collector | 10.1.0 | |
+
+- No `AspNetCore.HealthChecks.MongoDb`: the `/health` Mongo ping is a 10-line custom `IHealthCheck`, which avoids a package that could pull a newer driver.
+- Renovate/Dependabot keeps everything current. Versions are re-checked at the start of Phase 1. The Mongo image tag is updated only within `9.0.x` patch releases, and tests run on the new tag before production does.
+
+### 2.2 Databases: legacy stays on 4.1.4, new app gets its own MongoDB 9.0.8
+
+```
+NAS (AMD RX-421ND, x86-64)
+├─ mongo:4.1.4  :4002  ← legacy back-end (unchanged, C10)
+└─ mongo:9.0.8  (docker network only) ← dib4t-dotnet :3010
+        ▲
+        └── .dibbak backup downloaded from the old app, restored in the new app
+```
+
+- The legacy database is **never touched** by the new app: no connection string to it, no reads, no writes. The new app talks only to its own server.
+- New database server: **`mongo:9.0.8`**, platform `linux/amd64` (an `arm64` image also exists for Apple-silicon dev machines). Same database name `dib4t`.
+- **CPU:** MongoDB 5.0+ needs AVX on x86-64. The NAS has an **AMD RX-421ND** (AMD Embedded R-Series "Merlin Falcon", Excavator cores), which supports AVX and AVX2. Confirmed once in Phase 0 (`grep -o -m1 -w avx /proc/cpuinfo` + test start).
+- Container: named volume for `/data/db`, `--wiredTigerCacheSizeGB` sized so both MongoDB servers fit in the NAS memory together, `ulimit nofile 64000`, health check `mongosh --eval "db.adminCommand('ping')"`. Not published on a host port; it is reachable only from the new app's Docker network (admin through `docker exec`).
+- Standalone server (like today): no transactions or change streams, `retryWrites=false`. At startup the app logs `buildInfo.version` and stops if the server version is outside what the driver supports.
+- Use current APIs only (e.g. `$collStats`, not the deprecated `collStats` command).
+
+**Getting data into the new app**
+1. In the **old app**: Settings → Base de dados → **download the backup** (`.dibbak`). This is an existing feature; nothing changes in the old app.
+2. In the **new app**: Settings → Base de dados → **restore** that file (streamed upload with progress, §7.6). The restore replaces everything in the new database.
+3. The restore **verifies itself** when it finishes: it re-reads the new database and compares it with the file (counts per collection, indexes, per-document checksum of field names, BSON types and values), and shows the result in the restore dialog (and in the log). No separate tool is needed.
+
+This can be repeated as often as needed (test data, pilot, final switch). Each restore replaces the new database, so anything entered only in the new app since the last import is lost; the restore dialog says so.
 
 ---
 
@@ -50,7 +102,7 @@ Rebuild the Dib4t ERP web app (budgets, jobs, entities, settings, dashboard, rea
 ```
 dib4t-dotnet/
 ├─ Dib4t.slnx
-├─ Directory.Build.props          # net10.0, Nullable=enable, TreatWarningsAsErrors, analyzers, LangVersion latest
+├─ Directory.Build.props          # net11.0, Nullable=enable, TreatWarningsAsErrors, analyzers, LangVersion latest
 ├─ Directory.Packages.props       # Central Package Management (one version per package)
 ├─ .editorconfig
 ├─ src/
@@ -74,15 +126,15 @@ dib4t-dotnet/
 │  │                              #   handler, Serilog, health checks, hosts the WASM client.
 │  └─ Dib4t.Client/               # Blazor WebAssembly: Pages, Components, Layout, Theme,
 │                                 #   typed API clients, state/view-model services, JS interop (clipboard,
-│                                 #   file download/upload streaming, sessionStorage).
+│                                 #   file download/upload streaming, localStorage).
 └─ tests/
    ├─ Dib4t.Domain.Tests/
    ├─ Dib4t.Application.Tests/
-   ├─ Dib4t.Infrastructure.Tests/   # Testcontainers MongoDB at the PRODUCTION server version
+   ├─ Dib4t.Infrastructure.Tests/   # Testcontainers mongo:9.0.8 (same image as production)
    ├─ Dib4t.Server.Tests/           # WebApplicationFactory API tests
-   ├─ Dib4t.Compatibility.Tests/    # Runs the LEGACY node API in a container on the same DB (§11.3)
+   ├─ Dib4t.ImportCompatibility.Tests/ # Legacy app (unchanged, mongo:4.1.4) makes backups → new app imports them (§11.3)
    ├─ Dib4t.Client.Tests/           # bUnit
-   └─ Dib4t.E2E/                    # Playwright
+   └─ Dib4t.E2E/                    # Playwright (.NET): new app E2E, legacy-vs-new comparison, layout matrix
 ```
 
 ### 3.1 Dependency rules (enforced with an architecture test, e.g. NetArchTest)
@@ -103,7 +155,7 @@ SharedKernel  ←  Contracts  ←  Client
 
 - `async` all the way with `CancellationToken` passed through.
 - Options pattern with `ValidateDataAnnotations().ValidateOnStart()`: `MongoOptions`, `JwtOptions`, `NasOptions`, `PrinterOptions`.
-- **No secrets in the repo.** The legacy repo commits the JWT key and the SSH password in `config/default.json`. In the new repo they live in user-secrets (dev) and environment variables (prod). Rotating the SSH credential is recommended.
+- **No secrets in the repo.** The legacy repo commits its JWT key and the SSH password in `config/default.json`. In the new repo they live in user-secrets (dev) and environment variables (prod). Rotating the SSH credential is recommended.
 - `TimeProvider` for every "now" (budget year, state dates, PDF date), so tests are deterministic.
 - `IExceptionHandler` returns `500 "Something failed."` as plain text (legacy parity) and logs the exception.
 - Health check `/health` (Mongo ping).
@@ -111,9 +163,17 @@ SharedKernel  ←  Contracts  ←  Client
 
 ---
 
-## 4. Coexistence and database compatibility contract (most critical section)
+## 4. Legacy backup import contract and data model (most critical section)
 
-Both apps share one database and read and write the same documents at once. Each rule below exists for that reason.
+The two apps never share a database. The **guarantee** this plan gives is: **any backup downloaded from the old app can be restored in the new app, and every feature then works on that data.** The new app also keeps the legacy data model when it writes, so imported and new documents look the same (C4) and later imports never meet a different shape.
+
+### 4.0 What the import guarantee covers
+1. **Format:** every `.dibbak` the legacy code produces (format version 1, header `serverVersion` 4.1.4 or anything else) is accepted. The new app reads the legacy frame format byte for byte (§7.6).
+2. **Content:** every document is restored unchanged: same `_id`s, field names, values and BSON types (raw BSON copy, no re-serialization). Collection options and index definitions are recreated, after cleaning anything MongoDB 9.0 rejects (§7.6).
+3. **Behavior on imported data:** login works with the imported users and their existing bcrypt passwords; budgets, revisions, tasks, jobs in every state, statistics, comments, entities, prices, payment methods and printer settings all display and can be edited. Old documents with missing fields, `Int32`/`Double`/`Int64` mixes or older shapes are handled by the read rules (§4.4).
+4. **Errors:** a damaged or wrong file is rejected with the legacy Portuguese messages and leaves the new database unchanged (validated fully before anything is dropped).
+5. **Size:** up to the 1 GB legacy limit, streamed (never fully in WASM memory).
+How it is proven: §11, item 3 (import compatibility suite, runs on every pull request).
 
 ### 4.1 Collections (Mongoose model → collection)
 
@@ -153,16 +213,16 @@ All documents carry `_id: ObjectId` and **`__v: Int32`** (Mongoose version key).
 - `assemblyStatistic` {`_id`, hours/budgeted/deviation, `pneumaticCircuits`, `electricalBoardsAndCircuits`, `kinematics`, `programmingFeaturesPLC`, `operator_equipmentSafetyConditions`, `visualInspection` (default `n/a`), `validTryOnFirstTest` ∈ {"1","2","3"} (default "1", **string**), `validatedBy`?}
 - `jobStatisticsDates` {`_id`, `devEndedInDate`, `onApprovalEndedInDate`, `approvedEndedInDate`, `machiningEndedInDate`, `assemblyEndedInDate`, `forInvoicingEndedInDate`}
 
-### 4.3 Write rules (new app → DB)
+### 4.3 Write rules (new app → its DB, keeping the legacy model)
 
-1. **Exact BSON types.** ObjectId references are stored as `ObjectId`, never strings. Dates are BSON `Date` (UTC). Numbers are `Int32` when the value is an integer that fits in 32 bits, otherwise `Double`. That is what the Node driver writes for JS numbers. **Never write `Decimal128` or `Int64`**, because Mongoose would hand those to the old app as objects and break its arithmetic. Implement this with one custom `JsNumberSerializer` used for every numeric field, with C# type `double`.
+1. **Exact BSON types.** ObjectId references are stored as `ObjectId`, never strings. Dates are BSON `Date` (UTC). Numbers are `Int32` when the value is an integer that fits in 32 bits, otherwise `Double`. That is what the Node driver writes for JS numbers. **Never write `Decimal128` or `Int64`**, so new documents have the same types as imported ones (sums, sorts and comparisons in queries stay consistent). Implement this with one custom `JsNumberSerializer` used for every numeric field, with C# type `double`.
 2. **Exact strings.** Enum values are Portuguese strings with accents. Keep them as constants in `SharedKernel`, compare ordinally, and store Unicode NFC.
-3. **Updates use `$set` on changed fields only** (`UpdateOne` + `UpdateDefinition`), never a full-document `ReplaceOne`. That matches Mongoose `save()` semantics (it only `$set`s modified paths) and keeps concurrent edits from both apps from overwriting each other's untouched fields.
+3. **Updates use `$set` on changed fields only** (`UpdateOne` + `UpdateDefinition`), never a full-document `ReplaceOne`. That matches Mongoose `save()` semantics (it only `$set`s modified paths) and keeps concurrent edits by two users from overwriting each other's untouched fields.
 4. **`__v` emulation.** Inserts write `__v: 0`. When an update replaces an array (`roles`, `commentType`), also `$inc: { __v: 1 }`, like Mongoose versioning.
 5. **Embedded sub-documents get an `_id`** (new `ObjectId`) when created or replaced as a whole, the same way Mongoose assigns them.
-6. **Inserts include the Mongoose defaults** from §4.2. The old app applies defaults on read anyway, but writing them keeps queries such as `hasGenerateJob: true` consistent.
+6. **Inserts include the Mongoose defaults** from §4.2, so queries such as `hasGenerateJob: true` behave the same on new and imported documents.
 7. **Round-trip unknown fields**: `[BsonExtraElements]`-style catch-all in class maps, so a field the new app doesn't know is never lost.
-8. **No schema side effects.** No `CreateIndex`, no collection validators, no new collections, no "app metadata" documents (C4).
+8. **No schema side effects.** No `CreateIndex`, no collection validators, no new collections, no "app metadata" documents (C4). Indexes are the ones that come with the imported backup.
 
 ### 4.4 Read rules (DB → new app)
 
@@ -175,22 +235,32 @@ All documents carry `_id: ObjectId` and **`__v: Int32`** (Mongoose version key).
 
 Before any code, run an aggregation per collection (`$objectToArray` + `$type`) on a **copy** of production. It counts the BSON type of every field path, finds missing fields, Int32/Double mixes, string-vs-Date drift, and so on. The output becomes test fixtures, and serializers must accept every observed variant.
 
-### 4.6 Authentication compatibility
+### 4.6 Authentication
 
-- Header **`x-auth-token`** (not `Authorization: Bearer`).
-- Token: HS256 JWT, payload `{ _id, name, email, roles, fieldOfCompetencies, iat }`, **no `exp`**, signed with the legacy key (configurable; today the legacy code hard-codes it in `models/user.js`).
-- ⚠ `Microsoft.IdentityModel` refuses HMAC keys shorter than 256 bits (the legacy key is 72 bits). Implement `ITokenService` with a small HMAC-SHA256 signer/validator of our own (or the `JWT` NuGet package, which doesn't enforce key length), wrapped in a custom `AuthenticationHandler`.
-- Responses: missing token → `401 "Access denied. No token provided."`; invalid token → **`400 "Invalid token."`**; settings role missing → `401 "Não tem permissão para concluir esta acção."`.
+- Same header **`x-auth-token`** and same claims `{ _id, name, email, roles, fieldOfCompetencies }` as the legacy API, so the client and the API contract stay the same.
+- The new app has **its own signing key** (≥ 256 bits, from configuration/secrets) and uses the standard `JwtBearer` handler (reading the token from `x-auth-token` in `OnMessageReceived`). Tokens of the old app are not accepted and not needed: the systems are separate.
+- Passwords: the imported bcryptjs hashes (`$2a$`/`$2b$`, cost 10) are verified with BCrypt.Net-Next; new or changed passwords are written in the same format.
+- Responses keep the legacy texts: missing token → `401 "Access denied. No token provided."`; invalid or expired token → **`400 "Invalid token."`**; settings role missing → `401 "Não tem permissão para concluir esta acção."`.
 - Policy `CanSeeDefinicoes` maps to `authCanSeeSettings`.
-- Result: a token from either app works on both APIs. That allows parity testing (old front-end pointed at the new API) and a gradual cut-over.
 
-### 4.7 What cannot be coordinated across the two apps (C4 forbids shared locks) and how it's mitigated
+**Staying logged in (decided):** the user never has to log in again; only the logout button ends the session.
+- Tokens have **no expiry**, like the old app: no `exp` claim, `TokenValidationParameters.RequireExpirationTime = false` and `ValidateLifetime = false`.
+- The client keeps the token in **`localStorage["token"]`** (the old app uses `sessionStorage`, which loses the login when the tab or browser closes). So the login survives closing the tab, the browser and restarting the computer, and is shared by all tabs. A `storage` event listener logs out every open tab when one tab logs out.
+- **Logout** (button at the bottom of the menu): removes the token from `localStorage` and goes to the login page. That is the only way the session ends for the user.
+- The key is never changed in normal operation, because changing it (`Jwt:Key`) logs **everyone** out. That is also the emergency switch if a token is stolen: no server-side token list is possible without new data (C4), the same as in the old app.
+- After a new deploy, the token stays valid (same key). After a backup restore it stays valid too, as long as the user still exists with the same `_id` (imports keep `_id`s).
+- If the server answers `400 "Invalid token."` (e.g. after a key change), the client deletes the stored token and shows the login page, instead of showing errors.
+- **Roles are checked against the database, not only the token.** Because a token lives forever, the server loads the user by the token's `_id` on each request (cached in memory for 30 s) and uses the user's **current** roles for authorization. So removing a role, or deleting a user, takes effect within 30 s without a new login (a deleted user's token gets `400 "Invalid token."`). The old app trusts the roles inside the token; this is a deliberate difference, with no new data.
+- The client refreshes name and roles for the menu on start from **`GET /api/account/me`** (new-app-only endpoint, reads the user document; added to §6), so a changed role shows up without logging in again.
+
+### 4.7 Running two separate systems at the same time
 
 | Risk | Mitigation |
 |---|---|
-| **Budget number collision.** Both apps compute `count(distinct budgetNumber this year) + 1` at the same moment. The same risk exists today between two users of the old app. | In the new app, a `SemaphoreSlim` around numbering. After the insert, re-check for another rev-0 document with the same number and a different `_id`; if one exists, renumber with retry and log a warning. A unique index would be the real fix, but it's a DB change, so it's deferred until the legacy app is retired. |
-| **Backup/restore lock is per process.** A restore from one app can run while the other app is writing. | Operational rule: restore only during maintenance, with the other app stopped. The UI shows a strong warning (it already does). |
-| **Lost updates.** Two users edit the same budget in different apps. | Same last-write-wins behavior the old app already has, kept field-granular by rule 4.3.3. |
+| **Data diverges.** Work done in one app is not in the other. | One app is the system of record at a time. Until the switch, the old app is; the new app runs on imported copies (pilot, training, UAT). At the switch, a final backup is imported and the old app is no longer used for daily work (it stays installed, unchanged, for consultation). |
+| **Duplicate budget numbers and NAS folders.** Each app numbers budgets from its own data, and both would create folders under `/share/Orçamentos/{year}/...` in production. | While the old app is the system of record, the new app runs in Production with its NAS and printer side effects **switched off by configuration** (`Nas:Enabled=false`, `LabelPrinter:Enabled=false`; §5). They are switched on at the switch-over. |
+| **Re-import overwrites new-app work.** | Restore warns and requires confirmation; the new app makes its own backup automatically before a restore. |
+| **Budget numbering inside the new app** (two users at once). | `SemaphoreSlim` around numbering plus a re-check after insert (same rule the old app lacks). |
 
 ---
 
@@ -198,8 +268,9 @@ Before any code, run an aggregation per collection (`$objectToArray` + `$type`) 
 
 | Legacy trigger | Behavior to reproduce | New home |
 |---|---|---|
-| `NODE_ENV=prod` → port | Dev 3001, prod 4001. The legacy front-end derives the API URL from its own origin (`origin` with the last char replaced by `1`). | New app: one origin serves UI + `/api`. Port set by `ASPNETCORE_URLS` and **different from the legacy ports**, so both run side by side (e.g. `:4100`). |
-| `NODE_ENV=prod` → DB | `db` (localhost) vs `serverDb` (NAS host, port 4002). | `MongoOptions.ConnectionString` per environment (appsettings.Production.json + env var). |
+| `NODE_ENV=prod` → port | Dev 3001, prod 4001. The legacy front-end derives the API URL from its own origin (`origin` with the last char replaced by `1`). | New app: one origin serves UI + `/api`. Port set by `ASPNETCORE_URLS`: **`3010`** in every environment, which is different from the legacy ports (3000/3001 dev, 4000/4001 prod), so both run side by side. |
+| (new) | — | `Nas:Enabled` and `LabelPrinter:Enabled` (default `true` in Production, always off elsewhere) so the new app can run in Production without touching the NAS or printers while the old app is still the system of record (§4.7). |
+| `NODE_ENV=prod` → DB | `db` (localhost) vs `serverDb` (NAS host, port 4002). | The new app's **own** database (`mongo:9.0.8`), `MongoOptions.ConnectionString` per environment. It never points at the legacy server on 4002. |
 | `POST /api/budget` (create) | After save: SSH `mkdir -p` of `/share/Orçamentos/{currentYear}/'{client}'/'{budgetNumber} - {descriptive}'`, plus `/Geometria` and `/Documentos`, then `test -d`. If the folder is missing → `500 "Erro ao criar pasta"`. | `INasFileShare.CreateBudgetFolderAsync`. Prod: SSH.NET; other envs: no-op that logs. |
 | `POST /api/budget/clone/:id` | Same folder creation as create. | Same. |
 | `PUT /api/budget/:id` (**not gated in legacy**) | If `revision == 0` and `descriptive` changed: `cd /;mv {oldPath} {newPath}` (year taken from `budget.date`). | `INasFileShare.RenameBudgetFolderAsync`. See defect D5 about gating. |
@@ -232,6 +303,7 @@ Auth column: **A** = anonymous, **T** = token, **S** = token + `canSeeDefinicoes
 | | `POST /api/account/create` | S | email unique ("Email já registado."), bcrypt salt 10, returns `{_id,name,email,roles}` |
 | | `GET /api/account/roles` | S | legacy role list (without `canSeeAdjudicacoes`, as today) |
 | | `GET /api/account/users` | S | `name email roles fieldOfCompetencies` sorted by name |
+| | `GET /api/account/me` | T | **New-app only**: current user `{_id,name,email,roles,fieldOfCompetencies}` from the DB (§4.6) |
 | | `GET/PUT/DELETE /api/account/:id` | S | PUT: password re-hashed only if provided. DELETE: see defect D2 |
 | Budget | `GET /api/budget` | T | 200 latest docs sorted `budgetNumber desc, revision desc`, deduped to the latest revision per number, flattened row DTO |
 | | `GET /api/budget/search?q=` | T | `q` min 2; case-insensitive **regex** over number, client name, descriptive, personInCharge, madeBy name ($lookup); deduped. Invalid regex → 500 "Error performing search: …" |
@@ -305,7 +377,8 @@ Barcode-scanner page: autofocus input "N Orçamento"; Enter → full-screen dial
 - Info: db stats, buildInfo, per-collection `collStats` with fallback to `estimatedDocumentCount` + `indexes`.
 - One operation at a time (409 with "Já existe uma operação em curso (…)"). Max upload 1 GB (`[RequestSizeLimit]`, Kestrel limits).
 - **WASM caveat:** a 1 GB file must not pass through WASM memory. Upload and download go through **JS interop `fetch`/XHR** with the token header and progress events (download → blob → anchor). The Blazor component only receives progress callbacks.
-- **Cross-app test:** a backup made by the legacy app restores with the new app and the other way round (byte-level frame parse + document equality).
+- **Import of legacy backups (the key requirement, §4.0):** before recreating them on MongoDB 9.0, clean collection options and index specs from the legacy server: keep only options 9.0 knows (`unique`, `sparse`, `partialFilterExpression`, `expireAfterSeconds`, `collation`, text/2dsphere options, …), drop `v`, `ns`, `background` and anything unknown, and log what was dropped. Restore continues on the server if the browser disconnects, and progress can be read again. Before a restore, the new app automatically keeps a backup of its current database.
+- Backups made by the new app use the same format and restore in the new app. Restoring them in the old app is not required (and not done, C10).
 
 ---
 
@@ -316,7 +389,7 @@ Barcode-scanner page: autofocus input "N Orçamento"; Enter → full-screen dial
 Every `/landing/*` route requires auth (`[Authorize]` + `AuthorizeRouteView`). Menu items are shown per role.
 
 ### 8.2 Client architecture
-- `AuthenticationStateProvider` reads the JWT from **`sessionStorage["token"]`** (same key and storage as legacy), decodes the claims for the UI (name, roles, fieldOfCompetencies).
+- `AuthenticationStateProvider` reads the JWT from **`localStorage["token"]`** (legacy: `sessionStorage`; changed so the login is never lost, §4.6), decodes the claims for the UI (name, roles, fieldOfCompetencies), and syncs logout across tabs.
 - `AuthHeaderHandler : DelegatingHandler` adds `x-auth-token`. A global error handler shows "An anexpected error occurred" for non-4xx errors (legacy text) and passes 4xx bodies to the caller.
 - Typed clients: `IAccountApi`, `IBudgetApi`, `ITaskApi`, `IEntityApi`, `IJobApi`, `IPricesApi`, `IPrinterSettingsApi`, `IDatabaseApi`.
 - Page state services (scoped): `BudgetsState`, `BudgetDetailsState` (replaces BudgetContext + CanBudgetBeEdited), `JobsState`, `JobDetailsState` (replaces JobContext + JobResultsContext), `JobStatisticsState`. Components bind to them and raise intents; the state services call the API clients.
@@ -344,13 +417,47 @@ Status colors used in components: warning `yellow`, error `red`, success `lightG
 - The landing layout has a permanent drawer of 240 px that collapses to 56/72 px, `MenuLogo.jpg` (45 % width, shadow `1px 1px 15px 5px #ccc`), the user name in the AppBar title, a theme switch on the right, and the logout icon at the bottom of the menu.
 - Font: **Roboto** (MUI default). Table head cells at 1.5 em. Dense tables by default.
 - Assets to copy: `src/images/LogInImg.jpg`, `Logo.jpg`, `MenuLogo.jpg`, `public/favicon.ico`; PDF logo extracted from `helpers/logoForPdf.js`.
-- Visual regression: Playwright screenshots of every page in both apps with the same data, compared side by side in UAT.
+- Visual comparison: Playwright screenshots of every page in both apps with the same data, reviewed side by side in UAT. Colors, texts, icons and content must match; **layout may differ** where it fixes a legacy bug (§8.4).
+
+### 8.4 Responsive and scalable layout (C9: fix the legacy layout bugs)
+
+**Legacy causes found in `../front-end/src`** (do not port these patterns):
+
+| Where | Problem |
+|---|---|
+| `jobDetais/jobDetails.css` | Grid rows in viewport units (`grid-template-rows: 12vh 65vh`, `height: 4vh`, `margin-top: 24vh` / `8vh`) mixed with fixed `rem` heights (`8rem`, `8.5rem`, `6rem`) and fixed widths (`7rem`, `20%`). Content overflows or overlaps when the font grows or the window is short. |
+| `jobDetais/jobDetails.css`, `jobDetailsHead.jsx` | `position: absolute` boxes (`right: 0`) and inline `width: 60px` that ignore the content size. |
+| `account/login.css` | Image box `height: 100vh; width: 100vh` (width tied to the height), so it is cut off or overflows on narrow or portrait screens. |
+| `budgetDetails/budgetGeneralDetails.jsx` | Totals and margin typed in `fontSize: 30` (px) that does not follow the user's font size. |
+| `dashboard/dashboardIndex.jsx` | Chart with a fixed `height="600px"`. |
+| `genericStyles/tableStyles.js`, `settings/settingsStyles.js` | Tables with `minWidth: 750` / `650` and no horizontal scroll container, so they push the page wider than the screen. |
+| `genericStyles/landingStyles.js`, `landing.jsx` | `height: 100vh` containers and an `absolute` AppBar; the permanent drawer stays open on small screens and squeezes the content. |
+| `job/jobStyle.js` | Fixed `48px` icon columns. |
+
+**Rules for the new UI**
+1. **Sizes in `rem`/`em`, not `px`**, for type, spacing, and component heights. The root font size is never hard-coded, so the browser font size setting and zoom scale the whole UI. Only borders and shadows may stay in `px`.
+2. **No fixed heights for content.** Use `min-height` and let content grow. `100dvh` only on the outer shell, never on inner panels; no `vh` for margins or grid rows.
+3. **Layout with CSS Grid/Flexbox and MudBlazor breakpoints** (`MudGrid`/`MudItem xs/sm/md/lg`), never `position: absolute` for page layout. Header boxes on Job details and Budget details wrap onto more rows when space runs out.
+4. **Breakpoints:** phone `< 600px`, tablet `600–960px`, laptop `960–1280px`, desktop `≥ 1280px` (MudBlazor defaults). The drawer is **temporary (overlay)** below `md`, **mini (56/72 px → rem)** on `md`, and **permanent** on `lg` and up; the AppBar is a normal sticky element.
+5. **Tables** sit in a horizontal scroll container (`MudTable` with `HorizontalScrollbar`), keep a sticky header, and on phones hide low-priority columns or switch to a card list (budgets, jobs, entities).
+6. **Dialogs** use `MaxWidth` + `FullWidth` and become `FullScreen` below `sm`.
+7. **Login page**: image column hidden below `md` (form centered); image uses `object-fit: cover` instead of `width: 100vh`.
+8. **Charts** size to their container (aspect ratio), not a fixed `px` height.
+9. **Text wraps** instead of overflowing (`overflow-wrap: anywhere` for paths, budget descriptions, comments); numbers use `tabular-nums`.
+10. **Accessibility baseline:** WCAG 2.2 AA reflow (usable at 320 CSS px width / 400 % zoom without two-way scrolling, except data tables), text spacing, and 200 % text resize without loss of content.
+
+**Verification (automated, part of the E2E suite, see §11):** every page is opened in a matrix of viewports **360×640, 768×1024, 1366×768, 1920×1080, 2560×1440**, with **browser zoom 100 % / 150 % / 200 %** and **root font size 16 px / 20 px / 24 px**. Each case asserts:
+- no horizontal scroll on the page (`document.documentElement.scrollWidth <= innerWidth`), except inside table scroll containers;
+- no overlapping or clipped elements among key controls (bounding boxes of buttons, inputs, header boxes do not intersect, and are inside the viewport or a scroll container);
+- primary actions are visible and clickable;
+- an axe-core accessibility scan has no serious/critical violations.
+Screenshots of the matrix are kept as baselines (Playwright visual comparison) so later layout regressions fail the build.
 
 ---
 
 ## 9. Legacy defects found during analysis: decide per item (keep for parity vs. fix)
 
-None of the fixes needs a DB change. **Recommendation** column = suggested default.
+None of the fixes needs a DB change, and none touches the old app (C10): fixes are made in the new app only. **Recommendation** column = suggested default.
 
 | # | Legacy behavior (file) | Impact | Recommendation |
 |---|---|---|---|
@@ -365,9 +472,9 @@ None of the fixes needs a DB change. **Recommendation** column = suggested defau
 | D9 | Budget search uses the user input as a raw regex | Power-user feature / 500 on bad input | Keep the regex semantics; invalid regex → 400 instead of 500 |
 | D10 | Dashboard year range ends at `{year}-12-31T00:00Z` (Dec 31 excluded) | Minor stats skew | Keep for parity (or fix and announce) |
 | D11 | Job `priority` default resolves to `undefined` | Old jobs without priority | Keep the read behavior (treated as low, no icon) |
-| D12 | JWT without expiry, short hard-coded key | Security | Keep compatible during coexistence; move the key to config; rotate and add `exp` once the legacy app is retired |
+| D12 | JWT without expiry, short hard-coded key | Security | **Keep no expiry** (decided: users stay logged in until they press logout, §4.6). **Fix the key** in the new app only: own ≥ 256-bit key from secrets, not in the code. The old app is left as is (C10) |
 | D13 | Import modal sets `total + 1` to force a reload (front-end) | Hack | Replace with an explicit reload in `BudgetDetailsState` |
-| D14 | "Lembrar" (remember me) checkbox does nothing | Cosmetic | Keep the checkbox as-is (or remove: open question) |
+| D14 | "Lembrar" (remember me) checkbox does nothing | Cosmetic | Remove it: the new app always remembers the login (§4.6) |
 | D15 | `canSeeAdjudicacoes` role exists in the UI but not in `GET /roles` | Cosmetic | Keep |
 
 ---
@@ -375,8 +482,11 @@ None of the fixes needs a DB change. **Recommendation** column = suggested defau
 ## 10. Phased delivery plan (vertical slices: each phase ships API + UI + tests)
 
 ### Phase 0: Discovery and safety net
-- [ ] Install the .NET 10 SDK (not installed on this machine yet), Docker, Node 14 (to run the legacy app in tests).
-- [ ] **Find the production MongoDB server version** (`db.version()`). It decides the C# driver version: driver 3.x needs server ≥ 4.0 (later 3.x releases ≥ 4.2); on an older server, pin driver 2.x or plan a server upgrade.
+- [ ] Install the .NET 11 SDK (not installed on this machine yet), Docker (for Testcontainers and the `mongo:9.0.8` dev database), Playwright browsers. Node 16.20.2 is already installed locally and is used to run the legacy app.
+- [ ] Confirm AVX on the NAS (AMD RX-421ND, expected yes: `grep -o -m1 -w avx /proc/cpuinfo`), check memory/disk for a second MongoDB server, and test-start `mongo:9.0.8` there on a throwaway volume next to the running 4.1.4 (§2.2).
+- [ ] Download real `.dibbak` backups from the old app (production) for the import tests: an anonymized one committed as a fixture, the full one kept outside the repo for the size/real-data run.
+- [ ] **Run the old app locally** (unchanged code; legacy back-end on `:3001` + front-end on `:3000` against its own `mongo:4.1.4` with a dev copy of the data) with a start script in `tools/legacy/` that the E2E suite reuses (§11).
+- [ ] Record the **legacy layout bugs** with screenshots at the §8.4 matrix (viewports × zoom × font size), as the "before" evidence and a checklist for C9.
 - [ ] Take a fresh `.dibbak` backup; create an anonymized dev copy.
 - [ ] Run the data-shape inventory (§4.5) → fixtures.
 - [ ] **Record characterization fixtures** from the legacy API: a scripted run (e.g. `.http`/Playwright API) of every endpoint in §6 against a seeded DB; save requests, responses and the resulting DB documents as golden files.
@@ -384,25 +494,36 @@ None of the fixes needs a DB change. **Recommendation** column = suggested defau
 - [ ] Decide the open questions (§14) and the defect list (§9).
 - **Exit:** fixtures committed under `tests/fixtures/legacy`; decisions recorded in `docs/decisions/` (ADRs).
 
+### Definition of Done (applies to every feature in every phase)
+A feature is done only when all of these are in the same pull request:
+1. **Unit tests** for its domain/application logic (and the shared calculations), written with the feature, not after it. Happy path, validation errors, and every legacy status code/message it can return.
+2. **API/integration tests** (`WebApplicationFactory` + Testcontainers `mongo:9.0.8`) for its endpoints, including the BSON types written (§4.3).
+3. **bUnit tests** for components with logic (state-dependent rendering, enabling/disabling).
+4. **E2E test (Playwright)** for the user flow in the new app, **plus the legacy comparison**: the same scenario run against the old app (each app on its own database, both loaded from the same backup), comparing visible results and the resulting documents (§11).
+5. **Layout check**: the feature's pages pass the §8.4 responsive matrix.
+6. CI green; no new analyzer warnings.
+
 ### Phase 1: Foundation
 - [ ] Solution, projects and dependency rules (§3), `Directory.Build.props`, central packages, `.editorconfig`, analyzers, architecture tests.
-- [ ] CI pipeline (build, test, Testcontainers), Dockerfile, `docker-compose.dev.yml` (Mongo at the prod version + legacy back-end + new app).
-- [ ] Mongo infrastructure: `JsNumberSerializer`, conventions, class maps for all 8 collections, round-trip tests against fixtures (read every variant, write, and check the BSON types match §4.3).
-- [ ] Auth: legacy-compatible token service and `x-auth-token` handler, policies, login endpoint and **login page**.
-- [ ] Blazor shell: MudBlazor theme (§8.3), landing layout, role-based menu, theme toggle, logout, snackbar, global HTTP error handling.
-- **Exit:** login with an existing prod user (the dev copy) works in the new app; a token issued by the new app is accepted by the legacy API and the other way round.
+- [ ] CI pipeline (build, unit, integration, E2E incl. legacy comparison and layout matrix), Dockerfile, `docker-compose.dev.yml` (legacy: `mongo:4.1.4` + back-end + front-end, unchanged; new: `mongo:9.0.8` + new app on `:3010`; all `linux/amd64`).
+- [ ] E2E harness: Playwright fixture that loads the same seed backup into both databases (legacy restore on 4.1.4, new-app restore on 9.0.8), starts both apps, and exposes page objects for both UIs (§11).
+- [ ] **Backup restore (import) slice first**: `.dibbak` reader + restore endpoint (API only) so every later phase can load real legacy data into the new app and test on it.
+- [ ] Mongo infrastructure (MongoDB.Driver 3.13.0, startup version check, `retryWrites=false`): `JsNumberSerializer`, conventions, class maps for all 8 collections, round-trip tests against fixtures (read every variant, write, and check the BSON types match §4.3).
+- [ ] Auth: `JwtBearer` with the `x-auth-token` header and own key, tokens without expiry stored in `localStorage`, roles checked against the DB, `GET /api/account/me`, bcrypt verification of imported passwords, policies, login endpoint, **login page** and logout (synced across tabs). E2E: still logged in after closing and reopening the browser and after a server restart; logged out only by the logout button (and in every tab); a removed role disappears without a new login.
+- [ ] Blazor shell: MudBlazor theme (§8.3), **responsive** landing layout (§8.4: temporary/mini/permanent drawer), role-based menu, theme toggle, logout, snackbar, global HTTP error handling. Layout matrix test running from the first page.
+- **Exit:** a legacy backup imports through the API, and an existing user from that backup logs in to the new app with their current password.
 
 ### Phase 2: Settings and entities
 - [ ] Users (list, create, edit), prices, payment methods, printers, info tab, startup seeding.
 - [ ] Entities: list/filter/sort/paginate, create/edit, types, clients list, search endpoint.
-- **Exit:** characterization tests green for account/prices/printer-settings/entity endpoints; cross-app tests (§11.3) green.
+- **Exit:** characterization tests green for account/prices/printer-settings/entity endpoints; import suite (§11.3) green for these collections.
 
 ### Phase 3: Budgets and tasks
 - [ ] Budget list (latest revisions, search, revisions collapse, copy path, row menu), new/edit/clone dialogs, new revision, numbering (+ collision guard §4.7).
 - [ ] Budget details: header grid, live totals and margin colors, lock/unlock, import, tasks editor (save on blur), description + "Concluir", payment method.
 - [ ] PDF generation (PDFsharp) + download (base64 contract) + `wasPdfDownloaded`.
 - [ ] `INasFileShare` (prod SSH.NET / dev no-op) for create/clone/rename.
-- **Exit:** PDF visual diff within tolerance; budget workflows interoperate across both apps (create in new → edit in old → revise in new …).
+- **Exit:** PDF visual diff within tolerance; imported budgets of every kind (all revisions, locked, with/without job) open, edit, revise and clone in the new app.
 
 ### Phase 4: Jobs
 - [ ] Create job (dialog with due date = today + daysNeededToDoTheWork), prod NAS move + label printing (`ILabelPrinter`).
@@ -415,40 +536,99 @@ None of the fixes needs a DB change. **Recommendation** column = suggested defau
 - [ ] Dashboard pie chart (current year counters).
 - [ ] Readings page (scanner flow, 3 s auto-close).
 - [ ] Database info, streamed backup download, streamed restore with progress, busy lock.
-- **Exit:** a legacy backup restores in the new app and a new backup restores in the legacy app, on test databases.
+- [ ] Restore UI and hardening for legacy imports (§7.6): option/index cleanup, full-size backup, server-side continuation, automatic pre-restore backup.
+- **Exit:** a real backup downloaded from the old app restores in the new app on 9.0.8 with zero differences in the built-in verification, at full production size; restore UI with progress, warnings and automatic pre-restore backup.
 
 ### Phase 6: Hardening, UAT, side-by-side production run
-- [ ] Full Playwright E2E suite; screenshot comparison with legacy.
+- [ ] Full regression run of the E2E suite (new app + legacy comparison) and the complete layout matrix; screenshot review with legacy in UAT.
 - [ ] Performance check (job lists with populated budgets: use `$lookup` aggregations instead of the legacy N+1 / load-all patterns, e.g. `getByBudgetNumber` loads every job today).
 - [ ] Security review (SSH escaping, authz on every endpoint, request size limits, no secrets in logs).
-- [ ] Deploy the new container next to the legacy ones (same Mongo, `ASPNETCORE_ENVIRONMENT=Production`, new port). Pilot users on the new app while others stay on the legacy app.
-- **Exit:** 2–4 weeks of parallel use without data issues → plan the legacy retirement (then apply D12 and the unique index for budget numbers).
+- [ ] Deploy the new app and its `mongo:9.0.8` next to the legacy containers (legacy untouched), `ASPNETCORE_ENVIRONMENT=Production`, port **3010**, NAS/printer switched off (§4.7). Import a fresh backup; pilot users try the new app on that copy while daily work stays in the old app.
+- [ ] **Switch-over:** stop daily work in the old app, download the final backup, restore it in the new app, check the verification result, switch NAS/printer on, users move to the new app. The old app stays installed and unchanged.
+- **Exit:** pilot finds no blocking difference → switch-over done; the old app is kept read-only by agreement (no technical change to it).
 
 ---
 
 ## 11. Testing strategy
 
+Policy: tests are written **together with each feature** (Definition of Done, §10). Target ≥ 90 % line coverage on Domain, Application and SharedKernel; coverage is reported in CI.
+
 1. **Unit (Domain/Application/SharedKernel):** numbering, flags, patch rules, `ChangeState`, `SetStatistics` per state, `UpdateStateDates`, deviation check, priority ordering, every `taskHelper` calculation (ported tests use the same inputs and outputs as the JS functions), PDF text helpers, template strings, path builders.
 2. **Characterization / contract tests:** the golden files from Phase 0 replayed against the new API; JSON compared after normalization (ids, dates, `__v`), plus the resulting DB documents compared field by field **including BSON types**.
-3. **Cross-application compatibility tests** (`Dib4t.Compatibility.Tests`): Testcontainers starts Mongo (prod version) and the **legacy Node back-end** image. Scenarios write through one API and read/modify through the other (budget → revision → job → statistics → billing; entity edit; user edit with password; backup/restore). This is the guarantee behind C3 and C4.
-4. **Integration:** repositories against real Mongo; NAS adapter against an `openssh-server` container; printer against an in-test TCP listener.
+3. **Import compatibility suite** (`Dib4t.ImportCompatibility.Tests`, runs on every pull request): this is what proves C3.
+   - **Backups made by the real old app:** Testcontainers starts `mongo:4.1.4` and the **unchanged legacy back-end**. A script fills it through the legacy API with scenarios that cover every feature and state (budgets with revisions, locked/complete, every job state with statistics, comments, priorities, entities of every type, users with every role, prices, payment methods, printers), then downloads the backup from `GET /api/database/backup`.
+   - The new app (on `mongo:9.0.8`) restores it through `POST /api/database/restore`. Assertions: every document equal to the source (raw BSON compare: `_id`, fields, values, types), indexes present, counts match.
+   - Then the new app is used on the imported data: login with imported users, open/edit every kind of record, run every state change, generate PDFs. The same requests on the legacy API (same data) give the same results.
+   - **Real production backups:** the anonymized fixture always; the full-size one in a nightly job.
+   - **Edge cases:** empty collections, documents missing later fields, Int32/Double/Int64 mixes, accents/Unicode, extra unknown fields, index options from 4.1.4, a 1 GB synthetic backup, truncated/corrupted/wrong files (legacy error messages, new DB unchanged).
+4. **Integration:** repositories against real Mongo (`mongo:9.0.8`); NAS adapter against an `openssh-server` container; printer against an in-test TCP listener.
 5. **Component (bUnit):** state-dependent rendering (menu items, statistics modal fields, lock behavior, colors).
-6. **E2E (Playwright):** login, budget lifecycle, job lifecycle, settings, readings, backup.
+6. **E2E (Playwright for .NET, `Dib4t.E2E`):** one test per user flow, added with each feature: login/logout and roles, budget lifecycle (create, edit, revision, clone, lock, import, PDF), job lifecycle (create, every state change with statistics, comments, priority, due date, billing, details page), entities, settings (users, prices, payment methods, printers, backup/restore), dashboard, readings.
+7. **Legacy comparison (E2E, behavior parity):** the harness runs the **old app** (unchanged, on its own `mongo:4.1.4`) and the new app (on its own `mongo:9.0.8`), both loaded from the **same seed backup**. Each scenario is written once against a small driver interface and executed in both UIs (separate page objects for the React and Blazor DOMs). Compared after each step:
+   - the visible result (table rows, totals, states, notification texts, error messages);
+   - the API responses (normalized ids/dates);
+   - the resulting DB documents, field by field and by BSON type.
+   Differences fail the test unless listed in an allow-list that points to a decided defect in §9 or a layout fix in §8.4. Generated values (`_id`s, dates, tokens) are normalized before comparing.
+8. **Layout matrix (E2E):** the §8.4 viewport × zoom × font-size checks and visual baselines for every page.
+9. **Production-only paths** are tested with fakes in E2E (test SSH server container, TCP listener for the printer) by running the new app with a test configuration that enables them; real NAS and printer are never touched by tests.
 
 ---
 
 ## 12. Deployment and side-by-side operation
 
+**The new app needs exactly 2 containers:**
+
+| # | Container | Image | What it does |
+|---|---|---|---|
+| 1 | `dib4t-db` | `mongo:9.0.8` (`linux/amd64`) | The new database. Volume for `/data/db`. Not published on a host port. |
+| 2 | `dib4t-app` | `dib4t-dotnet` (built from `mcr.microsoft.com/dotnet/aspnet:11.0`) | One ASP.NET Core process that serves **everything**: the Blazor WebAssembly files, the `/api` endpoints, the health check, the NAS (SSH) and printer (TCP) calls, and the scheduled backups. Port `3010`. |
+
+Nothing else runs: no separate front-end or web server (Kestrel serves the static WASM files), no reverse proxy, no cron or backup container, no migration or seeding job (seeding of the admin user and the startup checks run inside the app), no message queue or cache. The test-only containers (legacy app on `mongo:4.1.4`, SSH server, printer listener) exist only in CI and on developer machines.
+
+**Memory (fewer than 20 users):** about **1.5 GB in total** is enough: database 1 GB (0.5 GB WiredTiger cache + the server's own overhead), app 512 MB (typically 150–300 MB in use). The load comes from the size of the data, not from the number of users: the cache only needs to hold the data and indexes, which for this app is tens of MB: a backup exported from the old app (2026-11) is **under 2 MB** compressed, so roughly 10–20 MB of data. The limits above leave large headroom; no tuning is expected. The cache size must be set explicitly, because inside a container MongoDB otherwise sizes it from the NAS's total RAM and would take far too much.
+
+`docker-compose.yml` for production has just these two services:
+```yaml
+services:
+  dib4t-db:
+    image: mongo:9.0.8
+    platform: linux/amd64
+    command: ["--wiredTigerCacheSizeGB", "0.5"]   # < 20 users; raise only if data + indexes grow past ~400 MB
+    mem_limit: 1g
+    volumes: [ "dib4t-db-data:/data/db" ]
+    healthcheck: { test: ["CMD", "mongosh", "--quiet", "--eval", "db.adminCommand('ping')"] }
+    restart: unless-stopped
+  dib4t-app:
+    image: dib4t-dotnet:<version>
+    platform: linux/amd64
+    ports: [ "3010:3010" ]
+    mem_limit: 512m
+    environment:
+      ASPNETCORE_ENVIRONMENT: Production
+      ASPNETCORE_URLS: http://+:3010
+      Mongo__ConnectionString: mongodb://dib4t-db:27017/dib4t?retryWrites=false
+      # Jwt__Key, Nas__* from an env file / Docker secrets, never in the repo
+    volumes: [ "dib4t-logs:/app/logs", "/share/<backup folder>:/app/backups" ]
+    depends_on: { dib4t-db: { condition: service_healthy } }
+    restart: unless-stopped
+volumes: { dib4t-db-data: {}, dib4t-logs: {} }
 ```
-NAS / server host
-├─ mongo            :4002   (unchanged, shared)
-├─ legacy back-end  :4001   (unchanged)
-├─ legacy front-end :4000   (unchanged; derives API port by replacing the last digit with 1)
-└─ dib4t-dotnet     :4100   (new: UI + /api on one origin, ASPNETCORE_ENVIRONMENT=Production)
+
 ```
+NAS / server host (AMD RX-421ND, x86-64)
+├─ legacy (unchanged, C10)
+│  ├─ mongo:4.1.4      :4002   legacy database
+│  ├─ back-end         :4001
+│  └─ front-end        :4000   (derives API port by replacing the last digit with 1)
+└─ new
+   ├─ mongo:9.0.8      (internal Docker network only)  new database, filled from legacy backups
+   └─ dib4t-dotnet     :3010   (UI + /api on one origin, ASPNETCORE_ENVIRONMENT=Production)
+```
+- Development also runs the new app on `:3010` (legacy dev: front-end `:3000`, back-end `:3001`).
 - Config through env vars: `Mongo__ConnectionString`, `Jwt__Key`, `Nas__Host`, `Nas__User`, `Nas__Password` (or key file), Kestrel URL.
 - Container user without root privileges, health check, log volume.
-- Rollback: stop the new container. Nothing in the DB depends on it (C4).
+- Rollback: users go back to the old app, which was never changed. (After the switch-over, work done in the new app would have to be re-entered; the new app's own backups keep it.)
+- Backups of the new database: the backup feature in the UI (download `.dibbak`), plus a **scheduled backup inside the app** (`BackgroundService`, daily at a configurable time) that writes a `.dibbak` to the mounted NAS folder and keeps the last N files (`Backup:Schedule`, `Backup:Keep`). No extra container.
 
 ---
 
@@ -456,22 +636,28 @@ NAS / server host
 
 | Risk | Likelihood | Mitigation |
 |---|---|---|
-| Subtle BSON type drift breaks the legacy app | Medium | §4.3 rules, type assertions in tests, cross-app suite |
-| Old MongoDB server not supported by the current C# driver | Unknown | Phase 0 check; pin a driver version |
+| NAS CPU can't run MongoDB 9.0 | Low | AMD RX-421ND (Excavator) has AVX; confirmed with a test start in Phase 0 |
+| A legacy backup doesn't import, or imports with differences | Medium | Import suite on every PR with backups made by the real old app + real production backups; built-in verification at every import |
+| Work done in the wrong app during the pilot (data diverges) | Medium | One system of record at a time, NAS/printer off in the new app until switch-over, clear communication (§4.7) |
+| NAS memory with two MongoDB servers | Low/Medium | WiredTiger cache limits for both, checked in Phase 0 |
+| A 4.1.4 backup has index/collection options 9.0 rejects | Medium | Option cleanup in the restore (§2.2), tested with real backups |
+| MudBlazor has no `net11.0` build yet | Low | Its `net10.0` build runs on .NET 11; Phase 1 smoke test; fallback to .NET 10 LTS |
+| New documents drift from the legacy model (types, defaults) | Medium | §4.3 rules, BSON type assertions in tests |
 | PDF not pixel-identical | Medium | PDFsharp absolute layout, same Roboto fonts, visual diff |
 | Printer payload differs (line terminator/encoding) | Medium | Byte capture in Phase 0 |
-| Budget number collisions between apps | Low/Medium | §4.7 guard, limited pilot, unique index after retirement |
 | Large backup files in the browser | Medium | JS streaming interop (§7.6) |
+| Legacy comparison tests are flaky (two UIs, timing) | Medium | Wait on network/DB state, not timeouts; run comparison on a dedicated seeded DB per test |
+| Responsive redesign drifts from the familiar look | Low/Medium | Same theme tokens and components; layout changes only where §8.4 requires; UAT review with users |
 | Scope: legacy quirks reproduced by accident or "fixed" by accident | Medium | Characterization tests + explicit defect decisions (§9) |
 
 ---
 
 ## 14. Open questions (need an answer before or during Phase 0)
 
-1. Confirm **.NET 10 LTS** and **MudBlazor**.
-2. Port and hostname for the new app in production (proposed `:4100`)?
-3. Production MongoDB **server version**?
-4. Approve the defect decisions in §9 (especially D1, D3, D6).
-5. Version shown in the Info tab for the new app (`1.0.0`?).
-6. Should the new app also accept tokens from the legacy app (shared key, recommended during coexistence)?
-7. Are there other consumers of the API (scanner stations, scripts) that must keep working?
+Answered: two databases — the old app stays on its `mongo:4.1.4` unchanged, the new app has its own `mongo:9.0.8` (x86-64 Docker) filled by importing old-app backups (§2.2, §4); the new app runs on port **3010**; use the newest libraries (§2.1); no changes to the old app; during the pilot NAS folders and label printing are off in the new app and switched on at the switch-over (§4.7); login never expires, only logout ends it (§4.6).
+
+1. Hostname for the new app in production (port is 3010)?
+2. Smallest screen the app must support (phone, or tablet and up)? The plan assumes phones (360 px) work.
+3. Approve the defect decisions in §9 (especially D1, D3, D6).
+4. Version shown in the Info tab for the new app (`1.0.0`?).
+5. Are there other consumers of the API (scanner stations, scripts) that must keep working?
