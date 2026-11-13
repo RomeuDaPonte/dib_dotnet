@@ -482,7 +482,11 @@ None of the fixes needs a DB change, and none touches the old app (C10): fixes a
 ## 10. Phased delivery plan (vertical slices: each phase ships API + UI + tests)
 
 ### Phase 0: Discovery and safety net
-- [ ] Install the .NET 11 SDK (not installed on this machine yet), Docker (for Testcontainers and the `mongo:9.0.8` dev database), Playwright browsers. Node 16.20.2 is already installed locally and is used to run the legacy app.
+- [x] Install the .NET 11 SDK, Docker (for Testcontainers and the `mongo:9.0.8` dev database), Playwright browsers. Node 16.20.2 is already installed locally and is used to run the legacy app. Check with `tools/check-prereqs.sh`.
+  - [x] .NET SDK 11.0.100 in `~/.dotnet` (user-level install), pinned in `global.json`.
+  - [x] Playwright browsers for Microsoft.Playwright 1.64.1 (chromium-1248, firefox-1555, webkit-2370).
+  - [x] Node 16.20.2.
+  - [x] Docker Desktop 29.9.3 (Apple silicon), `mongo:9.0.8` pulled and smoke-tested; legacy `mongo:4.1.4` (amd64) runs under emulation.
 - [ ] Confirm AVX on the NAS (AMD RX-421ND, expected yes: `grep -o -m1 -w avx /proc/cpuinfo`), check memory/disk for a second MongoDB server, and test-start `mongo:9.0.8` there on a throwaway volume next to the running 4.1.4 (§2.2).
 - [ ] Download real `.dibbak` backups from the old app (production) for the import tests: an anonymized one committed as a fixture, the full one kept outside the repo for the size/real-data run.
 - [ ] **Run the old app locally** (unchanged code; legacy back-end on `:3001` + front-end on `:3000` against its own `mongo:4.1.4` with a dev copy of the data) with a start script in `tools/legacy/` that the E2E suite reuses (§11).
