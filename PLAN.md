@@ -1,6 +1,6 @@
 # Dib4t — Rewrite plan: Node/React ➜ .NET (ASP.NET Core + Blazor WebAssembly)
 
-> Status: **Plan / not started** · Created 2026-11-12 · Updated 2026-11-12 (two databases: legacy untouched, new app on MongoDB 9.0.8 fed by legacy backups; port 3010; latest packages; test policy; responsive layout)
+> Status: **Plan / not started** · Created 2026-11-12 · Updated 2026-11-13 (two databases: legacy untouched, new app on MongoDB 9.0.8 fed by legacy backups; port 3010; latest packages; test policy; responsive layout; NAS and printers not reachable from the dev network: converted from the legacy code, real-device checks deferred to the owner, §5.1)
 > Source of truth for the behavior: `../back-end` (Node/Express/Mongoose) and `../front-end` (React 17 / MUI v4).
 
 ---
@@ -83,7 +83,7 @@ NAS (AMD RX-421ND, x86-64)
 
 - The legacy database is **never touched** by the new app: no connection string to it, no reads, no writes. The new app talks only to its own server.
 - New database server: **`mongo:9.0.8`**, platform `linux/amd64` (an `arm64` image also exists for Apple-silicon dev machines). Same database name `dib4t`.
-- **CPU:** MongoDB 5.0+ needs AVX on x86-64. The NAS has an **AMD RX-421ND** (AMD Embedded R-Series "Merlin Falcon", Excavator cores), which supports AVX and AVX2. Confirmed once in Phase 0 (`grep -o -m1 -w avx /proc/cpuinfo` + test start).
+- **CPU:** MongoDB 5.0+ needs AVX on x86-64. The NAS has an **AMD RX-421ND** (AMD Embedded R-Series "Merlin Falcon", Excavator cores), which supports AVX and AVX2. To be confirmed on site by the owner (`grep -o -m1 -w avx /proc/cpuinfo` + test start; §5.1, check N1). The NAS is not reachable from the development network.
 - Container: named volume for `/data/db`, `--wiredTigerCacheSizeGB` sized so both MongoDB servers fit in the NAS memory together, `ulimit nofile 64000`, health check `mongosh --eval "db.adminCommand('ping')"`. Not published on a host port; it is reachable only from the new app's Docker network (admin through `docker exec`).
 - Standalone server (like today): no transactions or change streams, `retryWrites=false`. At startup the app logs `buildInfo.version` and stops if the server version is outside what the driver supports.
 - Use current APIs only (e.g. `$collStats`, not the deprecated `collStats` command).
@@ -235,6 +235,16 @@ All documents carry `_id: ObjectId` and **`__v: Int32`** (Mongoose version key).
 
 Before any code, run an aggregation per collection (`$objectToArray` + `$type`) on a **copy** of production. It counts the BSON type of every field path, finds missing fields, Int32/Double mixes, string-vs-Date drift, and so on. The output becomes test fixtures, and serializers must accept every observed variant.
 
+**Done 2026-11-13** on the production backup of 2026-11-11, by reading the `.dibbak` BSON directly with the .NET `MongoDB.Bson` library (`tools/legacy/dibbak.cs inventory`, same result as the aggregation, and a first proof that .NET reads the legacy backup format). Full table: `docs/data/legacy-data-shapes.md`; machine-readable: `tests/fixtures/legacy/data-shapes.json`. Findings the class maps, serializers and UI must handle (all are now test cases):
+1. **Numbers:** no `Int64` or `Decimal128` anywhere. Int32/Double **mixes** in `budgets.total`, `jobs.finalPrice`, `jobs.materials`, `devStatistic.{budgetedHours,deviation,numberOfHoursUsed}`, `machiningStatistic.{budgetedHours,deviation}`, `tasks.{quantity,unitPrice}`; the doubles are fractional (e.g. 0.5 h) → `double` + `JsNumberSerializer` (§4.3) confirmed. Negative deviations are normal.
+2. **Nulls where the schema has none:** `users.roles[]` contains **`null` elements** (30 of 60, in every user's array); `jobs.deliveryDate` null in 126 jobs (missing in 58 more); `jobs.costNonQuality` null once; `jobStatisticsDates.devEndedInDate` null once. Role checks must skip `null`; round-trips must keep the nulls (arrays are never rewritten unless the user edits them).
+3. **Missing fields:** `budgets.description` (50); `jobs.commentType` (934), `comments` (139), `createdBy` (270), `invoicedBy` (299), `jobStatisticsDates` (124) and most dates inside it, `machiningStatistic.validatedBy`/`assemblyStatistic.validatedBy`; `users.fieldOfCompetencies` (1). Read defaults per §4.4.
+4. **Unknown field:** `jobs.isHightPriority` (Boolean, 7 old jobs) is not in the current schema → must round-trip untouched (§4.3 rule 7, extra elements).
+5. **Dates:** `jobs.deliveryDate` has a typo year (**0022**-07-29). Dates before 1970 must read, display and save without errors (no `DateTimeOffset` assumptions, no range validation on read). No string-vs-Date drift (no date-like strings in date fields).
+6. **Strings:** leading/trailing whitespace is common (`budgets.description` 1,277, `descriptive` 34, `jobs.orderIdentification` 34, `tasks.description` 346) and a tab inside `entities.fiscalNumber`; **never trim on import or read**. 6 non-NFC strings (`budgets.description`, `tasks.description`): keep them as stored; NFC applies only to values the new app writes (§4.3 rule 2). Many empty strings (`jobs.comments` 953, task descriptions 5,288).
+7. `jobs.priority` is present in every production job (`Média` 1,108), but the "missing priority" path stays (§4.4.3) for older backups. `assemblyStatistic.validTryOnFirstTest` is always a string. `budgets.client`/`madeBy` are always ObjectIds. Payment-method texts are long (up to 109 chars) → layout.
+8. Only `_id` indexes and empty collection options: nothing for the 9.0 restore cleanup to do on current data (keep the cleanup for older backups).
+
 ### 4.6 Authentication
 
 - Same header **`x-auth-token`** and same claims `{ _id, name, email, roles, fieldOfCompetencies }` as the legacy API, so the client and the API contract stay the same.
@@ -281,9 +291,29 @@ Before any code, run an aggregation per collection (`$objectToArray` + `$type`) 
 - `producao`: `"\n      ia3,^TS001{num},{date},{descriptive},{client},{num},\n      "` (the leading/trailing whitespace is part of the payload)
 - `maquinacao`: `"ia3,^TS002{num},{date},{descriptive},{client},"`
 
-> **Byte-exact verification required:** in Phase 0, point a printer setting at `nc -l 9100` and capture what the legacy app sends (encoding, whether `telnet-client` appends a line terminator). The capture becomes a golden-file test.
+**Wire behavior, derived from the legacy code** (`models/printerSettings.js` + `telnet-client` 1.4.9 `lib/index.js`, no capture needed):
+- Connect with `negotiationMandatory: false`, so `connect()` resolves as soon as the TCP connection is up; nothing is written before the payload (`initialLFCR`/`initialCTRLC` are off).
+- `send(data)` appends the output record separator `ors`, default **`"\n"`** (LF only), and writes the string with Node's default encoding **UTF-8** (accents in `descriptive`/client name are multi-byte).
+- So the bytes on the wire are exactly `UTF8(template + "\n")`, followed by a normal close (`socket.end()`, FIN).
+- `send()` then waits `sendTimeout` (2000 ms) for a reply. A label printer normally sends nothing back, so legacy rejects with `"response not received"`, logs `Printer error: …` and `print()` returns `false`. **Every caller ignores the return value** (`routes/job.js`), so this has no visible effect except about 2 s of latency per printer.
+- New app: write `UTF8(template + "\n")`, flush, close; no wait for a reply (decision: same bytes, same visible result, without the 2 s per printer). Errors are logged and swallowed as in legacy.
+- Golden-file tests assert these bytes against an in-test TCP listener. The real printers are checked by the owner later (§5.1, check N3).
 
 **SSH safety:** legacy builds shell commands by string concatenation, with client and descriptive in single quotes. The new adapter must produce **the same resulting paths** but escape arguments correctly. Commands are logged at Information level, without credentials.
+
+### 5.1 NAS and printers: converted from code, real-device checks deferred
+
+The NAS (`192.168.2.10`) and the label printers are **not reachable from the development network**. So:
+- Everything that depends on them is **converted from the legacy source code**, like the rest of the app: SSH commands and paths from `helpers/pathHlelper.js`, `models/budget.js` and `routes/budget.js`/`routes/job.js`; printer bytes from `models/printerSettings.js` + `telnet-client` (above). The expected command sequences and byte payloads are written down as golden files **from the code**, not from captures.
+- Automated tests use **local fakes only** (an `openssh-server` container that records commands, an in-test TCP listener for the printer). No test, script or development step connects to the real NAS or printers.
+- The owner runs the real-device checks later, on site. They are tracked here and are **not blockers** for any phase before Phase 6:
+
+| # | On-site check (owner) | Where it is used |
+|---|---|---|
+| N1 | NAS CPU has AVX (`grep -o -m1 -w avx /proc/cpuinfo`), free memory/disk for a second MongoDB server, test start of `mongo:9.0.8` on a throwaway volume next to the running 4.1.4 (§2.2). | Deployment (§12) |
+| N2 | Budget create/clone/rename and job create make and move the expected folders under `/share/Orçamentos` and `/share/Obras` (compare with the old app on a test client/budget). | Phase 3, Phase 4 |
+| N3 | Both label templates (`producao`, `maquinacao`) print correctly on the real printers, including accented text. | Phase 4 |
+| N4 | Deploy on the NAS, with NAS/printer side effects off until switch-over (§4.7). | Phase 6 |
 
 ---
 
@@ -487,14 +517,34 @@ None of the fixes needs a DB change, and none touches the old app (C10): fixes a
   - [x] Playwright browsers for Microsoft.Playwright 1.64.1 (chromium-1248, firefox-1555, webkit-2370).
   - [x] Node 16.20.2.
   - [x] Docker Desktop 29.9.3 (Apple silicon), `mongo:9.0.8` pulled and smoke-tested; legacy `mongo:4.1.4` (amd64) runs under emulation.
-- [ ] Confirm AVX on the NAS (AMD RX-421ND, expected yes: `grep -o -m1 -w avx /proc/cpuinfo`), check memory/disk for a second MongoDB server, and test-start `mongo:9.0.8` there on a throwaway volume next to the running 4.1.4 (§2.2).
-- [ ] Download real `.dibbak` backups from the old app (production) for the import tests: an anonymized one committed as a fixture, the full one kept outside the repo for the size/real-data run.
-- [ ] **Run the old app locally** (unchanged code; legacy back-end on `:3001` + front-end on `:3000` against its own `mongo:4.1.4` with a dev copy of the data) with a start script in `tools/legacy/` that the E2E suite reuses (§11).
-- [ ] Record the **legacy layout bugs** with screenshots at the §8.4 matrix (viewports × zoom × font size), as the "before" evidence and a checklist for C9.
-- [ ] Take a fresh `.dibbak` backup; create an anonymized dev copy.
-- [ ] Run the data-shape inventory (§4.5) → fixtures.
+- [~] ~~Confirm AVX on the NAS, check memory/disk, test-start `mongo:9.0.8` there~~ → **deferred to the owner (on site)**: the NAS is not reachable from the development network. Tracked as check N1 in §5.1; not a blocker before Phase 6.
+- [x] Download real `.dibbak` backups from the old app (production) for the import tests: an anonymized one committed as a fixture, the full one kept outside the repo for the size/real-data run.
+  - [x] Production backup of **2026-11-11** received (`dib4t-backup-2026-11-11_16-15-31.dibbak`, 1.2 MB). Kept **outside the repo** in the parent folder `Dib4t/` (not a git repo); never committed, never sent to external services.
+  - [x] Content: format `dib4t-backup` v1, server 4.1.4, database `dib4t`, 8 collections, **30,754 documents** (budgets 3,397 · entities 235 · jobs 1,118 · paymentmethods 20 · prices 1 · printersettings 2 · tasks 25,971 · users 10). Only `_id` indexes, no collection options (nothing for the 9.0 option/index cleanup to do on this file).
+  - [x] Restores into the local legacy app (`legacy.sh restore`, < 1 s); counts match; jobs board, budgets and dashboard load with no page errors. Note: `GET /api/job/getAll` returns 2.6 MB (budgets populated in every job) → Phase 6 performance item.
+  - [x] Anonymized copy as a fixture: `tests/fixtures/legacy/prod-2026-11-11.anon.dibbak` (see "anonymized dev copy" below).
+- [x] **Run the old app locally** (unchanged code; legacy back-end on `:3001` + front-end on `:3000` against its own `mongo:4.1.4` with a dev copy of the data) with a start script in `tools/legacy/` that the E2E suite reuses (§11).
+  - `tools/legacy/legacy.sh up [--fresh] | down [--purge] | status | restore <file> | backup <file> | token | logs`. `LEGACY_NO_FRONTEND=1` starts only Mongo + back-end (API-only tests). Pids and logs go to `tools/legacy/.run/` (git-ignored).
+  - The legacy ports are **hard-coded** in the unchanged code: DB `mongodb://localhost:27017/dib4t` (`config/default.json`), API `:3001`, UI `:3000`. So legacy Mongo always publishes host port **27017** (bound to 127.0.0.1, volume `dib4t-legacy-db`). The new app's local `mongo:9.0.8` must use a **different host port** (or none: Testcontainers picks a random one).
+  - `NODE_ENV` is left unset, so the legacy back-end stays in dev mode: no SSH/NAS and no printing (§5.1).
+  - On a fresh DB, the legacy back-end seeds the admin user (`userlogado@gmail.com`) and default prices. Only the bcrypt hash of that password is in the legacy code. For API calls, `legacy.sh token` signs a settings-capable JWT with the key and role names read from the legacy code at runtime, so no legacy secret is copied into this repo. To log in through the UI, restore a backup with known users (`legacy.sh restore`).
+  - Mongo is stopped cleanly (`docker stop`): killing a 4.1.4 `mongod` leaves stale collection counts (`count()` returns 0 after restart).
+  - Verified 2026-11-13: fresh start, login page renders, API with and without token (200/401), backup → restore round trip through the legacy API, data survives `down`/`up`, all ports freed by `down`.
+- [x] Record the **legacy layout bugs** with screenshots at the §8.4 matrix (viewports × zoom × font size), as the "before" evidence and a checklist for C9.
+  - `legacy.sh seed` fills a fresh legacy DB with synthetic data through the legacy API (`tools/legacy/seed-legacy.cs`: 4 users with password `layout-test`, 22 entities, 14 budgets + revisions with tasks, 10 jobs in every state incl. one billed; long texts on purpose).
+  - `legacy.sh layout` runs the matrix (`tools/legacy/layout-matrix.cs`, .NET file-based app, Microsoft.Playwright 1.64.1, full Chromium). Zoom z is emulated as CSS viewport = window / z with devicePixelRatio z; the root font size is the Chromium profile setting `default_font_size`. Measures H (page overflow), O (controls outside the viewport), X (overlapping controls), T (overlapping text), C (controls/text cut off). Off-screen screen-reader-only content is ignored.
+  - Result: 495 cases, **190 with issues**. Generated numbers: `docs/layout/legacy-layout-matrix.md`; curated checklist LB-01…LB-15 with evidence and causes: `docs/layout/legacy-layout-bugs.md`. Screenshots + gallery in `artifacts/legacy-layout/` (git-ignored, regenerate in about 4 min).
+  - Worst pages: budget details (header over task rows, already at 1366×768 100 %), job details (cost table text collisions, page cut at a fixed height), jobs board and settings (tabs cut off/unreachable). The permanent drawer breaks every page on phones. The new app's E2E layout matrix (§11) reuses the same checks.
+- [x] Take a fresh `.dibbak` backup; create an anonymized dev copy.
+  - `tools/legacy/dibbak.cs anonymize <in> <out>` → `tests/fixtures/legacy/prod-2026-11-11.anon.dibbak` (2.0 MB, committed). **Safe by default**: every string is scrambled except an allowlist (enum fields, `budgetNumber`). Scrambling keeps length, case, whitespace, punctuation, digit/letter classes, accents and non-NFC sequences, and is deterministic per value under a random key that is never stored, so equal values stay equal across collections (user names ↔ `createdBy`/`invoicedBy`/`validatedBy`, payment-method names ↔ `paymentMethod`/`paymentCondition`) and nothing can be reversed. Users become `utilizador01…10@dib4t.local`, all with password **`dib4t-dev`** (bcrypt `$2a$`, cost 10); printer IPs become `127.0.0.x`; the header's `createdBy` is replaced.
+  - Kept as-is: ObjectIds, all numbers with their exact BSON types, dates, booleans, nulls, field order, unknown fields. **Numbers (prices, totals, hours) are real values**; only names and texts are anonymized.
+  - Checks: built-in leak check (no output string equals or contains any original scrambled value); the inventory of the anonymized file is **identical** to the original's in every property (paths, presence, types, nulls, Int32/Double split, array sizes, enum values, non-NFC and date-like counts); restores into the legacy app; login with `utilizador02@dib4t.local` / `dib4t-dev` works; pages render.
+  - `.gitignore`: `*.dibbak` ignored except `tests/fixtures/legacy/*.anon.dibbak`.
+- [x] Run the data-shape inventory (§4.5) → fixtures. Findings in §4.5; `docs/data/legacy-data-shapes.md`, `tests/fixtures/legacy/data-shapes.json`.
 - [ ] **Record characterization fixtures** from the legacy API: a scripted run (e.g. `.http`/Playwright API) of every endpoint in §6 against a seeded DB; save requests, responses and the resulting DB documents as golden files.
-- [ ] Capture the printer bytes (`nc -l 9100`), the SSH commands (log them on a test SSH server) and sample PDFs for 5–10 real budgets.
+- [x] Printer bytes: derived from the legacy code instead of a capture (§5, "Wire behavior"): `UTF8(template + "\n")`, then close.
+- [ ] SSH commands: write the expected command sequences per operation (budget create/clone/rename, job create) **from the legacy code** as golden files (§5.1). No NAS access.
+- [ ] Sample PDFs for 5–10 real budgets (generated by the old app running locally; no NAS needed).
 - [ ] Decide the open questions (§14) and the defect list (§9).
 - **Exit:** fixtures committed under `tests/fixtures/legacy`; decisions recorded in `docs/decisions/` (ADRs).
 
@@ -526,15 +576,15 @@ A feature is done only when all of these are in the same pull request:
 - [ ] Budget list (latest revisions, search, revisions collapse, copy path, row menu), new/edit/clone dialogs, new revision, numbering (+ collision guard §4.7).
 - [ ] Budget details: header grid, live totals and margin colors, lock/unlock, import, tasks editor (save on blur), description + "Concluir", payment method.
 - [ ] PDF generation (PDFsharp) + download (base64 contract) + `wasPdfDownloaded`.
-- [ ] `INasFileShare` (prod SSH.NET / dev no-op) for create/clone/rename.
+- [ ] `INasFileShare` (prod SSH.NET / dev no-op) for create/clone/rename, converted from the legacy code and tested against the `openssh-server` fake only (§5.1). Real NAS: owner check N2.
 - **Exit:** PDF visual diff within tolerance; imported budgets of every kind (all revisions, locked, with/without job) open, edit, revise and clone in the new app.
 
 ### Phase 4: Jobs
-- [ ] Create job (dialog with due date = today + daysNeededToDoTheWork), prod NAS move + label printing (`ILabelPrinter`).
+- [ ] Create job (dialog with due date = today + daysNeededToDoTheWork), prod NAS move + label printing (`ILabelPrinter`), converted from the legacy code and tested against fakes only (§5.1). Real NAS/printers: owner checks N2, N3.
 - [ ] Jobs board: tabs/counters, priority ordering, due-date picker + countdown icons, state menu, statistics modal per state (incl. 405 handling), comments modal, priority/print menu, icons.
 - [ ] Job details page: header, cost summary, state dates, cost table with live calculations, observations, verifications.
 - [ ] Print endpoint + print dialog.
-- **Exit:** characterization tests for every job endpoint; printer golden bytes match; SSH command sequence matches the legacy capture (against a test SSH server in a container).
+- **Exit:** characterization tests for every job endpoint; printer golden bytes match the code-derived payload (§5); SSH command sequence matches the code-derived golden files (against a test SSH server in a container). Real-device checks N2/N3 (§5.1) are done by the owner and do not block this exit.
 
 ### Phase 5: Dashboard, readings, backup/restore
 - [ ] Dashboard pie chart (current year counters).
@@ -547,6 +597,7 @@ A feature is done only when all of these are in the same pull request:
 - [ ] Full regression run of the E2E suite (new app + legacy comparison) and the complete layout matrix; screenshot review with legacy in UAT.
 - [ ] Performance check (job lists with populated budgets: use `$lookup` aggregations instead of the legacy N+1 / load-all patterns, e.g. `getByBudgetNumber` loads every job today).
 - [ ] Security review (SSH escaping, authz on every endpoint, request size limits, no secrets in logs).
+- [ ] Owner on-site checks N1–N3 (§5.1) done before deploying.
 - [ ] Deploy the new app and its `mongo:9.0.8` next to the legacy containers (legacy untouched), `ASPNETCORE_ENVIRONMENT=Production`, port **3010**, NAS/printer switched off (§4.7). Import a fresh backup; pilot users try the new app on that copy while daily work stays in the old app.
 - [ ] **Switch-over:** stop daily work in the old app, download the final backup, restore it in the new app, check the verification result, switch NAS/printer on, users move to the new app. The old app stays installed and unchanged.
 - **Exit:** pilot finds no blocking difference → switch-over done; the old app is kept read-only by agreement (no technical change to it).
@@ -574,7 +625,7 @@ Policy: tests are written **together with each feature** (Definition of Done, §
    - the resulting DB documents, field by field and by BSON type.
    Differences fail the test unless listed in an allow-list that points to a decided defect in §9 or a layout fix in §8.4. Generated values (`_id`s, dates, tokens) are normalized before comparing.
 8. **Layout matrix (E2E):** the §8.4 viewport × zoom × font-size checks and visual baselines for every page.
-9. **Production-only paths** are tested with fakes in E2E (test SSH server container, TCP listener for the printer) by running the new app with a test configuration that enables them; real NAS and printer are never touched by tests.
+9. **Production-only paths** are tested with fakes in E2E (test SSH server container, TCP listener for the printer) by running the new app with a test configuration that enables them; real NAS and printer are never touched by tests (they are not reachable from the development network; §5.1).
 
 ---
 
@@ -640,15 +691,15 @@ NAS / server host (AMD RX-421ND, x86-64)
 
 | Risk | Likelihood | Mitigation |
 |---|---|---|
-| NAS CPU can't run MongoDB 9.0 | Low | AMD RX-421ND (Excavator) has AVX; confirmed with a test start in Phase 0 |
+| NAS CPU can't run MongoDB 9.0 | Low | AMD RX-421ND (Excavator) has AVX; owner confirms with a test start on site (§5.1, N1) before deployment |
 | A legacy backup doesn't import, or imports with differences | Medium | Import suite on every PR with backups made by the real old app + real production backups; built-in verification at every import |
 | Work done in the wrong app during the pilot (data diverges) | Medium | One system of record at a time, NAS/printer off in the new app until switch-over, clear communication (§4.7) |
-| NAS memory with two MongoDB servers | Low/Medium | WiredTiger cache limits for both, checked in Phase 0 |
+| NAS memory with two MongoDB servers | Low/Medium | WiredTiger cache limits for both, checked on site by the owner (§5.1, N1) |
 | A 4.1.4 backup has index/collection options 9.0 rejects | Medium | Option cleanup in the restore (§2.2), tested with real backups |
 | MudBlazor has no `net11.0` build yet | Low | Its `net10.0` build runs on .NET 11; Phase 1 smoke test; fallback to .NET 10 LTS |
 | New documents drift from the legacy model (types, defaults) | Medium | §4.3 rules, BSON type assertions in tests |
 | PDF not pixel-identical | Medium | PDFsharp absolute layout, same Roboto fonts, visual diff |
-| Printer payload differs (line terminator/encoding) | Medium | Byte capture in Phase 0 |
+| Printer payload differs (line terminator/encoding) | Low | Payload derived from the `telnet-client` source (§5); golden-file test; owner prints on the real printers (§5.1, N3) |
 | Large backup files in the browser | Medium | JS streaming interop (§7.6) |
 | Legacy comparison tests are flaky (two UIs, timing) | Medium | Wait on network/DB state, not timeouts; run comparison on a dedicated seeded DB per test |
 | Responsive redesign drifts from the familiar look | Low/Medium | Same theme tokens and components; layout changes only where §8.4 requires; UAT review with users |

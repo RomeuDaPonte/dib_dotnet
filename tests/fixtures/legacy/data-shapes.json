@@ -1,0 +1,879 @@
+{
+  "source": {
+    "createdAt": "2026-11-11T16:15:29.313Z",
+    "serverVersion": "4.1.4"
+  },
+  "collections": {
+    "budgets": {
+      "documents": 3397,
+      "paths": {
+        "__v": {
+          "present": 3397,
+          "types": {
+            "Int32": 3397
+          }
+        },
+        "_id": {
+          "present": 3397,
+          "types": {
+            "ObjectId": 3397
+          }
+        },
+        "budgetNumber": {
+          "present": 3397,
+          "types": {
+            "String": 3397
+          }
+        },
+        "client": {
+          "present": 3397,
+          "types": {
+            "ObjectId": 3397
+          }
+        },
+        "complete": {
+          "present": 3397,
+          "types": {
+            "Boolean": 3397
+          }
+        },
+        "date": {
+          "present": 3397,
+          "types": {
+            "DateTime": 3397
+          }
+        },
+        "daysNeededToDoTheWork": {
+          "present": 3397,
+          "types": {
+            "Int32": 3397
+          }
+        },
+        "description": {
+          "present": 3347,
+          "types": {
+            "String": 3347
+          },
+          "nonNfcStrings": 3
+        },
+        "descriptive": {
+          "present": 3397,
+          "types": {
+            "String": 3397
+          }
+        },
+        "hasGenerateJob": {
+          "present": 3397,
+          "types": {
+            "Boolean": 3397
+          }
+        },
+        "madeBy": {
+          "present": 3397,
+          "types": {
+            "ObjectId": 3397
+          }
+        },
+        "margin": {
+          "present": 3397,
+          "types": {
+            "Int32": 3397
+          }
+        },
+        "paymentMethod": {
+          "present": 3397,
+          "types": {
+            "String": 3397
+          }
+        },
+        "personInCharge": {
+          "present": 3397,
+          "types": {
+            "String": 3397
+          }
+        },
+        "revision": {
+          "present": 3397,
+          "types": {
+            "Int32": 3397
+          }
+        },
+        "total": {
+          "present": 3397,
+          "types": {
+            "Double": 23,
+            "Int32": 3374
+          },
+          "integralDoubles": 0,
+          "fractionalDoubles": 23
+        },
+        "validity": {
+          "present": 3397,
+          "types": {
+            "Int32": 3397
+          }
+        },
+        "wasPdfDownloaded": {
+          "present": 3397,
+          "types": {
+            "Boolean": 3397
+          }
+        }
+      }
+    },
+    "entities": {
+      "documents": 235,
+      "paths": {
+        "__v": {
+          "present": 235,
+          "types": {
+            "Int32": 235
+          }
+        },
+        "_id": {
+          "present": 235,
+          "types": {
+            "ObjectId": 235
+          }
+        },
+        "address": {
+          "present": 235,
+          "types": {
+            "String": 235
+          }
+        },
+        "fiscalNumber": {
+          "present": 235,
+          "types": {
+            "String": 235
+          }
+        },
+        "location": {
+          "present": 235,
+          "types": {
+            "String": 235
+          }
+        },
+        "name": {
+          "present": 235,
+          "types": {
+            "String": 235
+          }
+        },
+        "paymentCondition": {
+          "present": 235,
+          "types": {
+            "String": 235
+          }
+        },
+        "type": {
+          "present": 235,
+          "types": {
+            "String": 235
+          },
+          "enumValues": {
+            "Cliente": 219,
+            "Cliente e Fornecedor": 16
+          }
+        },
+        "zipCode": {
+          "present": 235,
+          "types": {
+            "String": 235
+          }
+        }
+      }
+    },
+    "jobs": {
+      "documents": 1118,
+      "paths": {
+        "__v": {
+          "present": 1118,
+          "types": {
+            "Int32": 1118
+          }
+        },
+        "_id": {
+          "present": 1118,
+          "types": {
+            "ObjectId": 1118
+          }
+        },
+        "assemblyStatistic": {
+          "present": 1118,
+          "types": {
+            "Document": 1118
+          }
+        },
+        "assemblyStatistic._id": {
+          "present": 1118,
+          "types": {
+            "ObjectId": 1118
+          }
+        },
+        "assemblyStatistic.budgetedHours": {
+          "present": 1118,
+          "types": {
+            "Int32": 1118
+          }
+        },
+        "assemblyStatistic.deviation": {
+          "present": 1118,
+          "types": {
+            "Int32": 1118
+          }
+        },
+        "assemblyStatistic.electricalBoardsAndCircuits": {
+          "present": 1118,
+          "types": {
+            "String": 1118
+          },
+          "enumValues": {
+            "Ok": 229,
+            "n/a": 889
+          }
+        },
+        "assemblyStatistic.kinematics": {
+          "present": 1118,
+          "types": {
+            "String": 1118
+          },
+          "enumValues": {
+            "Ok": 390,
+            "n/a": 728
+          }
+        },
+        "assemblyStatistic.numberOfHoursUsed": {
+          "present": 1118,
+          "types": {
+            "Int32": 1118
+          }
+        },
+        "assemblyStatistic.operator_equipmentSafetyConditions": {
+          "present": 1118,
+          "types": {
+            "String": 1118
+          },
+          "enumValues": {
+            "Ok": 134,
+            "n/a": 984
+          }
+        },
+        "assemblyStatistic.pneumaticCircuits": {
+          "present": 1118,
+          "types": {
+            "String": 1118
+          },
+          "enumValues": {
+            "Ok": 370,
+            "n/a": 748
+          }
+        },
+        "assemblyStatistic.programmingFeaturesPLC": {
+          "present": 1118,
+          "types": {
+            "String": 1118
+          },
+          "enumValues": {
+            "Ok": 114,
+            "n/a": 1004
+          }
+        },
+        "assemblyStatistic.validTryOnFirstTest": {
+          "present": 1118,
+          "types": {
+            "String": 1118
+          },
+          "enumValues": {
+            "1": 1117,
+            "2": 1
+          }
+        },
+        "assemblyStatistic.validatedBy": {
+          "present": 804,
+          "types": {
+            "String": 804
+          }
+        },
+        "assemblyStatistic.visualInspection": {
+          "present": 1118,
+          "types": {
+            "String": 1118
+          },
+          "enumValues": {
+            "Ok": 797,
+            "n/a": 321
+          }
+        },
+        "automation": {
+          "present": 1118,
+          "types": {
+            "Int32": 1118
+          }
+        },
+        "budget": {
+          "present": 1118,
+          "types": {
+            "ObjectId": 1118
+          }
+        },
+        "commentType": {
+          "present": 184,
+          "types": {
+            "Array": 184
+          },
+          "emptyArrays": 179,
+          "maxArrayLength": 3
+        },
+        "commentType[]": {
+          "present": 7,
+          "types": {
+            "String": 7
+          },
+          "enumValues": {
+            "Detalhes de fabrico": 1,
+            "Outros": 4,
+            "Quantidade de peças": 2
+          }
+        },
+        "comments": {
+          "present": 979,
+          "types": {
+            "String": 979
+          }
+        },
+        "components": {
+          "present": 1118,
+          "types": {
+            "Int32": 1118
+          }
+        },
+        "costNonQuality": {
+          "present": 1118,
+          "types": {
+            "Int32": 1117,
+            "Null": 1
+          },
+          "null": 1
+        },
+        "createdBy": {
+          "present": 848,
+          "types": {
+            "String": 848
+          }
+        },
+        "deliveryDate": {
+          "present": 1060,
+          "types": {
+            "DateTime": 934,
+            "Null": 126
+          },
+          "null": 126
+        },
+        "devStatistic": {
+          "present": 1118,
+          "types": {
+            "Document": 1118
+          }
+        },
+        "devStatistic._id": {
+          "present": 1118,
+          "types": {
+            "ObjectId": 1118
+          }
+        },
+        "devStatistic.budgetedHours": {
+          "present": 1118,
+          "types": {
+            "Double": 2,
+            "Int32": 1116
+          },
+          "integralDoubles": 0,
+          "fractionalDoubles": 2
+        },
+        "devStatistic.deviation": {
+          "present": 1118,
+          "types": {
+            "Double": 3,
+            "Int32": 1115
+          },
+          "integralDoubles": 0,
+          "fractionalDoubles": 3
+        },
+        "devStatistic.numberOfHoursUsed": {
+          "present": 1118,
+          "types": {
+            "Double": 3,
+            "Int32": 1115
+          },
+          "integralDoubles": 0,
+          "fractionalDoubles": 3
+        },
+        "dueDate": {
+          "present": 1118,
+          "types": {
+            "DateTime": 1118
+          }
+        },
+        "finalPrice": {
+          "present": 1118,
+          "types": {
+            "Double": 14,
+            "Int32": 1104
+          },
+          "integralDoubles": 0,
+          "fractionalDoubles": 14
+        },
+        "invoicedBy": {
+          "present": 819,
+          "types": {
+            "String": 819
+          }
+        },
+        "invoicedPercent": {
+          "present": 1118,
+          "types": {
+            "Int32": 1118
+          }
+        },
+        "isHightPriority": {
+          "present": 7,
+          "types": {
+            "Boolean": 7
+          }
+        },
+        "isOfficialOrderIdentification": {
+          "present": 1118,
+          "types": {
+            "Boolean": 1118
+          }
+        },
+        "jobStatisticsDates": {
+          "present": 994,
+          "types": {
+            "Document": 994
+          }
+        },
+        "jobStatisticsDates._id": {
+          "present": 994,
+          "types": {
+            "ObjectId": 994
+          }
+        },
+        "jobStatisticsDates.approvedEndedInDate": {
+          "present": 438,
+          "types": {
+            "DateTime": 438
+          }
+        },
+        "jobStatisticsDates.assemblyEndedInDate": {
+          "present": 838,
+          "types": {
+            "DateTime": 838
+          }
+        },
+        "jobStatisticsDates.devEndedInDate": {
+          "present": 702,
+          "types": {
+            "DateTime": 701,
+            "Null": 1
+          },
+          "null": 1
+        },
+        "jobStatisticsDates.forInvoicingEndedInDate": {
+          "present": 952,
+          "types": {
+            "DateTime": 952
+          }
+        },
+        "jobStatisticsDates.machiningEndedInDate": {
+          "present": 805,
+          "types": {
+            "DateTime": 805
+          }
+        },
+        "jobStatisticsDates.onApprovalEndedInDate": {
+          "present": 428,
+          "types": {
+            "DateTime": 428
+          }
+        },
+        "machiningStatistic": {
+          "present": 1118,
+          "types": {
+            "Document": 1118
+          }
+        },
+        "machiningStatistic._id": {
+          "present": 1118,
+          "types": {
+            "ObjectId": 1118
+          }
+        },
+        "machiningStatistic.analysisOfTheDegreeOfFinish": {
+          "present": 1118,
+          "types": {
+            "String": 1118
+          },
+          "enumValues": {
+            "Ok": 725,
+            "n/a": 393
+          }
+        },
+        "machiningStatistic.budgetedHours": {
+          "present": 1118,
+          "types": {
+            "Double": 16,
+            "Int32": 1102
+          },
+          "integralDoubles": 0,
+          "fractionalDoubles": 16
+        },
+        "machiningStatistic.deviation": {
+          "present": 1118,
+          "types": {
+            "Double": 16,
+            "Int32": 1102
+          },
+          "integralDoubles": 0,
+          "fractionalDoubles": 16
+        },
+        "machiningStatistic.dimensionalVerificationAndControl": {
+          "present": 1118,
+          "types": {
+            "String": 1118
+          },
+          "enumValues": {
+            "Ok": 727,
+            "n/a": 391
+          }
+        },
+        "machiningStatistic.numberOfHoursUsed": {
+          "present": 1118,
+          "types": {
+            "Int32": 1118
+          }
+        },
+        "machiningStatistic.validatedBy": {
+          "present": 728,
+          "types": {
+            "String": 728
+          }
+        },
+        "machiningStatistic.verificationAndShapeControl": {
+          "present": 1118,
+          "types": {
+            "String": 1118
+          },
+          "enumValues": {
+            "Ok": 728,
+            "n/a": 390
+          }
+        },
+        "materials": {
+          "present": 1118,
+          "types": {
+            "Double": 1,
+            "Int32": 1117
+          },
+          "integralDoubles": 0,
+          "fractionalDoubles": 1
+        },
+        "orderIdentification": {
+          "present": 1118,
+          "types": {
+            "String": 1118
+          }
+        },
+        "others": {
+          "present": 1118,
+          "types": {
+            "Int32": 1118
+          }
+        },
+        "priority": {
+          "present": 1118,
+          "types": {
+            "String": 1118
+          },
+          "enumValues": {
+            "Alta": 8,
+            "Baixa": 2,
+            "Média": 1108
+          }
+        },
+        "startDate": {
+          "present": 1118,
+          "types": {
+            "DateTime": 1118
+          }
+        },
+        "state": {
+          "present": 1118,
+          "types": {
+            "String": 1118
+          },
+          "enumValues": {
+            "Apagada": 19,
+            "Aprovado": 1,
+            "Desenvolvimento": 17,
+            "Em Aprovação": 5,
+            "Faturada": 1044,
+            "Maquinação": 2,
+            "Montagem": 19,
+            "Para faturação": 11
+          }
+        }
+      }
+    },
+    "paymentmethods": {
+      "documents": 20,
+      "paths": {
+        "__v": {
+          "present": 20,
+          "types": {
+            "Int32": 20
+          }
+        },
+        "_id": {
+          "present": 20,
+          "types": {
+            "ObjectId": 20
+          }
+        },
+        "name": {
+          "present": 20,
+          "types": {
+            "String": 20
+          }
+        }
+      }
+    },
+    "prices": {
+      "documents": 1,
+      "paths": {
+        "__v": {
+          "present": 1,
+          "types": {
+            "Int32": 1
+          }
+        },
+        "_id": {
+          "present": 1,
+          "types": {
+            "ObjectId": 1
+          }
+        },
+        "assembly": {
+          "present": 1,
+          "types": {
+            "Int32": 1
+          }
+        },
+        "automation": {
+          "present": 1,
+          "types": {
+            "Int32": 1
+          }
+        },
+        "consultancy": {
+          "present": 1,
+          "types": {
+            "Int32": 1
+          }
+        },
+        "development": {
+          "present": 1,
+          "types": {
+            "Int32": 1
+          }
+        },
+        "machining": {
+          "present": 1,
+          "types": {
+            "Int32": 1
+          }
+        },
+        "margin": {
+          "present": 1,
+          "types": {
+            "Int32": 1
+          }
+        }
+      }
+    },
+    "printersettings": {
+      "documents": 2,
+      "paths": {
+        "__v": {
+          "present": 2,
+          "types": {
+            "Int32": 2
+          }
+        },
+        "_id": {
+          "present": 2,
+          "types": {
+            "ObjectId": 2
+          }
+        },
+        "ip": {
+          "present": 2,
+          "types": {
+            "String": 2
+          }
+        },
+        "port": {
+          "present": 2,
+          "types": {
+            "Int32": 2
+          }
+        },
+        "templateName": {
+          "present": 2,
+          "types": {
+            "String": 2
+          },
+          "enumValues": {
+            "maquinacao": 1,
+            "producao": 1
+          }
+        }
+      }
+    },
+    "tasks": {
+      "documents": 25971,
+      "paths": {
+        "__v": {
+          "present": 25971,
+          "types": {
+            "Int32": 25971
+          }
+        },
+        "_id": {
+          "present": 25971,
+          "types": {
+            "ObjectId": 25971
+          }
+        },
+        "budgetId": {
+          "present": 25971,
+          "types": {
+            "ObjectId": 25971
+          }
+        },
+        "description": {
+          "present": 25971,
+          "types": {
+            "String": 25971
+          },
+          "nonNfcStrings": 3
+        },
+        "quantity": {
+          "present": 25971,
+          "types": {
+            "Double": 45,
+            "Int32": 25926
+          },
+          "integralDoubles": 0,
+          "fractionalDoubles": 45
+        },
+        "taskType": {
+          "present": 25971,
+          "types": {
+            "String": 25971
+          },
+          "enumValues": {
+            "assembly": 1999,
+            "automation": 2147,
+            "components": 9653,
+            "consultancy": 5,
+            "development": 2537,
+            "machining": 7238,
+            "others": 2392
+          }
+        },
+        "unitPrice": {
+          "present": 25971,
+          "types": {
+            "Double": 57,
+            "Int32": 25914
+          },
+          "integralDoubles": 0,
+          "fractionalDoubles": 57
+        }
+      }
+    },
+    "users": {
+      "documents": 10,
+      "paths": {
+        "__v": {
+          "present": 10,
+          "types": {
+            "Int32": 10
+          }
+        },
+        "_id": {
+          "present": 10,
+          "types": {
+            "ObjectId": 10
+          }
+        },
+        "email": {
+          "present": 10,
+          "types": {
+            "String": 10
+          }
+        },
+        "fieldOfCompetencies": {
+          "present": 9,
+          "types": {
+            "String": 9
+          },
+          "enumValues": {
+            "Desenvolvimento": 2,
+            "Maquinação": 2,
+            "Montagem": 4,
+            "Para faturação": 1
+          }
+        },
+        "name": {
+          "present": 10,
+          "types": {
+            "String": 10
+          }
+        },
+        "password": {
+          "present": 10,
+          "types": {
+            "String": 10
+          }
+        },
+        "roles": {
+          "present": 10,
+          "types": {
+            "Array": 10
+          },
+          "emptyArrays": 0,
+          "maxArrayLength": 7
+        },
+        "roles[]": {
+          "present": 60,
+          "types": {
+            "Null": 30,
+            "String": 30
+          },
+          "null": 30,
+          "enumValues": {
+            "canSeeDashboard": 4,
+            "canSeeDefinicoes": 4,
+            "canSeeEntidades": 4,
+            "canSeeLeituras": 3,
+            "canSeeObras": 10,
+            "canSeeOrcamentos": 5
+          }
+        }
+      }
+    }
+  }
+}

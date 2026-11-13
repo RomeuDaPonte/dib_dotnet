@@ -19,3 +19,10 @@ appsettings.*.local.json
 
 # OS
 .DS_Store
+
+# Legacy app runner (pids + logs)
+tools/legacy/.run/
+
+# Backups: real ones never go in the repo; only anonymized fixtures (tools/legacy/dibbak.cs anonymize)
+*.dibbak
+!tests/fixtures/legacy/*.anon.dibbak
