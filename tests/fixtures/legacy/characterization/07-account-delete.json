@@ -1,0 +1,215 @@
+{
+  "area": "07-account-delete",
+  "steps": [
+    {
+      "id": "user-delete-d2",
+      "title": "DELETE /account/:id deletes the FIRST user, not :id (D2)",
+      "request": {
+        "method": "DELETE",
+        "path": "/api/account/{{users:3}}",
+        "auth": "admin",
+        "body": null
+      },
+      "response": {
+        "status": 200,
+        "contentType": "application/json; charset=utf-8",
+        "json": {
+          "_id": "{{users:3}}",
+          "name": "Bruno Maquinação Silva",
+          "email": "bruno.limitado@dib4t.local",
+          "roles": [
+            "canSeeObras",
+            "canSeeLeituras",
+            "canSeeHistorico"
+          ]
+        }
+      },
+      "db": {
+        "users": {
+          "deleted": [
+            {
+              "_id": {
+                "$oid": "{{users:1}}"
+              },
+              "roles": [
+                "canSeeDefinicoes",
+                "canSeeEntidades",
+                "canSeeOrcamentos",
+                "canSeeObras",
+                "canSeeHistorico",
+                "canSeeDashboard"
+              ],
+              "fieldOfCompetencies": "Desenvolvimento",
+              "name": "User Logado",
+              "email": "userlogado@gmail.com",
+              "password": "{{bcrypt:$2b$10$}}",
+              "__v": {
+                "$numberInt": "0"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "user-delete-missing",
+      "title": "Delete unknown user → 404",
+      "request": {
+        "method": "DELETE",
+        "path": "/api/account/{{oid:1}}",
+        "auth": "admin",
+        "body": null
+      },
+      "response": {
+        "status": 404,
+        "contentType": "text/html; charset=utf-8",
+        "text": "Utilizador não exista na bd"
+      },
+      "db": {}
+    },
+    {
+      "id": "users-after-delete",
+      "title": "Users after the D2 delete",
+      "request": {
+        "method": "GET",
+        "path": "/api/account/users",
+        "auth": "admin",
+        "body": null
+      },
+      "response": {
+        "status": 200,
+        "contentType": "application/json; charset=utf-8",
+        "json": [
+          {
+            "roles": [
+              "canSeeOrcamentos",
+              "canSeeObras",
+              "canSeeHistorico",
+              "canSeeEntidades",
+              "canSeeDefinicoes",
+              "canSeeDashboard",
+              "canSeeLeituras"
+            ],
+            "fieldOfCompetencies": "Desenvolvimento",
+            "_id": "{{users:2}}",
+            "name": "Ana Administradora",
+            "email": "ana.admin@dib4t.local"
+          },
+          {
+            "roles": [
+              "canSeeObras",
+              "canSeeLeituras",
+              "canSeeHistorico"
+            ],
+            "fieldOfCompetencies": "Montagem",
+            "_id": "{{users:3}}",
+            "name": "Bruno Maquinação Silva",
+            "email": "bruno.limitado@dib4t.local"
+          },
+          {
+            "roles": [
+              "canSeeDashboard"
+            ],
+            "fieldOfCompetencies": "Desenvolvimento",
+            "_id": "{{users:4}}",
+            "name": "Carla Sem Área",
+            "email": "carla.semarea@dib4t.local"
+          }
+        ]
+      },
+      "db": {}
+    },
+    {
+      "id": "budget-list-after-delete",
+      "title": "Budget list still loads (madeBy users kept)",
+      "request": {
+        "method": "GET",
+        "path": "/api/budget",
+        "auth": "admin",
+        "body": null
+      },
+      "response": {
+        "status": 200,
+        "contentType": "application/json; charset=utf-8",
+        "json": [
+          {
+            "_id": "{{budgets:7}}",
+            "budgetNumber": "{{yy}}-0005",
+            "clientName": "Cortiças Reunidas",
+            "descriptive": "Garra de manipulação",
+            "personInCharge": "Eng.ª Maria",
+            "madeBy": "Bruno Maquinação Silva",
+            "date": "{{now}}",
+            "revision": 0,
+            "complete": false,
+            "wasPdfDownloaded": false,
+            "hasGenerateJob": true,
+            "total": 12345.67,
+            "daysNeededToDoTheWork": 45
+          },
+          {
+            "_id": "{{budgets:6}}",
+            "budgetNumber": "{{yy}}-0004",
+            "clientName": "Metalúrgica do Vale do Ave, Lda.",
+            "descriptive": "Linha de montagem",
+            "personInCharge": "Sr. Paulo",
+            "madeBy": "Ana Administradora",
+            "date": "{{now}}",
+            "revision": 0,
+            "complete": false,
+            "wasPdfDownloaded": false,
+            "hasGenerateJob": true,
+            "total": 12345.67,
+            "daysNeededToDoTheWork": 45
+          },
+          {
+            "_id": "{{budgets:5}}",
+            "budgetNumber": "{{yy}}-0003",
+            "clientName": "Cortiças Reunidas",
+            "descriptive": "Máquina de corte — cópia",
+            "personInCharge": "Sr. Paulo",
+            "madeBy": "Ana Administradora",
+            "date": "{{now}}",
+            "revision": 0,
+            "complete": false,
+            "wasPdfDownloaded": false,
+            "hasGenerateJob": false,
+            "total": 12345.67,
+            "daysNeededToDoTheWork": 45
+          },
+          {
+            "_id": "{{budgets:2}}",
+            "budgetNumber": "{{yy}}-0002",
+            "clientName": "Cortiças Reunidas",
+            "descriptive": "Retrofit prensa 200t",
+            "personInCharge": "Sr. Paulo",
+            "madeBy": "Ana Administradora",
+            "date": "{{now}}",
+            "revision": 0,
+            "complete": false,
+            "wasPdfDownloaded": false,
+            "hasGenerateJob": false,
+            "total": 12345.67,
+            "daysNeededToDoTheWork": 60
+          },
+          {
+            "_id": "{{budgets:4}}",
+            "budgetNumber": "{{yy}}-0001",
+            "clientName": "Metalúrgica do Vale do Ave, Lda.",
+            "descriptive": "Máquina de corte",
+            "personInCharge": "Eng.ª Maria Lopes",
+            "madeBy": "Bruno Maquinação Silva",
+            "date": "{{now}}",
+            "revision": 2,
+            "complete": false,
+            "wasPdfDownloaded": false,
+            "hasGenerateJob": false,
+            "total": 12345.67,
+            "daysNeededToDoTheWork": 45
+          }
+        ]
+      },
+      "db": {}
+    }
+  ]
+}

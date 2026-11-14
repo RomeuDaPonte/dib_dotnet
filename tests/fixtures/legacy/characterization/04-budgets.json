@@ -1,0 +1,3723 @@
+{
+  "area": "04-budgets",
+  "steps": [
+    {
+      "id": "budget-create",
+      "title": "Create budget (number, total from prices, default task)",
+      "request": {
+        "method": "POST",
+        "path": "/api/budget",
+        "auth": "admin",
+        "body": {
+          "clientId": "{{entities:1}}",
+          "madeById": "{{users:2}}",
+          "descriptive": "Máquina de corte",
+          "personInCharge": "Eng.ª Maria"
+        }
+      },
+      "response": {
+        "status": 200,
+        "contentType": "application/json; charset=utf-8",
+        "json": {
+          "revision": 0,
+          "complete": false,
+          "wasPdfDownloaded": false,
+          "margin": 35,
+          "daysNeededToDoTheWork": 60,
+          "validity": 30,
+          "hasGenerateJob": false,
+          "_id": "{{budgets:1}}",
+          "client": {
+            "_id": "{{entities:1}}",
+            "name": "Metalúrgica do Vale do Ave, Lda.",
+            "fiscalNumber": "500100200",
+            "address": "Rua da Indústria, 12",
+            "zipCode": "4760-100",
+            "location": "Vila Nova de Famalicão",
+            "paymentCondition": "Pronto pagamento",
+            "type": "Cliente",
+            "__v": 0
+          },
+          "descriptive": "Máquina de corte",
+          "personInCharge": "Eng.ª Maria",
+          "madeBy": {
+            "roles": [
+              "canSeeOrcamentos",
+              "canSeeObras",
+              "canSeeHistorico",
+              "canSeeEntidades",
+              "canSeeDefinicoes",
+              "canSeeDashboard",
+              "canSeeLeituras"
+            ],
+            "fieldOfCompetencies": "Desenvolvimento",
+            "_id": "{{users:2}}",
+            "name": "Ana Administradora",
+            "email": "ana.admin@dib4t.local",
+            "password": "{{bcrypt:$2a$10$}}",
+            "__v": 0
+          },
+          "budgetNumber": "{{yy}}-0001",
+          "paymentMethod": "Pronto pagamento",
+          "total": 43.5,
+          "date": "{{now}}",
+          "__v": 0
+        }
+      },
+      "db": {
+        "budgets": {
+          "inserted": [
+            {
+              "_id": {
+                "$oid": "{{budgets:1}}"
+              },
+              "revision": {
+                "$numberInt": "0"
+              },
+              "complete": false,
+              "wasPdfDownloaded": false,
+              "margin": {
+                "$numberInt": "35"
+              },
+              "daysNeededToDoTheWork": {
+                "$numberInt": "60"
+              },
+              "validity": {
+                "$numberInt": "30"
+              },
+              "hasGenerateJob": false,
+              "client": {
+                "$oid": "{{entities:1}}"
+              },
+              "descriptive": "Máquina de corte",
+              "personInCharge": "Eng.ª Maria",
+              "madeBy": {
+                "$oid": "{{users:2}}"
+              },
+              "budgetNumber": "{{yy}}-0001",
+              "paymentMethod": "Pronto pagamento",
+              "total": {
+                "$numberDouble": "43.5"
+              },
+              "date": {
+                "$date": "{{now}}"
+              },
+              "__v": {
+                "$numberInt": "0"
+              }
+            }
+          ]
+        },
+        "tasks": {
+          "inserted": [
+            {
+              "_id": {
+                "$oid": "{{tasks:1}}"
+              },
+              "budgetId": {
+                "$oid": "{{budgets:1}}"
+              },
+              "taskType": "automation",
+              "description": "",
+              "unitPrice": {
+                "$numberDouble": "32.5"
+              },
+              "quantity": {
+                "$numberInt": "1"
+              },
+              "__v": {
+                "$numberInt": "0"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "budget-create-2",
+      "title": "Create second budget",
+      "request": {
+        "method": "POST",
+        "path": "/api/budget",
+        "auth": "admin",
+        "body": {
+          "clientId": "{{entities:2}}",
+          "madeById": "{{users:2}}",
+          "descriptive": "Retrofit prensa 200t",
+          "personInCharge": "Sr. Paulo"
+        }
+      },
+      "response": {
+        "status": 200,
+        "contentType": "application/json; charset=utf-8",
+        "json": {
+          "revision": 0,
+          "complete": false,
+          "wasPdfDownloaded": false,
+          "margin": 35,
+          "daysNeededToDoTheWork": 60,
+          "validity": 30,
+          "hasGenerateJob": false,
+          "_id": "{{budgets:2}}",
+          "client": {
+            "_id": "{{entities:2}}",
+            "name": "Cortiças Reunidas",
+            "paymentCondition": "Transferência a 30 dias",
+            "type": "Cliente e Fornecedor",
+            "__v": 0,
+            "address": "Lugar da Cortiça",
+            "fiscalNumber": "500999888",
+            "location": "Santa Maria da Feira",
+            "zipCode": "4535-000"
+          },
+          "descriptive": "Retrofit prensa 200t",
+          "personInCharge": "Sr. Paulo",
+          "madeBy": {
+            "roles": [
+              "canSeeOrcamentos",
+              "canSeeObras",
+              "canSeeHistorico",
+              "canSeeEntidades",
+              "canSeeDefinicoes",
+              "canSeeDashboard",
+              "canSeeLeituras"
+            ],
+            "fieldOfCompetencies": "Desenvolvimento",
+            "_id": "{{users:2}}",
+            "name": "Ana Administradora",
+            "email": "ana.admin@dib4t.local",
+            "password": "{{bcrypt:$2a$10$}}",
+            "__v": 0
+          },
+          "budgetNumber": "{{yy}}-0002",
+          "paymentMethod": "Transferência a 30 dias",
+          "total": 43.5,
+          "date": "{{now}}",
+          "__v": 0
+        }
+      },
+      "db": {
+        "budgets": {
+          "inserted": [
+            {
+              "_id": {
+                "$oid": "{{budgets:2}}"
+              },
+              "revision": {
+                "$numberInt": "0"
+              },
+              "complete": false,
+              "wasPdfDownloaded": false,
+              "margin": {
+                "$numberInt": "35"
+              },
+              "daysNeededToDoTheWork": {
+                "$numberInt": "60"
+              },
+              "validity": {
+                "$numberInt": "30"
+              },
+              "hasGenerateJob": false,
+              "client": {
+                "$oid": "{{entities:2}}"
+              },
+              "descriptive": "Retrofit prensa 200t",
+              "personInCharge": "Sr. Paulo",
+              "madeBy": {
+                "$oid": "{{users:2}}"
+              },
+              "budgetNumber": "{{yy}}-0002",
+              "paymentMethod": "Transferência a 30 dias",
+              "total": {
+                "$numberDouble": "43.5"
+              },
+              "date": {
+                "$date": "{{now}}"
+              },
+              "__v": {
+                "$numberInt": "0"
+              }
+            }
+          ]
+        },
+        "tasks": {
+          "inserted": [
+            {
+              "_id": {
+                "$oid": "{{tasks:2}}"
+              },
+              "budgetId": {
+                "$oid": "{{budgets:2}}"
+              },
+              "taskType": "automation",
+              "description": "",
+              "unitPrice": {
+                "$numberDouble": "32.5"
+              },
+              "quantity": {
+                "$numberInt": "1"
+              },
+              "__v": {
+                "$numberInt": "0"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "budget-create-supplier",
+      "title": "Create budget for a supplier → 200 text",
+      "request": {
+        "method": "POST",
+        "path": "/api/budget",
+        "auth": "admin",
+        "body": {
+          "clientId": "{{entities:3}}",
+          "madeById": "{{users:2}}",
+          "descriptive": "Não deve existir",
+          "personInCharge": "X"
+        }
+      },
+      "response": {
+        "status": 200,
+        "contentType": "text/html; charset=utf-8",
+        "text": "Entidade registada como fornecedor!"
+      },
+      "db": {}
+    },
+    {
+      "id": "budget-create-missing-client",
+      "title": "Create budget for unknown client",
+      "request": {
+        "method": "POST",
+        "path": "/api/budget",
+        "auth": "admin",
+        "body": {
+          "clientId": "{{oid:1}}",
+          "madeById": "{{users:2}}",
+          "descriptive": "X",
+          "personInCharge": "X"
+        }
+      },
+      "response": {
+        "status": 400,
+        "contentType": "text/html; charset=utf-8",
+        "text": "Cliente não existe!"
+      },
+      "db": {}
+    },
+    {
+      "id": "budget-create-missing-user",
+      "title": "Create budget with unknown madeBy",
+      "request": {
+        "method": "POST",
+        "path": "/api/budget",
+        "auth": "admin",
+        "body": {
+          "clientId": "{{entities:1}}",
+          "madeById": "{{oid:1}}",
+          "descriptive": "X",
+          "personInCharge": "X"
+        }
+      },
+      "response": {
+        "status": 400,
+        "contentType": "text/html; charset=utf-8",
+        "text": "Erro interno relacionado com user!"
+      },
+      "db": {}
+    },
+    {
+      "id": "budget-create-validation",
+      "title": "Create budget without descriptive",
+      "request": {
+        "method": "POST",
+        "path": "/api/budget",
+        "auth": "admin",
+        "body": {
+          "clientId": "{{entities:1}}",
+          "madeById": "{{users:2}}",
+          "personInCharge": "X"
+        }
+      },
+      "response": {
+        "status": 400,
+        "contentType": "text/html; charset=utf-8",
+        "text": "\"descriptive\" is required"
+      },
+      "db": {}
+    },
+    {
+      "id": "budget-by-id",
+      "title": "Budget with populated madeBy and client",
+      "request": {
+        "method": "GET",
+        "path": "/api/budget/getById/{{budgets:1}}",
+        "auth": "admin",
+        "body": null
+      },
+      "response": {
+        "status": 200,
+        "contentType": "application/json; charset=utf-8",
+        "json": {
+          "revision": 0,
+          "complete": false,
+          "wasPdfDownloaded": false,
+          "margin": 35,
+          "daysNeededToDoTheWork": 60,
+          "validity": 30,
+          "hasGenerateJob": false,
+          "_id": "{{budgets:1}}",
+          "client": {
+            "_id": "{{entities:1}}",
+            "name": "Metalúrgica do Vale do Ave, Lda.",
+            "fiscalNumber": "500100200",
+            "address": "Rua da Indústria, 12",
+            "zipCode": "4760-100",
+            "location": "Vila Nova de Famalicão",
+            "paymentCondition": "Pronto pagamento",
+            "type": "Cliente",
+            "__v": 0
+          },
+          "descriptive": "Máquina de corte",
+          "personInCharge": "Eng.ª Maria",
+          "madeBy": {
+            "roles": [
+              "canSeeOrcamentos",
+              "canSeeObras",
+              "canSeeHistorico",
+              "canSeeEntidades",
+              "canSeeDefinicoes",
+              "canSeeDashboard",
+              "canSeeLeituras"
+            ],
+            "fieldOfCompetencies": "Desenvolvimento",
+            "_id": "{{users:2}}",
+            "name": "Ana Administradora",
+            "email": "ana.admin@dib4t.local",
+            "password": "{{bcrypt:$2a$10$}}",
+            "__v": 0
+          },
+          "budgetNumber": "{{yy}}-0001",
+          "paymentMethod": "Pronto pagamento",
+          "total": 43.5,
+          "date": "{{now}}",
+          "__v": 0
+        }
+      },
+      "db": {}
+    },
+    {
+      "id": "budget-by-id-missing",
+      "title": "Unknown budget",
+      "request": {
+        "method": "GET",
+        "path": "/api/budget/getById/{{oid:1}}",
+        "auth": "admin",
+        "body": null
+      },
+      "response": {
+        "status": 400,
+        "contentType": "text/html; charset=utf-8",
+        "text": "Orçamento não existe na base de dados"
+      },
+      "db": {}
+    },
+    {
+      "id": "task-types",
+      "title": "Task types",
+      "request": {
+        "method": "GET",
+        "path": "/api/task/getTaskTypes",
+        "auth": "admin",
+        "body": null
+      },
+      "response": {
+        "status": 200,
+        "contentType": "application/json; charset=utf-8",
+        "json": [
+          "automation",
+          "consultancy",
+          "development",
+          "machining",
+          "assembly",
+          "others",
+          "components"
+        ]
+      },
+      "db": {}
+    },
+    {
+      "id": "task-list",
+      "title": "Budget tasks (default automation task)",
+      "request": {
+        "method": "GET",
+        "path": "/api/task/getBudgetTasks/{{budgets:1}}",
+        "auth": "admin",
+        "body": null
+      },
+      "response": {
+        "status": 200,
+        "contentType": "application/json; charset=utf-8",
+        "json": [
+          {
+            "_id": "{{tasks:1}}",
+            "budgetId": "{{budgets:1}}",
+            "taskType": "automation",
+            "description": "",
+            "unitPrice": 32.5,
+            "quantity": 1,
+            "__v": 0
+          }
+        ]
+      },
+      "db": {}
+    },
+    {
+      "id": "task-list-missing-budget",
+      "title": "Tasks of unknown budget",
+      "request": {
+        "method": "GET",
+        "path": "/api/task/getBudgetTasks/{{oid:1}}",
+        "auth": "admin",
+        "body": null
+      },
+      "response": {
+        "status": 400,
+        "contentType": "text/html; charset=utf-8",
+        "text": "Orçamento não existe"
+      },
+      "db": {}
+    },
+    {
+      "id": "task-create-default",
+      "title": "Add default task",
+      "request": {
+        "method": "POST",
+        "path": "/api/task/createDefaultTask/{{budgets:1}}",
+        "auth": "admin",
+        "body": null
+      },
+      "response": {
+        "status": 200,
+        "contentType": "application/json; charset=utf-8",
+        "json": {
+          "_id": "{{tasks:3}}",
+          "budgetId": "{{budgets:1}}",
+          "taskType": "automation",
+          "description": "",
+          "unitPrice": 32.5,
+          "quantity": 1,
+          "__v": 0
+        }
+      },
+      "db": {
+        "tasks": {
+          "inserted": [
+            {
+              "_id": {
+                "$oid": "{{tasks:3}}"
+              },
+              "budgetId": {
+                "$oid": "{{budgets:1}}"
+              },
+              "taskType": "automation",
+              "description": "",
+              "unitPrice": {
+                "$numberDouble": "32.5"
+              },
+              "quantity": {
+                "$numberInt": "1"
+              },
+              "__v": {
+                "$numberInt": "0"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "task-create-default-2",
+      "title": "Add default task",
+      "request": {
+        "method": "POST",
+        "path": "/api/task/createDefaultTask/{{budgets:1}}",
+        "auth": "admin",
+        "body": null
+      },
+      "response": {
+        "status": 200,
+        "contentType": "application/json; charset=utf-8",
+        "json": {
+          "_id": "{{tasks:4}}",
+          "budgetId": "{{budgets:1}}",
+          "taskType": "automation",
+          "description": "",
+          "unitPrice": 32.5,
+          "quantity": 1,
+          "__v": 0
+        }
+      },
+      "db": {
+        "tasks": {
+          "inserted": [
+            {
+              "_id": {
+                "$oid": "{{tasks:4}}"
+              },
+              "budgetId": {
+                "$oid": "{{budgets:1}}"
+              },
+              "taskType": "automation",
+              "description": "",
+              "unitPrice": {
+                "$numberDouble": "32.5"
+              },
+              "quantity": {
+                "$numberInt": "1"
+              },
+              "__v": {
+                "$numberInt": "0"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "task-create-default-3",
+      "title": "Add default task",
+      "request": {
+        "method": "POST",
+        "path": "/api/task/createDefaultTask/{{budgets:1}}",
+        "auth": "admin",
+        "body": null
+      },
+      "response": {
+        "status": 200,
+        "contentType": "application/json; charset=utf-8",
+        "json": {
+          "_id": "{{tasks:5}}",
+          "budgetId": "{{budgets:1}}",
+          "taskType": "automation",
+          "description": "",
+          "unitPrice": 32.5,
+          "quantity": 1,
+          "__v": 0
+        }
+      },
+      "db": {
+        "tasks": {
+          "inserted": [
+            {
+              "_id": {
+                "$oid": "{{tasks:5}}"
+              },
+              "budgetId": {
+                "$oid": "{{budgets:1}}"
+              },
+              "taskType": "automation",
+              "description": "",
+              "unitPrice": {
+                "$numberDouble": "32.5"
+              },
+              "quantity": {
+                "$numberInt": "1"
+              },
+              "__v": {
+                "$numberInt": "0"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "task-create-default-missing",
+      "title": "Default task for unknown budget",
+      "request": {
+        "method": "POST",
+        "path": "/api/task/createDefaultTask/{{oid:1}}",
+        "auth": "admin",
+        "body": null
+      },
+      "response": {
+        "status": 400,
+        "contentType": "text/html; charset=utf-8",
+        "text": "Orçamento não existe"
+      },
+      "db": {}
+    },
+    {
+      "id": "task-update-development",
+      "title": "Edit task (development, integer values)",
+      "request": {
+        "method": "PUT",
+        "path": "/api/task/{{tasks:3}}/{{budgets:1}}",
+        "auth": "admin",
+        "body": {
+          "taskType": "development",
+          "description": "Projeto mecânico",
+          "unitPrice": 30,
+          "quantity": 20
+        }
+      },
+      "response": {
+        "status": 200,
+        "contentType": "application/json; charset=utf-8",
+        "json": {
+          "_id": "{{tasks:3}}",
+          "budgetId": "{{budgets:1}}",
+          "taskType": "development",
+          "description": "Projeto mecânico",
+          "unitPrice": 30,
+          "quantity": 20,
+          "__v": 0
+        }
+      },
+      "db": {
+        "tasks": {
+          "updated": [
+            {
+              "_id": {
+                "$oid": "{{tasks:3}}"
+              },
+              "changed": [
+                "taskType",
+                "description",
+                "unitPrice",
+                "quantity"
+              ],
+              "after": {
+                "_id": {
+                  "$oid": "{{tasks:3}}"
+                },
+                "budgetId": {
+                  "$oid": "{{budgets:1}}"
+                },
+                "taskType": "development",
+                "description": "Projeto mecânico",
+                "unitPrice": {
+                  "$numberInt": "30"
+                },
+                "quantity": {
+                  "$numberInt": "20"
+                },
+                "__v": {
+                  "$numberInt": "0"
+                }
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "task-update-machining",
+      "title": "Edit task (machining, decimal price)",
+      "request": {
+        "method": "PUT",
+        "path": "/api/task/{{tasks:4}}/{{budgets:1}}",
+        "auth": "admin",
+        "body": {
+          "taskType": "machining",
+          "description": "Maquinação de peças em aço inox",
+          "unitPrice": 38.5,
+          "quantity": 15
+        }
+      },
+      "response": {
+        "status": 200,
+        "contentType": "application/json; charset=utf-8",
+        "json": {
+          "_id": "{{tasks:4}}",
+          "budgetId": "{{budgets:1}}",
+          "taskType": "machining",
+          "description": "Maquinação de peças em aço inox",
+          "unitPrice": 38.5,
+          "quantity": 15,
+          "__v": 0
+        }
+      },
+      "db": {
+        "tasks": {
+          "updated": [
+            {
+              "_id": {
+                "$oid": "{{tasks:4}}"
+              },
+              "changed": [
+                "taskType",
+                "description",
+                "unitPrice",
+                "quantity"
+              ],
+              "after": {
+                "_id": {
+                  "$oid": "{{tasks:4}}"
+                },
+                "budgetId": {
+                  "$oid": "{{budgets:1}}"
+                },
+                "taskType": "machining",
+                "description": "Maquinação de peças em aço inox",
+                "unitPrice": {
+                  "$numberDouble": "38.5"
+                },
+                "quantity": {
+                  "$numberInt": "15"
+                },
+                "__v": {
+                  "$numberInt": "0"
+                }
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "task-update-assembly",
+      "title": "Edit task (assembly, empty description)",
+      "request": {
+        "method": "PUT",
+        "path": "/api/task/{{tasks:5}}/{{budgets:1}}",
+        "auth": "admin",
+        "body": {
+          "taskType": "assembly",
+          "description": "",
+          "unitPrice": 28,
+          "quantity": 10
+        }
+      },
+      "response": {
+        "status": 200,
+        "contentType": "application/json; charset=utf-8",
+        "json": {
+          "_id": "{{tasks:5}}",
+          "budgetId": "{{budgets:1}}",
+          "taskType": "assembly",
+          "description": "",
+          "unitPrice": 28,
+          "quantity": 10,
+          "__v": 0
+        }
+      },
+      "db": {
+        "tasks": {
+          "updated": [
+            {
+              "_id": {
+                "$oid": "{{tasks:5}}"
+              },
+              "changed": [
+                "taskType",
+                "unitPrice",
+                "quantity"
+              ],
+              "after": {
+                "_id": {
+                  "$oid": "{{tasks:5}}"
+                },
+                "budgetId": {
+                  "$oid": "{{budgets:1}}"
+                },
+                "taskType": "assembly",
+                "description": "",
+                "unitPrice": {
+                  "$numberInt": "28"
+                },
+                "quantity": {
+                  "$numberInt": "10"
+                },
+                "__v": {
+                  "$numberInt": "0"
+                }
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "task-update-components",
+      "title": "Edit default task (components, decimal quantity)",
+      "request": {
+        "method": "PUT",
+        "path": "/api/task/{{tasks:1}}/{{budgets:1}}",
+        "auth": "admin",
+        "body": {
+          "taskType": "components",
+          "description": "Componentes pneumáticos",
+          "unitPrice": 1250.75,
+          "quantity": 1.5
+        }
+      },
+      "response": {
+        "status": 200,
+        "contentType": "application/json; charset=utf-8",
+        "json": {
+          "_id": "{{tasks:1}}",
+          "budgetId": "{{budgets:1}}",
+          "taskType": "components",
+          "description": "Componentes pneumáticos",
+          "unitPrice": 1250.75,
+          "quantity": 1.5,
+          "__v": 0
+        }
+      },
+      "db": {
+        "tasks": {
+          "updated": [
+            {
+              "_id": {
+                "$oid": "{{tasks:1}}"
+              },
+              "changed": [
+                "taskType",
+                "description",
+                "unitPrice",
+                "quantity"
+              ],
+              "after": {
+                "_id": {
+                  "$oid": "{{tasks:1}}"
+                },
+                "budgetId": {
+                  "$oid": "{{budgets:1}}"
+                },
+                "taskType": "components",
+                "description": "Componentes pneumáticos",
+                "unitPrice": {
+                  "$numberDouble": "1250.75"
+                },
+                "quantity": {
+                  "$numberDouble": "1.5"
+                },
+                "__v": {
+                  "$numberInt": "0"
+                }
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "task-update-validation",
+      "title": "Edit task with unknown type",
+      "request": {
+        "method": "PUT",
+        "path": "/api/task/{{tasks:5}}/{{budgets:1}}",
+        "auth": "admin",
+        "body": {
+          "taskType": "painting",
+          "description": "",
+          "unitPrice": 1,
+          "quantity": 1
+        }
+      },
+      "response": {
+        "status": 400,
+        "contentType": "text/html; charset=utf-8",
+        "text": "\"taskType\" must be one of [automation, consultancy, development, machining, assembly, others, components]"
+      },
+      "db": {}
+    },
+    {
+      "id": "task-update-bad-ids",
+      "title": "Edit task with non-ObjectId ids",
+      "request": {
+        "method": "PUT",
+        "path": "/api/task/abc/def",
+        "auth": "admin",
+        "body": {
+          "taskType": "assembly",
+          "description": "",
+          "unitPrice": 1,
+          "quantity": 1
+        }
+      },
+      "response": {
+        "status": 400,
+        "contentType": "text/html; charset=utf-8",
+        "text": "\"taskId\" with value \"abc\" fails to match the valid mongo id pattern"
+      },
+      "db": {}
+    },
+    {
+      "id": "task-update-missing",
+      "title": "Edit unknown task",
+      "request": {
+        "method": "PUT",
+        "path": "/api/task/{{oid:1}}/{{budgets:1}}",
+        "auth": "admin",
+        "body": {
+          "taskType": "assembly",
+          "description": "",
+          "unitPrice": 1,
+          "quantity": 1
+        }
+      },
+      "response": {
+        "status": 400,
+        "contentType": "text/html; charset=utf-8",
+        "text": "Tarefa não encontrada"
+      },
+      "db": {}
+    },
+    {
+      "id": "task-create-d8",
+      "title": "POST /api/task always fails validation (D8)",
+      "request": {
+        "method": "POST",
+        "path": "/api/task",
+        "auth": "admin",
+        "body": {
+          "budgetId": "{{budgets:1}}",
+          "taskType": "others",
+          "description": "x",
+          "unitPrice": 1,
+          "quantity": 1
+        }
+      },
+      "response": {
+        "status": 400,
+        "contentType": "text/html; charset=utf-8",
+        "text": "\"budgetId\" is not allowed"
+      },
+      "db": {}
+    },
+    {
+      "id": "task-create-default-4",
+      "title": "Add default task (deleted below)",
+      "request": {
+        "method": "POST",
+        "path": "/api/task/createDefaultTask/{{budgets:1}}",
+        "auth": "admin",
+        "body": null
+      },
+      "response": {
+        "status": 200,
+        "contentType": "application/json; charset=utf-8",
+        "json": {
+          "_id": "{{tasks:6}}",
+          "budgetId": "{{budgets:1}}",
+          "taskType": "automation",
+          "description": "",
+          "unitPrice": 32.5,
+          "quantity": 1,
+          "__v": 0
+        }
+      },
+      "db": {
+        "tasks": {
+          "inserted": [
+            {
+              "_id": {
+                "$oid": "{{tasks:6}}"
+              },
+              "budgetId": {
+                "$oid": "{{budgets:1}}"
+              },
+              "taskType": "automation",
+              "description": "",
+              "unitPrice": {
+                "$numberDouble": "32.5"
+              },
+              "quantity": {
+                "$numberInt": "1"
+              },
+              "__v": {
+                "$numberInt": "0"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "task-delete",
+      "title": "Delete task (returns it, budget incomplete)",
+      "request": {
+        "method": "DELETE",
+        "path": "/api/task/{{tasks:6}}/{{budgets:1}}",
+        "auth": "admin",
+        "body": null
+      },
+      "response": {
+        "status": 200,
+        "contentType": "application/json; charset=utf-8",
+        "json": {
+          "_id": "{{tasks:6}}",
+          "budgetId": "{{budgets:1}}",
+          "taskType": "automation",
+          "description": "",
+          "unitPrice": 32.5,
+          "quantity": 1,
+          "__v": 0
+        }
+      },
+      "db": {
+        "tasks": {
+          "deleted": [
+            {
+              "_id": {
+                "$oid": "{{tasks:6}}"
+              },
+              "budgetId": {
+                "$oid": "{{budgets:1}}"
+              },
+              "taskType": "automation",
+              "description": "",
+              "unitPrice": {
+                "$numberDouble": "32.5"
+              },
+              "quantity": {
+                "$numberInt": "1"
+              },
+              "__v": {
+                "$numberInt": "0"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "task-delete-missing",
+      "title": "Delete unknown task → 500 text",
+      "request": {
+        "method": "DELETE",
+        "path": "/api/task/{{oid:1}}/{{budgets:1}}",
+        "auth": "admin",
+        "body": null
+      },
+      "response": {
+        "status": 500,
+        "contentType": "text/html; charset=utf-8",
+        "text": "Erro no servidor"
+      },
+      "db": {}
+    },
+    {
+      "id": "task-list-after-edits",
+      "title": "Budget tasks after edits",
+      "request": {
+        "method": "GET",
+        "path": "/api/task/getBudgetTasks/{{budgets:1}}",
+        "auth": "admin",
+        "body": null
+      },
+      "response": {
+        "status": 200,
+        "contentType": "application/json; charset=utf-8",
+        "json": [
+          {
+            "_id": "{{tasks:1}}",
+            "budgetId": "{{budgets:1}}",
+            "taskType": "components",
+            "description": "Componentes pneumáticos",
+            "unitPrice": 1250.75,
+            "quantity": 1.5,
+            "__v": 0
+          },
+          {
+            "_id": "{{tasks:3}}",
+            "budgetId": "{{budgets:1}}",
+            "taskType": "development",
+            "description": "Projeto mecânico",
+            "unitPrice": 30,
+            "quantity": 20,
+            "__v": 0
+          },
+          {
+            "_id": "{{tasks:4}}",
+            "budgetId": "{{budgets:1}}",
+            "taskType": "machining",
+            "description": "Maquinação de peças em aço inox",
+            "unitPrice": 38.5,
+            "quantity": 15,
+            "__v": 0
+          },
+          {
+            "_id": "{{tasks:5}}",
+            "budgetId": "{{budgets:1}}",
+            "taskType": "assembly",
+            "description": "",
+            "unitPrice": 28,
+            "quantity": 10,
+            "__v": 0
+          }
+        ]
+      },
+      "db": {}
+    },
+    {
+      "id": "budget-patch-description",
+      "title": "Patch description",
+      "request": {
+        "method": "PUT",
+        "path": "/api/budget/patchProperty/{{budgets:1}}",
+        "auth": "admin",
+        "body": {
+          "propertyName": "description",
+          "value": "Fornecimento conforme especificação.\nInclui montagem e ensaios."
+        }
+      },
+      "response": {
+        "status": 200,
+        "contentType": "application/json; charset=utf-8",
+        "json": {
+          "revision": 0,
+          "complete": false,
+          "wasPdfDownloaded": false,
+          "margin": 35,
+          "daysNeededToDoTheWork": 60,
+          "validity": 30,
+          "hasGenerateJob": false,
+          "_id": "{{budgets:1}}",
+          "client": {
+            "_id": "{{entities:1}}",
+            "name": "Metalúrgica do Vale do Ave, Lda.",
+            "fiscalNumber": "500100200",
+            "address": "Rua da Indústria, 12",
+            "zipCode": "4760-100",
+            "location": "Vila Nova de Famalicão",
+            "paymentCondition": "Pronto pagamento",
+            "type": "Cliente",
+            "__v": 0
+          },
+          "descriptive": "Máquina de corte",
+          "personInCharge": "Eng.ª Maria",
+          "madeBy": {
+            "roles": [
+              "canSeeOrcamentos",
+              "canSeeObras",
+              "canSeeHistorico",
+              "canSeeEntidades",
+              "canSeeDefinicoes",
+              "canSeeDashboard",
+              "canSeeLeituras"
+            ],
+            "fieldOfCompetencies": "Desenvolvimento",
+            "_id": "{{users:2}}",
+            "name": "Ana Administradora",
+            "email": "ana.admin@dib4t.local",
+            "password": "{{bcrypt:$2a$10$}}",
+            "__v": 0
+          },
+          "budgetNumber": "{{yy}}-0001",
+          "paymentMethod": "Pronto pagamento",
+          "total": 43.5,
+          "date": "{{now}}",
+          "__v": 0,
+          "description": "Fornecimento conforme especificação.\nInclui montagem e ensaios."
+        }
+      },
+      "db": {
+        "budgets": {
+          "updated": [
+            {
+              "_id": {
+                "$oid": "{{budgets:1}}"
+              },
+              "changed": [
+                "description"
+              ],
+              "after": {
+                "_id": {
+                  "$oid": "{{budgets:1}}"
+                },
+                "revision": {
+                  "$numberInt": "0"
+                },
+                "complete": false,
+                "wasPdfDownloaded": false,
+                "margin": {
+                  "$numberInt": "35"
+                },
+                "daysNeededToDoTheWork": {
+                  "$numberInt": "60"
+                },
+                "validity": {
+                  "$numberInt": "30"
+                },
+                "hasGenerateJob": false,
+                "client": {
+                  "$oid": "{{entities:1}}"
+                },
+                "descriptive": "Máquina de corte",
+                "personInCharge": "Eng.ª Maria",
+                "madeBy": {
+                  "$oid": "{{users:2}}"
+                },
+                "budgetNumber": "{{yy}}-0001",
+                "paymentMethod": "Pronto pagamento",
+                "total": {
+                  "$numberDouble": "43.5"
+                },
+                "date": {
+                  "$date": "{{now}}"
+                },
+                "__v": {
+                  "$numberInt": "0"
+                },
+                "description": "Fornecimento conforme especificação.\nInclui montagem e ensaios."
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "budget-patch-days",
+      "title": "Patch daysNeededToDoTheWork",
+      "request": {
+        "method": "PUT",
+        "path": "/api/budget/patchProperty/{{budgets:1}}",
+        "auth": "admin",
+        "body": {
+          "propertyName": "daysNeededToDoTheWork",
+          "value": 45
+        }
+      },
+      "response": {
+        "status": 200,
+        "contentType": "application/json; charset=utf-8",
+        "json": {
+          "revision": 0,
+          "complete": false,
+          "wasPdfDownloaded": false,
+          "margin": 35,
+          "daysNeededToDoTheWork": 45,
+          "validity": 30,
+          "hasGenerateJob": false,
+          "_id": "{{budgets:1}}",
+          "client": {
+            "_id": "{{entities:1}}",
+            "name": "Metalúrgica do Vale do Ave, Lda.",
+            "fiscalNumber": "500100200",
+            "address": "Rua da Indústria, 12",
+            "zipCode": "4760-100",
+            "location": "Vila Nova de Famalicão",
+            "paymentCondition": "Pronto pagamento",
+            "type": "Cliente",
+            "__v": 0
+          },
+          "descriptive": "Máquina de corte",
+          "personInCharge": "Eng.ª Maria",
+          "madeBy": {
+            "roles": [
+              "canSeeOrcamentos",
+              "canSeeObras",
+              "canSeeHistorico",
+              "canSeeEntidades",
+              "canSeeDefinicoes",
+              "canSeeDashboard",
+              "canSeeLeituras"
+            ],
+            "fieldOfCompetencies": "Desenvolvimento",
+            "_id": "{{users:2}}",
+            "name": "Ana Administradora",
+            "email": "ana.admin@dib4t.local",
+            "password": "{{bcrypt:$2a$10$}}",
+            "__v": 0
+          },
+          "budgetNumber": "{{yy}}-0001",
+          "paymentMethod": "Pronto pagamento",
+          "total": 43.5,
+          "date": "{{now}}",
+          "__v": 0,
+          "description": "Fornecimento conforme especificação.\nInclui montagem e ensaios."
+        }
+      },
+      "db": {
+        "budgets": {
+          "updated": [
+            {
+              "_id": {
+                "$oid": "{{budgets:1}}"
+              },
+              "changed": [
+                "daysNeededToDoTheWork"
+              ],
+              "after": {
+                "_id": {
+                  "$oid": "{{budgets:1}}"
+                },
+                "revision": {
+                  "$numberInt": "0"
+                },
+                "complete": false,
+                "wasPdfDownloaded": false,
+                "margin": {
+                  "$numberInt": "35"
+                },
+                "daysNeededToDoTheWork": {
+                  "$numberInt": "45"
+                },
+                "validity": {
+                  "$numberInt": "30"
+                },
+                "hasGenerateJob": false,
+                "client": {
+                  "$oid": "{{entities:1}}"
+                },
+                "descriptive": "Máquina de corte",
+                "personInCharge": "Eng.ª Maria",
+                "madeBy": {
+                  "$oid": "{{users:2}}"
+                },
+                "budgetNumber": "{{yy}}-0001",
+                "paymentMethod": "Pronto pagamento",
+                "total": {
+                  "$numberDouble": "43.5"
+                },
+                "date": {
+                  "$date": "{{now}}"
+                },
+                "__v": {
+                  "$numberInt": "0"
+                },
+                "description": "Fornecimento conforme especificação.\nInclui montagem e ensaios."
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "budget-patch-validity",
+      "title": "Patch validity",
+      "request": {
+        "method": "PUT",
+        "path": "/api/budget/patchProperty/{{budgets:1}}",
+        "auth": "admin",
+        "body": {
+          "propertyName": "validity",
+          "value": 60
+        }
+      },
+      "response": {
+        "status": 200,
+        "contentType": "application/json; charset=utf-8",
+        "json": {
+          "revision": 0,
+          "complete": false,
+          "wasPdfDownloaded": false,
+          "margin": 35,
+          "daysNeededToDoTheWork": 45,
+          "validity": 60,
+          "hasGenerateJob": false,
+          "_id": "{{budgets:1}}",
+          "client": {
+            "_id": "{{entities:1}}",
+            "name": "Metalúrgica do Vale do Ave, Lda.",
+            "fiscalNumber": "500100200",
+            "address": "Rua da Indústria, 12",
+            "zipCode": "4760-100",
+            "location": "Vila Nova de Famalicão",
+            "paymentCondition": "Pronto pagamento",
+            "type": "Cliente",
+            "__v": 0
+          },
+          "descriptive": "Máquina de corte",
+          "personInCharge": "Eng.ª Maria",
+          "madeBy": {
+            "roles": [
+              "canSeeOrcamentos",
+              "canSeeObras",
+              "canSeeHistorico",
+              "canSeeEntidades",
+              "canSeeDefinicoes",
+              "canSeeDashboard",
+              "canSeeLeituras"
+            ],
+            "fieldOfCompetencies": "Desenvolvimento",
+            "_id": "{{users:2}}",
+            "name": "Ana Administradora",
+            "email": "ana.admin@dib4t.local",
+            "password": "{{bcrypt:$2a$10$}}",
+            "__v": 0
+          },
+          "budgetNumber": "{{yy}}-0001",
+          "paymentMethod": "Pronto pagamento",
+          "total": 43.5,
+          "date": "{{now}}",
+          "__v": 0,
+          "description": "Fornecimento conforme especificação.\nInclui montagem e ensaios."
+        }
+      },
+      "db": {
+        "budgets": {
+          "updated": [
+            {
+              "_id": {
+                "$oid": "{{budgets:1}}"
+              },
+              "changed": [
+                "validity"
+              ],
+              "after": {
+                "_id": {
+                  "$oid": "{{budgets:1}}"
+                },
+                "revision": {
+                  "$numberInt": "0"
+                },
+                "complete": false,
+                "wasPdfDownloaded": false,
+                "margin": {
+                  "$numberInt": "35"
+                },
+                "daysNeededToDoTheWork": {
+                  "$numberInt": "45"
+                },
+                "validity": {
+                  "$numberInt": "60"
+                },
+                "hasGenerateJob": false,
+                "client": {
+                  "$oid": "{{entities:1}}"
+                },
+                "descriptive": "Máquina de corte",
+                "personInCharge": "Eng.ª Maria",
+                "madeBy": {
+                  "$oid": "{{users:2}}"
+                },
+                "budgetNumber": "{{yy}}-0001",
+                "paymentMethod": "Pronto pagamento",
+                "total": {
+                  "$numberDouble": "43.5"
+                },
+                "date": {
+                  "$date": "{{now}}"
+                },
+                "__v": {
+                  "$numberInt": "0"
+                },
+                "description": "Fornecimento conforme especificação.\nInclui montagem e ensaios."
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "budget-patch-total",
+      "title": "Patch total (decimal)",
+      "request": {
+        "method": "PUT",
+        "path": "/api/budget/patchProperty/{{budgets:1}}",
+        "auth": "admin",
+        "body": {
+          "propertyName": "total",
+          "value": 12345.67
+        }
+      },
+      "response": {
+        "status": 200,
+        "contentType": "application/json; charset=utf-8",
+        "json": {
+          "revision": 0,
+          "complete": false,
+          "wasPdfDownloaded": false,
+          "margin": 35,
+          "daysNeededToDoTheWork": 45,
+          "validity": 60,
+          "hasGenerateJob": false,
+          "_id": "{{budgets:1}}",
+          "client": {
+            "_id": "{{entities:1}}",
+            "name": "Metalúrgica do Vale do Ave, Lda.",
+            "fiscalNumber": "500100200",
+            "address": "Rua da Indústria, 12",
+            "zipCode": "4760-100",
+            "location": "Vila Nova de Famalicão",
+            "paymentCondition": "Pronto pagamento",
+            "type": "Cliente",
+            "__v": 0
+          },
+          "descriptive": "Máquina de corte",
+          "personInCharge": "Eng.ª Maria",
+          "madeBy": {
+            "roles": [
+              "canSeeOrcamentos",
+              "canSeeObras",
+              "canSeeHistorico",
+              "canSeeEntidades",
+              "canSeeDefinicoes",
+              "canSeeDashboard",
+              "canSeeLeituras"
+            ],
+            "fieldOfCompetencies": "Desenvolvimento",
+            "_id": "{{users:2}}",
+            "name": "Ana Administradora",
+            "email": "ana.admin@dib4t.local",
+            "password": "{{bcrypt:$2a$10$}}",
+            "__v": 0
+          },
+          "budgetNumber": "{{yy}}-0001",
+          "paymentMethod": "Pronto pagamento",
+          "total": 12345.67,
+          "date": "{{now}}",
+          "__v": 0,
+          "description": "Fornecimento conforme especificação.\nInclui montagem e ensaios."
+        }
+      },
+      "db": {
+        "budgets": {
+          "updated": [
+            {
+              "_id": {
+                "$oid": "{{budgets:1}}"
+              },
+              "changed": [
+                "total"
+              ],
+              "after": {
+                "_id": {
+                  "$oid": "{{budgets:1}}"
+                },
+                "revision": {
+                  "$numberInt": "0"
+                },
+                "complete": false,
+                "wasPdfDownloaded": false,
+                "margin": {
+                  "$numberInt": "35"
+                },
+                "daysNeededToDoTheWork": {
+                  "$numberInt": "45"
+                },
+                "validity": {
+                  "$numberInt": "60"
+                },
+                "hasGenerateJob": false,
+                "client": {
+                  "$oid": "{{entities:1}}"
+                },
+                "descriptive": "Máquina de corte",
+                "personInCharge": "Eng.ª Maria",
+                "madeBy": {
+                  "$oid": "{{users:2}}"
+                },
+                "budgetNumber": "{{yy}}-0001",
+                "paymentMethod": "Pronto pagamento",
+                "total": {
+                  "$numberDouble": "12345.67"
+                },
+                "date": {
+                  "$date": "{{now}}"
+                },
+                "__v": {
+                  "$numberInt": "0"
+                },
+                "description": "Fornecimento conforme especificação.\nInclui montagem e ensaios."
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "budget-patch-margin",
+      "title": "Patch margin",
+      "request": {
+        "method": "PUT",
+        "path": "/api/budget/patchProperty/{{budgets:1}}",
+        "auth": "admin",
+        "body": {
+          "propertyName": "margin",
+          "value": 25
+        }
+      },
+      "response": {
+        "status": 200,
+        "contentType": "application/json; charset=utf-8",
+        "json": {
+          "revision": 0,
+          "complete": false,
+          "wasPdfDownloaded": false,
+          "margin": 25,
+          "daysNeededToDoTheWork": 45,
+          "validity": 60,
+          "hasGenerateJob": false,
+          "_id": "{{budgets:1}}",
+          "client": {
+            "_id": "{{entities:1}}",
+            "name": "Metalúrgica do Vale do Ave, Lda.",
+            "fiscalNumber": "500100200",
+            "address": "Rua da Indústria, 12",
+            "zipCode": "4760-100",
+            "location": "Vila Nova de Famalicão",
+            "paymentCondition": "Pronto pagamento",
+            "type": "Cliente",
+            "__v": 0
+          },
+          "descriptive": "Máquina de corte",
+          "personInCharge": "Eng.ª Maria",
+          "madeBy": {
+            "roles": [
+              "canSeeOrcamentos",
+              "canSeeObras",
+              "canSeeHistorico",
+              "canSeeEntidades",
+              "canSeeDefinicoes",
+              "canSeeDashboard",
+              "canSeeLeituras"
+            ],
+            "fieldOfCompetencies": "Desenvolvimento",
+            "_id": "{{users:2}}",
+            "name": "Ana Administradora",
+            "email": "ana.admin@dib4t.local",
+            "password": "{{bcrypt:$2a$10$}}",
+            "__v": 0
+          },
+          "budgetNumber": "{{yy}}-0001",
+          "paymentMethod": "Pronto pagamento",
+          "total": 12345.67,
+          "date": "{{now}}",
+          "__v": 0,
+          "description": "Fornecimento conforme especificação.\nInclui montagem e ensaios."
+        }
+      },
+      "db": {
+        "budgets": {
+          "updated": [
+            {
+              "_id": {
+                "$oid": "{{budgets:1}}"
+              },
+              "changed": [
+                "margin"
+              ],
+              "after": {
+                "_id": {
+                  "$oid": "{{budgets:1}}"
+                },
+                "revision": {
+                  "$numberInt": "0"
+                },
+                "complete": false,
+                "wasPdfDownloaded": false,
+                "margin": {
+                  "$numberInt": "25"
+                },
+                "daysNeededToDoTheWork": {
+                  "$numberInt": "45"
+                },
+                "validity": {
+                  "$numberInt": "60"
+                },
+                "hasGenerateJob": false,
+                "client": {
+                  "$oid": "{{entities:1}}"
+                },
+                "descriptive": "Máquina de corte",
+                "personInCharge": "Eng.ª Maria",
+                "madeBy": {
+                  "$oid": "{{users:2}}"
+                },
+                "budgetNumber": "{{yy}}-0001",
+                "paymentMethod": "Pronto pagamento",
+                "total": {
+                  "$numberDouble": "12345.67"
+                },
+                "date": {
+                  "$date": "{{now}}"
+                },
+                "__v": {
+                  "$numberInt": "0"
+                },
+                "description": "Fornecimento conforme especificação.\nInclui montagem e ensaios."
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "budget-patch-payment",
+      "title": "Patch paymentMethod",
+      "request": {
+        "method": "PUT",
+        "path": "/api/budget/patchProperty/{{budgets:1}}",
+        "auth": "admin",
+        "body": {
+          "propertyName": "paymentMethod",
+          "value": "Transferência a 30 dias"
+        }
+      },
+      "response": {
+        "status": 200,
+        "contentType": "application/json; charset=utf-8",
+        "json": {
+          "revision": 0,
+          "complete": false,
+          "wasPdfDownloaded": false,
+          "margin": 25,
+          "daysNeededToDoTheWork": 45,
+          "validity": 60,
+          "hasGenerateJob": false,
+          "_id": "{{budgets:1}}",
+          "client": {
+            "_id": "{{entities:1}}",
+            "name": "Metalúrgica do Vale do Ave, Lda.",
+            "fiscalNumber": "500100200",
+            "address": "Rua da Indústria, 12",
+            "zipCode": "4760-100",
+            "location": "Vila Nova de Famalicão",
+            "paymentCondition": "Pronto pagamento",
+            "type": "Cliente",
+            "__v": 0
+          },
+          "descriptive": "Máquina de corte",
+          "personInCharge": "Eng.ª Maria",
+          "madeBy": {
+            "roles": [
+              "canSeeOrcamentos",
+              "canSeeObras",
+              "canSeeHistorico",
+              "canSeeEntidades",
+              "canSeeDefinicoes",
+              "canSeeDashboard",
+              "canSeeLeituras"
+            ],
+            "fieldOfCompetencies": "Desenvolvimento",
+            "_id": "{{users:2}}",
+            "name": "Ana Administradora",
+            "email": "ana.admin@dib4t.local",
+            "password": "{{bcrypt:$2a$10$}}",
+            "__v": 0
+          },
+          "budgetNumber": "{{yy}}-0001",
+          "paymentMethod": "Transferência a 30 dias",
+          "total": 12345.67,
+          "date": "{{now}}",
+          "__v": 0,
+          "description": "Fornecimento conforme especificação.\nInclui montagem e ensaios."
+        }
+      },
+      "db": {
+        "budgets": {
+          "updated": [
+            {
+              "_id": {
+                "$oid": "{{budgets:1}}"
+              },
+              "changed": [
+                "paymentMethod"
+              ],
+              "after": {
+                "_id": {
+                  "$oid": "{{budgets:1}}"
+                },
+                "revision": {
+                  "$numberInt": "0"
+                },
+                "complete": false,
+                "wasPdfDownloaded": false,
+                "margin": {
+                  "$numberInt": "25"
+                },
+                "daysNeededToDoTheWork": {
+                  "$numberInt": "45"
+                },
+                "validity": {
+                  "$numberInt": "60"
+                },
+                "hasGenerateJob": false,
+                "client": {
+                  "$oid": "{{entities:1}}"
+                },
+                "descriptive": "Máquina de corte",
+                "personInCharge": "Eng.ª Maria",
+                "madeBy": {
+                  "$oid": "{{users:2}}"
+                },
+                "budgetNumber": "{{yy}}-0001",
+                "paymentMethod": "Transferência a 30 dias",
+                "total": {
+                  "$numberDouble": "12345.67"
+                },
+                "date": {
+                  "$date": "{{now}}"
+                },
+                "__v": {
+                  "$numberInt": "0"
+                },
+                "description": "Fornecimento conforme especificação.\nInclui montagem e ensaios."
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "budget-patch-total-string",
+      "title": "Patch total with a numeric string (Joi converts, Mongoose casts)",
+      "request": {
+        "method": "PUT",
+        "path": "/api/budget/patchProperty/{{budgets:2}}",
+        "auth": "admin",
+        "body": {
+          "propertyName": "total",
+          "value": "999"
+        }
+      },
+      "response": {
+        "status": 200,
+        "contentType": "application/json; charset=utf-8",
+        "json": {
+          "revision": 0,
+          "complete": false,
+          "wasPdfDownloaded": false,
+          "margin": 35,
+          "daysNeededToDoTheWork": 60,
+          "validity": 30,
+          "hasGenerateJob": false,
+          "_id": "{{budgets:2}}",
+          "client": {
+            "_id": "{{entities:2}}",
+            "name": "Cortiças Reunidas",
+            "paymentCondition": "Transferência a 30 dias",
+            "type": "Cliente e Fornecedor",
+            "__v": 0,
+            "address": "Lugar da Cortiça",
+            "fiscalNumber": "500999888",
+            "location": "Santa Maria da Feira",
+            "zipCode": "4535-000"
+          },
+          "descriptive": "Retrofit prensa 200t",
+          "personInCharge": "Sr. Paulo",
+          "madeBy": {
+            "roles": [
+              "canSeeOrcamentos",
+              "canSeeObras",
+              "canSeeHistorico",
+              "canSeeEntidades",
+              "canSeeDefinicoes",
+              "canSeeDashboard",
+              "canSeeLeituras"
+            ],
+            "fieldOfCompetencies": "Desenvolvimento",
+            "_id": "{{users:2}}",
+            "name": "Ana Administradora",
+            "email": "ana.admin@dib4t.local",
+            "password": "{{bcrypt:$2a$10$}}",
+            "__v": 0
+          },
+          "budgetNumber": "{{yy}}-0002",
+          "paymentMethod": "Transferência a 30 dias",
+          "total": 999,
+          "date": "{{now}}",
+          "__v": 0
+        }
+      },
+      "db": {
+        "budgets": {
+          "updated": [
+            {
+              "_id": {
+                "$oid": "{{budgets:2}}"
+              },
+              "changed": [
+                "total"
+              ],
+              "after": {
+                "_id": {
+                  "$oid": "{{budgets:2}}"
+                },
+                "revision": {
+                  "$numberInt": "0"
+                },
+                "complete": false,
+                "wasPdfDownloaded": false,
+                "margin": {
+                  "$numberInt": "35"
+                },
+                "daysNeededToDoTheWork": {
+                  "$numberInt": "60"
+                },
+                "validity": {
+                  "$numberInt": "30"
+                },
+                "hasGenerateJob": false,
+                "client": {
+                  "$oid": "{{entities:2}}"
+                },
+                "descriptive": "Retrofit prensa 200t",
+                "personInCharge": "Sr. Paulo",
+                "madeBy": {
+                  "$oid": "{{users:2}}"
+                },
+                "budgetNumber": "{{yy}}-0002",
+                "paymentMethod": "Transferência a 30 dias",
+                "total": {
+                  "$numberInt": "999"
+                },
+                "date": {
+                  "$date": "{{now}}"
+                },
+                "__v": {
+                  "$numberInt": "0"
+                }
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "budget-patch-complete",
+      "title": "Patch complete=true (sets it after resetting flags)",
+      "request": {
+        "method": "PUT",
+        "path": "/api/budget/patchProperty/{{budgets:1}}",
+        "auth": "admin",
+        "body": {
+          "propertyName": "complete",
+          "value": true
+        }
+      },
+      "response": {
+        "status": 200,
+        "contentType": "application/json; charset=utf-8",
+        "json": {
+          "revision": 0,
+          "complete": true,
+          "wasPdfDownloaded": false,
+          "margin": 25,
+          "daysNeededToDoTheWork": 45,
+          "validity": 60,
+          "hasGenerateJob": false,
+          "_id": "{{budgets:1}}",
+          "client": {
+            "_id": "{{entities:1}}",
+            "name": "Metalúrgica do Vale do Ave, Lda.",
+            "fiscalNumber": "500100200",
+            "address": "Rua da Indústria, 12",
+            "zipCode": "4760-100",
+            "location": "Vila Nova de Famalicão",
+            "paymentCondition": "Pronto pagamento",
+            "type": "Cliente",
+            "__v": 0
+          },
+          "descriptive": "Máquina de corte",
+          "personInCharge": "Eng.ª Maria",
+          "madeBy": {
+            "roles": [
+              "canSeeOrcamentos",
+              "canSeeObras",
+              "canSeeHistorico",
+              "canSeeEntidades",
+              "canSeeDefinicoes",
+              "canSeeDashboard",
+              "canSeeLeituras"
+            ],
+            "fieldOfCompetencies": "Desenvolvimento",
+            "_id": "{{users:2}}",
+            "name": "Ana Administradora",
+            "email": "ana.admin@dib4t.local",
+            "password": "{{bcrypt:$2a$10$}}",
+            "__v": 0
+          },
+          "budgetNumber": "{{yy}}-0001",
+          "paymentMethod": "Transferência a 30 dias",
+          "total": 12345.67,
+          "date": "{{now}}",
+          "__v": 0,
+          "description": "Fornecimento conforme especificação.\nInclui montagem e ensaios."
+        }
+      },
+      "db": {
+        "budgets": {
+          "updated": [
+            {
+              "_id": {
+                "$oid": "{{budgets:1}}"
+              },
+              "changed": [
+                "complete"
+              ],
+              "after": {
+                "_id": {
+                  "$oid": "{{budgets:1}}"
+                },
+                "revision": {
+                  "$numberInt": "0"
+                },
+                "complete": true,
+                "wasPdfDownloaded": false,
+                "margin": {
+                  "$numberInt": "25"
+                },
+                "daysNeededToDoTheWork": {
+                  "$numberInt": "45"
+                },
+                "validity": {
+                  "$numberInt": "60"
+                },
+                "hasGenerateJob": false,
+                "client": {
+                  "$oid": "{{entities:1}}"
+                },
+                "descriptive": "Máquina de corte",
+                "personInCharge": "Eng.ª Maria",
+                "madeBy": {
+                  "$oid": "{{users:2}}"
+                },
+                "budgetNumber": "{{yy}}-0001",
+                "paymentMethod": "Transferência a 30 dias",
+                "total": {
+                  "$numberDouble": "12345.67"
+                },
+                "date": {
+                  "$date": "{{now}}"
+                },
+                "__v": {
+                  "$numberInt": "0"
+                },
+                "description": "Fornecimento conforme especificação.\nInclui montagem e ensaios."
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "budget-patch-bad-property",
+      "title": "Patch a non-whitelisted property",
+      "request": {
+        "method": "PUT",
+        "path": "/api/budget/patchProperty/{{budgets:1}}",
+        "auth": "admin",
+        "body": {
+          "propertyName": "budgetNumber",
+          "value": "99-9999"
+        }
+      },
+      "response": {
+        "status": 400,
+        "contentType": "text/html; charset=utf-8",
+        "text": "Não é possível atualizar budgetNumber"
+      },
+      "db": {}
+    },
+    {
+      "id": "budget-patch-bad-value",
+      "title": "Patch margin 0",
+      "request": {
+        "method": "PUT",
+        "path": "/api/budget/patchProperty/{{budgets:1}}",
+        "auth": "admin",
+        "body": {
+          "propertyName": "margin",
+          "value": 0
+        }
+      },
+      "response": {
+        "status": 400,
+        "contentType": "text/html; charset=utf-8",
+        "text": "Não é possível atualizar margin"
+      },
+      "db": {}
+    },
+    {
+      "id": "budget-patch-missing",
+      "title": "Patch unknown budget",
+      "request": {
+        "method": "PUT",
+        "path": "/api/budget/patchProperty/{{oid:1}}",
+        "auth": "admin",
+        "body": {
+          "propertyName": "validity",
+          "value": 10
+        }
+      },
+      "response": {
+        "status": 400,
+        "contentType": "text/html; charset=utf-8",
+        "text": "Orçamento não existe!"
+      },
+      "db": {}
+    },
+    {
+      "id": "budget-pdf",
+      "title": "PDF as base64 + wasPdfDownloaded=true",
+      "request": {
+        "method": "GET",
+        "path": "/api/budget/getPdf/{{budgets:1}}",
+        "auth": "admin",
+        "body": null
+      },
+      "response": {
+        "status": 200,
+        "contentType": "application/pdf",
+        "body": {
+          "base64": true,
+          "decodedStartsWith": "%PDF-1.3",
+          "decodedEndsWithEof": true
+        }
+      },
+      "db": {
+        "budgets": {
+          "updated": [
+            {
+              "_id": {
+                "$oid": "{{budgets:1}}"
+              },
+              "changed": [
+                "wasPdfDownloaded"
+              ],
+              "after": {
+                "_id": {
+                  "$oid": "{{budgets:1}}"
+                },
+                "revision": {
+                  "$numberInt": "0"
+                },
+                "complete": true,
+                "wasPdfDownloaded": true,
+                "margin": {
+                  "$numberInt": "25"
+                },
+                "daysNeededToDoTheWork": {
+                  "$numberInt": "45"
+                },
+                "validity": {
+                  "$numberInt": "60"
+                },
+                "hasGenerateJob": false,
+                "client": {
+                  "$oid": "{{entities:1}}"
+                },
+                "descriptive": "Máquina de corte",
+                "personInCharge": "Eng.ª Maria",
+                "madeBy": {
+                  "$oid": "{{users:2}}"
+                },
+                "budgetNumber": "{{yy}}-0001",
+                "paymentMethod": "Transferência a 30 dias",
+                "total": {
+                  "$numberDouble": "12345.67"
+                },
+                "date": {
+                  "$date": "{{now}}"
+                },
+                "__v": {
+                  "$numberInt": "0"
+                },
+                "description": "Fornecimento conforme especificação.\nInclui montagem e ensaios."
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "budget-pdf-missing",
+      "title": "PDF of unknown budget → 500",
+      "request": {
+        "method": "GET",
+        "path": "/api/budget/getPdf/{{oid:1}}",
+        "auth": "admin",
+        "body": null
+      },
+      "response": {
+        "status": 500,
+        "contentType": "text/html; charset=utf-8",
+        "expressErrorPage": {
+          "error": "TypeError: Cannot read properties of null (reading 'budgetNumber')"
+        }
+      },
+      "db": {}
+    },
+    {
+      "id": "budget-update",
+      "title": "Update rev 0 with the SAME descriptive (no NAS rename)",
+      "request": {
+        "method": "PUT",
+        "path": "/api/budget/{{budgets:1}}",
+        "auth": "admin",
+        "body": {
+          "madeById": "{{users:3}}",
+          "descriptive": "Máquina de corte",
+          "personInCharge": "Eng.ª Maria Lopes"
+        }
+      },
+      "response": {
+        "status": 200,
+        "contentType": "application/json; charset=utf-8",
+        "json": {
+          "revision": 0,
+          "complete": false,
+          "wasPdfDownloaded": false,
+          "margin": 25,
+          "daysNeededToDoTheWork": 45,
+          "validity": 60,
+          "hasGenerateJob": false,
+          "_id": "{{budgets:1}}",
+          "client": {
+            "_id": "{{entities:1}}",
+            "name": "Metalúrgica do Vale do Ave, Lda.",
+            "fiscalNumber": "500100200",
+            "address": "Rua da Indústria, 12",
+            "zipCode": "4760-100",
+            "location": "Vila Nova de Famalicão",
+            "paymentCondition": "Pronto pagamento",
+            "type": "Cliente",
+            "__v": 0
+          },
+          "descriptive": "Máquina de corte",
+          "personInCharge": "Eng.ª Maria Lopes",
+          "madeBy": {
+            "roles": [
+              "canSeeObras",
+              "canSeeLeituras",
+              "canSeeHistorico"
+            ],
+            "fieldOfCompetencies": "Montagem",
+            "_id": "{{users:3}}",
+            "name": "Bruno Maquinação Silva",
+            "email": "bruno.limitado@dib4t.local",
+            "password": "{{bcrypt:$2a$10$}}",
+            "__v": 1
+          },
+          "budgetNumber": "{{yy}}-0001",
+          "paymentMethod": "Transferência a 30 dias",
+          "total": 12345.67,
+          "date": "{{now}}",
+          "__v": 0,
+          "description": "Fornecimento conforme especificação.\nInclui montagem e ensaios."
+        }
+      },
+      "db": {
+        "budgets": {
+          "updated": [
+            {
+              "_id": {
+                "$oid": "{{budgets:1}}"
+              },
+              "changed": [
+                "complete",
+                "wasPdfDownloaded",
+                "personInCharge",
+                "madeBy"
+              ],
+              "after": {
+                "_id": {
+                  "$oid": "{{budgets:1}}"
+                },
+                "revision": {
+                  "$numberInt": "0"
+                },
+                "complete": false,
+                "wasPdfDownloaded": false,
+                "margin": {
+                  "$numberInt": "25"
+                },
+                "daysNeededToDoTheWork": {
+                  "$numberInt": "45"
+                },
+                "validity": {
+                  "$numberInt": "60"
+                },
+                "hasGenerateJob": false,
+                "client": {
+                  "$oid": "{{entities:1}}"
+                },
+                "descriptive": "Máquina de corte",
+                "personInCharge": "Eng.ª Maria Lopes",
+                "madeBy": {
+                  "$oid": "{{users:3}}"
+                },
+                "budgetNumber": "{{yy}}-0001",
+                "paymentMethod": "Transferência a 30 dias",
+                "total": {
+                  "$numberDouble": "12345.67"
+                },
+                "date": {
+                  "$date": "{{now}}"
+                },
+                "__v": {
+                  "$numberInt": "0"
+                },
+                "description": "Fornecimento conforme especificação.\nInclui montagem e ensaios."
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "budget-update-missing-user",
+      "title": "Update without madeById (D7: validation skipped)",
+      "request": {
+        "method": "PUT",
+        "path": "/api/budget/{{budgets:1}}",
+        "auth": "admin",
+        "body": {
+          "descriptive": "Máquina de corte",
+          "personInCharge": "X"
+        }
+      },
+      "response": {
+        "status": 400,
+        "contentType": "text/html; charset=utf-8",
+        "text": "Erro interno relacionado com user!"
+      },
+      "db": {}
+    },
+    {
+      "id": "budget-update-missing",
+      "title": "Update unknown budget",
+      "request": {
+        "method": "PUT",
+        "path": "/api/budget/{{oid:1}}",
+        "auth": "admin",
+        "body": {
+          "madeById": "{{users:2}}",
+          "descriptive": "X",
+          "personInCharge": "X"
+        }
+      },
+      "response": {
+        "status": 400,
+        "contentType": "text/html; charset=utf-8",
+        "text": "Orçamento não existe"
+      },
+      "db": {}
+    },
+    {
+      "id": "budget-new-revision",
+      "title": "New revision (copies tasks)",
+      "request": {
+        "method": "POST",
+        "path": "/api/budget/newrevision/{{budgets:1}}",
+        "auth": "admin",
+        "body": {}
+      },
+      "response": {
+        "status": 200,
+        "contentType": "application/json; charset=utf-8",
+        "json": {
+          "revision": 1,
+          "complete": false,
+          "wasPdfDownloaded": false,
+          "margin": 25,
+          "daysNeededToDoTheWork": 45,
+          "validity": 60,
+          "hasGenerateJob": false,
+          "_id": "{{budgets:3}}",
+          "client": {
+            "_id": "{{entities:1}}",
+            "name": "Metalúrgica do Vale do Ave, Lda.",
+            "fiscalNumber": "500100200",
+            "address": "Rua da Indústria, 12",
+            "zipCode": "4760-100",
+            "location": "Vila Nova de Famalicão",
+            "paymentCondition": "Pronto pagamento",
+            "type": "Cliente",
+            "__v": 0
+          },
+          "descriptive": "Máquina de corte",
+          "personInCharge": "Eng.ª Maria Lopes",
+          "madeBy": {
+            "roles": [
+              "canSeeObras",
+              "canSeeLeituras",
+              "canSeeHistorico"
+            ],
+            "fieldOfCompetencies": "Montagem",
+            "_id": "{{users:3}}",
+            "name": "Bruno Maquinação Silva",
+            "email": "bruno.limitado@dib4t.local",
+            "password": "{{bcrypt:$2a$10$}}",
+            "__v": 1
+          },
+          "budgetNumber": "{{yy}}-0001",
+          "paymentMethod": "Transferência a 30 dias",
+          "total": 12345.67,
+          "description": "Fornecimento conforme especificação.\nInclui montagem e ensaios.",
+          "date": "{{now}}",
+          "__v": 0
+        }
+      },
+      "db": {
+        "budgets": {
+          "inserted": [
+            {
+              "_id": {
+                "$oid": "{{budgets:3}}"
+              },
+              "revision": {
+                "$numberInt": "1"
+              },
+              "complete": false,
+              "wasPdfDownloaded": false,
+              "margin": {
+                "$numberInt": "25"
+              },
+              "daysNeededToDoTheWork": {
+                "$numberInt": "45"
+              },
+              "validity": {
+                "$numberInt": "60"
+              },
+              "hasGenerateJob": false,
+              "client": {
+                "$oid": "{{entities:1}}"
+              },
+              "descriptive": "Máquina de corte",
+              "personInCharge": "Eng.ª Maria Lopes",
+              "madeBy": {
+                "$oid": "{{users:3}}"
+              },
+              "budgetNumber": "{{yy}}-0001",
+              "paymentMethod": "Transferência a 30 dias",
+              "total": {
+                "$numberDouble": "12345.67"
+              },
+              "description": "Fornecimento conforme especificação.\nInclui montagem e ensaios.",
+              "date": {
+                "$date": "{{now}}"
+              },
+              "__v": {
+                "$numberInt": "0"
+              }
+            }
+          ]
+        },
+        "tasks": {
+          "inserted": [
+            {
+              "_id": {
+                "$oid": "{{tasks:7}}"
+              },
+              "taskType": "components",
+              "budgetId": {
+                "$oid": "{{budgets:3}}"
+              },
+              "description": "Componentes pneumáticos",
+              "unitPrice": {
+                "$numberDouble": "1250.75"
+              },
+              "quantity": {
+                "$numberDouble": "1.5"
+              },
+              "__v": {
+                "$numberInt": "0"
+              }
+            },
+            {
+              "_id": {
+                "$oid": "{{tasks:8}}"
+              },
+              "taskType": "development",
+              "budgetId": {
+                "$oid": "{{budgets:3}}"
+              },
+              "description": "Projeto mecânico",
+              "unitPrice": {
+                "$numberInt": "30"
+              },
+              "quantity": {
+                "$numberInt": "20"
+              },
+              "__v": {
+                "$numberInt": "0"
+              }
+            },
+            {
+              "_id": {
+                "$oid": "{{tasks:9}}"
+              },
+              "taskType": "machining",
+              "budgetId": {
+                "$oid": "{{budgets:3}}"
+              },
+              "description": "Maquinação de peças em aço inox",
+              "unitPrice": {
+                "$numberDouble": "38.5"
+              },
+              "quantity": {
+                "$numberInt": "15"
+              },
+              "__v": {
+                "$numberInt": "0"
+              }
+            },
+            {
+              "_id": {
+                "$oid": "{{tasks:10}}"
+              },
+              "taskType": "assembly",
+              "budgetId": {
+                "$oid": "{{budgets:3}}"
+              },
+              "description": "",
+              "unitPrice": {
+                "$numberInt": "28"
+              },
+              "quantity": {
+                "$numberInt": "10"
+              },
+              "__v": {
+                "$numberInt": "0"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "budget-new-revision-2",
+      "title": "Second revision from rev 0",
+      "request": {
+        "method": "POST",
+        "path": "/api/budget/newrevision/{{budgets:1}}",
+        "auth": "admin",
+        "body": {}
+      },
+      "response": {
+        "status": 200,
+        "contentType": "application/json; charset=utf-8",
+        "json": {
+          "revision": 2,
+          "complete": false,
+          "wasPdfDownloaded": false,
+          "margin": 25,
+          "daysNeededToDoTheWork": 45,
+          "validity": 60,
+          "hasGenerateJob": false,
+          "_id": "{{budgets:4}}",
+          "client": {
+            "_id": "{{entities:1}}",
+            "name": "Metalúrgica do Vale do Ave, Lda.",
+            "fiscalNumber": "500100200",
+            "address": "Rua da Indústria, 12",
+            "zipCode": "4760-100",
+            "location": "Vila Nova de Famalicão",
+            "paymentCondition": "Pronto pagamento",
+            "type": "Cliente",
+            "__v": 0
+          },
+          "descriptive": "Máquina de corte",
+          "personInCharge": "Eng.ª Maria Lopes",
+          "madeBy": {
+            "roles": [
+              "canSeeObras",
+              "canSeeLeituras",
+              "canSeeHistorico"
+            ],
+            "fieldOfCompetencies": "Montagem",
+            "_id": "{{users:3}}",
+            "name": "Bruno Maquinação Silva",
+            "email": "bruno.limitado@dib4t.local",
+            "password": "{{bcrypt:$2a$10$}}",
+            "__v": 1
+          },
+          "budgetNumber": "{{yy}}-0001",
+          "paymentMethod": "Transferência a 30 dias",
+          "total": 12345.67,
+          "description": "Fornecimento conforme especificação.\nInclui montagem e ensaios.",
+          "date": "{{now}}",
+          "__v": 0
+        }
+      },
+      "db": {
+        "budgets": {
+          "inserted": [
+            {
+              "_id": {
+                "$oid": "{{budgets:4}}"
+              },
+              "revision": {
+                "$numberInt": "2"
+              },
+              "complete": false,
+              "wasPdfDownloaded": false,
+              "margin": {
+                "$numberInt": "25"
+              },
+              "daysNeededToDoTheWork": {
+                "$numberInt": "45"
+              },
+              "validity": {
+                "$numberInt": "60"
+              },
+              "hasGenerateJob": false,
+              "client": {
+                "$oid": "{{entities:1}}"
+              },
+              "descriptive": "Máquina de corte",
+              "personInCharge": "Eng.ª Maria Lopes",
+              "madeBy": {
+                "$oid": "{{users:3}}"
+              },
+              "budgetNumber": "{{yy}}-0001",
+              "paymentMethod": "Transferência a 30 dias",
+              "total": {
+                "$numberDouble": "12345.67"
+              },
+              "description": "Fornecimento conforme especificação.\nInclui montagem e ensaios.",
+              "date": {
+                "$date": "{{now}}"
+              },
+              "__v": {
+                "$numberInt": "0"
+              }
+            }
+          ]
+        },
+        "tasks": {
+          "inserted": [
+            {
+              "_id": {
+                "$oid": "{{tasks:11}}"
+              },
+              "taskType": "components",
+              "budgetId": {
+                "$oid": "{{budgets:4}}"
+              },
+              "description": "Componentes pneumáticos",
+              "unitPrice": {
+                "$numberDouble": "1250.75"
+              },
+              "quantity": {
+                "$numberDouble": "1.5"
+              },
+              "__v": {
+                "$numberInt": "0"
+              }
+            },
+            {
+              "_id": {
+                "$oid": "{{tasks:12}}"
+              },
+              "taskType": "development",
+              "budgetId": {
+                "$oid": "{{budgets:4}}"
+              },
+              "description": "Projeto mecânico",
+              "unitPrice": {
+                "$numberInt": "30"
+              },
+              "quantity": {
+                "$numberInt": "20"
+              },
+              "__v": {
+                "$numberInt": "0"
+              }
+            },
+            {
+              "_id": {
+                "$oid": "{{tasks:13}}"
+              },
+              "taskType": "machining",
+              "budgetId": {
+                "$oid": "{{budgets:4}}"
+              },
+              "description": "Maquinação de peças em aço inox",
+              "unitPrice": {
+                "$numberDouble": "38.5"
+              },
+              "quantity": {
+                "$numberInt": "15"
+              },
+              "__v": {
+                "$numberInt": "0"
+              }
+            },
+            {
+              "_id": {
+                "$oid": "{{tasks:14}}"
+              },
+              "taskType": "assembly",
+              "budgetId": {
+                "$oid": "{{budgets:4}}"
+              },
+              "description": "",
+              "unitPrice": {
+                "$numberInt": "28"
+              },
+              "quantity": {
+                "$numberInt": "10"
+              },
+              "__v": {
+                "$numberInt": "0"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "budget-new-revision-missing",
+      "title": "New revision of unknown budget",
+      "request": {
+        "method": "POST",
+        "path": "/api/budget/newrevision/{{oid:1}}",
+        "auth": "admin",
+        "body": {}
+      },
+      "response": {
+        "status": 400,
+        "contentType": "text/html; charset=utf-8",
+        "text": "Orçamento não existe"
+      },
+      "db": {}
+    },
+    {
+      "id": "budget-update-revision-descriptive",
+      "title": "Change descriptive of a revision (rev > 0: no NAS rename)",
+      "request": {
+        "method": "PUT",
+        "path": "/api/budget/{{budgets:3}}",
+        "auth": "admin",
+        "body": {
+          "madeById": "{{users:2}}",
+          "descriptive": "Máquina de corte (rev. 1)",
+          "personInCharge": "Eng.ª Maria"
+        }
+      },
+      "response": {
+        "status": 200,
+        "contentType": "application/json; charset=utf-8",
+        "json": {
+          "revision": 1,
+          "complete": false,
+          "wasPdfDownloaded": false,
+          "margin": 25,
+          "daysNeededToDoTheWork": 45,
+          "validity": 60,
+          "hasGenerateJob": false,
+          "_id": "{{budgets:3}}",
+          "client": {
+            "_id": "{{entities:1}}",
+            "name": "Metalúrgica do Vale do Ave, Lda.",
+            "fiscalNumber": "500100200",
+            "address": "Rua da Indústria, 12",
+            "zipCode": "4760-100",
+            "location": "Vila Nova de Famalicão",
+            "paymentCondition": "Pronto pagamento",
+            "type": "Cliente",
+            "__v": 0
+          },
+          "descriptive": "Máquina de corte (rev. 1)",
+          "personInCharge": "Eng.ª Maria",
+          "madeBy": {
+            "roles": [
+              "canSeeOrcamentos",
+              "canSeeObras",
+              "canSeeHistorico",
+              "canSeeEntidades",
+              "canSeeDefinicoes",
+              "canSeeDashboard",
+              "canSeeLeituras"
+            ],
+            "fieldOfCompetencies": "Desenvolvimento",
+            "_id": "{{users:2}}",
+            "name": "Ana Administradora",
+            "email": "ana.admin@dib4t.local",
+            "password": "{{bcrypt:$2a$10$}}",
+            "__v": 0
+          },
+          "budgetNumber": "{{yy}}-0001",
+          "paymentMethod": "Transferência a 30 dias",
+          "total": 12345.67,
+          "description": "Fornecimento conforme especificação.\nInclui montagem e ensaios.",
+          "date": "{{now}}",
+          "__v": 0
+        }
+      },
+      "db": {
+        "budgets": {
+          "updated": [
+            {
+              "_id": {
+                "$oid": "{{budgets:3}}"
+              },
+              "changed": [
+                "descriptive",
+                "personInCharge",
+                "madeBy"
+              ],
+              "after": {
+                "_id": {
+                  "$oid": "{{budgets:3}}"
+                },
+                "revision": {
+                  "$numberInt": "1"
+                },
+                "complete": false,
+                "wasPdfDownloaded": false,
+                "margin": {
+                  "$numberInt": "25"
+                },
+                "daysNeededToDoTheWork": {
+                  "$numberInt": "45"
+                },
+                "validity": {
+                  "$numberInt": "60"
+                },
+                "hasGenerateJob": false,
+                "client": {
+                  "$oid": "{{entities:1}}"
+                },
+                "descriptive": "Máquina de corte (rev. 1)",
+                "personInCharge": "Eng.ª Maria",
+                "madeBy": {
+                  "$oid": "{{users:2}}"
+                },
+                "budgetNumber": "{{yy}}-0001",
+                "paymentMethod": "Transferência a 30 dias",
+                "total": {
+                  "$numberDouble": "12345.67"
+                },
+                "description": "Fornecimento conforme especificação.\nInclui montagem e ensaios.",
+                "date": {
+                  "$date": "{{now}}"
+                },
+                "__v": {
+                  "$numberInt": "0"
+                }
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "budget-revisions",
+      "title": "All revisions desc with madeBy",
+      "request": {
+        "method": "GET",
+        "path": "/api/budget/revisions/{{yy}}-0001",
+        "auth": "admin",
+        "body": null
+      },
+      "response": {
+        "status": 200,
+        "contentType": "application/json; charset=utf-8",
+        "json": [
+          {
+            "revision": 2,
+            "complete": false,
+            "wasPdfDownloaded": false,
+            "margin": 25,
+            "daysNeededToDoTheWork": 45,
+            "validity": 60,
+            "hasGenerateJob": false,
+            "_id": "{{budgets:4}}",
+            "client": "{{entities:1}}",
+            "descriptive": "Máquina de corte",
+            "personInCharge": "Eng.ª Maria Lopes",
+            "madeBy": {
+              "roles": [
+                "canSeeObras",
+                "canSeeLeituras",
+                "canSeeHistorico"
+              ],
+              "fieldOfCompetencies": "Montagem",
+              "_id": "{{users:3}}",
+              "name": "Bruno Maquinação Silva",
+              "email": "bruno.limitado@dib4t.local",
+              "password": "{{bcrypt:$2a$10$}}",
+              "__v": 1
+            },
+            "budgetNumber": "{{yy}}-0001",
+            "paymentMethod": "Transferência a 30 dias",
+            "total": 12345.67,
+            "description": "Fornecimento conforme especificação.\nInclui montagem e ensaios.",
+            "date": "{{now}}",
+            "__v": 0
+          },
+          {
+            "revision": 1,
+            "complete": false,
+            "wasPdfDownloaded": false,
+            "margin": 25,
+            "daysNeededToDoTheWork": 45,
+            "validity": 60,
+            "hasGenerateJob": false,
+            "_id": "{{budgets:3}}",
+            "client": "{{entities:1}}",
+            "descriptive": "Máquina de corte (rev. 1)",
+            "personInCharge": "Eng.ª Maria",
+            "madeBy": {
+              "roles": [
+                "canSeeOrcamentos",
+                "canSeeObras",
+                "canSeeHistorico",
+                "canSeeEntidades",
+                "canSeeDefinicoes",
+                "canSeeDashboard",
+                "canSeeLeituras"
+              ],
+              "fieldOfCompetencies": "Desenvolvimento",
+              "_id": "{{users:2}}",
+              "name": "Ana Administradora",
+              "email": "ana.admin@dib4t.local",
+              "password": "{{bcrypt:$2a$10$}}",
+              "__v": 0
+            },
+            "budgetNumber": "{{yy}}-0001",
+            "paymentMethod": "Transferência a 30 dias",
+            "total": 12345.67,
+            "description": "Fornecimento conforme especificação.\nInclui montagem e ensaios.",
+            "date": "{{now}}",
+            "__v": 0
+          },
+          {
+            "revision": 0,
+            "complete": false,
+            "wasPdfDownloaded": false,
+            "margin": 25,
+            "daysNeededToDoTheWork": 45,
+            "validity": 60,
+            "hasGenerateJob": false,
+            "_id": "{{budgets:1}}",
+            "client": "{{entities:1}}",
+            "descriptive": "Máquina de corte",
+            "personInCharge": "Eng.ª Maria Lopes",
+            "madeBy": {
+              "roles": [
+                "canSeeObras",
+                "canSeeLeituras",
+                "canSeeHistorico"
+              ],
+              "fieldOfCompetencies": "Montagem",
+              "_id": "{{users:3}}",
+              "name": "Bruno Maquinação Silva",
+              "email": "bruno.limitado@dib4t.local",
+              "password": "{{bcrypt:$2a$10$}}",
+              "__v": 1
+            },
+            "budgetNumber": "{{yy}}-0001",
+            "paymentMethod": "Transferência a 30 dias",
+            "total": 12345.67,
+            "date": "{{now}}",
+            "__v": 0,
+            "description": "Fornecimento conforme especificação.\nInclui montagem e ensaios."
+          }
+        ]
+      },
+      "db": {}
+    },
+    {
+      "id": "budget-clone",
+      "title": "Clone to a new number (copies tasks and fields)",
+      "request": {
+        "method": "POST",
+        "path": "/api/budget/clone/{{budgets:1}}",
+        "auth": "admin",
+        "body": {
+          "clientId": "{{entities:2}}",
+          "madeById": "{{users:2}}",
+          "descriptive": "Máquina de corte — cópia",
+          "personInCharge": "Sr. Paulo"
+        }
+      },
+      "response": {
+        "status": 200,
+        "contentType": "application/json; charset=utf-8",
+        "json": {
+          "revision": 0,
+          "complete": false,
+          "wasPdfDownloaded": false,
+          "margin": 25,
+          "daysNeededToDoTheWork": 45,
+          "validity": 60,
+          "hasGenerateJob": false,
+          "_id": "{{budgets:5}}",
+          "client": {
+            "_id": "{{entities:2}}",
+            "name": "Cortiças Reunidas",
+            "paymentCondition": "Transferência a 30 dias",
+            "type": "Cliente e Fornecedor",
+            "__v": 0,
+            "address": "Lugar da Cortiça",
+            "fiscalNumber": "500999888",
+            "location": "Santa Maria da Feira",
+            "zipCode": "4535-000"
+          },
+          "descriptive": "Máquina de corte — cópia",
+          "personInCharge": "Sr. Paulo",
+          "madeBy": {
+            "roles": [
+              "canSeeOrcamentos",
+              "canSeeObras",
+              "canSeeHistorico",
+              "canSeeEntidades",
+              "canSeeDefinicoes",
+              "canSeeDashboard",
+              "canSeeLeituras"
+            ],
+            "fieldOfCompetencies": "Desenvolvimento",
+            "_id": "{{users:2}}",
+            "name": "Ana Administradora",
+            "email": "ana.admin@dib4t.local",
+            "password": "{{bcrypt:$2a$10$}}",
+            "__v": 0
+          },
+          "budgetNumber": "{{yy}}-0003",
+          "paymentMethod": "Transferência a 30 dias",
+          "total": 12345.67,
+          "description": "Fornecimento conforme especificação.\nInclui montagem e ensaios.",
+          "date": "{{now}}",
+          "__v": 0
+        }
+      },
+      "db": {
+        "budgets": {
+          "inserted": [
+            {
+              "_id": {
+                "$oid": "{{budgets:5}}"
+              },
+              "revision": {
+                "$numberInt": "0"
+              },
+              "complete": false,
+              "wasPdfDownloaded": false,
+              "margin": {
+                "$numberInt": "25"
+              },
+              "daysNeededToDoTheWork": {
+                "$numberInt": "45"
+              },
+              "validity": {
+                "$numberInt": "60"
+              },
+              "hasGenerateJob": false,
+              "client": {
+                "$oid": "{{entities:2}}"
+              },
+              "descriptive": "Máquina de corte — cópia",
+              "personInCharge": "Sr. Paulo",
+              "madeBy": {
+                "$oid": "{{users:2}}"
+              },
+              "budgetNumber": "{{yy}}-0003",
+              "paymentMethod": "Transferência a 30 dias",
+              "total": {
+                "$numberDouble": "12345.67"
+              },
+              "description": "Fornecimento conforme especificação.\nInclui montagem e ensaios.",
+              "date": {
+                "$date": "{{now}}"
+              },
+              "__v": {
+                "$numberInt": "0"
+              }
+            }
+          ]
+        },
+        "tasks": {
+          "inserted": [
+            {
+              "_id": {
+                "$oid": "{{tasks:15}}"
+              },
+              "taskType": "components",
+              "budgetId": {
+                "$oid": "{{budgets:5}}"
+              },
+              "description": "Componentes pneumáticos",
+              "unitPrice": {
+                "$numberDouble": "1250.75"
+              },
+              "quantity": {
+                "$numberDouble": "1.5"
+              },
+              "__v": {
+                "$numberInt": "0"
+              }
+            },
+            {
+              "_id": {
+                "$oid": "{{tasks:16}}"
+              },
+              "taskType": "development",
+              "budgetId": {
+                "$oid": "{{budgets:5}}"
+              },
+              "description": "Projeto mecânico",
+              "unitPrice": {
+                "$numberInt": "30"
+              },
+              "quantity": {
+                "$numberInt": "20"
+              },
+              "__v": {
+                "$numberInt": "0"
+              }
+            },
+            {
+              "_id": {
+                "$oid": "{{tasks:17}}"
+              },
+              "taskType": "machining",
+              "budgetId": {
+                "$oid": "{{budgets:5}}"
+              },
+              "description": "Maquinação de peças em aço inox",
+              "unitPrice": {
+                "$numberDouble": "38.5"
+              },
+              "quantity": {
+                "$numberInt": "15"
+              },
+              "__v": {
+                "$numberInt": "0"
+              }
+            },
+            {
+              "_id": {
+                "$oid": "{{tasks:18}}"
+              },
+              "taskType": "assembly",
+              "budgetId": {
+                "$oid": "{{budgets:5}}"
+              },
+              "description": "",
+              "unitPrice": {
+                "$numberInt": "28"
+              },
+              "quantity": {
+                "$numberInt": "10"
+              },
+              "__v": {
+                "$numberInt": "0"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "budget-clone-missing",
+      "title": "Clone unknown budget",
+      "request": {
+        "method": "POST",
+        "path": "/api/budget/clone/{{oid:1}}",
+        "auth": "admin",
+        "body": {
+          "clientId": "{{entities:2}}",
+          "madeById": "{{users:2}}",
+          "descriptive": "X",
+          "personInCharge": "X"
+        }
+      },
+      "response": {
+        "status": 400,
+        "contentType": "text/html; charset=utf-8",
+        "text": "Orçamento não existe"
+      },
+      "db": {}
+    },
+    {
+      "id": "budget-import",
+      "title": "Import tasks + description from a number",
+      "request": {
+        "method": "PUT",
+        "path": "/api/budget/import/{{budgets:2}}",
+        "auth": "admin",
+        "body": {
+          "importDescription": true,
+          "importTasks": true,
+          "budgetNumber": "{{yy}}-0001"
+        }
+      },
+      "response": {
+        "status": 200,
+        "contentType": "application/json; charset=utf-8",
+        "json": {
+          "revision": 0,
+          "complete": false,
+          "wasPdfDownloaded": false,
+          "margin": 25,
+          "daysNeededToDoTheWork": 60,
+          "validity": 30,
+          "hasGenerateJob": false,
+          "_id": "{{budgets:2}}",
+          "client": {
+            "_id": "{{entities:2}}",
+            "name": "Cortiças Reunidas",
+            "paymentCondition": "Transferência a 30 dias",
+            "type": "Cliente e Fornecedor",
+            "__v": 0,
+            "address": "Lugar da Cortiça",
+            "fiscalNumber": "500999888",
+            "location": "Santa Maria da Feira",
+            "zipCode": "4535-000"
+          },
+          "descriptive": "Retrofit prensa 200t",
+          "personInCharge": "Sr. Paulo",
+          "madeBy": {
+            "roles": [
+              "canSeeOrcamentos",
+              "canSeeObras",
+              "canSeeHistorico",
+              "canSeeEntidades",
+              "canSeeDefinicoes",
+              "canSeeDashboard",
+              "canSeeLeituras"
+            ],
+            "fieldOfCompetencies": "Desenvolvimento",
+            "_id": "{{users:2}}",
+            "name": "Ana Administradora",
+            "email": "ana.admin@dib4t.local",
+            "password": "{{bcrypt:$2a$10$}}",
+            "__v": 0
+          },
+          "budgetNumber": "{{yy}}-0002",
+          "paymentMethod": "Transferência a 30 dias",
+          "total": 12345.67,
+          "date": "{{now}}",
+          "__v": 0,
+          "description": "Fornecimento conforme especificação.\nInclui montagem e ensaios."
+        }
+      },
+      "db": {
+        "budgets": {
+          "updated": [
+            {
+              "_id": {
+                "$oid": "{{budgets:2}}"
+              },
+              "changed": [
+                "margin",
+                "total",
+                "description"
+              ],
+              "after": {
+                "_id": {
+                  "$oid": "{{budgets:2}}"
+                },
+                "revision": {
+                  "$numberInt": "0"
+                },
+                "complete": false,
+                "wasPdfDownloaded": false,
+                "margin": {
+                  "$numberInt": "25"
+                },
+                "daysNeededToDoTheWork": {
+                  "$numberInt": "60"
+                },
+                "validity": {
+                  "$numberInt": "30"
+                },
+                "hasGenerateJob": false,
+                "client": {
+                  "$oid": "{{entities:2}}"
+                },
+                "descriptive": "Retrofit prensa 200t",
+                "personInCharge": "Sr. Paulo",
+                "madeBy": {
+                  "$oid": "{{users:2}}"
+                },
+                "budgetNumber": "{{yy}}-0002",
+                "paymentMethod": "Transferência a 30 dias",
+                "total": {
+                  "$numberDouble": "12345.67"
+                },
+                "date": {
+                  "$date": "{{now}}"
+                },
+                "__v": {
+                  "$numberInt": "0"
+                },
+                "description": "Fornecimento conforme especificação.\nInclui montagem e ensaios."
+              }
+            }
+          ]
+        },
+        "tasks": {
+          "inserted": [
+            {
+              "_id": {
+                "$oid": "{{tasks:19}}"
+              },
+              "taskType": "components",
+              "budgetId": {
+                "$oid": "{{budgets:2}}"
+              },
+              "description": "Componentes pneumáticos",
+              "unitPrice": {
+                "$numberDouble": "1250.75"
+              },
+              "quantity": {
+                "$numberDouble": "1.5"
+              },
+              "__v": {
+                "$numberInt": "0"
+              }
+            },
+            {
+              "_id": {
+                "$oid": "{{tasks:20}}"
+              },
+              "taskType": "development",
+              "budgetId": {
+                "$oid": "{{budgets:2}}"
+              },
+              "description": "Projeto mecânico",
+              "unitPrice": {
+                "$numberInt": "30"
+              },
+              "quantity": {
+                "$numberInt": "20"
+              },
+              "__v": {
+                "$numberInt": "0"
+              }
+            },
+            {
+              "_id": {
+                "$oid": "{{tasks:21}}"
+              },
+              "taskType": "machining",
+              "budgetId": {
+                "$oid": "{{budgets:2}}"
+              },
+              "description": "Maquinação de peças em aço inox",
+              "unitPrice": {
+                "$numberDouble": "38.5"
+              },
+              "quantity": {
+                "$numberInt": "15"
+              },
+              "__v": {
+                "$numberInt": "0"
+              }
+            },
+            {
+              "_id": {
+                "$oid": "{{tasks:22}}"
+              },
+              "taskType": "assembly",
+              "budgetId": {
+                "$oid": "{{budgets:2}}"
+              },
+              "description": "",
+              "unitPrice": {
+                "$numberInt": "28"
+              },
+              "quantity": {
+                "$numberInt": "10"
+              },
+              "__v": {
+                "$numberInt": "0"
+              }
+            }
+          ],
+          "deleted": [
+            {
+              "_id": {
+                "$oid": "{{tasks:2}}"
+              },
+              "budgetId": {
+                "$oid": "{{budgets:2}}"
+              },
+              "taskType": "automation",
+              "description": "",
+              "unitPrice": {
+                "$numberDouble": "32.5"
+              },
+              "quantity": {
+                "$numberInt": "1"
+              },
+              "__v": {
+                "$numberInt": "0"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "budget-import-description-only",
+      "title": "Import description only",
+      "request": {
+        "method": "PUT",
+        "path": "/api/budget/import/{{budgets:5}}",
+        "auth": "admin",
+        "body": {
+          "importDescription": true,
+          "importTasks": false,
+          "budgetNumber": "{{yy}}-0002"
+        }
+      },
+      "response": {
+        "status": 200,
+        "contentType": "application/json; charset=utf-8",
+        "json": {
+          "revision": 0,
+          "complete": false,
+          "wasPdfDownloaded": false,
+          "margin": 25,
+          "daysNeededToDoTheWork": 45,
+          "validity": 60,
+          "hasGenerateJob": false,
+          "_id": "{{budgets:5}}",
+          "client": {
+            "_id": "{{entities:2}}",
+            "name": "Cortiças Reunidas",
+            "paymentCondition": "Transferência a 30 dias",
+            "type": "Cliente e Fornecedor",
+            "__v": 0,
+            "address": "Lugar da Cortiça",
+            "fiscalNumber": "500999888",
+            "location": "Santa Maria da Feira",
+            "zipCode": "4535-000"
+          },
+          "descriptive": "Máquina de corte — cópia",
+          "personInCharge": "Sr. Paulo",
+          "madeBy": {
+            "roles": [
+              "canSeeOrcamentos",
+              "canSeeObras",
+              "canSeeHistorico",
+              "canSeeEntidades",
+              "canSeeDefinicoes",
+              "canSeeDashboard",
+              "canSeeLeituras"
+            ],
+            "fieldOfCompetencies": "Desenvolvimento",
+            "_id": "{{users:2}}",
+            "name": "Ana Administradora",
+            "email": "ana.admin@dib4t.local",
+            "password": "{{bcrypt:$2a$10$}}",
+            "__v": 0
+          },
+          "budgetNumber": "{{yy}}-0003",
+          "paymentMethod": "Transferência a 30 dias",
+          "total": 12345.67,
+          "description": "Fornecimento conforme especificação.\nInclui montagem e ensaios.",
+          "date": "{{now}}",
+          "__v": 0
+        }
+      },
+      "db": {}
+    },
+    {
+      "id": "budget-import-unknown-number",
+      "title": "Import from unknown number",
+      "request": {
+        "method": "PUT",
+        "path": "/api/budget/import/{{budgets:2}}",
+        "auth": "admin",
+        "body": {
+          "importDescription": true,
+          "importTasks": true,
+          "budgetNumber": "00-0000"
+        }
+      },
+      "response": {
+        "status": 400,
+        "contentType": "text/html; charset=utf-8",
+        "text": "Orçamento com esse número não existe"
+      },
+      "db": {}
+    },
+    {
+      "id": "budget-import-validation",
+      "title": "Import without flags",
+      "request": {
+        "method": "PUT",
+        "path": "/api/budget/import/{{budgets:2}}",
+        "auth": "admin",
+        "body": {
+          "budgetNumber": "{{yy}}-0001"
+        }
+      },
+      "response": {
+        "status": 400,
+        "contentType": "text/html; charset=utf-8",
+        "text": "Erro: \"importDescription\" is required"
+      },
+      "db": {}
+    },
+    {
+      "id": "budget-list",
+      "title": "Latest revision per number, flattened rows",
+      "request": {
+        "method": "GET",
+        "path": "/api/budget",
+        "auth": "admin",
+        "body": null
+      },
+      "response": {
+        "status": 200,
+        "contentType": "application/json; charset=utf-8",
+        "json": [
+          {
+            "_id": "{{budgets:5}}",
+            "budgetNumber": "{{yy}}-0003",
+            "clientName": "Cortiças Reunidas",
+            "descriptive": "Máquina de corte — cópia",
+            "personInCharge": "Sr. Paulo",
+            "madeBy": "Ana Administradora",
+            "date": "{{now}}",
+            "revision": 0,
+            "complete": false,
+            "wasPdfDownloaded": false,
+            "hasGenerateJob": false,
+            "total": 12345.67,
+            "daysNeededToDoTheWork": 45
+          },
+          {
+            "_id": "{{budgets:2}}",
+            "budgetNumber": "{{yy}}-0002",
+            "clientName": "Cortiças Reunidas",
+            "descriptive": "Retrofit prensa 200t",
+            "personInCharge": "Sr. Paulo",
+            "madeBy": "Ana Administradora",
+            "date": "{{now}}",
+            "revision": 0,
+            "complete": false,
+            "wasPdfDownloaded": false,
+            "hasGenerateJob": false,
+            "total": 12345.67,
+            "daysNeededToDoTheWork": 60
+          },
+          {
+            "_id": "{{budgets:4}}",
+            "budgetNumber": "{{yy}}-0001",
+            "clientName": "Metalúrgica do Vale do Ave, Lda.",
+            "descriptive": "Máquina de corte",
+            "personInCharge": "Eng.ª Maria Lopes",
+            "madeBy": "Bruno Maquinação Silva",
+            "date": "{{now}}",
+            "revision": 2,
+            "complete": false,
+            "wasPdfDownloaded": false,
+            "hasGenerateJob": false,
+            "total": 12345.67,
+            "daysNeededToDoTheWork": 45
+          }
+        ]
+      },
+      "db": {}
+    },
+    {
+      "id": "budget-search",
+      "title": "Search (regex over number/client/descriptive/person/madeBy)",
+      "request": {
+        "method": "GET",
+        "path": "/api/budget/search?q=corti",
+        "auth": "admin",
+        "body": null
+      },
+      "response": {
+        "status": 200,
+        "contentType": "application/json; charset=utf-8",
+        "json": [
+          {
+            "_id": "{{budgets:5}}",
+            "budgetNumber": "{{yy}}-0003",
+            "clientName": "Cortiças Reunidas",
+            "descriptive": "Máquina de corte — cópia",
+            "personInCharge": "Sr. Paulo",
+            "madeBy": "Ana Administradora",
+            "date": "{{now}}",
+            "revision": 0,
+            "complete": false,
+            "wasPdfDownloaded": false,
+            "hasGenerateJob": false,
+            "total": 12345.67,
+            "daysNeededToDoTheWork": 45
+          },
+          {
+            "_id": "{{budgets:2}}",
+            "budgetNumber": "{{yy}}-0002",
+            "clientName": "Cortiças Reunidas",
+            "descriptive": "Retrofit prensa 200t",
+            "personInCharge": "Sr. Paulo",
+            "madeBy": "Ana Administradora",
+            "date": "{{now}}",
+            "revision": 0,
+            "complete": false,
+            "wasPdfDownloaded": false,
+            "hasGenerateJob": false,
+            "total": 12345.67,
+            "daysNeededToDoTheWork": 60
+          }
+        ]
+      },
+      "db": {}
+    },
+    {
+      "id": "budget-search-number",
+      "title": "Search by number fragment",
+      "request": {
+        "method": "GET",
+        "path": "/api/budget/search?q={{yy}}-0001",
+        "auth": "admin",
+        "body": null
+      },
+      "response": {
+        "status": 200,
+        "contentType": "application/json; charset=utf-8",
+        "json": [
+          {
+            "_id": "{{budgets:4}}",
+            "budgetNumber": "{{yy}}-0001",
+            "clientName": "Metalúrgica do Vale do Ave, Lda.",
+            "descriptive": "Máquina de corte",
+            "personInCharge": "Eng.ª Maria Lopes",
+            "madeBy": "Bruno Maquinação Silva",
+            "date": "{{now}}",
+            "revision": 2,
+            "complete": false,
+            "wasPdfDownloaded": false,
+            "hasGenerateJob": false,
+            "total": 12345.67,
+            "daysNeededToDoTheWork": 45
+          }
+        ]
+      },
+      "db": {}
+    },
+    {
+      "id": "budget-search-short",
+      "title": "Search with 1 char → 400",
+      "request": {
+        "method": "GET",
+        "path": "/api/budget/search?q=a",
+        "auth": "admin",
+        "body": null
+      },
+      "response": {
+        "status": 400,
+        "contentType": "text/html; charset=utf-8",
+        "text": "\"q\" length must be at least 2 characters long"
+      },
+      "db": {}
+    },
+    {
+      "id": "budget-search-bad-regex",
+      "title": "Search with invalid regex → 500",
+      "request": {
+        "method": "GET",
+        "path": "/api/budget/search?q=%28%28",
+        "auth": "admin",
+        "body": null
+      },
+      "response": {
+        "status": 500,
+        "contentType": "text/html; charset=utf-8",
+        "text": "Error performing search: Invalid regular expression: /((/: Unterminated group"
+      },
+      "db": {}
+    }
+  ]
+}

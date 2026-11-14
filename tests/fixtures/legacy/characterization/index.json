@@ -1,0 +1,1298 @@
+[
+  {
+    "file": "01-account.json",
+    "id": "auth-no-token",
+    "endpoint": "GET /api/prices",
+    "status": 401
+  },
+  {
+    "file": "01-account.json",
+    "id": "auth-invalid-token",
+    "endpoint": "GET /api/prices",
+    "status": 400
+  },
+  {
+    "file": "01-account.json",
+    "id": "login-validation",
+    "endpoint": "POST /api/account/login",
+    "status": 400
+  },
+  {
+    "file": "01-account.json",
+    "id": "login-unknown-email",
+    "endpoint": "POST /api/account/login",
+    "status": 400
+  },
+  {
+    "file": "01-account.json",
+    "id": "create-admin-user",
+    "endpoint": "POST /api/account/create",
+    "status": 200
+  },
+  {
+    "file": "01-account.json",
+    "id": "create-limited-user",
+    "endpoint": "POST /api/account/create",
+    "status": 200
+  },
+  {
+    "file": "01-account.json",
+    "id": "create-user-default-field",
+    "endpoint": "POST /api/account/create",
+    "status": 200
+  },
+  {
+    "file": "01-account.json",
+    "id": "create-user-duplicate-email",
+    "endpoint": "POST /api/account/create",
+    "status": 400
+  },
+  {
+    "file": "01-account.json",
+    "id": "create-user-validation",
+    "endpoint": "POST /api/account/create",
+    "status": 400
+  },
+  {
+    "file": "01-account.json",
+    "id": "login-wrong-password",
+    "endpoint": "POST /api/account/login",
+    "status": 400
+  },
+  {
+    "file": "01-account.json",
+    "id": "login-admin",
+    "endpoint": "POST /api/account/login",
+    "status": 200
+  },
+  {
+    "file": "01-account.json",
+    "id": "login-limited",
+    "endpoint": "POST /api/account/login",
+    "status": 200
+  },
+  {
+    "file": "01-account.json",
+    "id": "roles",
+    "endpoint": "GET /api/account/roles",
+    "status": 200
+  },
+  {
+    "file": "01-account.json",
+    "id": "roles-forbidden",
+    "endpoint": "GET /api/account/roles",
+    "status": 401
+  },
+  {
+    "file": "01-account.json",
+    "id": "users",
+    "endpoint": "GET /api/account/users",
+    "status": 200
+  },
+  {
+    "file": "01-account.json",
+    "id": "user-by-id",
+    "endpoint": "GET /api/account/:id",
+    "status": 200
+  },
+  {
+    "file": "01-account.json",
+    "id": "user-by-id-missing",
+    "endpoint": "GET /api/account/:id",
+    "status": 404
+  },
+  {
+    "file": "01-account.json",
+    "id": "user-me-legacy",
+    "endpoint": "GET /api/account/me",
+    "status": 500
+  },
+  {
+    "file": "01-account.json",
+    "id": "user-update",
+    "endpoint": "PUT /api/account/:id",
+    "status": 200
+  },
+  {
+    "file": "01-account.json",
+    "id": "user-update-password",
+    "endpoint": "PUT /api/account/:id",
+    "status": 200
+  },
+  {
+    "file": "01-account.json",
+    "id": "user-update-missing",
+    "endpoint": "PUT /api/account/:id",
+    "status": 404
+  },
+  {
+    "file": "01-account.json",
+    "id": "user-update-validation",
+    "endpoint": "PUT /api/account/:id",
+    "status": 400
+  },
+  {
+    "file": "01-account.json",
+    "id": "login-after-password-change",
+    "endpoint": "POST /api/account/login",
+    "status": 200
+  },
+  {
+    "file": "02-settings.json",
+    "id": "prices-get",
+    "endpoint": "GET /api/prices",
+    "status": 200
+  },
+  {
+    "file": "02-settings.json",
+    "id": "prices-get-limited",
+    "endpoint": "GET /api/prices",
+    "status": 200
+  },
+  {
+    "file": "02-settings.json",
+    "id": "prices-update",
+    "endpoint": "POST /api/prices",
+    "status": 200
+  },
+  {
+    "file": "02-settings.json",
+    "id": "prices-update-validation",
+    "endpoint": "POST /api/prices",
+    "status": 400
+  },
+  {
+    "file": "02-settings.json",
+    "id": "prices-update-forbidden",
+    "endpoint": "POST /api/prices",
+    "status": 401
+  },
+  {
+    "file": "02-settings.json",
+    "id": "payment-conditions-empty",
+    "endpoint": "GET /api/entity/getAllPaymentConditions",
+    "status": 200
+  },
+  {
+    "file": "02-settings.json",
+    "id": "payment-method-add",
+    "endpoint": "POST /api/entity/addPaymentMethod",
+    "status": 200
+  },
+  {
+    "file": "02-settings.json",
+    "id": "payment-method-add-2",
+    "endpoint": "POST /api/entity/addPaymentMethod",
+    "status": 200
+  },
+  {
+    "file": "02-settings.json",
+    "id": "payment-method-add-3",
+    "endpoint": "POST /api/entity/addPaymentMethod",
+    "status": 200
+  },
+  {
+    "file": "02-settings.json",
+    "id": "payment-method-duplicate",
+    "endpoint": "POST /api/entity/addPaymentMethod",
+    "status": 400
+  },
+  {
+    "file": "02-settings.json",
+    "id": "payment-method-validation",
+    "endpoint": "POST /api/entity/addPaymentMethod",
+    "status": 400
+  },
+  {
+    "file": "02-settings.json",
+    "id": "payment-method-delete",
+    "endpoint": "DELETE /api/entity/deletePaymentMethod/:id",
+    "status": 200
+  },
+  {
+    "file": "02-settings.json",
+    "id": "payment-method-delete-missing",
+    "endpoint": "DELETE /api/entity/deletePaymentMethod/:id",
+    "status": 400
+  },
+  {
+    "file": "02-settings.json",
+    "id": "payment-conditions",
+    "endpoint": "GET /api/entity/getAllPaymentConditions",
+    "status": 200
+  },
+  {
+    "file": "02-settings.json",
+    "id": "printers-empty",
+    "endpoint": "GET /api/printer-settings",
+    "status": 200
+  },
+  {
+    "file": "02-settings.json",
+    "id": "printer-add-producao",
+    "endpoint": "POST /api/printer-settings",
+    "status": 200
+  },
+  {
+    "file": "02-settings.json",
+    "id": "printer-add-maquinacao",
+    "endpoint": "POST /api/printer-settings",
+    "status": 200
+  },
+  {
+    "file": "02-settings.json",
+    "id": "printer-add-validation-ip",
+    "endpoint": "POST /api/printer-settings",
+    "status": 400
+  },
+  {
+    "file": "02-settings.json",
+    "id": "printer-add-validation-template",
+    "endpoint": "POST /api/printer-settings",
+    "status": 400
+  },
+  {
+    "file": "02-settings.json",
+    "id": "printer-add-forbidden",
+    "endpoint": "POST /api/printer-settings",
+    "status": 401
+  },
+  {
+    "file": "02-settings.json",
+    "id": "printers",
+    "endpoint": "GET /api/printer-settings",
+    "status": 200
+  },
+  {
+    "file": "02-settings.json",
+    "id": "printer-by-template",
+    "endpoint": "GET /api/printer-settings/producao",
+    "status": 200
+  },
+  {
+    "file": "02-settings.json",
+    "id": "printer-by-template-missing",
+    "endpoint": "GET /api/printer-settings/outro",
+    "status": 404
+  },
+  {
+    "file": "02-settings.json",
+    "id": "printer-update",
+    "endpoint": "PUT /api/printer-settings/:id",
+    "status": 200
+  },
+  {
+    "file": "02-settings.json",
+    "id": "printer-update-bad-id",
+    "endpoint": "PUT /api/printer-settings/abc",
+    "status": 400
+  },
+  {
+    "file": "02-settings.json",
+    "id": "printer-update-missing",
+    "endpoint": "PUT /api/printer-settings/:id",
+    "status": 404
+  },
+  {
+    "file": "02-settings.json",
+    "id": "printer-delete",
+    "endpoint": "DELETE /api/printer-settings/:id",
+    "status": 200
+  },
+  {
+    "file": "02-settings.json",
+    "id": "printer-delete-missing",
+    "endpoint": "DELETE /api/printer-settings/:id",
+    "status": 404
+  },
+  {
+    "file": "02-settings.json",
+    "id": "printer-add-maquinacao-again",
+    "endpoint": "POST /api/printer-settings",
+    "status": 200
+  },
+  {
+    "file": "03-entities.json",
+    "id": "entity-types",
+    "endpoint": "GET /api/entity/getentityTypes",
+    "status": 200
+  },
+  {
+    "file": "03-entities.json",
+    "id": "entity-create-client",
+    "endpoint": "POST /api/entity",
+    "status": 200
+  },
+  {
+    "file": "03-entities.json",
+    "id": "entity-create-client-supplier",
+    "endpoint": "POST /api/entity",
+    "status": 200
+  },
+  {
+    "file": "03-entities.json",
+    "id": "entity-create-supplier",
+    "endpoint": "POST /api/entity",
+    "status": 200
+  },
+  {
+    "file": "03-entities.json",
+    "id": "entity-create-duplicate",
+    "endpoint": "POST /api/entity",
+    "status": 400
+  },
+  {
+    "file": "03-entities.json",
+    "id": "entity-create-validation",
+    "endpoint": "POST /api/entity",
+    "status": 400
+  },
+  {
+    "file": "03-entities.json",
+    "id": "entity-all",
+    "endpoint": "GET /api/entity/getAll",
+    "status": 200
+  },
+  {
+    "file": "03-entities.json",
+    "id": "entity-all-case-insensitive",
+    "endpoint": "GET /api/Entity/GETALL",
+    "status": 200
+  },
+  {
+    "file": "03-entities.json",
+    "id": "entity-clients",
+    "endpoint": "GET /api/entity/getallclients",
+    "status": 200
+  },
+  {
+    "file": "03-entities.json",
+    "id": "entity-by-id",
+    "endpoint": "GET /api/entity/:id",
+    "status": 200
+  },
+  {
+    "file": "03-entities.json",
+    "id": "entity-by-id-missing",
+    "endpoint": "GET /api/entity/:id",
+    "status": 400
+  },
+  {
+    "file": "03-entities.json",
+    "id": "entity-update",
+    "endpoint": "PUT /api/entity/:id",
+    "status": 200
+  },
+  {
+    "file": "03-entities.json",
+    "id": "entity-update-missing",
+    "endpoint": "PUT /api/entity/:id",
+    "status": 400
+  },
+  {
+    "file": "03-entities.json",
+    "id": "entity-search",
+    "endpoint": "POST /api/entity/search",
+    "status": 200
+  },
+  {
+    "file": "03-entities.json",
+    "id": "entity-search-partial-body",
+    "endpoint": "POST /api/entity/search",
+    "status": 200
+  },
+  {
+    "file": "03-entities.json",
+    "id": "entity-search-no-match",
+    "endpoint": "POST /api/entity/search",
+    "status": 200
+  },
+  {
+    "file": "04-budgets.json",
+    "id": "budget-create",
+    "endpoint": "POST /api/budget",
+    "status": 200
+  },
+  {
+    "file": "04-budgets.json",
+    "id": "budget-create-2",
+    "endpoint": "POST /api/budget",
+    "status": 200
+  },
+  {
+    "file": "04-budgets.json",
+    "id": "budget-create-supplier",
+    "endpoint": "POST /api/budget",
+    "status": 200
+  },
+  {
+    "file": "04-budgets.json",
+    "id": "budget-create-missing-client",
+    "endpoint": "POST /api/budget",
+    "status": 400
+  },
+  {
+    "file": "04-budgets.json",
+    "id": "budget-create-missing-user",
+    "endpoint": "POST /api/budget",
+    "status": 400
+  },
+  {
+    "file": "04-budgets.json",
+    "id": "budget-create-validation",
+    "endpoint": "POST /api/budget",
+    "status": 400
+  },
+  {
+    "file": "04-budgets.json",
+    "id": "budget-by-id",
+    "endpoint": "GET /api/budget/getById/:id",
+    "status": 200
+  },
+  {
+    "file": "04-budgets.json",
+    "id": "budget-by-id-missing",
+    "endpoint": "GET /api/budget/getById/:id",
+    "status": 400
+  },
+  {
+    "file": "04-budgets.json",
+    "id": "task-types",
+    "endpoint": "GET /api/task/getTaskTypes",
+    "status": 200
+  },
+  {
+    "file": "04-budgets.json",
+    "id": "task-list",
+    "endpoint": "GET /api/task/getBudgetTasks/:id",
+    "status": 200
+  },
+  {
+    "file": "04-budgets.json",
+    "id": "task-list-missing-budget",
+    "endpoint": "GET /api/task/getBudgetTasks/:id",
+    "status": 400
+  },
+  {
+    "file": "04-budgets.json",
+    "id": "task-create-default",
+    "endpoint": "POST /api/task/createDefaultTask/:id",
+    "status": 200
+  },
+  {
+    "file": "04-budgets.json",
+    "id": "task-create-default-2",
+    "endpoint": "POST /api/task/createDefaultTask/:id",
+    "status": 200
+  },
+  {
+    "file": "04-budgets.json",
+    "id": "task-create-default-3",
+    "endpoint": "POST /api/task/createDefaultTask/:id",
+    "status": 200
+  },
+  {
+    "file": "04-budgets.json",
+    "id": "task-create-default-missing",
+    "endpoint": "POST /api/task/createDefaultTask/:id",
+    "status": 400
+  },
+  {
+    "file": "04-budgets.json",
+    "id": "task-update-development",
+    "endpoint": "PUT /api/task/:id/:id",
+    "status": 200
+  },
+  {
+    "file": "04-budgets.json",
+    "id": "task-update-machining",
+    "endpoint": "PUT /api/task/:id/:id",
+    "status": 200
+  },
+  {
+    "file": "04-budgets.json",
+    "id": "task-update-assembly",
+    "endpoint": "PUT /api/task/:id/:id",
+    "status": 200
+  },
+  {
+    "file": "04-budgets.json",
+    "id": "task-update-components",
+    "endpoint": "PUT /api/task/:id/:id",
+    "status": 200
+  },
+  {
+    "file": "04-budgets.json",
+    "id": "task-update-validation",
+    "endpoint": "PUT /api/task/:id/:id",
+    "status": 400
+  },
+  {
+    "file": "04-budgets.json",
+    "id": "task-update-bad-ids",
+    "endpoint": "PUT /api/task/abc/def",
+    "status": 400
+  },
+  {
+    "file": "04-budgets.json",
+    "id": "task-update-missing",
+    "endpoint": "PUT /api/task/:id/:id",
+    "status": 400
+  },
+  {
+    "file": "04-budgets.json",
+    "id": "task-create-d8",
+    "endpoint": "POST /api/task",
+    "status": 400
+  },
+  {
+    "file": "04-budgets.json",
+    "id": "task-create-default-4",
+    "endpoint": "POST /api/task/createDefaultTask/:id",
+    "status": 200
+  },
+  {
+    "file": "04-budgets.json",
+    "id": "task-delete",
+    "endpoint": "DELETE /api/task/:id/:id",
+    "status": 200
+  },
+  {
+    "file": "04-budgets.json",
+    "id": "task-delete-missing",
+    "endpoint": "DELETE /api/task/:id/:id",
+    "status": 500
+  },
+  {
+    "file": "04-budgets.json",
+    "id": "task-list-after-edits",
+    "endpoint": "GET /api/task/getBudgetTasks/:id",
+    "status": 200
+  },
+  {
+    "file": "04-budgets.json",
+    "id": "budget-patch-description",
+    "endpoint": "PUT /api/budget/patchProperty/:id",
+    "status": 200
+  },
+  {
+    "file": "04-budgets.json",
+    "id": "budget-patch-days",
+    "endpoint": "PUT /api/budget/patchProperty/:id",
+    "status": 200
+  },
+  {
+    "file": "04-budgets.json",
+    "id": "budget-patch-validity",
+    "endpoint": "PUT /api/budget/patchProperty/:id",
+    "status": 200
+  },
+  {
+    "file": "04-budgets.json",
+    "id": "budget-patch-total",
+    "endpoint": "PUT /api/budget/patchProperty/:id",
+    "status": 200
+  },
+  {
+    "file": "04-budgets.json",
+    "id": "budget-patch-margin",
+    "endpoint": "PUT /api/budget/patchProperty/:id",
+    "status": 200
+  },
+  {
+    "file": "04-budgets.json",
+    "id": "budget-patch-payment",
+    "endpoint": "PUT /api/budget/patchProperty/:id",
+    "status": 200
+  },
+  {
+    "file": "04-budgets.json",
+    "id": "budget-patch-total-string",
+    "endpoint": "PUT /api/budget/patchProperty/:id",
+    "status": 200
+  },
+  {
+    "file": "04-budgets.json",
+    "id": "budget-patch-complete",
+    "endpoint": "PUT /api/budget/patchProperty/:id",
+    "status": 200
+  },
+  {
+    "file": "04-budgets.json",
+    "id": "budget-patch-bad-property",
+    "endpoint": "PUT /api/budget/patchProperty/:id",
+    "status": 400
+  },
+  {
+    "file": "04-budgets.json",
+    "id": "budget-patch-bad-value",
+    "endpoint": "PUT /api/budget/patchProperty/:id",
+    "status": 400
+  },
+  {
+    "file": "04-budgets.json",
+    "id": "budget-patch-missing",
+    "endpoint": "PUT /api/budget/patchProperty/:id",
+    "status": 400
+  },
+  {
+    "file": "04-budgets.json",
+    "id": "budget-pdf",
+    "endpoint": "GET /api/budget/getPdf/:id",
+    "status": 200
+  },
+  {
+    "file": "04-budgets.json",
+    "id": "budget-pdf-missing",
+    "endpoint": "GET /api/budget/getPdf/:id",
+    "status": 500
+  },
+  {
+    "file": "04-budgets.json",
+    "id": "budget-update",
+    "endpoint": "PUT /api/budget/:id",
+    "status": 200
+  },
+  {
+    "file": "04-budgets.json",
+    "id": "budget-update-missing-user",
+    "endpoint": "PUT /api/budget/:id",
+    "status": 400
+  },
+  {
+    "file": "04-budgets.json",
+    "id": "budget-update-missing",
+    "endpoint": "PUT /api/budget/:id",
+    "status": 400
+  },
+  {
+    "file": "04-budgets.json",
+    "id": "budget-new-revision",
+    "endpoint": "POST /api/budget/newrevision/:id",
+    "status": 200
+  },
+  {
+    "file": "04-budgets.json",
+    "id": "budget-new-revision-2",
+    "endpoint": "POST /api/budget/newrevision/:id",
+    "status": 200
+  },
+  {
+    "file": "04-budgets.json",
+    "id": "budget-new-revision-missing",
+    "endpoint": "POST /api/budget/newrevision/:id",
+    "status": 400
+  },
+  {
+    "file": "04-budgets.json",
+    "id": "budget-update-revision-descriptive",
+    "endpoint": "PUT /api/budget/:id",
+    "status": 200
+  },
+  {
+    "file": "04-budgets.json",
+    "id": "budget-revisions",
+    "endpoint": "GET /api/budget/revisions/:budgetNumber",
+    "status": 200
+  },
+  {
+    "file": "04-budgets.json",
+    "id": "budget-clone",
+    "endpoint": "POST /api/budget/clone/:id",
+    "status": 200
+  },
+  {
+    "file": "04-budgets.json",
+    "id": "budget-clone-missing",
+    "endpoint": "POST /api/budget/clone/:id",
+    "status": 400
+  },
+  {
+    "file": "04-budgets.json",
+    "id": "budget-import",
+    "endpoint": "PUT /api/budget/import/:id",
+    "status": 200
+  },
+  {
+    "file": "04-budgets.json",
+    "id": "budget-import-description-only",
+    "endpoint": "PUT /api/budget/import/:id",
+    "status": 200
+  },
+  {
+    "file": "04-budgets.json",
+    "id": "budget-import-unknown-number",
+    "endpoint": "PUT /api/budget/import/:id",
+    "status": 400
+  },
+  {
+    "file": "04-budgets.json",
+    "id": "budget-import-validation",
+    "endpoint": "PUT /api/budget/import/:id",
+    "status": 400
+  },
+  {
+    "file": "04-budgets.json",
+    "id": "budget-list",
+    "endpoint": "GET /api/budget",
+    "status": 200
+  },
+  {
+    "file": "04-budgets.json",
+    "id": "budget-search",
+    "endpoint": "GET /api/budget/search",
+    "status": 200
+  },
+  {
+    "file": "04-budgets.json",
+    "id": "budget-search-number",
+    "endpoint": "GET /api/budget/search",
+    "status": 200
+  },
+  {
+    "file": "04-budgets.json",
+    "id": "budget-search-short",
+    "endpoint": "GET /api/budget/search",
+    "status": 400
+  },
+  {
+    "file": "04-budgets.json",
+    "id": "budget-search-bad-regex",
+    "endpoint": "GET /api/budget/search",
+    "status": 500
+  },
+  {
+    "file": "05-jobs.json",
+    "id": "budget-for-job-2",
+    "endpoint": "POST /api/budget/clone/:id",
+    "status": 200
+  },
+  {
+    "file": "05-jobs.json",
+    "id": "budget-for-job-3",
+    "endpoint": "POST /api/budget/clone/:id",
+    "status": 200
+  },
+  {
+    "file": "05-jobs.json",
+    "id": "job-create",
+    "endpoint": "POST /api/job",
+    "status": 200
+  },
+  {
+    "file": "05-jobs.json",
+    "id": "job-create-again",
+    "endpoint": "POST /api/job",
+    "status": 400
+  },
+  {
+    "file": "05-jobs.json",
+    "id": "job-create-validation",
+    "endpoint": "POST /api/job",
+    "status": 400
+  },
+  {
+    "file": "05-jobs.json",
+    "id": "job-create-missing-budget",
+    "endpoint": "POST /api/job",
+    "status": 400
+  },
+  {
+    "file": "05-jobs.json",
+    "id": "job-create-2",
+    "endpoint": "POST /api/job",
+    "status": 200
+  },
+  {
+    "file": "05-jobs.json",
+    "id": "job-create-3",
+    "endpoint": "POST /api/job",
+    "status": 200
+  },
+  {
+    "file": "05-jobs.json",
+    "id": "blocked-task-update",
+    "endpoint": "PUT /api/task/:id/:id",
+    "status": 400
+  },
+  {
+    "file": "05-jobs.json",
+    "id": "blocked-task-default",
+    "endpoint": "POST /api/task/createDefaultTask/:id",
+    "status": 400
+  },
+  {
+    "file": "05-jobs.json",
+    "id": "blocked-task-delete",
+    "endpoint": "DELETE /api/task/:id/:id",
+    "status": 400
+  },
+  {
+    "file": "05-jobs.json",
+    "id": "blocked-patch",
+    "endpoint": "PUT /api/budget/patchProperty/:id",
+    "status": 200
+  },
+  {
+    "file": "05-jobs.json",
+    "id": "blocked-update",
+    "endpoint": "PUT /api/budget/:id",
+    "status": 200
+  },
+  {
+    "file": "05-jobs.json",
+    "id": "blocked-import",
+    "endpoint": "PUT /api/budget/import/:id",
+    "status": 400
+  },
+  {
+    "file": "05-jobs.json",
+    "id": "job-priority-high",
+    "endpoint": "PATCH /api/job/changeJobPriority/:id",
+    "status": 200
+  },
+  {
+    "file": "05-jobs.json",
+    "id": "job-priority-low",
+    "endpoint": "PATCH /api/job/changeJobPriority/:id",
+    "status": 200
+  },
+  {
+    "file": "05-jobs.json",
+    "id": "job-priority-validation",
+    "endpoint": "PATCH /api/job/changeJobPriority/:id",
+    "status": 400
+  },
+  {
+    "file": "05-jobs.json",
+    "id": "job-priority-bad-id",
+    "endpoint": "PATCH /api/job/changeJobPriority/abc",
+    "status": 400
+  },
+  {
+    "file": "05-jobs.json",
+    "id": "job-priority-missing",
+    "endpoint": "PATCH /api/job/changeJobPriority/:id",
+    "status": 400
+  },
+  {
+    "file": "05-jobs.json",
+    "id": "job-get-by-id",
+    "endpoint": "GET /api/job/getById/:id",
+    "status": 200
+  },
+  {
+    "file": "05-jobs.json",
+    "id": "job-get-by-id-missing",
+    "endpoint": "GET /api/job/getById/:id",
+    "status": 200
+  },
+  {
+    "file": "05-jobs.json",
+    "id": "job-get",
+    "endpoint": "GET /api/job/:id",
+    "status": 200
+  },
+  {
+    "file": "05-jobs.json",
+    "id": "job-get-missing",
+    "endpoint": "GET /api/job/:id",
+    "status": 400
+  },
+  {
+    "file": "05-jobs.json",
+    "id": "job-get-bad-id",
+    "endpoint": "GET /api/job/abc",
+    "status": 400
+  },
+  {
+    "file": "05-jobs.json",
+    "id": "job-counts",
+    "endpoint": "GET /api/job/getCounts",
+    "status": 200
+  },
+  {
+    "file": "05-jobs.json",
+    "id": "job-unfinished",
+    "endpoint": "GET /api/job/getUnfinished",
+    "status": 200
+  },
+  {
+    "file": "05-jobs.json",
+    "id": "job-by-state",
+    "endpoint": "GET /api/job/getByState/Aprovado",
+    "status": 200
+  },
+  {
+    "file": "05-jobs.json",
+    "id": "job-by-state-validation",
+    "endpoint": "GET /api/job/getByState/Outro",
+    "status": 400
+  },
+  {
+    "file": "05-jobs.json",
+    "id": "job-by-budget-number",
+    "endpoint": "GET /api/job/getByBudgetNumber/:budgetNumber",
+    "status": 200
+  },
+  {
+    "file": "05-jobs.json",
+    "id": "job-by-budget-number-missing",
+    "endpoint": "GET /api/job/getByBudgetNumber/:budgetNumber",
+    "status": 200
+  },
+  {
+    "file": "05-jobs.json",
+    "id": "job-by-budget-id",
+    "endpoint": "GET /api/job/getByBudgetId/:id",
+    "status": 200
+  },
+  {
+    "file": "05-jobs.json",
+    "id": "job-by-budget-id-missing",
+    "endpoint": "GET /api/job/getByBudgetId/:id",
+    "status": 400
+  },
+  {
+    "file": "05-jobs.json",
+    "id": "job-due-date",
+    "endpoint": "PATCH /api/job/dueDate/:id",
+    "status": 200
+  },
+  {
+    "file": "05-jobs.json",
+    "id": "job-due-date-missing",
+    "endpoint": "PATCH /api/job/dueDate/:id",
+    "status": 400
+  },
+  {
+    "file": "05-jobs.json",
+    "id": "job-statistics-dates-no-dates",
+    "endpoint": "PATCH /api/job/statisticsDates/:id",
+    "status": 500
+  },
+  {
+    "file": "05-jobs.json",
+    "id": "job-statistics-dates-validation",
+    "endpoint": "PATCH /api/job/statisticsDates/:id",
+    "status": 400
+  },
+  {
+    "file": "05-jobs.json",
+    "id": "job-register-development",
+    "endpoint": "PATCH /api/job/register/:id",
+    "status": 200
+  },
+  {
+    "file": "05-jobs.json",
+    "id": "job-register-consultancy",
+    "endpoint": "PATCH /api/job/register/:id",
+    "status": 200
+  },
+  {
+    "file": "05-jobs.json",
+    "id": "job-register-assembly",
+    "endpoint": "PATCH /api/job/register/:id",
+    "status": 200
+  },
+  {
+    "file": "05-jobs.json",
+    "id": "job-register-automation",
+    "endpoint": "PATCH /api/job/register/:id",
+    "status": 200
+  },
+  {
+    "file": "05-jobs.json",
+    "id": "job-register-components",
+    "endpoint": "PATCH /api/job/register/:id",
+    "status": 200
+  },
+  {
+    "file": "05-jobs.json",
+    "id": "job-register-machining",
+    "endpoint": "PATCH /api/job/register/:id",
+    "status": 200
+  },
+  {
+    "file": "05-jobs.json",
+    "id": "job-register-others",
+    "endpoint": "PATCH /api/job/register/:id",
+    "status": 200
+  },
+  {
+    "file": "05-jobs.json",
+    "id": "job-register-custoNaoQualidade",
+    "endpoint": "PATCH /api/job/register/:id",
+    "status": 200
+  },
+  {
+    "file": "05-jobs.json",
+    "id": "job-register-materials",
+    "endpoint": "PATCH /api/job/register/:id",
+    "status": 200
+  },
+  {
+    "file": "05-jobs.json",
+    "id": "job-register-missing",
+    "endpoint": "PATCH /api/job/register/:id",
+    "status": 400
+  },
+  {
+    "file": "05-jobs.json",
+    "id": "job-state-d1",
+    "endpoint": "PATCH /api/job/state/:id",
+    "status": 400
+  },
+  {
+    "file": "05-jobs.json",
+    "id": "job-state-validation",
+    "endpoint": "PATCH /api/job/state/:id",
+    "status": 400
+  },
+  {
+    "file": "05-jobs.json",
+    "id": "job-single-comments",
+    "endpoint": "PATCH /api/job/singleProperty/:id",
+    "status": 200
+  },
+  {
+    "file": "05-jobs.json",
+    "id": "job-single-order",
+    "endpoint": "PATCH /api/job/singleProperty/:id",
+    "status": 200
+  },
+  {
+    "file": "05-jobs.json",
+    "id": "job-single-official",
+    "endpoint": "PATCH /api/job/singleProperty/:id",
+    "status": 200
+  },
+  {
+    "file": "05-jobs.json",
+    "id": "job-single-invoiced",
+    "endpoint": "PATCH /api/job/singleProperty/:id",
+    "status": 200
+  },
+  {
+    "file": "05-jobs.json",
+    "id": "job-single-delivery-blocked",
+    "endpoint": "PATCH /api/job/singleProperty/:id",
+    "status": 400
+  },
+  {
+    "file": "05-jobs.json",
+    "id": "job-single-delivery",
+    "endpoint": "PATCH /api/job/singleProperty/:id",
+    "status": 200
+  },
+  {
+    "file": "05-jobs.json",
+    "id": "job-single-validation",
+    "endpoint": "PATCH /api/job/singleProperty/:id",
+    "status": 400
+  },
+  {
+    "file": "05-jobs.json",
+    "id": "job-verifications-machining",
+    "endpoint": "PATCH /api/job/updateVerifications/:id",
+    "status": 200
+  },
+  {
+    "file": "05-jobs.json",
+    "id": "job-verifications-assembly",
+    "endpoint": "PATCH /api/job/updateVerifications/:id",
+    "status": 200
+  },
+  {
+    "file": "05-jobs.json",
+    "id": "job-print-dev",
+    "endpoint": "POST /api/job/print/:id",
+    "status": 400
+  },
+  {
+    "file": "05-jobs.json",
+    "id": "stats-validation",
+    "endpoint": "PUT /api/job/statistics/:id",
+    "status": 400
+  },
+  {
+    "file": "05-jobs.json",
+    "id": "stats-bad-deviation",
+    "endpoint": "PUT /api/job/statistics/:id",
+    "status": 400
+  },
+  {
+    "file": "05-jobs.json",
+    "id": "stats-dev-to-onapproval",
+    "endpoint": "PUT /api/job/statistics/:id",
+    "status": 200
+  },
+  {
+    "file": "05-jobs.json",
+    "id": "job-statistics-dates",
+    "endpoint": "PATCH /api/job/statisticsDates/:id",
+    "status": 200
+  },
+  {
+    "file": "05-jobs.json",
+    "id": "stats-onapproval-to-approved",
+    "endpoint": "PUT /api/job/statistics/:id",
+    "status": 200
+  },
+  {
+    "file": "05-jobs.json",
+    "id": "stats-approved-to-machining",
+    "endpoint": "PUT /api/job/statistics/:id",
+    "status": 200
+  },
+  {
+    "file": "05-jobs.json",
+    "id": "stats-machining-to-assembly",
+    "endpoint": "PUT /api/job/statistics/:id",
+    "status": 200
+  },
+  {
+    "file": "05-jobs.json",
+    "id": "stats-assembly-to-invoicing",
+    "endpoint": "PUT /api/job/statistics/:id",
+    "status": 200
+  },
+  {
+    "file": "05-jobs.json",
+    "id": "stats-invoicing-no-commenttype",
+    "endpoint": "PUT /api/job/statistics/:id",
+    "status": 500
+  },
+  {
+    "file": "05-jobs.json",
+    "id": "stats-invoicing-partial",
+    "endpoint": "PUT /api/job/statistics/:id",
+    "status": 405
+  },
+  {
+    "file": "05-jobs.json",
+    "id": "stats-invoicing-to-billed",
+    "endpoint": "PUT /api/job/statistics/:id",
+    "status": 200
+  },
+  {
+    "file": "05-jobs.json",
+    "id": "stats-jump-dev-to-assembly",
+    "endpoint": "PUT /api/job/statistics/:id",
+    "status": 200
+  },
+  {
+    "file": "05-jobs.json",
+    "id": "stats-missing-job",
+    "endpoint": "PUT /api/job/statistics/:id",
+    "status": 400
+  },
+  {
+    "file": "05-jobs.json",
+    "id": "job-by-state-billed",
+    "endpoint": "GET /api/job/getByState/Faturada",
+    "status": 200
+  },
+  {
+    "file": "05-jobs.json",
+    "id": "job-by-state-assembly",
+    "endpoint": "GET /api/job/getByState/Montagem",
+    "status": 200
+  },
+  {
+    "file": "05-jobs.json",
+    "id": "job-all",
+    "endpoint": "GET /api/job/getAll",
+    "status": 200
+  },
+  {
+    "file": "05-jobs.json",
+    "id": "job-counts-after",
+    "endpoint": "GET /api/job/getCounts",
+    "status": 200
+  },
+  {
+    "file": "05-jobs.json",
+    "id": "job-valid-try-counters",
+    "endpoint": "GET /api/job/getValidTryOnFirstTestCountersByYear/{{yyyy}}",
+    "status": 200
+  },
+  {
+    "file": "05-jobs.json",
+    "id": "job-valid-try-counters-other-year",
+    "endpoint": "GET /api/job/getValidTryOnFirstTestCountersByYear/2001",
+    "status": 200
+  },
+  {
+    "file": "05-jobs.json",
+    "id": "budget-list-after-jobs",
+    "endpoint": "GET /api/budget",
+    "status": 200
+  },
+  {
+    "file": "06-database.json",
+    "id": "db-info",
+    "endpoint": "GET /api/database/info",
+    "status": 200
+  },
+  {
+    "file": "06-database.json",
+    "id": "db-info-forbidden",
+    "endpoint": "GET /api/database/info",
+    "status": 401
+  },
+  {
+    "file": "06-database.json",
+    "id": "db-backup",
+    "endpoint": "GET /api/database/backup",
+    "status": 200
+  },
+  {
+    "file": "06-database.json",
+    "id": "db-restore-empty",
+    "endpoint": "POST /api/database/restore",
+    "status": 400
+  },
+  {
+    "file": "06-database.json",
+    "id": "db-restore-garbage",
+    "endpoint": "POST /api/database/restore",
+    "status": 400
+  },
+  {
+    "file": "06-database.json",
+    "id": "db-restore-truncated",
+    "endpoint": "POST /api/database/restore",
+    "status": 400
+  },
+  {
+    "file": "06-database.json",
+    "id": "db-restore",
+    "endpoint": "POST /api/database/restore",
+    "status": 200
+  },
+  {
+    "file": "07-account-delete.json",
+    "id": "user-delete-d2",
+    "endpoint": "DELETE /api/account/:id",
+    "status": 200
+  },
+  {
+    "file": "07-account-delete.json",
+    "id": "user-delete-missing",
+    "endpoint": "DELETE /api/account/:id",
+    "status": 404
+  },
+  {
+    "file": "07-account-delete.json",
+    "id": "users-after-delete",
+    "endpoint": "GET /api/account/users",
+    "status": 200
+  },
+  {
+    "file": "07-account-delete.json",
+    "id": "budget-list-after-delete",
+    "endpoint": "GET /api/budget",
+    "status": 200
+  }
+]

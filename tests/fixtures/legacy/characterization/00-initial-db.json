@@ -1,0 +1,52 @@
+{
+  "prices": [
+    {
+      "_id": {
+        "$oid": "{{prices:1}}"
+      },
+      "automation": {
+        "$numberInt": "10"
+      },
+      "consultancy": {
+        "$numberInt": "10"
+      },
+      "development": {
+        "$numberInt": "10"
+      },
+      "margin": {
+        "$numberInt": "35"
+      },
+      "machining": {
+        "$numberInt": "10"
+      },
+      "assembly": {
+        "$numberInt": "10"
+      },
+      "__v": {
+        "$numberInt": "0"
+      }
+    }
+  ],
+  "users": [
+    {
+      "_id": {
+        "$oid": "{{users:1}}"
+      },
+      "roles": [
+        "canSeeDefinicoes",
+        "canSeeEntidades",
+        "canSeeOrcamentos",
+        "canSeeObras",
+        "canSeeHistorico",
+        "canSeeDashboard"
+      ],
+      "fieldOfCompetencies": "Desenvolvimento",
+      "name": "User Logado",
+      "email": "userlogado@gmail.com",
+      "password": "{{bcrypt:$2b$10$}}",
+      "__v": {
+        "$numberInt": "0"
+      }
+    }
+  ]
+}

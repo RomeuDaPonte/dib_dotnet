@@ -1,0 +1,772 @@
+{
+  "area": "01-account",
+  "steps": [
+    {
+      "id": "auth-no-token",
+      "title": "Protected route without token → 401",
+      "request": {
+        "method": "GET",
+        "path": "/api/prices",
+        "auth": "none",
+        "body": null
+      },
+      "response": {
+        "status": 401,
+        "contentType": "text/html; charset=utf-8",
+        "text": "Access denied. No token provided."
+      },
+      "db": {}
+    },
+    {
+      "id": "auth-invalid-token",
+      "title": "Protected route with a malformed token → 400",
+      "request": {
+        "method": "GET",
+        "path": "/api/prices",
+        "auth": "invalid",
+        "body": null
+      },
+      "response": {
+        "status": 400,
+        "contentType": "text/html; charset=utf-8",
+        "text": "Invalid token."
+      },
+      "db": {}
+    },
+    {
+      "id": "login-validation",
+      "title": "Login without password → Joi message",
+      "request": {
+        "method": "POST",
+        "path": "/api/account/login",
+        "auth": "none",
+        "body": {
+          "email": "ana.admin@dib4t.local"
+        }
+      },
+      "response": {
+        "status": 400,
+        "contentType": "text/html; charset=utf-8",
+        "text": "\"password\" is required"
+      },
+      "db": {}
+    },
+    {
+      "id": "login-unknown-email",
+      "title": "Login with unknown email",
+      "request": {
+        "method": "POST",
+        "path": "/api/account/login",
+        "auth": "none",
+        "body": {
+          "email": "nobody@dib4t.local",
+          "password": "char-test-1"
+        }
+      },
+      "response": {
+        "status": 400,
+        "contentType": "text/html; charset=utf-8",
+        "text": "Invalid email or password."
+      },
+      "db": {}
+    },
+    {
+      "id": "create-admin-user",
+      "title": "Create a user with every role",
+      "request": {
+        "method": "POST",
+        "path": "/api/account/create",
+        "auth": "tool",
+        "body": {
+          "name": "Ana Administradora",
+          "email": "ana.admin@dib4t.local",
+          "password": "char-test-1",
+          "passwordConfirmation": "char-test-1",
+          "roles": [
+            "canSeeOrcamentos",
+            "canSeeObras",
+            "canSeeHistorico",
+            "canSeeEntidades",
+            "canSeeDefinicoes",
+            "canSeeDashboard",
+            "canSeeLeituras"
+          ],
+          "fieldOfCompetencies": "Desenvolvimento"
+        }
+      },
+      "response": {
+        "status": 200,
+        "contentType": "application/json; charset=utf-8",
+        "json": {
+          "_id": "{{users:2}}",
+          "name": "Ana Administradora",
+          "email": "ana.admin@dib4t.local",
+          "roles": [
+            "canSeeOrcamentos",
+            "canSeeObras",
+            "canSeeHistorico",
+            "canSeeEntidades",
+            "canSeeDefinicoes",
+            "canSeeDashboard",
+            "canSeeLeituras"
+          ]
+        }
+      },
+      "db": {
+        "users": {
+          "inserted": [
+            {
+              "_id": {
+                "$oid": "{{users:2}}"
+              },
+              "roles": [
+                "canSeeOrcamentos",
+                "canSeeObras",
+                "canSeeHistorico",
+                "canSeeEntidades",
+                "canSeeDefinicoes",
+                "canSeeDashboard",
+                "canSeeLeituras"
+              ],
+              "fieldOfCompetencies": "Desenvolvimento",
+              "name": "Ana Administradora",
+              "email": "ana.admin@dib4t.local",
+              "password": "{{bcrypt:$2a$10$}}",
+              "__v": {
+                "$numberInt": "0"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "create-limited-user",
+      "title": "Create a user without settings role",
+      "request": {
+        "method": "POST",
+        "path": "/api/account/create",
+        "auth": "tool",
+        "body": {
+          "name": "Bruno Maquinação",
+          "email": "bruno.limitado@dib4t.local",
+          "password": "char-test-1",
+          "roles": [
+            "canSeeObras",
+            "canSeeLeituras"
+          ],
+          "fieldOfCompetencies": "Maquinação"
+        }
+      },
+      "response": {
+        "status": 200,
+        "contentType": "application/json; charset=utf-8",
+        "json": {
+          "_id": "{{users:3}}",
+          "name": "Bruno Maquinação",
+          "email": "bruno.limitado@dib4t.local",
+          "roles": [
+            "canSeeObras",
+            "canSeeLeituras"
+          ]
+        }
+      },
+      "db": {
+        "users": {
+          "inserted": [
+            {
+              "_id": {
+                "$oid": "{{users:3}}"
+              },
+              "roles": [
+                "canSeeObras",
+                "canSeeLeituras"
+              ],
+              "fieldOfCompetencies": "Maquinação",
+              "name": "Bruno Maquinação",
+              "email": "bruno.limitado@dib4t.local",
+              "password": "{{bcrypt:$2a$10$}}",
+              "__v": {
+                "$numberInt": "0"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "create-user-default-field",
+      "title": "Create a user without fieldOfCompetencies (schema default)",
+      "request": {
+        "method": "POST",
+        "path": "/api/account/create",
+        "auth": "tool",
+        "body": {
+          "name": "Carla Sem Área",
+          "email": "carla.semarea@dib4t.local",
+          "password": "char-test-1",
+          "roles": [
+            "canSeeDashboard"
+          ]
+        }
+      },
+      "response": {
+        "status": 200,
+        "contentType": "application/json; charset=utf-8",
+        "json": {
+          "_id": "{{users:4}}",
+          "name": "Carla Sem Área",
+          "email": "carla.semarea@dib4t.local",
+          "roles": [
+            "canSeeDashboard"
+          ]
+        }
+      },
+      "db": {
+        "users": {
+          "inserted": [
+            {
+              "_id": {
+                "$oid": "{{users:4}}"
+              },
+              "roles": [
+                "canSeeDashboard"
+              ],
+              "fieldOfCompetencies": "Desenvolvimento",
+              "name": "Carla Sem Área",
+              "email": "carla.semarea@dib4t.local",
+              "password": "{{bcrypt:$2a$10$}}",
+              "__v": {
+                "$numberInt": "0"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "create-user-duplicate-email",
+      "title": "Create a user with an existing email",
+      "request": {
+        "method": "POST",
+        "path": "/api/account/create",
+        "auth": "tool",
+        "body": {
+          "name": "Ana Duplicada",
+          "email": "ana.admin@dib4t.local",
+          "password": "char-test-1",
+          "roles": [
+            "canSeeOrcamentos",
+            "canSeeObras",
+            "canSeeHistorico",
+            "canSeeEntidades",
+            "canSeeDefinicoes",
+            "canSeeDashboard",
+            "canSeeLeituras"
+          ]
+        }
+      },
+      "response": {
+        "status": 400,
+        "contentType": "text/html; charset=utf-8",
+        "text": "Email já registado."
+      },
+      "db": {}
+    },
+    {
+      "id": "create-user-validation",
+      "title": "Create a user with a 2-char name",
+      "request": {
+        "method": "POST",
+        "path": "/api/account/create",
+        "auth": "tool",
+        "body": {
+          "name": "Al",
+          "email": "al.short@dib4t.local",
+          "password": "char-test-1",
+          "roles": [
+            "canSeeOrcamentos",
+            "canSeeObras",
+            "canSeeHistorico",
+            "canSeeEntidades",
+            "canSeeDefinicoes",
+            "canSeeDashboard",
+            "canSeeLeituras"
+          ]
+        }
+      },
+      "response": {
+        "status": 400,
+        "contentType": "text/html; charset=utf-8",
+        "text": "\"name\" length must be at least 3 characters long"
+      },
+      "db": {}
+    },
+    {
+      "id": "login-wrong-password",
+      "title": "Login with the wrong password",
+      "request": {
+        "method": "POST",
+        "path": "/api/account/login",
+        "auth": "none",
+        "body": {
+          "email": "ana.admin@dib4t.local",
+          "password": "wrong-pass"
+        }
+      },
+      "response": {
+        "status": 400,
+        "contentType": "text/html; charset=utf-8",
+        "text": "Password incorreta!"
+      },
+      "db": {}
+    },
+    {
+      "id": "login-admin",
+      "title": "Login → raw JWT string",
+      "request": {
+        "method": "POST",
+        "path": "/api/account/login",
+        "auth": "none",
+        "body": {
+          "email": "ana.admin@dib4t.local",
+          "password": "char-test-1"
+        }
+      },
+      "response": {
+        "status": 200,
+        "contentType": "text/html; charset=utf-8",
+        "text": "{{jwt}}",
+        "jwtPayload": {
+          "_id": "{{users:2}}",
+          "name": "Ana Administradora",
+          "email": "ana.admin@dib4t.local",
+          "roles": [
+            "canSeeOrcamentos",
+            "canSeeObras",
+            "canSeeHistorico",
+            "canSeeEntidades",
+            "canSeeDefinicoes",
+            "canSeeDashboard",
+            "canSeeLeituras"
+          ],
+          "fieldOfCompetencies": "Desenvolvimento",
+          "iat": "{{iat}}"
+        }
+      },
+      "db": {}
+    },
+    {
+      "id": "login-limited",
+      "title": "Login of the limited user",
+      "request": {
+        "method": "POST",
+        "path": "/api/account/login",
+        "auth": "none",
+        "body": {
+          "email": "bruno.limitado@dib4t.local",
+          "password": "char-test-1"
+        }
+      },
+      "response": {
+        "status": 200,
+        "contentType": "text/html; charset=utf-8",
+        "text": "{{jwt}}",
+        "jwtPayload": {
+          "_id": "{{users:3}}",
+          "name": "Bruno Maquinação",
+          "email": "bruno.limitado@dib4t.local",
+          "roles": [
+            "canSeeObras",
+            "canSeeLeituras"
+          ],
+          "fieldOfCompetencies": "Maquinação",
+          "iat": "{{iat}}"
+        }
+      },
+      "db": {}
+    },
+    {
+      "id": "roles",
+      "title": "Role list",
+      "request": {
+        "method": "GET",
+        "path": "/api/account/roles",
+        "auth": "admin",
+        "body": null
+      },
+      "response": {
+        "status": 200,
+        "contentType": "application/json; charset=utf-8",
+        "json": [
+          "canSeeOrcamentos",
+          "canSeeObras",
+          "canSeeHistorico",
+          "canSeeEntidades",
+          "canSeeDefinicoes",
+          "canSeeDashboard",
+          "canSeeLeituras"
+        ]
+      },
+      "db": {}
+    },
+    {
+      "id": "roles-forbidden",
+      "title": "Settings route without canSeeDefinicoes → 401",
+      "request": {
+        "method": "GET",
+        "path": "/api/account/roles",
+        "auth": "limited",
+        "body": null
+      },
+      "response": {
+        "status": 401,
+        "contentType": "text/html; charset=utf-8",
+        "text": "Não tem permissão para concluir esta acção."
+      },
+      "db": {}
+    },
+    {
+      "id": "users",
+      "title": "User list sorted by name",
+      "request": {
+        "method": "GET",
+        "path": "/api/account/users",
+        "auth": "admin",
+        "body": null
+      },
+      "response": {
+        "status": 200,
+        "contentType": "application/json; charset=utf-8",
+        "json": [
+          {
+            "roles": [
+              "canSeeOrcamentos",
+              "canSeeObras",
+              "canSeeHistorico",
+              "canSeeEntidades",
+              "canSeeDefinicoes",
+              "canSeeDashboard",
+              "canSeeLeituras"
+            ],
+            "fieldOfCompetencies": "Desenvolvimento",
+            "_id": "{{users:2}}",
+            "name": "Ana Administradora",
+            "email": "ana.admin@dib4t.local"
+          },
+          {
+            "roles": [
+              "canSeeObras",
+              "canSeeLeituras"
+            ],
+            "fieldOfCompetencies": "Maquinação",
+            "_id": "{{users:3}}",
+            "name": "Bruno Maquinação",
+            "email": "bruno.limitado@dib4t.local"
+          },
+          {
+            "roles": [
+              "canSeeDashboard"
+            ],
+            "fieldOfCompetencies": "Desenvolvimento",
+            "_id": "{{users:4}}",
+            "name": "Carla Sem Área",
+            "email": "carla.semarea@dib4t.local"
+          },
+          {
+            "roles": [
+              "canSeeDefinicoes",
+              "canSeeEntidades",
+              "canSeeOrcamentos",
+              "canSeeObras",
+              "canSeeHistorico",
+              "canSeeDashboard"
+            ],
+            "fieldOfCompetencies": "Desenvolvimento",
+            "_id": "{{users:1}}",
+            "name": "User Logado",
+            "email": "userlogado@gmail.com"
+          }
+        ]
+      },
+      "db": {}
+    },
+    {
+      "id": "user-by-id",
+      "title": "One user",
+      "request": {
+        "method": "GET",
+        "path": "/api/account/{{users:3}}",
+        "auth": "admin",
+        "body": null
+      },
+      "response": {
+        "status": 200,
+        "contentType": "application/json; charset=utf-8",
+        "json": {
+          "_id": "{{users:3}}",
+          "name": "Bruno Maquinação",
+          "email": "bruno.limitado@dib4t.local",
+          "roles": [
+            "canSeeObras",
+            "canSeeLeituras"
+          ]
+        }
+      },
+      "db": {}
+    },
+    {
+      "id": "user-by-id-missing",
+      "title": "Unknown user → 404",
+      "request": {
+        "method": "GET",
+        "path": "/api/account/0123456789abcdef01234567",
+        "auth": "admin",
+        "body": null
+      },
+      "response": {
+        "status": 404,
+        "contentType": "text/html; charset=utf-8",
+        "text": "not found!"
+      },
+      "db": {}
+    },
+    {
+      "id": "user-me-legacy",
+      "title": "GET /account/me does not exist in legacy (cast error on /:id)",
+      "request": {
+        "method": "GET",
+        "path": "/api/account/me",
+        "auth": "admin",
+        "body": null
+      },
+      "response": {
+        "status": 500,
+        "contentType": "text/html; charset=utf-8",
+        "expressErrorPage": {
+          "error": "CastError: Cast to ObjectId failed for value \"me\" (type string) at path \"_id\" for model \"User\""
+        }
+      },
+      "db": {}
+    },
+    {
+      "id": "user-update",
+      "title": "Update user without password",
+      "request": {
+        "method": "PUT",
+        "path": "/api/account/{{users:3}}",
+        "auth": "admin",
+        "body": {
+          "name": "Bruno Maquinação Silva",
+          "email": "bruno.limitado@dib4t.local",
+          "roles": [
+            "canSeeObras",
+            "canSeeLeituras",
+            "canSeeHistorico"
+          ],
+          "fieldOfCompetencies": "Montagem"
+        }
+      },
+      "response": {
+        "status": 200,
+        "contentType": "application/json; charset=utf-8",
+        "json": {
+          "_id": "{{users:3}}",
+          "name": "Bruno Maquinação Silva",
+          "email": "bruno.limitado@dib4t.local",
+          "roles": [
+            "canSeeObras",
+            "canSeeLeituras",
+            "canSeeHistorico"
+          ]
+        }
+      },
+      "db": {
+        "users": {
+          "updated": [
+            {
+              "_id": {
+                "$oid": "{{users:3}}"
+              },
+              "changed": [
+                "roles",
+                "fieldOfCompetencies",
+                "name",
+                "__v"
+              ],
+              "after": {
+                "_id": {
+                  "$oid": "{{users:3}}"
+                },
+                "roles": [
+                  "canSeeObras",
+                  "canSeeLeituras",
+                  "canSeeHistorico"
+                ],
+                "fieldOfCompetencies": "Montagem",
+                "name": "Bruno Maquinação Silva",
+                "email": "bruno.limitado@dib4t.local",
+                "password": "{{bcrypt:$2a$10$}}",
+                "__v": {
+                  "$numberInt": "1"
+                }
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "user-update-password",
+      "title": "Update user with a new password (re-hashed)",
+      "request": {
+        "method": "PUT",
+        "path": "/api/account/{{users:3}}",
+        "auth": "admin",
+        "body": {
+          "name": "Bruno Maquinação Silva",
+          "email": "bruno.limitado@dib4t.local",
+          "roles": [
+            "canSeeObras",
+            "canSeeLeituras",
+            "canSeeHistorico"
+          ],
+          "fieldOfCompetencies": "Montagem",
+          "password": "char-test-2"
+        }
+      },
+      "response": {
+        "status": 200,
+        "contentType": "application/json; charset=utf-8",
+        "json": {
+          "_id": "{{users:3}}",
+          "name": "Bruno Maquinação Silva",
+          "email": "bruno.limitado@dib4t.local",
+          "roles": [
+            "canSeeObras",
+            "canSeeLeituras",
+            "canSeeHistorico"
+          ]
+        }
+      },
+      "db": {
+        "users": {
+          "updated": [
+            {
+              "_id": {
+                "$oid": "{{users:3}}"
+              },
+              "changed": [
+                "password"
+              ],
+              "after": {
+                "_id": {
+                  "$oid": "{{users:3}}"
+                },
+                "roles": [
+                  "canSeeObras",
+                  "canSeeLeituras",
+                  "canSeeHistorico"
+                ],
+                "fieldOfCompetencies": "Montagem",
+                "name": "Bruno Maquinação Silva",
+                "email": "bruno.limitado@dib4t.local",
+                "password": "{{bcrypt:$2a$10$}}",
+                "__v": {
+                  "$numberInt": "1"
+                }
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "user-update-missing",
+      "title": "Update unknown user → 404",
+      "request": {
+        "method": "PUT",
+        "path": "/api/account/0123456789abcdef01234567",
+        "auth": "admin",
+        "body": {
+          "name": "Ninguém",
+          "email": "ninguem@dib4t.local",
+          "roles": [
+            "canSeeOrcamentos",
+            "canSeeObras",
+            "canSeeHistorico",
+            "canSeeEntidades",
+            "canSeeDefinicoes",
+            "canSeeDashboard",
+            "canSeeLeituras"
+          ]
+        }
+      },
+      "response": {
+        "status": 404,
+        "contentType": "text/html; charset=utf-8",
+        "text": "Utilizador não exista na bd"
+      },
+      "db": {}
+    },
+    {
+      "id": "user-update-validation",
+      "title": "Update user with invalid email",
+      "request": {
+        "method": "PUT",
+        "path": "/api/account/{{users:3}}",
+        "auth": "admin",
+        "body": {
+          "name": "Bruno",
+          "email": "not-an-email",
+          "roles": [
+            "canSeeOrcamentos",
+            "canSeeObras",
+            "canSeeHistorico",
+            "canSeeEntidades",
+            "canSeeDefinicoes",
+            "canSeeDashboard",
+            "canSeeLeituras"
+          ]
+        }
+      },
+      "response": {
+        "status": 400,
+        "contentType": "text/html; charset=utf-8",
+        "text": "\"email\" must be a valid email"
+      },
+      "db": {}
+    },
+    {
+      "id": "login-after-password-change",
+      "title": "Login with the new password",
+      "request": {
+        "method": "POST",
+        "path": "/api/account/login",
+        "auth": "none",
+        "body": {
+          "email": "bruno.limitado@dib4t.local",
+          "password": "char-test-2"
+        }
+      },
+      "response": {
+        "status": 200,
+        "contentType": "text/html; charset=utf-8",
+        "text": "{{jwt}}",
+        "jwtPayload": {
+          "_id": "{{users:3}}",
+          "name": "Bruno Maquinação Silva",
+          "email": "bruno.limitado@dib4t.local",
+          "roles": [
+            "canSeeObras",
+            "canSeeLeituras",
+            "canSeeHistorico"
+          ],
+          "fieldOfCompetencies": "Montagem",
+          "iat": "{{iat}}"
+        }
+      },
+      "db": {}
+    }
+  ]
+}

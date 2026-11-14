@@ -1,0 +1,42 @@
+{
+  "source": "prod-2026-11-11.anon.dibbak",
+  "note": "Counts only. Legacy creates the folder '{year}/{client}/{budgetNumber} - {descriptive}' from revision 0; job creation moves it using the revision the job was made from (its date year and descriptive).",
+  "clientNamesOfBudgets": {
+    "total": 3228,
+    "apostrophe": 0,
+    "slash": 0,
+    "backslash": 0,
+    "doubleQuote": 0,
+    "dollarOrBacktick": 0,
+    "newlineOrTab": 0,
+    "leadingOrTrailingSpace": 0,
+    "doubleSpace": 0,
+    "windowsReserved": 0,
+    "nonNfc": 0,
+    "nonAscii": 112
+  },
+  "descriptivesRev0": {
+    "total": 3228,
+    "apostrophe": 0,
+    "slash": 0,
+    "backslash": 0,
+    "doubleQuote": 0,
+    "dollarOrBacktick": 0,
+    "newlineOrTab": 0,
+    "leadingOrTrailingSpace": 33,
+    "doubleSpace": 3,
+    "windowsReserved": 0,
+    "nonNfc": 0,
+    "nonAscii": 227
+  },
+  "revisionsWithDescriptiveDifferentFromRev0": {
+    "revisions": 11,
+    "jobsCreatedFromThem": 5
+  },
+  "revisionsDatedInAnotherYearThanRev0": {
+    "revisions": 21,
+    "jobsCreatedFromThem": 8
+  },
+  "budgetsWithAJob": 1117,
+  "rev0WhoseDateYearDiffersFromNumberPrefix": 0
+}

@@ -1,0 +1,4435 @@
+{
+  "description": "Expected NAS SSH command sequences, derived by running the unchanged legacy routes with a recording SSH client on a virtual file system (PLAN.md §5, §5.1). See README.md.",
+  "generator": "tools/legacy/ssh-golden.js",
+  "legacySources": [
+    "back-end/helpers/pathHlelper.js",
+    "back-end/models/budget.js",
+    "back-end/routes/budget.js",
+    "back-end/routes/job.js",
+    "back-end/models/printerSettings.js"
+  ],
+  "sshClient": "ssh2-promise 1.0.1 exec(): one channel per call, cwd = SSH user's home (/home/ssh-user here), resolves stdout on close, rejects on the first stderr data",
+  "timeZone": "Europe/Lisbon",
+  "nasInitialFolders": [
+    "/share/Orçamentos",
+    "/share/Obras"
+  ],
+  "scenarios": [
+    {
+      "id": "budget-create",
+      "title": "Budget create (prod): 3 × mkdir -p, then test -d",
+      "steps": [
+        {
+          "step": "POST /api/budget (silva, \"Máquina de corte\")",
+          "at": "2026-11-14T10:00:00 Europe/Lisbon",
+          "NODE_ENV": "prod",
+          "response": {
+            "status": 200,
+            "body": "json",
+            "fields": {
+              "budgetNumber": "26-0001",
+              "revision": 0,
+              "descriptive": "Máquina de corte",
+              "hasGenerateJob": false
+            }
+          },
+          "events": [
+            {
+              "type": "db",
+              "op": "Budget.save",
+              "budgetNumber": "26-0001",
+              "revision": 0
+            },
+            {
+              "type": "ssh",
+              "command": "mkdir -p /share/Orçamentos/2026/'Metalúrgica Silva & Filhos, Lda.'/'26-0001 - Máquina de corte'",
+              "argv": [
+                [
+                  "mkdir",
+                  "-p",
+                  "/share/Orçamentos/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Máquina de corte"
+                ]
+              ],
+              "ops": [
+                {
+                  "op": "mkdir-p",
+                  "path": "/share/Orçamentos/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Máquina de corte"
+                }
+              ],
+              "outcome": "resolves"
+            },
+            {
+              "type": "ssh",
+              "command": "mkdir -p /share/Orçamentos/2026/'Metalúrgica Silva & Filhos, Lda.'/'26-0001 - Máquina de corte'/Geometria",
+              "argv": [
+                [
+                  "mkdir",
+                  "-p",
+                  "/share/Orçamentos/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Máquina de corte/Geometria"
+                ]
+              ],
+              "ops": [
+                {
+                  "op": "mkdir-p",
+                  "path": "/share/Orçamentos/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Máquina de corte/Geometria"
+                }
+              ],
+              "outcome": "resolves"
+            },
+            {
+              "type": "ssh",
+              "command": "mkdir -p /share/Orçamentos/2026/'Metalúrgica Silva & Filhos, Lda.'/'26-0001 - Máquina de corte'/Documentos",
+              "argv": [
+                [
+                  "mkdir",
+                  "-p",
+                  "/share/Orçamentos/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Máquina de corte/Documentos"
+                ]
+              ],
+              "ops": [
+                {
+                  "op": "mkdir-p",
+                  "path": "/share/Orçamentos/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Máquina de corte/Documentos"
+                }
+              ],
+              "outcome": "resolves"
+            },
+            {
+              "type": "ssh",
+              "command": "if test -d /share/Orçamentos/2026/'Metalúrgica Silva & Filhos, Lda.'/'26-0001 - Máquina de corte'; then echo 1; else echo 0; fi",
+              "argv": [
+                [
+                  "if",
+                  "test",
+                  "-d",
+                  "/share/Orçamentos/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Máquina de corte"
+                ],
+                [
+                  "then",
+                  "echo",
+                  "1"
+                ],
+                [
+                  "else",
+                  "echo",
+                  "0"
+                ],
+                [
+                  "fi"
+                ]
+              ],
+              "ops": [
+                {
+                  "op": "test-d",
+                  "path": "/share/Orçamentos/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Máquina de corte",
+                  "result": true
+                }
+              ],
+              "stdout": "1\n",
+              "outcome": "resolves"
+            },
+            {
+              "type": "db",
+              "op": "Task.save"
+            }
+          ],
+          "dbAfter": {
+            "budgets": 1,
+            "tasks": 1,
+            "jobs": 0
+          },
+          "nasChanges": {
+            "created": [
+              "/share/Orçamentos/2026",
+              "/share/Orçamentos/2026/Metalúrgica Silva & Filhos, Lda.",
+              "/share/Orçamentos/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Máquina de corte",
+              "/share/Orçamentos/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Máquina de corte/Documentos",
+              "/share/Orçamentos/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Máquina de corte/Geometria"
+            ],
+            "removed": []
+          }
+        }
+      ],
+      "nasFoldersAtEnd": [
+        "/share/Orçamentos/2026",
+        "/share/Orçamentos/2026/Metalúrgica Silva & Filhos, Lda.",
+        "/share/Orçamentos/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Máquina de corte",
+        "/share/Orçamentos/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Máquina de corte/Documentos",
+        "/share/Orçamentos/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Máquina de corte/Geometria"
+      ]
+    },
+    {
+      "id": "budget-create-dev",
+      "title": "Budget create outside prod: no SSH",
+      "steps": [
+        {
+          "step": "POST /api/budget (silva, \"Máquina de corte\")",
+          "at": "2026-11-14T10:00:00 Europe/Lisbon",
+          "NODE_ENV": null,
+          "response": {
+            "status": 200,
+            "body": "json",
+            "fields": {
+              "budgetNumber": "26-0001",
+              "revision": 0,
+              "descriptive": "Máquina de corte",
+              "hasGenerateJob": false
+            }
+          },
+          "events": [
+            {
+              "type": "db",
+              "op": "Budget.save",
+              "budgetNumber": "26-0001",
+              "revision": 0
+            },
+            {
+              "type": "db",
+              "op": "Task.save"
+            }
+          ],
+          "dbAfter": {
+            "budgets": 1,
+            "tasks": 1,
+            "jobs": 0
+          },
+          "nasChanges": {
+            "created": [],
+            "removed": []
+          }
+        }
+      ],
+      "nasFoldersAtEnd": []
+    },
+    {
+      "id": "budget-create-folder-missing",
+      "title": "Budget create (prod), NAS answers 0 to test -d: 500 \"Erro ao criar pasta\", budget saved without its default task (D6)",
+      "nas": "answers 0 to every test -d (folder not found)",
+      "steps": [
+        {
+          "step": "POST /api/budget (silva, \"Máquina de corte\")",
+          "at": "2026-11-14T10:00:00 Europe/Lisbon",
+          "NODE_ENV": "prod",
+          "response": {
+            "status": 500,
+            "body": "Erro ao criar pasta"
+          },
+          "events": [
+            {
+              "type": "db",
+              "op": "Budget.save",
+              "budgetNumber": "26-0001",
+              "revision": 0
+            },
+            {
+              "type": "ssh",
+              "command": "mkdir -p /share/Orçamentos/2026/'Metalúrgica Silva & Filhos, Lda.'/'26-0001 - Máquina de corte'",
+              "argv": [
+                [
+                  "mkdir",
+                  "-p",
+                  "/share/Orçamentos/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Máquina de corte"
+                ]
+              ],
+              "ops": [
+                {
+                  "op": "mkdir-p",
+                  "path": "/share/Orçamentos/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Máquina de corte"
+                }
+              ],
+              "outcome": "resolves"
+            },
+            {
+              "type": "ssh",
+              "command": "mkdir -p /share/Orçamentos/2026/'Metalúrgica Silva & Filhos, Lda.'/'26-0001 - Máquina de corte'/Geometria",
+              "argv": [
+                [
+                  "mkdir",
+                  "-p",
+                  "/share/Orçamentos/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Máquina de corte/Geometria"
+                ]
+              ],
+              "ops": [
+                {
+                  "op": "mkdir-p",
+                  "path": "/share/Orçamentos/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Máquina de corte/Geometria"
+                }
+              ],
+              "outcome": "resolves"
+            },
+            {
+              "type": "ssh",
+              "command": "mkdir -p /share/Orçamentos/2026/'Metalúrgica Silva & Filhos, Lda.'/'26-0001 - Máquina de corte'/Documentos",
+              "argv": [
+                [
+                  "mkdir",
+                  "-p",
+                  "/share/Orçamentos/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Máquina de corte/Documentos"
+                ]
+              ],
+              "ops": [
+                {
+                  "op": "mkdir-p",
+                  "path": "/share/Orçamentos/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Máquina de corte/Documentos"
+                }
+              ],
+              "outcome": "resolves"
+            },
+            {
+              "type": "ssh",
+              "command": "if test -d /share/Orçamentos/2026/'Metalúrgica Silva & Filhos, Lda.'/'26-0001 - Máquina de corte'; then echo 1; else echo 0; fi",
+              "argv": [
+                [
+                  "if",
+                  "test",
+                  "-d",
+                  "/share/Orçamentos/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Máquina de corte"
+                ],
+                [
+                  "then",
+                  "echo",
+                  "1"
+                ],
+                [
+                  "else",
+                  "echo",
+                  "0"
+                ],
+                [
+                  "fi"
+                ]
+              ],
+              "ops": [
+                {
+                  "op": "test-d",
+                  "path": "/share/Orçamentos/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Máquina de corte",
+                  "result": false
+                }
+              ],
+              "stdout": "0\n",
+              "outcome": "resolves"
+            }
+          ],
+          "dbAfter": {
+            "budgets": 1,
+            "tasks": 0,
+            "jobs": 0
+          },
+          "nasChanges": {
+            "created": [
+              "/share/Orçamentos/2026",
+              "/share/Orçamentos/2026/Metalúrgica Silva & Filhos, Lda.",
+              "/share/Orçamentos/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Máquina de corte",
+              "/share/Orçamentos/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Máquina de corte/Documentos",
+              "/share/Orçamentos/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Máquina de corte/Geometria"
+            ],
+            "removed": []
+          }
+        }
+      ],
+      "nasFoldersAtEnd": [
+        "/share/Orçamentos/2026",
+        "/share/Orçamentos/2026/Metalúrgica Silva & Filhos, Lda.",
+        "/share/Orçamentos/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Máquina de corte",
+        "/share/Orçamentos/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Máquina de corte/Documentos",
+        "/share/Orçamentos/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Máquina de corte/Geometria"
+      ]
+    },
+    {
+      "id": "budget-create-slash-in-descriptive",
+      "title": "Descriptive with '/': legacy creates NESTED folders (the path keeps the slash)",
+      "steps": [
+        {
+          "step": "POST /api/budget (silva, \"Suporte 30/40 mm\")",
+          "at": "2026-11-14T10:00:00 Europe/Lisbon",
+          "NODE_ENV": "prod",
+          "response": {
+            "status": 200,
+            "body": "json",
+            "fields": {
+              "budgetNumber": "26-0001",
+              "revision": 0,
+              "descriptive": "Suporte 30/40 mm",
+              "hasGenerateJob": false
+            }
+          },
+          "events": [
+            {
+              "type": "db",
+              "op": "Budget.save",
+              "budgetNumber": "26-0001",
+              "revision": 0
+            },
+            {
+              "type": "ssh",
+              "command": "mkdir -p /share/Orçamentos/2026/'Metalúrgica Silva & Filhos, Lda.'/'26-0001 - Suporte 30/40 mm'",
+              "argv": [
+                [
+                  "mkdir",
+                  "-p",
+                  "/share/Orçamentos/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Suporte 30/40 mm"
+                ]
+              ],
+              "ops": [
+                {
+                  "op": "mkdir-p",
+                  "path": "/share/Orçamentos/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Suporte 30/40 mm"
+                }
+              ],
+              "outcome": "resolves"
+            },
+            {
+              "type": "ssh",
+              "command": "mkdir -p /share/Orçamentos/2026/'Metalúrgica Silva & Filhos, Lda.'/'26-0001 - Suporte 30/40 mm'/Geometria",
+              "argv": [
+                [
+                  "mkdir",
+                  "-p",
+                  "/share/Orçamentos/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Suporte 30/40 mm/Geometria"
+                ]
+              ],
+              "ops": [
+                {
+                  "op": "mkdir-p",
+                  "path": "/share/Orçamentos/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Suporte 30/40 mm/Geometria"
+                }
+              ],
+              "outcome": "resolves"
+            },
+            {
+              "type": "ssh",
+              "command": "mkdir -p /share/Orçamentos/2026/'Metalúrgica Silva & Filhos, Lda.'/'26-0001 - Suporte 30/40 mm'/Documentos",
+              "argv": [
+                [
+                  "mkdir",
+                  "-p",
+                  "/share/Orçamentos/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Suporte 30/40 mm/Documentos"
+                ]
+              ],
+              "ops": [
+                {
+                  "op": "mkdir-p",
+                  "path": "/share/Orçamentos/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Suporte 30/40 mm/Documentos"
+                }
+              ],
+              "outcome": "resolves"
+            },
+            {
+              "type": "ssh",
+              "command": "if test -d /share/Orçamentos/2026/'Metalúrgica Silva & Filhos, Lda.'/'26-0001 - Suporte 30/40 mm'; then echo 1; else echo 0; fi",
+              "argv": [
+                [
+                  "if",
+                  "test",
+                  "-d",
+                  "/share/Orçamentos/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Suporte 30/40 mm"
+                ],
+                [
+                  "then",
+                  "echo",
+                  "1"
+                ],
+                [
+                  "else",
+                  "echo",
+                  "0"
+                ],
+                [
+                  "fi"
+                ]
+              ],
+              "ops": [
+                {
+                  "op": "test-d",
+                  "path": "/share/Orçamentos/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Suporte 30/40 mm",
+                  "result": true
+                }
+              ],
+              "stdout": "1\n",
+              "outcome": "resolves"
+            },
+            {
+              "type": "db",
+              "op": "Task.save"
+            }
+          ],
+          "dbAfter": {
+            "budgets": 1,
+            "tasks": 1,
+            "jobs": 0
+          },
+          "nasChanges": {
+            "created": [
+              "/share/Orçamentos/2026",
+              "/share/Orçamentos/2026/Metalúrgica Silva & Filhos, Lda.",
+              "/share/Orçamentos/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Suporte 30",
+              "/share/Orçamentos/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Suporte 30/40 mm",
+              "/share/Orçamentos/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Suporte 30/40 mm/Documentos",
+              "/share/Orçamentos/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Suporte 30/40 mm/Geometria"
+            ],
+            "removed": []
+          }
+        }
+      ],
+      "nasFoldersAtEnd": [
+        "/share/Orçamentos/2026",
+        "/share/Orçamentos/2026/Metalúrgica Silva & Filhos, Lda.",
+        "/share/Orçamentos/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Suporte 30",
+        "/share/Orçamentos/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Suporte 30/40 mm",
+        "/share/Orçamentos/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Suporte 30/40 mm/Documentos",
+        "/share/Orçamentos/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Suporte 30/40 mm/Geometria"
+      ]
+    },
+    {
+      "id": "budget-create-quotes-and-spaces",
+      "title": "Double quotes, %, double and trailing spaces inside single quotes: kept literally",
+      "steps": [
+        {
+          "step": "POST /api/budget (silva, \"Molde \"especial\"  100% \")",
+          "at": "2026-11-14T10:00:00 Europe/Lisbon",
+          "NODE_ENV": "prod",
+          "response": {
+            "status": 200,
+            "body": "json",
+            "fields": {
+              "budgetNumber": "26-0001",
+              "revision": 0,
+              "descriptive": "Molde \"especial\"  100% ",
+              "hasGenerateJob": false
+            }
+          },
+          "events": [
+            {
+              "type": "db",
+              "op": "Budget.save",
+              "budgetNumber": "26-0001",
+              "revision": 0
+            },
+            {
+              "type": "ssh",
+              "command": "mkdir -p /share/Orçamentos/2026/'Metalúrgica Silva & Filhos, Lda.'/'26-0001 - Molde \"especial\"  100% '",
+              "argv": [
+                [
+                  "mkdir",
+                  "-p",
+                  "/share/Orçamentos/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Molde \"especial\"  100% "
+                ]
+              ],
+              "ops": [
+                {
+                  "op": "mkdir-p",
+                  "path": "/share/Orçamentos/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Molde \"especial\"  100% "
+                }
+              ],
+              "outcome": "resolves"
+            },
+            {
+              "type": "ssh",
+              "command": "mkdir -p /share/Orçamentos/2026/'Metalúrgica Silva & Filhos, Lda.'/'26-0001 - Molde \"especial\"  100% '/Geometria",
+              "argv": [
+                [
+                  "mkdir",
+                  "-p",
+                  "/share/Orçamentos/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Molde \"especial\"  100% /Geometria"
+                ]
+              ],
+              "ops": [
+                {
+                  "op": "mkdir-p",
+                  "path": "/share/Orçamentos/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Molde \"especial\"  100% /Geometria"
+                }
+              ],
+              "outcome": "resolves"
+            },
+            {
+              "type": "ssh",
+              "command": "mkdir -p /share/Orçamentos/2026/'Metalúrgica Silva & Filhos, Lda.'/'26-0001 - Molde \"especial\"  100% '/Documentos",
+              "argv": [
+                [
+                  "mkdir",
+                  "-p",
+                  "/share/Orçamentos/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Molde \"especial\"  100% /Documentos"
+                ]
+              ],
+              "ops": [
+                {
+                  "op": "mkdir-p",
+                  "path": "/share/Orçamentos/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Molde \"especial\"  100% /Documentos"
+                }
+              ],
+              "outcome": "resolves"
+            },
+            {
+              "type": "ssh",
+              "command": "if test -d /share/Orçamentos/2026/'Metalúrgica Silva & Filhos, Lda.'/'26-0001 - Molde \"especial\"  100% '; then echo 1; else echo 0; fi",
+              "argv": [
+                [
+                  "if",
+                  "test",
+                  "-d",
+                  "/share/Orçamentos/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Molde \"especial\"  100% "
+                ],
+                [
+                  "then",
+                  "echo",
+                  "1"
+                ],
+                [
+                  "else",
+                  "echo",
+                  "0"
+                ],
+                [
+                  "fi"
+                ]
+              ],
+              "ops": [
+                {
+                  "op": "test-d",
+                  "path": "/share/Orçamentos/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Molde \"especial\"  100% ",
+                  "result": true
+                }
+              ],
+              "stdout": "1\n",
+              "outcome": "resolves"
+            },
+            {
+              "type": "db",
+              "op": "Task.save"
+            }
+          ],
+          "dbAfter": {
+            "budgets": 1,
+            "tasks": 1,
+            "jobs": 0
+          },
+          "nasChanges": {
+            "created": [
+              "/share/Orçamentos/2026",
+              "/share/Orçamentos/2026/Metalúrgica Silva & Filhos, Lda.",
+              "/share/Orçamentos/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Molde \"especial\"  100% ",
+              "/share/Orçamentos/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Molde \"especial\"  100% /Documentos",
+              "/share/Orçamentos/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Molde \"especial\"  100% /Geometria"
+            ],
+            "removed": []
+          }
+        }
+      ],
+      "nasFoldersAtEnd": [
+        "/share/Orçamentos/2026",
+        "/share/Orçamentos/2026/Metalúrgica Silva & Filhos, Lda.",
+        "/share/Orçamentos/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Molde \"especial\"  100% ",
+        "/share/Orçamentos/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Molde \"especial\"  100% /Documentos",
+        "/share/Orçamentos/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Molde \"especial\"  100% /Geometria"
+      ]
+    },
+    {
+      "id": "budget-create-shell-chars-in-client",
+      "title": "$, backticks and parentheses inside single quotes: literal (no expansion) in legacy",
+      "steps": [
+        {
+          "step": "POST /api/budget (shellish, \"Peça $1\")",
+          "at": "2026-11-14T10:00:00 Europe/Lisbon",
+          "NODE_ENV": "prod",
+          "response": {
+            "status": 200,
+            "body": "json",
+            "fields": {
+              "budgetNumber": "26-0001",
+              "revision": 0,
+              "descriptive": "Peça $1",
+              "hasGenerateJob": false
+            }
+          },
+          "events": [
+            {
+              "type": "db",
+              "op": "Budget.save",
+              "budgetNumber": "26-0001",
+              "revision": 0
+            },
+            {
+              "type": "ssh",
+              "command": "mkdir -p /share/Orçamentos/2026/'Ferragens $HOME `id` (Porto)'/'26-0001 - Peça $1'",
+              "argv": [
+                [
+                  "mkdir",
+                  "-p",
+                  "/share/Orçamentos/2026/Ferragens $HOME `id` (Porto)/26-0001 - Peça $1"
+                ]
+              ],
+              "ops": [
+                {
+                  "op": "mkdir-p",
+                  "path": "/share/Orçamentos/2026/Ferragens $HOME `id` (Porto)/26-0001 - Peça $1"
+                }
+              ],
+              "outcome": "resolves"
+            },
+            {
+              "type": "ssh",
+              "command": "mkdir -p /share/Orçamentos/2026/'Ferragens $HOME `id` (Porto)'/'26-0001 - Peça $1'/Geometria",
+              "argv": [
+                [
+                  "mkdir",
+                  "-p",
+                  "/share/Orçamentos/2026/Ferragens $HOME `id` (Porto)/26-0001 - Peça $1/Geometria"
+                ]
+              ],
+              "ops": [
+                {
+                  "op": "mkdir-p",
+                  "path": "/share/Orçamentos/2026/Ferragens $HOME `id` (Porto)/26-0001 - Peça $1/Geometria"
+                }
+              ],
+              "outcome": "resolves"
+            },
+            {
+              "type": "ssh",
+              "command": "mkdir -p /share/Orçamentos/2026/'Ferragens $HOME `id` (Porto)'/'26-0001 - Peça $1'/Documentos",
+              "argv": [
+                [
+                  "mkdir",
+                  "-p",
+                  "/share/Orçamentos/2026/Ferragens $HOME `id` (Porto)/26-0001 - Peça $1/Documentos"
+                ]
+              ],
+              "ops": [
+                {
+                  "op": "mkdir-p",
+                  "path": "/share/Orçamentos/2026/Ferragens $HOME `id` (Porto)/26-0001 - Peça $1/Documentos"
+                }
+              ],
+              "outcome": "resolves"
+            },
+            {
+              "type": "ssh",
+              "command": "if test -d /share/Orçamentos/2026/'Ferragens $HOME `id` (Porto)'/'26-0001 - Peça $1'; then echo 1; else echo 0; fi",
+              "argv": [
+                [
+                  "if",
+                  "test",
+                  "-d",
+                  "/share/Orçamentos/2026/Ferragens $HOME `id` (Porto)/26-0001 - Peça $1"
+                ],
+                [
+                  "then",
+                  "echo",
+                  "1"
+                ],
+                [
+                  "else",
+                  "echo",
+                  "0"
+                ],
+                [
+                  "fi"
+                ]
+              ],
+              "ops": [
+                {
+                  "op": "test-d",
+                  "path": "/share/Orçamentos/2026/Ferragens $HOME `id` (Porto)/26-0001 - Peça $1",
+                  "result": true
+                }
+              ],
+              "stdout": "1\n",
+              "outcome": "resolves"
+            },
+            {
+              "type": "db",
+              "op": "Task.save"
+            }
+          ],
+          "dbAfter": {
+            "budgets": 1,
+            "tasks": 1,
+            "jobs": 0
+          },
+          "nasChanges": {
+            "created": [
+              "/share/Orçamentos/2026",
+              "/share/Orçamentos/2026/Ferragens $HOME `id` (Porto)",
+              "/share/Orçamentos/2026/Ferragens $HOME `id` (Porto)/26-0001 - Peça $1",
+              "/share/Orçamentos/2026/Ferragens $HOME `id` (Porto)/26-0001 - Peça $1/Documentos",
+              "/share/Orçamentos/2026/Ferragens $HOME `id` (Porto)/26-0001 - Peça $1/Geometria"
+            ],
+            "removed": []
+          }
+        }
+      ],
+      "nasFoldersAtEnd": [
+        "/share/Orçamentos/2026",
+        "/share/Orçamentos/2026/Ferragens $HOME `id` (Porto)",
+        "/share/Orçamentos/2026/Ferragens $HOME `id` (Porto)/26-0001 - Peça $1",
+        "/share/Orçamentos/2026/Ferragens $HOME `id` (Porto)/26-0001 - Peça $1/Documentos",
+        "/share/Orçamentos/2026/Ferragens $HOME `id` (Porto)/26-0001 - Peça $1/Geometria"
+      ]
+    },
+    {
+      "id": "budget-create-non-nfc-client",
+      "title": "Non-NFC client name (combining marks): bytes passed through unchanged",
+      "steps": [
+        {
+          "step": "POST /api/budget (nfd, \"Caixa\")",
+          "at": "2026-11-14T10:00:00 Europe/Lisbon",
+          "NODE_ENV": "prod",
+          "response": {
+            "status": 200,
+            "body": "json",
+            "fields": {
+              "budgetNumber": "26-0001",
+              "revision": 0,
+              "descriptive": "Caixa",
+              "hasGenerateJob": false
+            }
+          },
+          "events": [
+            {
+              "type": "db",
+              "op": "Budget.save",
+              "budgetNumber": "26-0001",
+              "revision": 0
+            },
+            {
+              "type": "ssh",
+              "command": "mkdir -p /share/Orçamentos/2026/'Fundição Norte'/'26-0001 - Caixa'",
+              "argv": [
+                [
+                  "mkdir",
+                  "-p",
+                  "/share/Orçamentos/2026/Fundição Norte/26-0001 - Caixa"
+                ]
+              ],
+              "ops": [
+                {
+                  "op": "mkdir-p",
+                  "path": "/share/Orçamentos/2026/Fundição Norte/26-0001 - Caixa"
+                }
+              ],
+              "outcome": "resolves"
+            },
+            {
+              "type": "ssh",
+              "command": "mkdir -p /share/Orçamentos/2026/'Fundição Norte'/'26-0001 - Caixa'/Geometria",
+              "argv": [
+                [
+                  "mkdir",
+                  "-p",
+                  "/share/Orçamentos/2026/Fundição Norte/26-0001 - Caixa/Geometria"
+                ]
+              ],
+              "ops": [
+                {
+                  "op": "mkdir-p",
+                  "path": "/share/Orçamentos/2026/Fundição Norte/26-0001 - Caixa/Geometria"
+                }
+              ],
+              "outcome": "resolves"
+            },
+            {
+              "type": "ssh",
+              "command": "mkdir -p /share/Orçamentos/2026/'Fundição Norte'/'26-0001 - Caixa'/Documentos",
+              "argv": [
+                [
+                  "mkdir",
+                  "-p",
+                  "/share/Orçamentos/2026/Fundição Norte/26-0001 - Caixa/Documentos"
+                ]
+              ],
+              "ops": [
+                {
+                  "op": "mkdir-p",
+                  "path": "/share/Orçamentos/2026/Fundição Norte/26-0001 - Caixa/Documentos"
+                }
+              ],
+              "outcome": "resolves"
+            },
+            {
+              "type": "ssh",
+              "command": "if test -d /share/Orçamentos/2026/'Fundição Norte'/'26-0001 - Caixa'; then echo 1; else echo 0; fi",
+              "argv": [
+                [
+                  "if",
+                  "test",
+                  "-d",
+                  "/share/Orçamentos/2026/Fundição Norte/26-0001 - Caixa"
+                ],
+                [
+                  "then",
+                  "echo",
+                  "1"
+                ],
+                [
+                  "else",
+                  "echo",
+                  "0"
+                ],
+                [
+                  "fi"
+                ]
+              ],
+              "ops": [
+                {
+                  "op": "test-d",
+                  "path": "/share/Orçamentos/2026/Fundição Norte/26-0001 - Caixa",
+                  "result": true
+                }
+              ],
+              "stdout": "1\n",
+              "outcome": "resolves"
+            },
+            {
+              "type": "db",
+              "op": "Task.save"
+            }
+          ],
+          "dbAfter": {
+            "budgets": 1,
+            "tasks": 1,
+            "jobs": 0
+          },
+          "nasChanges": {
+            "created": [
+              "/share/Orçamentos/2026",
+              "/share/Orçamentos/2026/Fundição Norte",
+              "/share/Orçamentos/2026/Fundição Norte/26-0001 - Caixa",
+              "/share/Orçamentos/2026/Fundição Norte/26-0001 - Caixa/Documentos",
+              "/share/Orçamentos/2026/Fundição Norte/26-0001 - Caixa/Geometria"
+            ],
+            "removed": []
+          }
+        }
+      ],
+      "nasFoldersAtEnd": [
+        "/share/Orçamentos/2026",
+        "/share/Orçamentos/2026/Fundição Norte",
+        "/share/Orçamentos/2026/Fundição Norte/26-0001 - Caixa",
+        "/share/Orçamentos/2026/Fundição Norte/26-0001 - Caixa/Documentos",
+        "/share/Orçamentos/2026/Fundição Norte/26-0001 - Caixa/Geometria"
+      ]
+    },
+    {
+      "id": "budget-create-apostrophe-in-client",
+      "title": "Apostrophe in the client name breaks legacy quoting: sh syntax error → exec rejects → 500 (budget saved, no task, no folder)",
+      "steps": [
+        {
+          "step": "POST /api/budget (apostrophe, \"Vitrine refrigerada\")",
+          "at": "2026-11-14T10:00:00 Europe/Lisbon",
+          "NODE_ENV": "prod",
+          "response": {
+            "status": 500,
+            "body": "expressErrorPage"
+          },
+          "events": [
+            {
+              "type": "db",
+              "op": "Budget.save",
+              "budgetNumber": "26-0001",
+              "revision": 0
+            },
+            {
+              "type": "ssh",
+              "command": "mkdir -p /share/Orçamentos/2026/'Pastelaria D'Ouro'/'26-0001 - Vitrine refrigerada'",
+              "parseError": "unterminated single quote at offset 82",
+              "ops": [],
+              "stderr": "sh: syntax error: unterminated single quote at offset 82\n",
+              "outcome": "rejects (stderr)"
+            },
+            {
+              "type": "error",
+              "name": "Buffer (ssh2-promise stderr rejection)",
+              "message": "sh: syntax error: unterminated single quote at offset 82\n"
+            }
+          ],
+          "dbAfter": {
+            "budgets": 1,
+            "tasks": 0,
+            "jobs": 0
+          },
+          "nasChanges": {
+            "created": [],
+            "removed": []
+          }
+        }
+      ],
+      "nasFoldersAtEnd": []
+    },
+    {
+      "id": "budget-create-apostrophe-in-descriptive",
+      "title": "Apostrophe in the descriptive: same quoting failure",
+      "steps": [
+        {
+          "step": "POST /api/budget (silva, \"Tampa O'Neill\")",
+          "at": "2026-11-14T10:00:00 Europe/Lisbon",
+          "NODE_ENV": "prod",
+          "response": {
+            "status": 500,
+            "body": "expressErrorPage"
+          },
+          "events": [
+            {
+              "type": "db",
+              "op": "Budget.save",
+              "budgetNumber": "26-0001",
+              "revision": 0
+            },
+            {
+              "type": "ssh",
+              "command": "mkdir -p /share/Orçamentos/2026/'Metalúrgica Silva & Filhos, Lda.'/'26-0001 - Tampa O'Neill'",
+              "parseError": "unterminated single quote at offset 91",
+              "ops": [],
+              "stderr": "sh: syntax error: unterminated single quote at offset 91\n",
+              "outcome": "rejects (stderr)"
+            },
+            {
+              "type": "error",
+              "name": "Buffer (ssh2-promise stderr rejection)",
+              "message": "sh: syntax error: unterminated single quote at offset 91\n"
+            }
+          ],
+          "dbAfter": {
+            "budgets": 1,
+            "tasks": 0,
+            "jobs": 0
+          },
+          "nasChanges": {
+            "created": [],
+            "removed": []
+          }
+        }
+      ],
+      "nasFoldersAtEnd": []
+    },
+    {
+      "id": "budget-clone",
+      "title": "Budget clone (prod): new number, folder in the CURRENT year, same commands as create",
+      "steps": [
+        {
+          "step": "POST /api/budget (silva, \"Máquina de corte\")",
+          "at": "2025-06-02T09:00:00 Europe/Lisbon",
+          "NODE_ENV": "prod",
+          "response": {
+            "status": 200,
+            "body": "json",
+            "fields": {
+              "budgetNumber": "25-0001",
+              "revision": 0,
+              "descriptive": "Máquina de corte",
+              "hasGenerateJob": false
+            }
+          },
+          "events": [
+            {
+              "type": "db",
+              "op": "Budget.save",
+              "budgetNumber": "25-0001",
+              "revision": 0
+            },
+            {
+              "type": "ssh",
+              "command": "mkdir -p /share/Orçamentos/2025/'Metalúrgica Silva & Filhos, Lda.'/'25-0001 - Máquina de corte'",
+              "argv": [
+                [
+                  "mkdir",
+                  "-p",
+                  "/share/Orçamentos/2025/Metalúrgica Silva & Filhos, Lda./25-0001 - Máquina de corte"
+                ]
+              ],
+              "ops": [
+                {
+                  "op": "mkdir-p",
+                  "path": "/share/Orçamentos/2025/Metalúrgica Silva & Filhos, Lda./25-0001 - Máquina de corte"
+                }
+              ],
+              "outcome": "resolves"
+            },
+            {
+              "type": "ssh",
+              "command": "mkdir -p /share/Orçamentos/2025/'Metalúrgica Silva & Filhos, Lda.'/'25-0001 - Máquina de corte'/Geometria",
+              "argv": [
+                [
+                  "mkdir",
+                  "-p",
+                  "/share/Orçamentos/2025/Metalúrgica Silva & Filhos, Lda./25-0001 - Máquina de corte/Geometria"
+                ]
+              ],
+              "ops": [
+                {
+                  "op": "mkdir-p",
+                  "path": "/share/Orçamentos/2025/Metalúrgica Silva & Filhos, Lda./25-0001 - Máquina de corte/Geometria"
+                }
+              ],
+              "outcome": "resolves"
+            },
+            {
+              "type": "ssh",
+              "command": "mkdir -p /share/Orçamentos/2025/'Metalúrgica Silva & Filhos, Lda.'/'25-0001 - Máquina de corte'/Documentos",
+              "argv": [
+                [
+                  "mkdir",
+                  "-p",
+                  "/share/Orçamentos/2025/Metalúrgica Silva & Filhos, Lda./25-0001 - Máquina de corte/Documentos"
+                ]
+              ],
+              "ops": [
+                {
+                  "op": "mkdir-p",
+                  "path": "/share/Orçamentos/2025/Metalúrgica Silva & Filhos, Lda./25-0001 - Máquina de corte/Documentos"
+                }
+              ],
+              "outcome": "resolves"
+            },
+            {
+              "type": "ssh",
+              "command": "if test -d /share/Orçamentos/2025/'Metalúrgica Silva & Filhos, Lda.'/'25-0001 - Máquina de corte'; then echo 1; else echo 0; fi",
+              "argv": [
+                [
+                  "if",
+                  "test",
+                  "-d",
+                  "/share/Orçamentos/2025/Metalúrgica Silva & Filhos, Lda./25-0001 - Máquina de corte"
+                ],
+                [
+                  "then",
+                  "echo",
+                  "1"
+                ],
+                [
+                  "else",
+                  "echo",
+                  "0"
+                ],
+                [
+                  "fi"
+                ]
+              ],
+              "ops": [
+                {
+                  "op": "test-d",
+                  "path": "/share/Orçamentos/2025/Metalúrgica Silva & Filhos, Lda./25-0001 - Máquina de corte",
+                  "result": true
+                }
+              ],
+              "stdout": "1\n",
+              "outcome": "resolves"
+            },
+            {
+              "type": "db",
+              "op": "Task.save"
+            }
+          ],
+          "dbAfter": {
+            "budgets": 1,
+            "tasks": 1,
+            "jobs": 0
+          },
+          "nasChanges": {
+            "created": [
+              "/share/Orçamentos/2025",
+              "/share/Orçamentos/2025/Metalúrgica Silva & Filhos, Lda.",
+              "/share/Orçamentos/2025/Metalúrgica Silva & Filhos, Lda./25-0001 - Máquina de corte",
+              "/share/Orçamentos/2025/Metalúrgica Silva & Filhos, Lda./25-0001 - Máquina de corte/Documentos",
+              "/share/Orçamentos/2025/Metalúrgica Silva & Filhos, Lda./25-0001 - Máquina de corte/Geometria"
+            ],
+            "removed": []
+          }
+        },
+        {
+          "step": "POST /api/budget/clone/{a}",
+          "at": "2026-11-14T10:00:00 Europe/Lisbon",
+          "NODE_ENV": "prod",
+          "response": {
+            "status": 200,
+            "body": "json",
+            "fields": {
+              "budgetNumber": "26-0001",
+              "revision": 0,
+              "descriptive": "Máquina de corte v2",
+              "hasGenerateJob": false
+            }
+          },
+          "events": [
+            {
+              "type": "db",
+              "op": "Task.insertMany",
+              "count": 1
+            },
+            {
+              "type": "db",
+              "op": "Budget.save",
+              "budgetNumber": "26-0001",
+              "revision": 0
+            },
+            {
+              "type": "ssh",
+              "command": "mkdir -p /share/Orçamentos/2026/'Metalúrgica Silva & Filhos, Lda.'/'26-0001 - Máquina de corte v2'",
+              "argv": [
+                [
+                  "mkdir",
+                  "-p",
+                  "/share/Orçamentos/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Máquina de corte v2"
+                ]
+              ],
+              "ops": [
+                {
+                  "op": "mkdir-p",
+                  "path": "/share/Orçamentos/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Máquina de corte v2"
+                }
+              ],
+              "outcome": "resolves"
+            },
+            {
+              "type": "ssh",
+              "command": "mkdir -p /share/Orçamentos/2026/'Metalúrgica Silva & Filhos, Lda.'/'26-0001 - Máquina de corte v2'/Geometria",
+              "argv": [
+                [
+                  "mkdir",
+                  "-p",
+                  "/share/Orçamentos/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Máquina de corte v2/Geometria"
+                ]
+              ],
+              "ops": [
+                {
+                  "op": "mkdir-p",
+                  "path": "/share/Orçamentos/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Máquina de corte v2/Geometria"
+                }
+              ],
+              "outcome": "resolves"
+            },
+            {
+              "type": "ssh",
+              "command": "mkdir -p /share/Orçamentos/2026/'Metalúrgica Silva & Filhos, Lda.'/'26-0001 - Máquina de corte v2'/Documentos",
+              "argv": [
+                [
+                  "mkdir",
+                  "-p",
+                  "/share/Orçamentos/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Máquina de corte v2/Documentos"
+                ]
+              ],
+              "ops": [
+                {
+                  "op": "mkdir-p",
+                  "path": "/share/Orçamentos/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Máquina de corte v2/Documentos"
+                }
+              ],
+              "outcome": "resolves"
+            },
+            {
+              "type": "ssh",
+              "command": "if test -d /share/Orçamentos/2026/'Metalúrgica Silva & Filhos, Lda.'/'26-0001 - Máquina de corte v2'; then echo 1; else echo 0; fi",
+              "argv": [
+                [
+                  "if",
+                  "test",
+                  "-d",
+                  "/share/Orçamentos/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Máquina de corte v2"
+                ],
+                [
+                  "then",
+                  "echo",
+                  "1"
+                ],
+                [
+                  "else",
+                  "echo",
+                  "0"
+                ],
+                [
+                  "fi"
+                ]
+              ],
+              "ops": [
+                {
+                  "op": "test-d",
+                  "path": "/share/Orçamentos/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Máquina de corte v2",
+                  "result": true
+                }
+              ],
+              "stdout": "1\n",
+              "outcome": "resolves"
+            }
+          ],
+          "dbAfter": {
+            "budgets": 2,
+            "tasks": 2,
+            "jobs": 0
+          },
+          "nasChanges": {
+            "created": [
+              "/share/Orçamentos/2026",
+              "/share/Orçamentos/2026/Metalúrgica Silva & Filhos, Lda.",
+              "/share/Orçamentos/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Máquina de corte v2",
+              "/share/Orçamentos/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Máquina de corte v2/Documentos",
+              "/share/Orçamentos/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Máquina de corte v2/Geometria"
+            ],
+            "removed": []
+          }
+        }
+      ],
+      "nasFoldersAtEnd": [
+        "/share/Orçamentos/2025",
+        "/share/Orçamentos/2025/Metalúrgica Silva & Filhos, Lda.",
+        "/share/Orçamentos/2025/Metalúrgica Silva & Filhos, Lda./25-0001 - Máquina de corte",
+        "/share/Orçamentos/2025/Metalúrgica Silva & Filhos, Lda./25-0001 - Máquina de corte/Documentos",
+        "/share/Orçamentos/2025/Metalúrgica Silva & Filhos, Lda./25-0001 - Máquina de corte/Geometria",
+        "/share/Orçamentos/2026",
+        "/share/Orçamentos/2026/Metalúrgica Silva & Filhos, Lda.",
+        "/share/Orçamentos/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Máquina de corte v2",
+        "/share/Orçamentos/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Máquina de corte v2/Documentos",
+        "/share/Orçamentos/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Máquina de corte v2/Geometria"
+      ]
+    },
+    {
+      "id": "budget-rename-rev0",
+      "title": "PUT on revision 0 with a new descriptive: cd /;mv old new, year from budget.date",
+      "steps": [
+        {
+          "step": "POST /api/budget (silva, \"Máquina de corte\")",
+          "at": "2025-12-30T16:00:00 Europe/Lisbon",
+          "NODE_ENV": "prod",
+          "response": {
+            "status": 200,
+            "body": "json",
+            "fields": {
+              "budgetNumber": "25-0001",
+              "revision": 0,
+              "descriptive": "Máquina de corte",
+              "hasGenerateJob": false
+            }
+          },
+          "events": [
+            {
+              "type": "db",
+              "op": "Budget.save",
+              "budgetNumber": "25-0001",
+              "revision": 0
+            },
+            {
+              "type": "ssh",
+              "command": "mkdir -p /share/Orçamentos/2025/'Metalúrgica Silva & Filhos, Lda.'/'25-0001 - Máquina de corte'",
+              "argv": [
+                [
+                  "mkdir",
+                  "-p",
+                  "/share/Orçamentos/2025/Metalúrgica Silva & Filhos, Lda./25-0001 - Máquina de corte"
+                ]
+              ],
+              "ops": [
+                {
+                  "op": "mkdir-p",
+                  "path": "/share/Orçamentos/2025/Metalúrgica Silva & Filhos, Lda./25-0001 - Máquina de corte"
+                }
+              ],
+              "outcome": "resolves"
+            },
+            {
+              "type": "ssh",
+              "command": "mkdir -p /share/Orçamentos/2025/'Metalúrgica Silva & Filhos, Lda.'/'25-0001 - Máquina de corte'/Geometria",
+              "argv": [
+                [
+                  "mkdir",
+                  "-p",
+                  "/share/Orçamentos/2025/Metalúrgica Silva & Filhos, Lda./25-0001 - Máquina de corte/Geometria"
+                ]
+              ],
+              "ops": [
+                {
+                  "op": "mkdir-p",
+                  "path": "/share/Orçamentos/2025/Metalúrgica Silva & Filhos, Lda./25-0001 - Máquina de corte/Geometria"
+                }
+              ],
+              "outcome": "resolves"
+            },
+            {
+              "type": "ssh",
+              "command": "mkdir -p /share/Orçamentos/2025/'Metalúrgica Silva & Filhos, Lda.'/'25-0001 - Máquina de corte'/Documentos",
+              "argv": [
+                [
+                  "mkdir",
+                  "-p",
+                  "/share/Orçamentos/2025/Metalúrgica Silva & Filhos, Lda./25-0001 - Máquina de corte/Documentos"
+                ]
+              ],
+              "ops": [
+                {
+                  "op": "mkdir-p",
+                  "path": "/share/Orçamentos/2025/Metalúrgica Silva & Filhos, Lda./25-0001 - Máquina de corte/Documentos"
+                }
+              ],
+              "outcome": "resolves"
+            },
+            {
+              "type": "ssh",
+              "command": "if test -d /share/Orçamentos/2025/'Metalúrgica Silva & Filhos, Lda.'/'25-0001 - Máquina de corte'; then echo 1; else echo 0; fi",
+              "argv": [
+                [
+                  "if",
+                  "test",
+                  "-d",
+                  "/share/Orçamentos/2025/Metalúrgica Silva & Filhos, Lda./25-0001 - Máquina de corte"
+                ],
+                [
+                  "then",
+                  "echo",
+                  "1"
+                ],
+                [
+                  "else",
+                  "echo",
+                  "0"
+                ],
+                [
+                  "fi"
+                ]
+              ],
+              "ops": [
+                {
+                  "op": "test-d",
+                  "path": "/share/Orçamentos/2025/Metalúrgica Silva & Filhos, Lda./25-0001 - Máquina de corte",
+                  "result": true
+                }
+              ],
+              "stdout": "1\n",
+              "outcome": "resolves"
+            },
+            {
+              "type": "db",
+              "op": "Task.save"
+            }
+          ],
+          "dbAfter": {
+            "budgets": 1,
+            "tasks": 1,
+            "jobs": 0
+          },
+          "nasChanges": {
+            "created": [
+              "/share/Orçamentos/2025",
+              "/share/Orçamentos/2025/Metalúrgica Silva & Filhos, Lda.",
+              "/share/Orçamentos/2025/Metalúrgica Silva & Filhos, Lda./25-0001 - Máquina de corte",
+              "/share/Orçamentos/2025/Metalúrgica Silva & Filhos, Lda./25-0001 - Máquina de corte/Documentos",
+              "/share/Orçamentos/2025/Metalúrgica Silva & Filhos, Lda./25-0001 - Máquina de corte/Geometria"
+            ],
+            "removed": []
+          }
+        },
+        {
+          "step": "PUT /api/budget/{b} (descriptive \"Máquina de corte CNC\")",
+          "at": "2026-01-05T09:00:00 Europe/Lisbon",
+          "NODE_ENV": "prod",
+          "response": {
+            "status": 200,
+            "body": "json",
+            "fields": {
+              "budgetNumber": "25-0001",
+              "revision": 0,
+              "descriptive": "Máquina de corte CNC",
+              "hasGenerateJob": false
+            }
+          },
+          "events": [
+            {
+              "type": "ssh",
+              "command": "cd /;mv /share/Orçamentos/2025/'Metalúrgica Silva & Filhos, Lda.'/'25-0001 - Máquina de corte' /share/Orçamentos/2025/'Metalúrgica Silva & Filhos, Lda.'/'25-0001 - Máquina de corte CNC'",
+              "argv": [
+                [
+                  "cd",
+                  "/"
+                ],
+                [
+                  "mv",
+                  "/share/Orçamentos/2025/Metalúrgica Silva & Filhos, Lda./25-0001 - Máquina de corte",
+                  "/share/Orçamentos/2025/Metalúrgica Silva & Filhos, Lda./25-0001 - Máquina de corte CNC"
+                ]
+              ],
+              "ops": [
+                {
+                  "op": "mv",
+                  "from": "/share/Orçamentos/2025/Metalúrgica Silva & Filhos, Lda./25-0001 - Máquina de corte",
+                  "to": "/share/Orçamentos/2025/Metalúrgica Silva & Filhos, Lda./25-0001 - Máquina de corte CNC",
+                  "result": "ok"
+                }
+              ],
+              "outcome": "resolves"
+            },
+            {
+              "type": "db",
+              "op": "Budget.save",
+              "budgetNumber": "25-0001",
+              "revision": 0
+            }
+          ],
+          "dbAfter": {
+            "budgets": 1,
+            "tasks": 1,
+            "jobs": 0
+          },
+          "nasChanges": {
+            "created": [
+              "/share/Orçamentos/2025/Metalúrgica Silva & Filhos, Lda./25-0001 - Máquina de corte CNC",
+              "/share/Orçamentos/2025/Metalúrgica Silva & Filhos, Lda./25-0001 - Máquina de corte CNC/Documentos",
+              "/share/Orçamentos/2025/Metalúrgica Silva & Filhos, Lda./25-0001 - Máquina de corte CNC/Geometria"
+            ],
+            "removed": [
+              "/share/Orçamentos/2025/Metalúrgica Silva & Filhos, Lda./25-0001 - Máquina de corte",
+              "/share/Orçamentos/2025/Metalúrgica Silva & Filhos, Lda./25-0001 - Máquina de corte/Documentos",
+              "/share/Orçamentos/2025/Metalúrgica Silva & Filhos, Lda./25-0001 - Máquina de corte/Geometria"
+            ]
+          }
+        }
+      ],
+      "nasFoldersAtEnd": [
+        "/share/Orçamentos/2025",
+        "/share/Orçamentos/2025/Metalúrgica Silva & Filhos, Lda.",
+        "/share/Orçamentos/2025/Metalúrgica Silva & Filhos, Lda./25-0001 - Máquina de corte CNC",
+        "/share/Orçamentos/2025/Metalúrgica Silva & Filhos, Lda./25-0001 - Máquina de corte CNC/Documentos",
+        "/share/Orçamentos/2025/Metalúrgica Silva & Filhos, Lda./25-0001 - Máquina de corte CNC/Geometria"
+      ]
+    },
+    {
+      "id": "budget-rename-rev0-dev",
+      "title": "Same PUT outside prod: legacy still runs SSH (D5, not gated)",
+      "steps": [
+        {
+          "step": "POST /api/budget (silva, \"Máquina de corte\")",
+          "at": "2026-11-14T10:00:00 Europe/Lisbon",
+          "NODE_ENV": null,
+          "response": {
+            "status": 200,
+            "body": "json",
+            "fields": {
+              "budgetNumber": "26-0001",
+              "revision": 0,
+              "descriptive": "Máquina de corte",
+              "hasGenerateJob": false
+            }
+          },
+          "events": [
+            {
+              "type": "db",
+              "op": "Budget.save",
+              "budgetNumber": "26-0001",
+              "revision": 0
+            },
+            {
+              "type": "db",
+              "op": "Task.save"
+            }
+          ],
+          "dbAfter": {
+            "budgets": 1,
+            "tasks": 1,
+            "jobs": 0
+          },
+          "nasChanges": {
+            "created": [],
+            "removed": []
+          }
+        },
+        {
+          "step": "PUT /api/budget/{b} (descriptive \"Máquina de corte CNC\")",
+          "at": "2026-11-14T10:05:00 Europe/Lisbon",
+          "NODE_ENV": null,
+          "response": {
+            "status": 500,
+            "body": "expressErrorPage"
+          },
+          "events": [
+            {
+              "type": "ssh",
+              "command": "cd /;mv /share/Orçamentos/2026/'Metalúrgica Silva & Filhos, Lda.'/'26-0001 - Máquina de corte' /share/Orçamentos/2026/'Metalúrgica Silva & Filhos, Lda.'/'26-0001 - Máquina de corte CNC'",
+              "argv": [
+                [
+                  "cd",
+                  "/"
+                ],
+                [
+                  "mv",
+                  "/share/Orçamentos/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Máquina de corte",
+                  "/share/Orçamentos/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Máquina de corte CNC"
+                ]
+              ],
+              "ops": [
+                {
+                  "op": "mv",
+                  "from": "/share/Orçamentos/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Máquina de corte",
+                  "to": "/share/Orçamentos/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Máquina de corte CNC",
+                  "result": "source-missing"
+                }
+              ],
+              "stderr": "mv: cannot stat '/share/Orçamentos/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Máquina de corte': No such file or directory\n",
+              "outcome": "rejects (stderr)"
+            },
+            {
+              "type": "error",
+              "name": "Buffer (ssh2-promise stderr rejection)",
+              "message": "mv: cannot stat '/share/Orçamentos/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Máquina de corte': No such file or directory\n"
+            }
+          ],
+          "dbAfter": {
+            "budgets": 1,
+            "tasks": 1,
+            "jobs": 0
+          },
+          "nasChanges": {
+            "created": [],
+            "removed": []
+          }
+        }
+      ],
+      "nasFoldersAtEnd": []
+    },
+    {
+      "id": "budget-rename-same-descriptive",
+      "title": "PUT on revision 0, descriptive unchanged: no SSH",
+      "steps": [
+        {
+          "step": "POST /api/budget (silva, \"Máquina de corte\")",
+          "at": "2026-11-14T10:00:00 Europe/Lisbon",
+          "NODE_ENV": "prod",
+          "response": {
+            "status": 200,
+            "body": "json",
+            "fields": {
+              "budgetNumber": "26-0001",
+              "revision": 0,
+              "descriptive": "Máquina de corte",
+              "hasGenerateJob": false
+            }
+          },
+          "events": [
+            {
+              "type": "db",
+              "op": "Budget.save",
+              "budgetNumber": "26-0001",
+              "revision": 0
+            },
+            {
+              "type": "ssh",
+              "command": "mkdir -p /share/Orçamentos/2026/'Metalúrgica Silva & Filhos, Lda.'/'26-0001 - Máquina de corte'",
+              "argv": [
+                [
+                  "mkdir",
+                  "-p",
+                  "/share/Orçamentos/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Máquina de corte"
+                ]
+              ],
+              "ops": [
+                {
+                  "op": "mkdir-p",
+                  "path": "/share/Orçamentos/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Máquina de corte"
+                }
+              ],
+              "outcome": "resolves"
+            },
+            {
+              "type": "ssh",
+              "command": "mkdir -p /share/Orçamentos/2026/'Metalúrgica Silva & Filhos, Lda.'/'26-0001 - Máquina de corte'/Geometria",
+              "argv": [
+                [
+                  "mkdir",
+                  "-p",
+                  "/share/Orçamentos/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Máquina de corte/Geometria"
+                ]
+              ],
+              "ops": [
+                {
+                  "op": "mkdir-p",
+                  "path": "/share/Orçamentos/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Máquina de corte/Geometria"
+                }
+              ],
+              "outcome": "resolves"
+            },
+            {
+              "type": "ssh",
+              "command": "mkdir -p /share/Orçamentos/2026/'Metalúrgica Silva & Filhos, Lda.'/'26-0001 - Máquina de corte'/Documentos",
+              "argv": [
+                [
+                  "mkdir",
+                  "-p",
+                  "/share/Orçamentos/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Máquina de corte/Documentos"
+                ]
+              ],
+              "ops": [
+                {
+                  "op": "mkdir-p",
+                  "path": "/share/Orçamentos/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Máquina de corte/Documentos"
+                }
+              ],
+              "outcome": "resolves"
+            },
+            {
+              "type": "ssh",
+              "command": "if test -d /share/Orçamentos/2026/'Metalúrgica Silva & Filhos, Lda.'/'26-0001 - Máquina de corte'; then echo 1; else echo 0; fi",
+              "argv": [
+                [
+                  "if",
+                  "test",
+                  "-d",
+                  "/share/Orçamentos/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Máquina de corte"
+                ],
+                [
+                  "then",
+                  "echo",
+                  "1"
+                ],
+                [
+                  "else",
+                  "echo",
+                  "0"
+                ],
+                [
+                  "fi"
+                ]
+              ],
+              "ops": [
+                {
+                  "op": "test-d",
+                  "path": "/share/Orçamentos/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Máquina de corte",
+                  "result": true
+                }
+              ],
+              "stdout": "1\n",
+              "outcome": "resolves"
+            },
+            {
+              "type": "db",
+              "op": "Task.save"
+            }
+          ],
+          "dbAfter": {
+            "budgets": 1,
+            "tasks": 1,
+            "jobs": 0
+          },
+          "nasChanges": {
+            "created": [
+              "/share/Orçamentos/2026",
+              "/share/Orçamentos/2026/Metalúrgica Silva & Filhos, Lda.",
+              "/share/Orçamentos/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Máquina de corte",
+              "/share/Orçamentos/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Máquina de corte/Documentos",
+              "/share/Orçamentos/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Máquina de corte/Geometria"
+            ],
+            "removed": []
+          }
+        },
+        {
+          "step": "PUT /api/budget/{b} (descriptive \"Máquina de corte\")",
+          "at": "2026-11-14T10:05:00 Europe/Lisbon",
+          "NODE_ENV": "prod",
+          "response": {
+            "status": 200,
+            "body": "json",
+            "fields": {
+              "budgetNumber": "26-0001",
+              "revision": 0,
+              "descriptive": "Máquina de corte",
+              "hasGenerateJob": false
+            }
+          },
+          "events": [
+            {
+              "type": "db",
+              "op": "Budget.save",
+              "budgetNumber": "26-0001",
+              "revision": 0
+            }
+          ],
+          "dbAfter": {
+            "budgets": 1,
+            "tasks": 1,
+            "jobs": 0
+          },
+          "nasChanges": {
+            "created": [],
+            "removed": []
+          }
+        }
+      ],
+      "nasFoldersAtEnd": [
+        "/share/Orçamentos/2026",
+        "/share/Orçamentos/2026/Metalúrgica Silva & Filhos, Lda.",
+        "/share/Orçamentos/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Máquina de corte",
+        "/share/Orçamentos/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Máquina de corte/Documentos",
+        "/share/Orçamentos/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Máquina de corte/Geometria"
+      ]
+    },
+    {
+      "id": "budget-rename-revision",
+      "title": "PUT on revision 1 with a new descriptive: no SSH (only revision 0 renames)",
+      "steps": [
+        {
+          "step": "POST /api/budget (silva, \"Máquina de corte\")",
+          "at": "2026-11-14T10:00:00 Europe/Lisbon",
+          "NODE_ENV": "prod",
+          "response": {
+            "status": 200,
+            "body": "json",
+            "fields": {
+              "budgetNumber": "26-0001",
+              "revision": 0,
+              "descriptive": "Máquina de corte",
+              "hasGenerateJob": false
+            }
+          },
+          "events": [
+            {
+              "type": "db",
+              "op": "Budget.save",
+              "budgetNumber": "26-0001",
+              "revision": 0
+            },
+            {
+              "type": "ssh",
+              "command": "mkdir -p /share/Orçamentos/2026/'Metalúrgica Silva & Filhos, Lda.'/'26-0001 - Máquina de corte'",
+              "argv": [
+                [
+                  "mkdir",
+                  "-p",
+                  "/share/Orçamentos/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Máquina de corte"
+                ]
+              ],
+              "ops": [
+                {
+                  "op": "mkdir-p",
+                  "path": "/share/Orçamentos/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Máquina de corte"
+                }
+              ],
+              "outcome": "resolves"
+            },
+            {
+              "type": "ssh",
+              "command": "mkdir -p /share/Orçamentos/2026/'Metalúrgica Silva & Filhos, Lda.'/'26-0001 - Máquina de corte'/Geometria",
+              "argv": [
+                [
+                  "mkdir",
+                  "-p",
+                  "/share/Orçamentos/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Máquina de corte/Geometria"
+                ]
+              ],
+              "ops": [
+                {
+                  "op": "mkdir-p",
+                  "path": "/share/Orçamentos/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Máquina de corte/Geometria"
+                }
+              ],
+              "outcome": "resolves"
+            },
+            {
+              "type": "ssh",
+              "command": "mkdir -p /share/Orçamentos/2026/'Metalúrgica Silva & Filhos, Lda.'/'26-0001 - Máquina de corte'/Documentos",
+              "argv": [
+                [
+                  "mkdir",
+                  "-p",
+                  "/share/Orçamentos/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Máquina de corte/Documentos"
+                ]
+              ],
+              "ops": [
+                {
+                  "op": "mkdir-p",
+                  "path": "/share/Orçamentos/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Máquina de corte/Documentos"
+                }
+              ],
+              "outcome": "resolves"
+            },
+            {
+              "type": "ssh",
+              "command": "if test -d /share/Orçamentos/2026/'Metalúrgica Silva & Filhos, Lda.'/'26-0001 - Máquina de corte'; then echo 1; else echo 0; fi",
+              "argv": [
+                [
+                  "if",
+                  "test",
+                  "-d",
+                  "/share/Orçamentos/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Máquina de corte"
+                ],
+                [
+                  "then",
+                  "echo",
+                  "1"
+                ],
+                [
+                  "else",
+                  "echo",
+                  "0"
+                ],
+                [
+                  "fi"
+                ]
+              ],
+              "ops": [
+                {
+                  "op": "test-d",
+                  "path": "/share/Orçamentos/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Máquina de corte",
+                  "result": true
+                }
+              ],
+              "stdout": "1\n",
+              "outcome": "resolves"
+            },
+            {
+              "type": "db",
+              "op": "Task.save"
+            }
+          ],
+          "dbAfter": {
+            "budgets": 1,
+            "tasks": 1,
+            "jobs": 0
+          },
+          "nasChanges": {
+            "created": [
+              "/share/Orçamentos/2026",
+              "/share/Orçamentos/2026/Metalúrgica Silva & Filhos, Lda.",
+              "/share/Orçamentos/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Máquina de corte",
+              "/share/Orçamentos/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Máquina de corte/Documentos",
+              "/share/Orçamentos/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Máquina de corte/Geometria"
+            ],
+            "removed": []
+          }
+        },
+        {
+          "step": "POST /api/budget/newrevision/{b0}",
+          "at": "2026-11-14T10:01:00 Europe/Lisbon",
+          "NODE_ENV": "prod",
+          "response": {
+            "status": 200,
+            "body": "json",
+            "fields": {
+              "budgetNumber": "26-0001",
+              "revision": 1,
+              "descriptive": "Máquina de corte",
+              "hasGenerateJob": false
+            }
+          },
+          "events": [
+            {
+              "type": "db",
+              "op": "Task.insertMany",
+              "count": 1
+            },
+            {
+              "type": "db",
+              "op": "Budget.save",
+              "budgetNumber": "26-0001",
+              "revision": 1
+            }
+          ],
+          "dbAfter": {
+            "budgets": 2,
+            "tasks": 2,
+            "jobs": 0
+          },
+          "nasChanges": {
+            "created": [],
+            "removed": []
+          }
+        },
+        {
+          "step": "PUT /api/budget/{b1} (descriptive \"Máquina de corte (rev. 1)\")",
+          "at": "2026-11-14T10:02:00 Europe/Lisbon",
+          "NODE_ENV": "prod",
+          "response": {
+            "status": 200,
+            "body": "json",
+            "fields": {
+              "budgetNumber": "26-0001",
+              "revision": 1,
+              "descriptive": "Máquina de corte (rev. 1)",
+              "hasGenerateJob": false
+            }
+          },
+          "events": [
+            {
+              "type": "db",
+              "op": "Budget.save",
+              "budgetNumber": "26-0001",
+              "revision": 1
+            }
+          ],
+          "dbAfter": {
+            "budgets": 2,
+            "tasks": 2,
+            "jobs": 0
+          },
+          "nasChanges": {
+            "created": [],
+            "removed": []
+          }
+        }
+      ],
+      "nasFoldersAtEnd": [
+        "/share/Orçamentos/2026",
+        "/share/Orçamentos/2026/Metalúrgica Silva & Filhos, Lda.",
+        "/share/Orçamentos/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Máquina de corte",
+        "/share/Orçamentos/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Máquina de corte/Documentos",
+        "/share/Orçamentos/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Máquina de corte/Geometria"
+      ]
+    },
+    {
+      "id": "budget-rename-slash",
+      "title": "Rename to a descriptive with '/': mv into a folder whose parent does not exist → fails",
+      "steps": [
+        {
+          "step": "POST /api/budget (silva, \"Suporte\")",
+          "at": "2026-11-14T10:00:00 Europe/Lisbon",
+          "NODE_ENV": "prod",
+          "response": {
+            "status": 200,
+            "body": "json",
+            "fields": {
+              "budgetNumber": "26-0001",
+              "revision": 0,
+              "descriptive": "Suporte",
+              "hasGenerateJob": false
+            }
+          },
+          "events": [
+            {
+              "type": "db",
+              "op": "Budget.save",
+              "budgetNumber": "26-0001",
+              "revision": 0
+            },
+            {
+              "type": "ssh",
+              "command": "mkdir -p /share/Orçamentos/2026/'Metalúrgica Silva & Filhos, Lda.'/'26-0001 - Suporte'",
+              "argv": [
+                [
+                  "mkdir",
+                  "-p",
+                  "/share/Orçamentos/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Suporte"
+                ]
+              ],
+              "ops": [
+                {
+                  "op": "mkdir-p",
+                  "path": "/share/Orçamentos/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Suporte"
+                }
+              ],
+              "outcome": "resolves"
+            },
+            {
+              "type": "ssh",
+              "command": "mkdir -p /share/Orçamentos/2026/'Metalúrgica Silva & Filhos, Lda.'/'26-0001 - Suporte'/Geometria",
+              "argv": [
+                [
+                  "mkdir",
+                  "-p",
+                  "/share/Orçamentos/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Suporte/Geometria"
+                ]
+              ],
+              "ops": [
+                {
+                  "op": "mkdir-p",
+                  "path": "/share/Orçamentos/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Suporte/Geometria"
+                }
+              ],
+              "outcome": "resolves"
+            },
+            {
+              "type": "ssh",
+              "command": "mkdir -p /share/Orçamentos/2026/'Metalúrgica Silva & Filhos, Lda.'/'26-0001 - Suporte'/Documentos",
+              "argv": [
+                [
+                  "mkdir",
+                  "-p",
+                  "/share/Orçamentos/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Suporte/Documentos"
+                ]
+              ],
+              "ops": [
+                {
+                  "op": "mkdir-p",
+                  "path": "/share/Orçamentos/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Suporte/Documentos"
+                }
+              ],
+              "outcome": "resolves"
+            },
+            {
+              "type": "ssh",
+              "command": "if test -d /share/Orçamentos/2026/'Metalúrgica Silva & Filhos, Lda.'/'26-0001 - Suporte'; then echo 1; else echo 0; fi",
+              "argv": [
+                [
+                  "if",
+                  "test",
+                  "-d",
+                  "/share/Orçamentos/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Suporte"
+                ],
+                [
+                  "then",
+                  "echo",
+                  "1"
+                ],
+                [
+                  "else",
+                  "echo",
+                  "0"
+                ],
+                [
+                  "fi"
+                ]
+              ],
+              "ops": [
+                {
+                  "op": "test-d",
+                  "path": "/share/Orçamentos/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Suporte",
+                  "result": true
+                }
+              ],
+              "stdout": "1\n",
+              "outcome": "resolves"
+            },
+            {
+              "type": "db",
+              "op": "Task.save"
+            }
+          ],
+          "dbAfter": {
+            "budgets": 1,
+            "tasks": 1,
+            "jobs": 0
+          },
+          "nasChanges": {
+            "created": [
+              "/share/Orçamentos/2026",
+              "/share/Orçamentos/2026/Metalúrgica Silva & Filhos, Lda.",
+              "/share/Orçamentos/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Suporte",
+              "/share/Orçamentos/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Suporte/Documentos",
+              "/share/Orçamentos/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Suporte/Geometria"
+            ],
+            "removed": []
+          }
+        },
+        {
+          "step": "PUT /api/budget/{b} (descriptive \"Suporte 30/40\")",
+          "at": "2026-11-14T10:05:00 Europe/Lisbon",
+          "NODE_ENV": "prod",
+          "response": {
+            "status": 500,
+            "body": "expressErrorPage"
+          },
+          "events": [
+            {
+              "type": "ssh",
+              "command": "cd /;mv /share/Orçamentos/2026/'Metalúrgica Silva & Filhos, Lda.'/'26-0001 - Suporte' /share/Orçamentos/2026/'Metalúrgica Silva & Filhos, Lda.'/'26-0001 - Suporte 30/40'",
+              "argv": [
+                [
+                  "cd",
+                  "/"
+                ],
+                [
+                  "mv",
+                  "/share/Orçamentos/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Suporte",
+                  "/share/Orçamentos/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Suporte 30/40"
+                ]
+              ],
+              "ops": [
+                {
+                  "op": "mv",
+                  "from": "/share/Orçamentos/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Suporte",
+                  "to": "/share/Orçamentos/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Suporte 30/40",
+                  "result": "target-parent-missing"
+                }
+              ],
+              "stderr": "mv: cannot move '/share/Orçamentos/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Suporte' to '/share/Orçamentos/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Suporte 30/40': No such file or directory\n",
+              "outcome": "rejects (stderr)"
+            },
+            {
+              "type": "error",
+              "name": "Buffer (ssh2-promise stderr rejection)",
+              "message": "mv: cannot move '/share/Orçamentos/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Suporte' to '/share/Orçamentos/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Suporte 30/40': No such file or directory\n"
+            }
+          ],
+          "dbAfter": {
+            "budgets": 1,
+            "tasks": 1,
+            "jobs": 0
+          },
+          "nasChanges": {
+            "created": [],
+            "removed": []
+          }
+        }
+      ],
+      "nasFoldersAtEnd": [
+        "/share/Orçamentos/2026",
+        "/share/Orçamentos/2026/Metalúrgica Silva & Filhos, Lda.",
+        "/share/Orçamentos/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Suporte",
+        "/share/Orçamentos/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Suporte/Documentos",
+        "/share/Orçamentos/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Suporte/Geometria"
+      ]
+    },
+    {
+      "id": "job-create-rev0",
+      "title": "Job create from revision 0 (prod): 3 × mkdir -p, 2 × mv, 2 × test -d (not awaited, D4), labels producao then maquinacao",
+      "steps": [
+        {
+          "step": "POST /api/budget (silva, \"Máquina de corte\")",
+          "at": "2026-11-02T10:00:00 Europe/Lisbon",
+          "NODE_ENV": "prod",
+          "response": {
+            "status": 200,
+            "body": "json",
+            "fields": {
+              "budgetNumber": "26-0001",
+              "revision": 0,
+              "descriptive": "Máquina de corte",
+              "hasGenerateJob": false
+            }
+          },
+          "events": [
+            {
+              "type": "db",
+              "op": "Budget.save",
+              "budgetNumber": "26-0001",
+              "revision": 0
+            },
+            {
+              "type": "ssh",
+              "command": "mkdir -p /share/Orçamentos/2026/'Metalúrgica Silva & Filhos, Lda.'/'26-0001 - Máquina de corte'",
+              "argv": [
+                [
+                  "mkdir",
+                  "-p",
+                  "/share/Orçamentos/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Máquina de corte"
+                ]
+              ],
+              "ops": [
+                {
+                  "op": "mkdir-p",
+                  "path": "/share/Orçamentos/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Máquina de corte"
+                }
+              ],
+              "outcome": "resolves"
+            },
+            {
+              "type": "ssh",
+              "command": "mkdir -p /share/Orçamentos/2026/'Metalúrgica Silva & Filhos, Lda.'/'26-0001 - Máquina de corte'/Geometria",
+              "argv": [
+                [
+                  "mkdir",
+                  "-p",
+                  "/share/Orçamentos/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Máquina de corte/Geometria"
+                ]
+              ],
+              "ops": [
+                {
+                  "op": "mkdir-p",
+                  "path": "/share/Orçamentos/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Máquina de corte/Geometria"
+                }
+              ],
+              "outcome": "resolves"
+            },
+            {
+              "type": "ssh",
+              "command": "mkdir -p /share/Orçamentos/2026/'Metalúrgica Silva & Filhos, Lda.'/'26-0001 - Máquina de corte'/Documentos",
+              "argv": [
+                [
+                  "mkdir",
+                  "-p",
+                  "/share/Orçamentos/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Máquina de corte/Documentos"
+                ]
+              ],
+              "ops": [
+                {
+                  "op": "mkdir-p",
+                  "path": "/share/Orçamentos/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Máquina de corte/Documentos"
+                }
+              ],
+              "outcome": "resolves"
+            },
+            {
+              "type": "ssh",
+              "command": "if test -d /share/Orçamentos/2026/'Metalúrgica Silva & Filhos, Lda.'/'26-0001 - Máquina de corte'; then echo 1; else echo 0; fi",
+              "argv": [
+                [
+                  "if",
+                  "test",
+                  "-d",
+                  "/share/Orçamentos/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Máquina de corte"
+                ],
+                [
+                  "then",
+                  "echo",
+                  "1"
+                ],
+                [
+                  "else",
+                  "echo",
+                  "0"
+                ],
+                [
+                  "fi"
+                ]
+              ],
+              "ops": [
+                {
+                  "op": "test-d",
+                  "path": "/share/Orçamentos/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Máquina de corte",
+                  "result": true
+                }
+              ],
+              "stdout": "1\n",
+              "outcome": "resolves"
+            },
+            {
+              "type": "db",
+              "op": "Task.save"
+            }
+          ],
+          "dbAfter": {
+            "budgets": 1,
+            "tasks": 1,
+            "jobs": 0
+          },
+          "nasChanges": {
+            "created": [
+              "/share/Orçamentos/2026",
+              "/share/Orçamentos/2026/Metalúrgica Silva & Filhos, Lda.",
+              "/share/Orçamentos/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Máquina de corte",
+              "/share/Orçamentos/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Máquina de corte/Documentos",
+              "/share/Orçamentos/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Máquina de corte/Geometria"
+            ],
+            "removed": []
+          }
+        },
+        {
+          "step": "POST /api/job (from {b})",
+          "at": "2026-11-14T10:00:00 Europe/Lisbon",
+          "NODE_ENV": "prod",
+          "response": {
+            "status": 200,
+            "body": "json",
+            "fields": {
+              "state": "Desenvolvimento"
+            }
+          },
+          "events": [
+            {
+              "type": "db",
+              "op": "Budget.save",
+              "budgetNumber": "26-0001",
+              "revision": 0
+            },
+            {
+              "type": "db",
+              "op": "Job.save"
+            },
+            {
+              "type": "ssh",
+              "command": "mkdir -p /share/Obras/2026/'Metalúrgica Silva & Filhos, Lda.'/'26-0001 - Máquina de corte'/CAD",
+              "argv": [
+                [
+                  "mkdir",
+                  "-p",
+                  "/share/Obras/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Máquina de corte/CAD"
+                ]
+              ],
+              "ops": [
+                {
+                  "op": "mkdir-p",
+                  "path": "/share/Obras/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Máquina de corte/CAD"
+                }
+              ],
+              "outcome": "resolves"
+            },
+            {
+              "type": "ssh",
+              "command": "mkdir -p /share/Obras/2026/'Metalúrgica Silva & Filhos, Lda.'/'26-0001 - Máquina de corte'/CAD/Equipamento",
+              "argv": [
+                [
+                  "mkdir",
+                  "-p",
+                  "/share/Obras/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Máquina de corte/CAD/Equipamento"
+                ]
+              ],
+              "ops": [
+                {
+                  "op": "mkdir-p",
+                  "path": "/share/Obras/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Máquina de corte/CAD/Equipamento"
+                }
+              ],
+              "outcome": "resolves"
+            },
+            {
+              "type": "ssh",
+              "command": "mkdir -p /share/Obras/2026/'Metalúrgica Silva & Filhos, Lda.'/'26-0001 - Máquina de corte'/CAM",
+              "argv": [
+                [
+                  "mkdir",
+                  "-p",
+                  "/share/Obras/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Máquina de corte/CAM"
+                ]
+              ],
+              "ops": [
+                {
+                  "op": "mkdir-p",
+                  "path": "/share/Obras/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Máquina de corte/CAM"
+                }
+              ],
+              "outcome": "resolves"
+            },
+            {
+              "type": "ssh",
+              "command": "cd /;mv share/Orçamentos/2026/'Metalúrgica Silva & Filhos, Lda.'/'26-0001 - Máquina de corte'/Documentos share/Obras/2026/'Metalúrgica Silva & Filhos, Lda.'/'26-0001 - Máquina de corte'/\"Informações Técnicas\"",
+              "argv": [
+                [
+                  "cd",
+                  "/"
+                ],
+                [
+                  "mv",
+                  "share/Orçamentos/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Máquina de corte/Documentos",
+                  "share/Obras/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Máquina de corte/Informações Técnicas"
+                ]
+              ],
+              "ops": [
+                {
+                  "op": "mv",
+                  "from": "/share/Orçamentos/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Máquina de corte/Documentos",
+                  "to": "/share/Obras/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Máquina de corte/Informações Técnicas",
+                  "result": "ok"
+                }
+              ],
+              "outcome": "resolves"
+            },
+            {
+              "type": "ssh",
+              "command": "cd /;mv share/Orçamentos/2026/'Metalúrgica Silva & Filhos, Lda.'/'26-0001 - Máquina de corte'/Geometria share/Obras/2026/'Metalúrgica Silva & Filhos, Lda.'/'26-0001 - Máquina de corte'/CAD/Artigo",
+              "argv": [
+                [
+                  "cd",
+                  "/"
+                ],
+                [
+                  "mv",
+                  "share/Orçamentos/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Máquina de corte/Geometria",
+                  "share/Obras/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Máquina de corte/CAD/Artigo"
+                ]
+              ],
+              "ops": [
+                {
+                  "op": "mv",
+                  "from": "/share/Orçamentos/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Máquina de corte/Geometria",
+                  "to": "/share/Obras/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Máquina de corte/CAD/Artigo",
+                  "result": "ok"
+                }
+              ],
+              "outcome": "resolves"
+            },
+            {
+              "type": "ssh",
+              "command": "if test -d share/Obras/2026/'Metalúrgica Silva & Filhos, Lda.'/'26-0001 - Máquina de corte'/\"Informações Técnicas\"; then echo 1; else echo 0; fi",
+              "argv": [
+                [
+                  "if",
+                  "test",
+                  "-d",
+                  "share/Obras/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Máquina de corte/Informações Técnicas"
+                ],
+                [
+                  "then",
+                  "echo",
+                  "1"
+                ],
+                [
+                  "else",
+                  "echo",
+                  "0"
+                ],
+                [
+                  "fi"
+                ]
+              ],
+              "ops": [
+                {
+                  "op": "test-d",
+                  "path": "/home/ssh-user/share/Obras/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Máquina de corte/Informações Técnicas",
+                  "result": false
+                }
+              ],
+              "stdout": "0\n",
+              "outcome": "resolves"
+            },
+            {
+              "type": "ssh",
+              "command": "if test -d share/Obras/2026/'Metalúrgica Silva & Filhos, Lda.'/'26-0001 - Máquina de corte'/CAD/Artigo; then echo 1; else echo 0; fi",
+              "argv": [
+                [
+                  "if",
+                  "test",
+                  "-d",
+                  "share/Obras/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Máquina de corte/CAD/Artigo"
+                ],
+                [
+                  "then",
+                  "echo",
+                  "1"
+                ],
+                [
+                  "else",
+                  "echo",
+                  "0"
+                ],
+                [
+                  "fi"
+                ]
+              ],
+              "ops": [
+                {
+                  "op": "test-d",
+                  "path": "/home/ssh-user/share/Obras/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Máquina de corte/CAD/Artigo",
+                  "result": false
+                }
+              ],
+              "stdout": "0\n",
+              "outcome": "resolves"
+            },
+            {
+              "type": "printer",
+              "host": "127.0.0.1",
+              "port": 9100,
+              "connectTimeoutMs": 1500,
+              "negotiationMandatory": false,
+              "send": "\n      \u001bia3,^TS00126-0001,14/11/2026,Máquina de corte,Metalúrgica Silva & Filhos, Lda.,26-0001,\n      ",
+              "wireUtf8Bytes": 105,
+              "wireHex": "0a2020202020201b6961332c5e545330303132362d303030312c31342f31312f323032362c4dc3a17175696e6120646520636f7274652c4d6574616cc3ba72676963612053696c766120262046696c686f732c204c64612e2c32362d303030312c0a2020202020200a"
+            },
+            {
+              "type": "printer",
+              "host": "127.0.0.2",
+              "port": 9100,
+              "connectTimeoutMs": 1500,
+              "negotiationMandatory": false,
+              "send": "\u001bia3,^TS00226-0001,14/11/2026,Máquina de corte,Metalúrgica Silva & Filhos, Lda.,",
+              "wireUtf8Bytes": 83,
+              "wireHex": "1b6961332c5e545330303232362d303030312c31342f31312f323032362c4dc3a17175696e6120646520636f7274652c4d6574616cc3ba72676963612053696c766120262046696c686f732c204c64612e2c0a"
+            }
+          ],
+          "dbAfter": {
+            "budgets": 1,
+            "tasks": 1,
+            "jobs": 1
+          },
+          "nasChanges": {
+            "created": [
+              "/share/Obras/2026",
+              "/share/Obras/2026/Metalúrgica Silva & Filhos, Lda.",
+              "/share/Obras/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Máquina de corte",
+              "/share/Obras/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Máquina de corte/CAD",
+              "/share/Obras/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Máquina de corte/CAD/Artigo",
+              "/share/Obras/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Máquina de corte/CAD/Equipamento",
+              "/share/Obras/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Máquina de corte/CAM",
+              "/share/Obras/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Máquina de corte/Informações Técnicas"
+            ],
+            "removed": [
+              "/share/Orçamentos/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Máquina de corte/Documentos",
+              "/share/Orçamentos/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Máquina de corte/Geometria"
+            ]
+          }
+        }
+      ],
+      "nasFoldersAtEnd": [
+        "/share/Obras/2026",
+        "/share/Obras/2026/Metalúrgica Silva & Filhos, Lda.",
+        "/share/Obras/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Máquina de corte",
+        "/share/Obras/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Máquina de corte/CAD",
+        "/share/Obras/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Máquina de corte/CAD/Artigo",
+        "/share/Obras/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Máquina de corte/CAD/Equipamento",
+        "/share/Obras/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Máquina de corte/CAM",
+        "/share/Obras/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Máquina de corte/Informações Técnicas",
+        "/share/Orçamentos/2026",
+        "/share/Orçamentos/2026/Metalúrgica Silva & Filhos, Lda.",
+        "/share/Orçamentos/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Máquina de corte"
+      ]
+    },
+    {
+      "id": "job-create-dev",
+      "title": "Job create outside prod: no SSH, no labels",
+      "steps": [
+        {
+          "step": "POST /api/budget (silva, \"Máquina de corte\")",
+          "at": "2026-11-02T10:00:00 Europe/Lisbon",
+          "NODE_ENV": null,
+          "response": {
+            "status": 200,
+            "body": "json",
+            "fields": {
+              "budgetNumber": "26-0001",
+              "revision": 0,
+              "descriptive": "Máquina de corte",
+              "hasGenerateJob": false
+            }
+          },
+          "events": [
+            {
+              "type": "db",
+              "op": "Budget.save",
+              "budgetNumber": "26-0001",
+              "revision": 0
+            },
+            {
+              "type": "db",
+              "op": "Task.save"
+            }
+          ],
+          "dbAfter": {
+            "budgets": 1,
+            "tasks": 1,
+            "jobs": 0
+          },
+          "nasChanges": {
+            "created": [],
+            "removed": []
+          }
+        },
+        {
+          "step": "POST /api/job (from {b})",
+          "at": "2026-11-14T10:00:00 Europe/Lisbon",
+          "NODE_ENV": null,
+          "response": {
+            "status": 200,
+            "body": "json",
+            "fields": {
+              "state": "Desenvolvimento"
+            }
+          },
+          "events": [
+            {
+              "type": "db",
+              "op": "Budget.save",
+              "budgetNumber": "26-0001",
+              "revision": 0
+            },
+            {
+              "type": "db",
+              "op": "Job.save"
+            }
+          ],
+          "dbAfter": {
+            "budgets": 1,
+            "tasks": 1,
+            "jobs": 1
+          },
+          "nasChanges": {
+            "created": [],
+            "removed": []
+          }
+        }
+      ],
+      "nasFoldersAtEnd": []
+    },
+    {
+      "id": "job-create-rev1-same-descriptive",
+      "title": "Job create from revision 1 with the revision-0 descriptive: updateFolderPath returns early, same move",
+      "steps": [
+        {
+          "step": "POST /api/budget (silva, \"Máquina de corte\")",
+          "at": "2026-11-02T10:00:00 Europe/Lisbon",
+          "NODE_ENV": "prod",
+          "response": {
+            "status": 200,
+            "body": "json",
+            "fields": {
+              "budgetNumber": "26-0001",
+              "revision": 0,
+              "descriptive": "Máquina de corte",
+              "hasGenerateJob": false
+            }
+          },
+          "events": [
+            {
+              "type": "db",
+              "op": "Budget.save",
+              "budgetNumber": "26-0001",
+              "revision": 0
+            },
+            {
+              "type": "ssh",
+              "command": "mkdir -p /share/Orçamentos/2026/'Metalúrgica Silva & Filhos, Lda.'/'26-0001 - Máquina de corte'",
+              "argv": [
+                [
+                  "mkdir",
+                  "-p",
+                  "/share/Orçamentos/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Máquina de corte"
+                ]
+              ],
+              "ops": [
+                {
+                  "op": "mkdir-p",
+                  "path": "/share/Orçamentos/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Máquina de corte"
+                }
+              ],
+              "outcome": "resolves"
+            },
+            {
+              "type": "ssh",
+              "command": "mkdir -p /share/Orçamentos/2026/'Metalúrgica Silva & Filhos, Lda.'/'26-0001 - Máquina de corte'/Geometria",
+              "argv": [
+                [
+                  "mkdir",
+                  "-p",
+                  "/share/Orçamentos/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Máquina de corte/Geometria"
+                ]
+              ],
+              "ops": [
+                {
+                  "op": "mkdir-p",
+                  "path": "/share/Orçamentos/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Máquina de corte/Geometria"
+                }
+              ],
+              "outcome": "resolves"
+            },
+            {
+              "type": "ssh",
+              "command": "mkdir -p /share/Orçamentos/2026/'Metalúrgica Silva & Filhos, Lda.'/'26-0001 - Máquina de corte'/Documentos",
+              "argv": [
+                [
+                  "mkdir",
+                  "-p",
+                  "/share/Orçamentos/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Máquina de corte/Documentos"
+                ]
+              ],
+              "ops": [
+                {
+                  "op": "mkdir-p",
+                  "path": "/share/Orçamentos/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Máquina de corte/Documentos"
+                }
+              ],
+              "outcome": "resolves"
+            },
+            {
+              "type": "ssh",
+              "command": "if test -d /share/Orçamentos/2026/'Metalúrgica Silva & Filhos, Lda.'/'26-0001 - Máquina de corte'; then echo 1; else echo 0; fi",
+              "argv": [
+                [
+                  "if",
+                  "test",
+                  "-d",
+                  "/share/Orçamentos/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Máquina de corte"
+                ],
+                [
+                  "then",
+                  "echo",
+                  "1"
+                ],
+                [
+                  "else",
+                  "echo",
+                  "0"
+                ],
+                [
+                  "fi"
+                ]
+              ],
+              "ops": [
+                {
+                  "op": "test-d",
+                  "path": "/share/Orçamentos/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Máquina de corte",
+                  "result": true
+                }
+              ],
+              "stdout": "1\n",
+              "outcome": "resolves"
+            },
+            {
+              "type": "db",
+              "op": "Task.save"
+            }
+          ],
+          "dbAfter": {
+            "budgets": 1,
+            "tasks": 1,
+            "jobs": 0
+          },
+          "nasChanges": {
+            "created": [
+              "/share/Orçamentos/2026",
+              "/share/Orçamentos/2026/Metalúrgica Silva & Filhos, Lda.",
+              "/share/Orçamentos/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Máquina de corte",
+              "/share/Orçamentos/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Máquina de corte/Documentos",
+              "/share/Orçamentos/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Máquina de corte/Geometria"
+            ],
+            "removed": []
+          }
+        },
+        {
+          "step": "POST /api/budget/newrevision/{b0}",
+          "at": "2026-11-05T10:00:00 Europe/Lisbon",
+          "NODE_ENV": "prod",
+          "response": {
+            "status": 200,
+            "body": "json",
+            "fields": {
+              "budgetNumber": "26-0001",
+              "revision": 1,
+              "descriptive": "Máquina de corte",
+              "hasGenerateJob": false
+            }
+          },
+          "events": [
+            {
+              "type": "db",
+              "op": "Task.insertMany",
+              "count": 1
+            },
+            {
+              "type": "db",
+              "op": "Budget.save",
+              "budgetNumber": "26-0001",
+              "revision": 1
+            }
+          ],
+          "dbAfter": {
+            "budgets": 2,
+            "tasks": 2,
+            "jobs": 0
+          },
+          "nasChanges": {
+            "created": [],
+            "removed": []
+          }
+        },
+        {
+          "step": "POST /api/job (from {b1})",
+          "at": "2026-11-14T10:00:00 Europe/Lisbon",
+          "NODE_ENV": "prod",
+          "response": {
+            "status": 200,
+            "body": "json",
+            "fields": {
+              "state": "Desenvolvimento"
+            }
+          },
+          "events": [
+            {
+              "type": "db",
+              "op": "Budget.save",
+              "budgetNumber": "26-0001",
+              "revision": 1
+            },
+            {
+              "type": "db",
+              "op": "Job.save"
+            },
+            {
+              "type": "ssh",
+              "command": "mkdir -p /share/Obras/2026/'Metalúrgica Silva & Filhos, Lda.'/'26-0001 - Máquina de corte'/CAD",
+              "argv": [
+                [
+                  "mkdir",
+                  "-p",
+                  "/share/Obras/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Máquina de corte/CAD"
+                ]
+              ],
+              "ops": [
+                {
+                  "op": "mkdir-p",
+                  "path": "/share/Obras/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Máquina de corte/CAD"
+                }
+              ],
+              "outcome": "resolves"
+            },
+            {
+              "type": "ssh",
+              "command": "mkdir -p /share/Obras/2026/'Metalúrgica Silva & Filhos, Lda.'/'26-0001 - Máquina de corte'/CAD/Equipamento",
+              "argv": [
+                [
+                  "mkdir",
+                  "-p",
+                  "/share/Obras/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Máquina de corte/CAD/Equipamento"
+                ]
+              ],
+              "ops": [
+                {
+                  "op": "mkdir-p",
+                  "path": "/share/Obras/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Máquina de corte/CAD/Equipamento"
+                }
+              ],
+              "outcome": "resolves"
+            },
+            {
+              "type": "ssh",
+              "command": "mkdir -p /share/Obras/2026/'Metalúrgica Silva & Filhos, Lda.'/'26-0001 - Máquina de corte'/CAM",
+              "argv": [
+                [
+                  "mkdir",
+                  "-p",
+                  "/share/Obras/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Máquina de corte/CAM"
+                ]
+              ],
+              "ops": [
+                {
+                  "op": "mkdir-p",
+                  "path": "/share/Obras/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Máquina de corte/CAM"
+                }
+              ],
+              "outcome": "resolves"
+            },
+            {
+              "type": "ssh",
+              "command": "cd /;mv share/Orçamentos/2026/'Metalúrgica Silva & Filhos, Lda.'/'26-0001 - Máquina de corte'/Documentos share/Obras/2026/'Metalúrgica Silva & Filhos, Lda.'/'26-0001 - Máquina de corte'/\"Informações Técnicas\"",
+              "argv": [
+                [
+                  "cd",
+                  "/"
+                ],
+                [
+                  "mv",
+                  "share/Orçamentos/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Máquina de corte/Documentos",
+                  "share/Obras/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Máquina de corte/Informações Técnicas"
+                ]
+              ],
+              "ops": [
+                {
+                  "op": "mv",
+                  "from": "/share/Orçamentos/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Máquina de corte/Documentos",
+                  "to": "/share/Obras/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Máquina de corte/Informações Técnicas",
+                  "result": "ok"
+                }
+              ],
+              "outcome": "resolves"
+            },
+            {
+              "type": "ssh",
+              "command": "cd /;mv share/Orçamentos/2026/'Metalúrgica Silva & Filhos, Lda.'/'26-0001 - Máquina de corte'/Geometria share/Obras/2026/'Metalúrgica Silva & Filhos, Lda.'/'26-0001 - Máquina de corte'/CAD/Artigo",
+              "argv": [
+                [
+                  "cd",
+                  "/"
+                ],
+                [
+                  "mv",
+                  "share/Orçamentos/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Máquina de corte/Geometria",
+                  "share/Obras/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Máquina de corte/CAD/Artigo"
+                ]
+              ],
+              "ops": [
+                {
+                  "op": "mv",
+                  "from": "/share/Orçamentos/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Máquina de corte/Geometria",
+                  "to": "/share/Obras/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Máquina de corte/CAD/Artigo",
+                  "result": "ok"
+                }
+              ],
+              "outcome": "resolves"
+            },
+            {
+              "type": "ssh",
+              "command": "if test -d share/Obras/2026/'Metalúrgica Silva & Filhos, Lda.'/'26-0001 - Máquina de corte'/\"Informações Técnicas\"; then echo 1; else echo 0; fi",
+              "argv": [
+                [
+                  "if",
+                  "test",
+                  "-d",
+                  "share/Obras/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Máquina de corte/Informações Técnicas"
+                ],
+                [
+                  "then",
+                  "echo",
+                  "1"
+                ],
+                [
+                  "else",
+                  "echo",
+                  "0"
+                ],
+                [
+                  "fi"
+                ]
+              ],
+              "ops": [
+                {
+                  "op": "test-d",
+                  "path": "/home/ssh-user/share/Obras/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Máquina de corte/Informações Técnicas",
+                  "result": false
+                }
+              ],
+              "stdout": "0\n",
+              "outcome": "resolves"
+            },
+            {
+              "type": "ssh",
+              "command": "if test -d share/Obras/2026/'Metalúrgica Silva & Filhos, Lda.'/'26-0001 - Máquina de corte'/CAD/Artigo; then echo 1; else echo 0; fi",
+              "argv": [
+                [
+                  "if",
+                  "test",
+                  "-d",
+                  "share/Obras/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Máquina de corte/CAD/Artigo"
+                ],
+                [
+                  "then",
+                  "echo",
+                  "1"
+                ],
+                [
+                  "else",
+                  "echo",
+                  "0"
+                ],
+                [
+                  "fi"
+                ]
+              ],
+              "ops": [
+                {
+                  "op": "test-d",
+                  "path": "/home/ssh-user/share/Obras/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Máquina de corte/CAD/Artigo",
+                  "result": false
+                }
+              ],
+              "stdout": "0\n",
+              "outcome": "resolves"
+            },
+            {
+              "type": "printer",
+              "host": "127.0.0.1",
+              "port": 9100,
+              "connectTimeoutMs": 1500,
+              "negotiationMandatory": false,
+              "send": "\n      \u001bia3,^TS00126-0001,14/11/2026,Máquina de corte,Metalúrgica Silva & Filhos, Lda.,26-0001,\n      ",
+              "wireUtf8Bytes": 105,
+              "wireHex": "0a2020202020201b6961332c5e545330303132362d303030312c31342f31312f323032362c4dc3a17175696e6120646520636f7274652c4d6574616cc3ba72676963612053696c766120262046696c686f732c204c64612e2c32362d303030312c0a2020202020200a"
+            },
+            {
+              "type": "printer",
+              "host": "127.0.0.2",
+              "port": 9100,
+              "connectTimeoutMs": 1500,
+              "negotiationMandatory": false,
+              "send": "\u001bia3,^TS00226-0001,14/11/2026,Máquina de corte,Metalúrgica Silva & Filhos, Lda.,",
+              "wireUtf8Bytes": 83,
+              "wireHex": "1b6961332c5e545330303232362d303030312c31342f31312f323032362c4dc3a17175696e6120646520636f7274652c4d6574616cc3ba72676963612053696c766120262046696c686f732c204c64612e2c0a"
+            }
+          ],
+          "dbAfter": {
+            "budgets": 2,
+            "tasks": 2,
+            "jobs": 1
+          },
+          "nasChanges": {
+            "created": [
+              "/share/Obras/2026",
+              "/share/Obras/2026/Metalúrgica Silva & Filhos, Lda.",
+              "/share/Obras/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Máquina de corte",
+              "/share/Obras/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Máquina de corte/CAD",
+              "/share/Obras/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Máquina de corte/CAD/Artigo",
+              "/share/Obras/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Máquina de corte/CAD/Equipamento",
+              "/share/Obras/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Máquina de corte/CAM",
+              "/share/Obras/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Máquina de corte/Informações Técnicas"
+            ],
+            "removed": [
+              "/share/Orçamentos/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Máquina de corte/Documentos",
+              "/share/Orçamentos/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Máquina de corte/Geometria"
+            ]
+          }
+        }
+      ],
+      "nasFoldersAtEnd": [
+        "/share/Obras/2026",
+        "/share/Obras/2026/Metalúrgica Silva & Filhos, Lda.",
+        "/share/Obras/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Máquina de corte",
+        "/share/Obras/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Máquina de corte/CAD",
+        "/share/Obras/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Máquina de corte/CAD/Artigo",
+        "/share/Obras/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Máquina de corte/CAD/Equipamento",
+        "/share/Obras/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Máquina de corte/CAM",
+        "/share/Obras/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Máquina de corte/Informações Técnicas",
+        "/share/Orçamentos/2026",
+        "/share/Orçamentos/2026/Metalúrgica Silva & Filhos, Lda.",
+        "/share/Orçamentos/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Máquina de corte"
+      ]
+    },
+    {
+      "id": "job-create-rev1-renamed",
+      "title": "Job create from revision 1 whose descriptive differs from revision 0: ReferenceError → 500 after the job is saved, no SSH, no labels (D3)",
+      "steps": [
+        {
+          "step": "POST /api/budget (silva, \"Máquina de corte\")",
+          "at": "2026-11-02T10:00:00 Europe/Lisbon",
+          "NODE_ENV": "prod",
+          "response": {
+            "status": 200,
+            "body": "json",
+            "fields": {
+              "budgetNumber": "26-0001",
+              "revision": 0,
+              "descriptive": "Máquina de corte",
+              "hasGenerateJob": false
+            }
+          },
+          "events": [
+            {
+              "type": "db",
+              "op": "Budget.save",
+              "budgetNumber": "26-0001",
+              "revision": 0
+            },
+            {
+              "type": "ssh",
+              "command": "mkdir -p /share/Orçamentos/2026/'Metalúrgica Silva & Filhos, Lda.'/'26-0001 - Máquina de corte'",
+              "argv": [
+                [
+                  "mkdir",
+                  "-p",
+                  "/share/Orçamentos/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Máquina de corte"
+                ]
+              ],
+              "ops": [
+                {
+                  "op": "mkdir-p",
+                  "path": "/share/Orçamentos/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Máquina de corte"
+                }
+              ],
+              "outcome": "resolves"
+            },
+            {
+              "type": "ssh",
+              "command": "mkdir -p /share/Orçamentos/2026/'Metalúrgica Silva & Filhos, Lda.'/'26-0001 - Máquina de corte'/Geometria",
+              "argv": [
+                [
+                  "mkdir",
+                  "-p",
+                  "/share/Orçamentos/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Máquina de corte/Geometria"
+                ]
+              ],
+              "ops": [
+                {
+                  "op": "mkdir-p",
+                  "path": "/share/Orçamentos/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Máquina de corte/Geometria"
+                }
+              ],
+              "outcome": "resolves"
+            },
+            {
+              "type": "ssh",
+              "command": "mkdir -p /share/Orçamentos/2026/'Metalúrgica Silva & Filhos, Lda.'/'26-0001 - Máquina de corte'/Documentos",
+              "argv": [
+                [
+                  "mkdir",
+                  "-p",
+                  "/share/Orçamentos/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Máquina de corte/Documentos"
+                ]
+              ],
+              "ops": [
+                {
+                  "op": "mkdir-p",
+                  "path": "/share/Orçamentos/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Máquina de corte/Documentos"
+                }
+              ],
+              "outcome": "resolves"
+            },
+            {
+              "type": "ssh",
+              "command": "if test -d /share/Orçamentos/2026/'Metalúrgica Silva & Filhos, Lda.'/'26-0001 - Máquina de corte'; then echo 1; else echo 0; fi",
+              "argv": [
+                [
+                  "if",
+                  "test",
+                  "-d",
+                  "/share/Orçamentos/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Máquina de corte"
+                ],
+                [
+                  "then",
+                  "echo",
+                  "1"
+                ],
+                [
+                  "else",
+                  "echo",
+                  "0"
+                ],
+                [
+                  "fi"
+                ]
+              ],
+              "ops": [
+                {
+                  "op": "test-d",
+                  "path": "/share/Orçamentos/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Máquina de corte",
+                  "result": true
+                }
+              ],
+              "stdout": "1\n",
+              "outcome": "resolves"
+            },
+            {
+              "type": "db",
+              "op": "Task.save"
+            }
+          ],
+          "dbAfter": {
+            "budgets": 1,
+            "tasks": 1,
+            "jobs": 0
+          },
+          "nasChanges": {
+            "created": [
+              "/share/Orçamentos/2026",
+              "/share/Orçamentos/2026/Metalúrgica Silva & Filhos, Lda.",
+              "/share/Orçamentos/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Máquina de corte",
+              "/share/Orçamentos/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Máquina de corte/Documentos",
+              "/share/Orçamentos/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Máquina de corte/Geometria"
+            ],
+            "removed": []
+          }
+        },
+        {
+          "step": "POST /api/budget/newrevision/{b0}",
+          "at": "2026-11-05T10:00:00 Europe/Lisbon",
+          "NODE_ENV": "prod",
+          "response": {
+            "status": 200,
+            "body": "json",
+            "fields": {
+              "budgetNumber": "26-0001",
+              "revision": 1,
+              "descriptive": "Máquina de corte",
+              "hasGenerateJob": false
+            }
+          },
+          "events": [
+            {
+              "type": "db",
+              "op": "Task.insertMany",
+              "count": 1
+            },
+            {
+              "type": "db",
+              "op": "Budget.save",
+              "budgetNumber": "26-0001",
+              "revision": 1
+            }
+          ],
+          "dbAfter": {
+            "budgets": 2,
+            "tasks": 2,
+            "jobs": 0
+          },
+          "nasChanges": {
+            "created": [],
+            "removed": []
+          }
+        },
+        {
+          "step": "PUT /api/budget/{b1} (descriptive \"Máquina de corte (rev. 1)\")",
+          "at": "2026-11-05T10:01:00 Europe/Lisbon",
+          "NODE_ENV": "prod",
+          "response": {
+            "status": 200,
+            "body": "json",
+            "fields": {
+              "budgetNumber": "26-0001",
+              "revision": 1,
+              "descriptive": "Máquina de corte (rev. 1)",
+              "hasGenerateJob": false
+            }
+          },
+          "events": [
+            {
+              "type": "db",
+              "op": "Budget.save",
+              "budgetNumber": "26-0001",
+              "revision": 1
+            }
+          ],
+          "dbAfter": {
+            "budgets": 2,
+            "tasks": 2,
+            "jobs": 0
+          },
+          "nasChanges": {
+            "created": [],
+            "removed": []
+          }
+        },
+        {
+          "step": "POST /api/job (from {b1})",
+          "at": "2026-11-14T10:00:00 Europe/Lisbon",
+          "NODE_ENV": "prod",
+          "response": {
+            "status": 500,
+            "body": "expressErrorPage"
+          },
+          "events": [
+            {
+              "type": "db",
+              "op": "Budget.save",
+              "budgetNumber": "26-0001",
+              "revision": 1
+            },
+            {
+              "type": "db",
+              "op": "Job.save"
+            },
+            {
+              "type": "error",
+              "name": "ReferenceError",
+              "message": "newValues is not defined"
+            }
+          ],
+          "dbAfter": {
+            "budgets": 2,
+            "tasks": 2,
+            "jobs": 1
+          },
+          "nasChanges": {
+            "created": [],
+            "removed": []
+          }
+        }
+      ],
+      "nasFoldersAtEnd": [
+        "/share/Orçamentos/2026",
+        "/share/Orçamentos/2026/Metalúrgica Silva & Filhos, Lda.",
+        "/share/Orçamentos/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Máquina de corte",
+        "/share/Orçamentos/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Máquina de corte/Documentos",
+        "/share/Orçamentos/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Máquina de corte/Geometria"
+      ]
+    },
+    {
+      "id": "job-create-after-rev0-rename",
+      "title": "Revision 0 renamed (folder renamed too), job from revision 0: the move uses the new name and works",
+      "steps": [
+        {
+          "step": "POST /api/budget (silva, \"Máquina de corte\")",
+          "at": "2026-11-02T10:00:00 Europe/Lisbon",
+          "NODE_ENV": "prod",
+          "response": {
+            "status": 200,
+            "body": "json",
+            "fields": {
+              "budgetNumber": "26-0001",
+              "revision": 0,
+              "descriptive": "Máquina de corte",
+              "hasGenerateJob": false
+            }
+          },
+          "events": [
+            {
+              "type": "db",
+              "op": "Budget.save",
+              "budgetNumber": "26-0001",
+              "revision": 0
+            },
+            {
+              "type": "ssh",
+              "command": "mkdir -p /share/Orçamentos/2026/'Metalúrgica Silva & Filhos, Lda.'/'26-0001 - Máquina de corte'",
+              "argv": [
+                [
+                  "mkdir",
+                  "-p",
+                  "/share/Orçamentos/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Máquina de corte"
+                ]
+              ],
+              "ops": [
+                {
+                  "op": "mkdir-p",
+                  "path": "/share/Orçamentos/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Máquina de corte"
+                }
+              ],
+              "outcome": "resolves"
+            },
+            {
+              "type": "ssh",
+              "command": "mkdir -p /share/Orçamentos/2026/'Metalúrgica Silva & Filhos, Lda.'/'26-0001 - Máquina de corte'/Geometria",
+              "argv": [
+                [
+                  "mkdir",
+                  "-p",
+                  "/share/Orçamentos/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Máquina de corte/Geometria"
+                ]
+              ],
+              "ops": [
+                {
+                  "op": "mkdir-p",
+                  "path": "/share/Orçamentos/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Máquina de corte/Geometria"
+                }
+              ],
+              "outcome": "resolves"
+            },
+            {
+              "type": "ssh",
+              "command": "mkdir -p /share/Orçamentos/2026/'Metalúrgica Silva & Filhos, Lda.'/'26-0001 - Máquina de corte'/Documentos",
+              "argv": [
+                [
+                  "mkdir",
+                  "-p",
+                  "/share/Orçamentos/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Máquina de corte/Documentos"
+                ]
+              ],
+              "ops": [
+                {
+                  "op": "mkdir-p",
+                  "path": "/share/Orçamentos/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Máquina de corte/Documentos"
+                }
+              ],
+              "outcome": "resolves"
+            },
+            {
+              "type": "ssh",
+              "command": "if test -d /share/Orçamentos/2026/'Metalúrgica Silva & Filhos, Lda.'/'26-0001 - Máquina de corte'; then echo 1; else echo 0; fi",
+              "argv": [
+                [
+                  "if",
+                  "test",
+                  "-d",
+                  "/share/Orçamentos/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Máquina de corte"
+                ],
+                [
+                  "then",
+                  "echo",
+                  "1"
+                ],
+                [
+                  "else",
+                  "echo",
+                  "0"
+                ],
+                [
+                  "fi"
+                ]
+              ],
+              "ops": [
+                {
+                  "op": "test-d",
+                  "path": "/share/Orçamentos/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Máquina de corte",
+                  "result": true
+                }
+              ],
+              "stdout": "1\n",
+              "outcome": "resolves"
+            },
+            {
+              "type": "db",
+              "op": "Task.save"
+            }
+          ],
+          "dbAfter": {
+            "budgets": 1,
+            "tasks": 1,
+            "jobs": 0
+          },
+          "nasChanges": {
+            "created": [
+              "/share/Orçamentos/2026",
+              "/share/Orçamentos/2026/Metalúrgica Silva & Filhos, Lda.",
+              "/share/Orçamentos/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Máquina de corte",
+              "/share/Orçamentos/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Máquina de corte/Documentos",
+              "/share/Orçamentos/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Máquina de corte/Geometria"
+            ],
+            "removed": []
+          }
+        },
+        {
+          "step": "PUT /api/budget/{b} (descriptive \"Máquina de corte CNC\")",
+          "at": "2026-11-03T10:00:00 Europe/Lisbon",
+          "NODE_ENV": "prod",
+          "response": {
+            "status": 200,
+            "body": "json",
+            "fields": {
+              "budgetNumber": "26-0001",
+              "revision": 0,
+              "descriptive": "Máquina de corte CNC",
+              "hasGenerateJob": false
+            }
+          },
+          "events": [
+            {
+              "type": "ssh",
+              "command": "cd /;mv /share/Orçamentos/2026/'Metalúrgica Silva & Filhos, Lda.'/'26-0001 - Máquina de corte' /share/Orçamentos/2026/'Metalúrgica Silva & Filhos, Lda.'/'26-0001 - Máquina de corte CNC'",
+              "argv": [
+                [
+                  "cd",
+                  "/"
+                ],
+                [
+                  "mv",
+                  "/share/Orçamentos/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Máquina de corte",
+                  "/share/Orçamentos/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Máquina de corte CNC"
+                ]
+              ],
+              "ops": [
+                {
+                  "op": "mv",
+                  "from": "/share/Orçamentos/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Máquina de corte",
+                  "to": "/share/Orçamentos/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Máquina de corte CNC",
+                  "result": "ok"
+                }
+              ],
+              "outcome": "resolves"
+            },
+            {
+              "type": "db",
+              "op": "Budget.save",
+              "budgetNumber": "26-0001",
+              "revision": 0
+            }
+          ],
+          "dbAfter": {
+            "budgets": 1,
+            "tasks": 1,
+            "jobs": 0
+          },
+          "nasChanges": {
+            "created": [
+              "/share/Orçamentos/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Máquina de corte CNC",
+              "/share/Orçamentos/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Máquina de corte CNC/Documentos",
+              "/share/Orçamentos/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Máquina de corte CNC/Geometria"
+            ],
+            "removed": [
+              "/share/Orçamentos/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Máquina de corte",
+              "/share/Orçamentos/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Máquina de corte/Documentos",
+              "/share/Orçamentos/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Máquina de corte/Geometria"
+            ]
+          }
+        },
+        {
+          "step": "POST /api/job (from {b})",
+          "at": "2026-11-14T10:00:00 Europe/Lisbon",
+          "NODE_ENV": "prod",
+          "response": {
+            "status": 200,
+            "body": "json",
+            "fields": {
+              "state": "Desenvolvimento"
+            }
+          },
+          "events": [
+            {
+              "type": "db",
+              "op": "Budget.save",
+              "budgetNumber": "26-0001",
+              "revision": 0
+            },
+            {
+              "type": "db",
+              "op": "Job.save"
+            },
+            {
+              "type": "ssh",
+              "command": "mkdir -p /share/Obras/2026/'Metalúrgica Silva & Filhos, Lda.'/'26-0001 - Máquina de corte CNC'/CAD",
+              "argv": [
+                [
+                  "mkdir",
+                  "-p",
+                  "/share/Obras/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Máquina de corte CNC/CAD"
+                ]
+              ],
+              "ops": [
+                {
+                  "op": "mkdir-p",
+                  "path": "/share/Obras/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Máquina de corte CNC/CAD"
+                }
+              ],
+              "outcome": "resolves"
+            },
+            {
+              "type": "ssh",
+              "command": "mkdir -p /share/Obras/2026/'Metalúrgica Silva & Filhos, Lda.'/'26-0001 - Máquina de corte CNC'/CAD/Equipamento",
+              "argv": [
+                [
+                  "mkdir",
+                  "-p",
+                  "/share/Obras/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Máquina de corte CNC/CAD/Equipamento"
+                ]
+              ],
+              "ops": [
+                {
+                  "op": "mkdir-p",
+                  "path": "/share/Obras/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Máquina de corte CNC/CAD/Equipamento"
+                }
+              ],
+              "outcome": "resolves"
+            },
+            {
+              "type": "ssh",
+              "command": "mkdir -p /share/Obras/2026/'Metalúrgica Silva & Filhos, Lda.'/'26-0001 - Máquina de corte CNC'/CAM",
+              "argv": [
+                [
+                  "mkdir",
+                  "-p",
+                  "/share/Obras/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Máquina de corte CNC/CAM"
+                ]
+              ],
+              "ops": [
+                {
+                  "op": "mkdir-p",
+                  "path": "/share/Obras/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Máquina de corte CNC/CAM"
+                }
+              ],
+              "outcome": "resolves"
+            },
+            {
+              "type": "ssh",
+              "command": "cd /;mv share/Orçamentos/2026/'Metalúrgica Silva & Filhos, Lda.'/'26-0001 - Máquina de corte CNC'/Documentos share/Obras/2026/'Metalúrgica Silva & Filhos, Lda.'/'26-0001 - Máquina de corte CNC'/\"Informações Técnicas\"",
+              "argv": [
+                [
+                  "cd",
+                  "/"
+                ],
+                [
+                  "mv",
+                  "share/Orçamentos/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Máquina de corte CNC/Documentos",
+                  "share/Obras/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Máquina de corte CNC/Informações Técnicas"
+                ]
+              ],
+              "ops": [
+                {
+                  "op": "mv",
+                  "from": "/share/Orçamentos/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Máquina de corte CNC/Documentos",
+                  "to": "/share/Obras/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Máquina de corte CNC/Informações Técnicas",
+                  "result": "ok"
+                }
+              ],
+              "outcome": "resolves"
+            },
+            {
+              "type": "ssh",
+              "command": "cd /;mv share/Orçamentos/2026/'Metalúrgica Silva & Filhos, Lda.'/'26-0001 - Máquina de corte CNC'/Geometria share/Obras/2026/'Metalúrgica Silva & Filhos, Lda.'/'26-0001 - Máquina de corte CNC'/CAD/Artigo",
+              "argv": [
+                [
+                  "cd",
+                  "/"
+                ],
+                [
+                  "mv",
+                  "share/Orçamentos/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Máquina de corte CNC/Geometria",
+                  "share/Obras/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Máquina de corte CNC/CAD/Artigo"
+                ]
+              ],
+              "ops": [
+                {
+                  "op": "mv",
+                  "from": "/share/Orçamentos/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Máquina de corte CNC/Geometria",
+                  "to": "/share/Obras/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Máquina de corte CNC/CAD/Artigo",
+                  "result": "ok"
+                }
+              ],
+              "outcome": "resolves"
+            },
+            {
+              "type": "ssh",
+              "command": "if test -d share/Obras/2026/'Metalúrgica Silva & Filhos, Lda.'/'26-0001 - Máquina de corte CNC'/\"Informações Técnicas\"; then echo 1; else echo 0; fi",
+              "argv": [
+                [
+                  "if",
+                  "test",
+                  "-d",
+                  "share/Obras/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Máquina de corte CNC/Informações Técnicas"
+                ],
+                [
+                  "then",
+                  "echo",
+                  "1"
+                ],
+                [
+                  "else",
+                  "echo",
+                  "0"
+                ],
+                [
+                  "fi"
+                ]
+              ],
+              "ops": [
+                {
+                  "op": "test-d",
+                  "path": "/home/ssh-user/share/Obras/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Máquina de corte CNC/Informações Técnicas",
+                  "result": false
+                }
+              ],
+              "stdout": "0\n",
+              "outcome": "resolves"
+            },
+            {
+              "type": "ssh",
+              "command": "if test -d share/Obras/2026/'Metalúrgica Silva & Filhos, Lda.'/'26-0001 - Máquina de corte CNC'/CAD/Artigo; then echo 1; else echo 0; fi",
+              "argv": [
+                [
+                  "if",
+                  "test",
+                  "-d",
+                  "share/Obras/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Máquina de corte CNC/CAD/Artigo"
+                ],
+                [
+                  "then",
+                  "echo",
+                  "1"
+                ],
+                [
+                  "else",
+                  "echo",
+                  "0"
+                ],
+                [
+                  "fi"
+                ]
+              ],
+              "ops": [
+                {
+                  "op": "test-d",
+                  "path": "/home/ssh-user/share/Obras/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Máquina de corte CNC/CAD/Artigo",
+                  "result": false
+                }
+              ],
+              "stdout": "0\n",
+              "outcome": "resolves"
+            },
+            {
+              "type": "printer",
+              "host": "127.0.0.1",
+              "port": 9100,
+              "connectTimeoutMs": 1500,
+              "negotiationMandatory": false,
+              "send": "\n      \u001bia3,^TS00126-0001,14/11/2026,Máquina de corte CNC,Metalúrgica Silva & Filhos, Lda.,26-0001,\n      ",
+              "wireUtf8Bytes": 109,
+              "wireHex": "0a2020202020201b6961332c5e545330303132362d303030312c31342f31312f323032362c4dc3a17175696e6120646520636f72746520434e432c4d6574616cc3ba72676963612053696c766120262046696c686f732c204c64612e2c32362d303030312c0a2020202020200a"
+            },
+            {
+              "type": "printer",
+              "host": "127.0.0.2",
+              "port": 9100,
+              "connectTimeoutMs": 1500,
+              "negotiationMandatory": false,
+              "send": "\u001bia3,^TS00226-0001,14/11/2026,Máquina de corte CNC,Metalúrgica Silva & Filhos, Lda.,",
+              "wireUtf8Bytes": 87,
+              "wireHex": "1b6961332c5e545330303232362d303030312c31342f31312f323032362c4dc3a17175696e6120646520636f72746520434e432c4d6574616cc3ba72676963612053696c766120262046696c686f732c204c64612e2c0a"
+            }
+          ],
+          "dbAfter": {
+            "budgets": 1,
+            "tasks": 1,
+            "jobs": 1
+          },
+          "nasChanges": {
+            "created": [
+              "/share/Obras/2026",
+              "/share/Obras/2026/Metalúrgica Silva & Filhos, Lda.",
+              "/share/Obras/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Máquina de corte CNC",
+              "/share/Obras/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Máquina de corte CNC/CAD",
+              "/share/Obras/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Máquina de corte CNC/CAD/Artigo",
+              "/share/Obras/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Máquina de corte CNC/CAD/Equipamento",
+              "/share/Obras/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Máquina de corte CNC/CAM",
+              "/share/Obras/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Máquina de corte CNC/Informações Técnicas"
+            ],
+            "removed": [
+              "/share/Orçamentos/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Máquina de corte CNC/Documentos",
+              "/share/Orçamentos/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Máquina de corte CNC/Geometria"
+            ]
+          }
+        }
+      ],
+      "nasFoldersAtEnd": [
+        "/share/Obras/2026",
+        "/share/Obras/2026/Metalúrgica Silva & Filhos, Lda.",
+        "/share/Obras/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Máquina de corte CNC",
+        "/share/Obras/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Máquina de corte CNC/CAD",
+        "/share/Obras/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Máquina de corte CNC/CAD/Artigo",
+        "/share/Obras/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Máquina de corte CNC/CAD/Equipamento",
+        "/share/Obras/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Máquina de corte CNC/CAM",
+        "/share/Obras/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Máquina de corte CNC/Informações Técnicas",
+        "/share/Orçamentos/2026",
+        "/share/Orçamentos/2026/Metalúrgica Silva & Filhos, Lda.",
+        "/share/Orçamentos/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Máquina de corte CNC"
+      ]
+    },
+    {
+      "id": "job-create-rev1-later-year",
+      "title": "Revision 1 made in the next year: the move uses the REVISION's year, the source folder is missing → mv rejects → 500 after the job is saved, Obras folders already made",
+      "steps": [
+        {
+          "step": "POST /api/budget (silva, \"Máquina de corte\")",
+          "at": "2025-12-15T10:00:00 Europe/Lisbon",
+          "NODE_ENV": "prod",
+          "response": {
+            "status": 200,
+            "body": "json",
+            "fields": {
+              "budgetNumber": "25-0001",
+              "revision": 0,
+              "descriptive": "Máquina de corte",
+              "hasGenerateJob": false
+            }
+          },
+          "events": [
+            {
+              "type": "db",
+              "op": "Budget.save",
+              "budgetNumber": "25-0001",
+              "revision": 0
+            },
+            {
+              "type": "ssh",
+              "command": "mkdir -p /share/Orçamentos/2025/'Metalúrgica Silva & Filhos, Lda.'/'25-0001 - Máquina de corte'",
+              "argv": [
+                [
+                  "mkdir",
+                  "-p",
+                  "/share/Orçamentos/2025/Metalúrgica Silva & Filhos, Lda./25-0001 - Máquina de corte"
+                ]
+              ],
+              "ops": [
+                {
+                  "op": "mkdir-p",
+                  "path": "/share/Orçamentos/2025/Metalúrgica Silva & Filhos, Lda./25-0001 - Máquina de corte"
+                }
+              ],
+              "outcome": "resolves"
+            },
+            {
+              "type": "ssh",
+              "command": "mkdir -p /share/Orçamentos/2025/'Metalúrgica Silva & Filhos, Lda.'/'25-0001 - Máquina de corte'/Geometria",
+              "argv": [
+                [
+                  "mkdir",
+                  "-p",
+                  "/share/Orçamentos/2025/Metalúrgica Silva & Filhos, Lda./25-0001 - Máquina de corte/Geometria"
+                ]
+              ],
+              "ops": [
+                {
+                  "op": "mkdir-p",
+                  "path": "/share/Orçamentos/2025/Metalúrgica Silva & Filhos, Lda./25-0001 - Máquina de corte/Geometria"
+                }
+              ],
+              "outcome": "resolves"
+            },
+            {
+              "type": "ssh",
+              "command": "mkdir -p /share/Orçamentos/2025/'Metalúrgica Silva & Filhos, Lda.'/'25-0001 - Máquina de corte'/Documentos",
+              "argv": [
+                [
+                  "mkdir",
+                  "-p",
+                  "/share/Orçamentos/2025/Metalúrgica Silva & Filhos, Lda./25-0001 - Máquina de corte/Documentos"
+                ]
+              ],
+              "ops": [
+                {
+                  "op": "mkdir-p",
+                  "path": "/share/Orçamentos/2025/Metalúrgica Silva & Filhos, Lda./25-0001 - Máquina de corte/Documentos"
+                }
+              ],
+              "outcome": "resolves"
+            },
+            {
+              "type": "ssh",
+              "command": "if test -d /share/Orçamentos/2025/'Metalúrgica Silva & Filhos, Lda.'/'25-0001 - Máquina de corte'; then echo 1; else echo 0; fi",
+              "argv": [
+                [
+                  "if",
+                  "test",
+                  "-d",
+                  "/share/Orçamentos/2025/Metalúrgica Silva & Filhos, Lda./25-0001 - Máquina de corte"
+                ],
+                [
+                  "then",
+                  "echo",
+                  "1"
+                ],
+                [
+                  "else",
+                  "echo",
+                  "0"
+                ],
+                [
+                  "fi"
+                ]
+              ],
+              "ops": [
+                {
+                  "op": "test-d",
+                  "path": "/share/Orçamentos/2025/Metalúrgica Silva & Filhos, Lda./25-0001 - Máquina de corte",
+                  "result": true
+                }
+              ],
+              "stdout": "1\n",
+              "outcome": "resolves"
+            },
+            {
+              "type": "db",
+              "op": "Task.save"
+            }
+          ],
+          "dbAfter": {
+            "budgets": 1,
+            "tasks": 1,
+            "jobs": 0
+          },
+          "nasChanges": {
+            "created": [
+              "/share/Orçamentos/2025",
+              "/share/Orçamentos/2025/Metalúrgica Silva & Filhos, Lda.",
+              "/share/Orçamentos/2025/Metalúrgica Silva & Filhos, Lda./25-0001 - Máquina de corte",
+              "/share/Orçamentos/2025/Metalúrgica Silva & Filhos, Lda./25-0001 - Máquina de corte/Documentos",
+              "/share/Orçamentos/2025/Metalúrgica Silva & Filhos, Lda./25-0001 - Máquina de corte/Geometria"
+            ],
+            "removed": []
+          }
+        },
+        {
+          "step": "POST /api/budget/newrevision/{b0}",
+          "at": "2026-01-10T10:00:00 Europe/Lisbon",
+          "NODE_ENV": "prod",
+          "response": {
+            "status": 200,
+            "body": "json",
+            "fields": {
+              "budgetNumber": "25-0001",
+              "revision": 1,
+              "descriptive": "Máquina de corte",
+              "hasGenerateJob": false
+            }
+          },
+          "events": [
+            {
+              "type": "db",
+              "op": "Task.insertMany",
+              "count": 1
+            },
+            {
+              "type": "db",
+              "op": "Budget.save",
+              "budgetNumber": "25-0001",
+              "revision": 1
+            }
+          ],
+          "dbAfter": {
+            "budgets": 2,
+            "tasks": 2,
+            "jobs": 0
+          },
+          "nasChanges": {
+            "created": [],
+            "removed": []
+          }
+        },
+        {
+          "step": "POST /api/job (from {b1})",
+          "at": "2026-01-12T10:00:00 Europe/Lisbon",
+          "NODE_ENV": "prod",
+          "response": {
+            "status": 500,
+            "body": "expressErrorPage"
+          },
+          "events": [
+            {
+              "type": "db",
+              "op": "Budget.save",
+              "budgetNumber": "25-0001",
+              "revision": 1
+            },
+            {
+              "type": "db",
+              "op": "Job.save"
+            },
+            {
+              "type": "ssh",
+              "command": "mkdir -p /share/Obras/2026/'Metalúrgica Silva & Filhos, Lda.'/'25-0001 - Máquina de corte'/CAD",
+              "argv": [
+                [
+                  "mkdir",
+                  "-p",
+                  "/share/Obras/2026/Metalúrgica Silva & Filhos, Lda./25-0001 - Máquina de corte/CAD"
+                ]
+              ],
+              "ops": [
+                {
+                  "op": "mkdir-p",
+                  "path": "/share/Obras/2026/Metalúrgica Silva & Filhos, Lda./25-0001 - Máquina de corte/CAD"
+                }
+              ],
+              "outcome": "resolves"
+            },
+            {
+              "type": "ssh",
+              "command": "mkdir -p /share/Obras/2026/'Metalúrgica Silva & Filhos, Lda.'/'25-0001 - Máquina de corte'/CAD/Equipamento",
+              "argv": [
+                [
+                  "mkdir",
+                  "-p",
+                  "/share/Obras/2026/Metalúrgica Silva & Filhos, Lda./25-0001 - Máquina de corte/CAD/Equipamento"
+                ]
+              ],
+              "ops": [
+                {
+                  "op": "mkdir-p",
+                  "path": "/share/Obras/2026/Metalúrgica Silva & Filhos, Lda./25-0001 - Máquina de corte/CAD/Equipamento"
+                }
+              ],
+              "outcome": "resolves"
+            },
+            {
+              "type": "ssh",
+              "command": "mkdir -p /share/Obras/2026/'Metalúrgica Silva & Filhos, Lda.'/'25-0001 - Máquina de corte'/CAM",
+              "argv": [
+                [
+                  "mkdir",
+                  "-p",
+                  "/share/Obras/2026/Metalúrgica Silva & Filhos, Lda./25-0001 - Máquina de corte/CAM"
+                ]
+              ],
+              "ops": [
+                {
+                  "op": "mkdir-p",
+                  "path": "/share/Obras/2026/Metalúrgica Silva & Filhos, Lda./25-0001 - Máquina de corte/CAM"
+                }
+              ],
+              "outcome": "resolves"
+            },
+            {
+              "type": "ssh",
+              "command": "cd /;mv share/Orçamentos/2026/'Metalúrgica Silva & Filhos, Lda.'/'25-0001 - Máquina de corte'/Documentos share/Obras/2026/'Metalúrgica Silva & Filhos, Lda.'/'25-0001 - Máquina de corte'/\"Informações Técnicas\"",
+              "argv": [
+                [
+                  "cd",
+                  "/"
+                ],
+                [
+                  "mv",
+                  "share/Orçamentos/2026/Metalúrgica Silva & Filhos, Lda./25-0001 - Máquina de corte/Documentos",
+                  "share/Obras/2026/Metalúrgica Silva & Filhos, Lda./25-0001 - Máquina de corte/Informações Técnicas"
+                ]
+              ],
+              "ops": [
+                {
+                  "op": "mv",
+                  "from": "/share/Orçamentos/2026/Metalúrgica Silva & Filhos, Lda./25-0001 - Máquina de corte/Documentos",
+                  "to": "/share/Obras/2026/Metalúrgica Silva & Filhos, Lda./25-0001 - Máquina de corte/Informações Técnicas",
+                  "result": "source-missing"
+                }
+              ],
+              "stderr": "mv: cannot stat 'share/Orçamentos/2026/Metalúrgica Silva & Filhos, Lda./25-0001 - Máquina de corte/Documentos': No such file or directory\n",
+              "outcome": "rejects (stderr)"
+            },
+            {
+              "type": "error",
+              "name": "Buffer (ssh2-promise stderr rejection)",
+              "message": "mv: cannot stat 'share/Orçamentos/2026/Metalúrgica Silva & Filhos, Lda./25-0001 - Máquina de corte/Documentos': No such file or directory\n"
+            }
+          ],
+          "dbAfter": {
+            "budgets": 2,
+            "tasks": 2,
+            "jobs": 1
+          },
+          "nasChanges": {
+            "created": [
+              "/share/Obras/2026",
+              "/share/Obras/2026/Metalúrgica Silva & Filhos, Lda.",
+              "/share/Obras/2026/Metalúrgica Silva & Filhos, Lda./25-0001 - Máquina de corte",
+              "/share/Obras/2026/Metalúrgica Silva & Filhos, Lda./25-0001 - Máquina de corte/CAD",
+              "/share/Obras/2026/Metalúrgica Silva & Filhos, Lda./25-0001 - Máquina de corte/CAD/Equipamento",
+              "/share/Obras/2026/Metalúrgica Silva & Filhos, Lda./25-0001 - Máquina de corte/CAM"
+            ],
+            "removed": []
+          }
+        }
+      ],
+      "nasFoldersAtEnd": [
+        "/share/Obras/2026",
+        "/share/Obras/2026/Metalúrgica Silva & Filhos, Lda.",
+        "/share/Obras/2026/Metalúrgica Silva & Filhos, Lda./25-0001 - Máquina de corte",
+        "/share/Obras/2026/Metalúrgica Silva & Filhos, Lda./25-0001 - Máquina de corte/CAD",
+        "/share/Obras/2026/Metalúrgica Silva & Filhos, Lda./25-0001 - Máquina de corte/CAD/Equipamento",
+        "/share/Obras/2026/Metalúrgica Silva & Filhos, Lda./25-0001 - Máquina de corte/CAM",
+        "/share/Orçamentos/2025",
+        "/share/Orçamentos/2025/Metalúrgica Silva & Filhos, Lda.",
+        "/share/Orçamentos/2025/Metalúrgica Silva & Filhos, Lda./25-0001 - Máquina de corte",
+        "/share/Orçamentos/2025/Metalúrgica Silva & Filhos, Lda./25-0001 - Máquina de corte/Documentos",
+        "/share/Orçamentos/2025/Metalúrgica Silva & Filhos, Lda./25-0001 - Máquina de corte/Geometria"
+      ]
+    },
+    {
+      "id": "job-create-slash-in-descriptive",
+      "title": "Job create for a budget whose descriptive has '/': the nested folders are moved as one",
+      "steps": [
+        {
+          "step": "POST /api/budget (silva, \"Suporte 30/40 mm\")",
+          "at": "2026-11-02T10:00:00 Europe/Lisbon",
+          "NODE_ENV": "prod",
+          "response": {
+            "status": 200,
+            "body": "json",
+            "fields": {
+              "budgetNumber": "26-0001",
+              "revision": 0,
+              "descriptive": "Suporte 30/40 mm",
+              "hasGenerateJob": false
+            }
+          },
+          "events": [
+            {
+              "type": "db",
+              "op": "Budget.save",
+              "budgetNumber": "26-0001",
+              "revision": 0
+            },
+            {
+              "type": "ssh",
+              "command": "mkdir -p /share/Orçamentos/2026/'Metalúrgica Silva & Filhos, Lda.'/'26-0001 - Suporte 30/40 mm'",
+              "argv": [
+                [
+                  "mkdir",
+                  "-p",
+                  "/share/Orçamentos/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Suporte 30/40 mm"
+                ]
+              ],
+              "ops": [
+                {
+                  "op": "mkdir-p",
+                  "path": "/share/Orçamentos/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Suporte 30/40 mm"
+                }
+              ],
+              "outcome": "resolves"
+            },
+            {
+              "type": "ssh",
+              "command": "mkdir -p /share/Orçamentos/2026/'Metalúrgica Silva & Filhos, Lda.'/'26-0001 - Suporte 30/40 mm'/Geometria",
+              "argv": [
+                [
+                  "mkdir",
+                  "-p",
+                  "/share/Orçamentos/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Suporte 30/40 mm/Geometria"
+                ]
+              ],
+              "ops": [
+                {
+                  "op": "mkdir-p",
+                  "path": "/share/Orçamentos/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Suporte 30/40 mm/Geometria"
+                }
+              ],
+              "outcome": "resolves"
+            },
+            {
+              "type": "ssh",
+              "command": "mkdir -p /share/Orçamentos/2026/'Metalúrgica Silva & Filhos, Lda.'/'26-0001 - Suporte 30/40 mm'/Documentos",
+              "argv": [
+                [
+                  "mkdir",
+                  "-p",
+                  "/share/Orçamentos/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Suporte 30/40 mm/Documentos"
+                ]
+              ],
+              "ops": [
+                {
+                  "op": "mkdir-p",
+                  "path": "/share/Orçamentos/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Suporte 30/40 mm/Documentos"
+                }
+              ],
+              "outcome": "resolves"
+            },
+            {
+              "type": "ssh",
+              "command": "if test -d /share/Orçamentos/2026/'Metalúrgica Silva & Filhos, Lda.'/'26-0001 - Suporte 30/40 mm'; then echo 1; else echo 0; fi",
+              "argv": [
+                [
+                  "if",
+                  "test",
+                  "-d",
+                  "/share/Orçamentos/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Suporte 30/40 mm"
+                ],
+                [
+                  "then",
+                  "echo",
+                  "1"
+                ],
+                [
+                  "else",
+                  "echo",
+                  "0"
+                ],
+                [
+                  "fi"
+                ]
+              ],
+              "ops": [
+                {
+                  "op": "test-d",
+                  "path": "/share/Orçamentos/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Suporte 30/40 mm",
+                  "result": true
+                }
+              ],
+              "stdout": "1\n",
+              "outcome": "resolves"
+            },
+            {
+              "type": "db",
+              "op": "Task.save"
+            }
+          ],
+          "dbAfter": {
+            "budgets": 1,
+            "tasks": 1,
+            "jobs": 0
+          },
+          "nasChanges": {
+            "created": [
+              "/share/Orçamentos/2026",
+              "/share/Orçamentos/2026/Metalúrgica Silva & Filhos, Lda.",
+              "/share/Orçamentos/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Suporte 30",
+              "/share/Orçamentos/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Suporte 30/40 mm",
+              "/share/Orçamentos/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Suporte 30/40 mm/Documentos",
+              "/share/Orçamentos/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Suporte 30/40 mm/Geometria"
+            ],
+            "removed": []
+          }
+        },
+        {
+          "step": "POST /api/job (from {b})",
+          "at": "2026-11-14T10:00:00 Europe/Lisbon",
+          "NODE_ENV": "prod",
+          "response": {
+            "status": 200,
+            "body": "json",
+            "fields": {
+              "state": "Desenvolvimento"
+            }
+          },
+          "events": [
+            {
+              "type": "db",
+              "op": "Budget.save",
+              "budgetNumber": "26-0001",
+              "revision": 0
+            },
+            {
+              "type": "db",
+              "op": "Job.save"
+            },
+            {
+              "type": "ssh",
+              "command": "mkdir -p /share/Obras/2026/'Metalúrgica Silva & Filhos, Lda.'/'26-0001 - Suporte 30/40 mm'/CAD",
+              "argv": [
+                [
+                  "mkdir",
+                  "-p",
+                  "/share/Obras/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Suporte 30/40 mm/CAD"
+                ]
+              ],
+              "ops": [
+                {
+                  "op": "mkdir-p",
+                  "path": "/share/Obras/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Suporte 30/40 mm/CAD"
+                }
+              ],
+              "outcome": "resolves"
+            },
+            {
+              "type": "ssh",
+              "command": "mkdir -p /share/Obras/2026/'Metalúrgica Silva & Filhos, Lda.'/'26-0001 - Suporte 30/40 mm'/CAD/Equipamento",
+              "argv": [
+                [
+                  "mkdir",
+                  "-p",
+                  "/share/Obras/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Suporte 30/40 mm/CAD/Equipamento"
+                ]
+              ],
+              "ops": [
+                {
+                  "op": "mkdir-p",
+                  "path": "/share/Obras/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Suporte 30/40 mm/CAD/Equipamento"
+                }
+              ],
+              "outcome": "resolves"
+            },
+            {
+              "type": "ssh",
+              "command": "mkdir -p /share/Obras/2026/'Metalúrgica Silva & Filhos, Lda.'/'26-0001 - Suporte 30/40 mm'/CAM",
+              "argv": [
+                [
+                  "mkdir",
+                  "-p",
+                  "/share/Obras/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Suporte 30/40 mm/CAM"
+                ]
+              ],
+              "ops": [
+                {
+                  "op": "mkdir-p",
+                  "path": "/share/Obras/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Suporte 30/40 mm/CAM"
+                }
+              ],
+              "outcome": "resolves"
+            },
+            {
+              "type": "ssh",
+              "command": "cd /;mv share/Orçamentos/2026/'Metalúrgica Silva & Filhos, Lda.'/'26-0001 - Suporte 30/40 mm'/Documentos share/Obras/2026/'Metalúrgica Silva & Filhos, Lda.'/'26-0001 - Suporte 30/40 mm'/\"Informações Técnicas\"",
+              "argv": [
+                [
+                  "cd",
+                  "/"
+                ],
+                [
+                  "mv",
+                  "share/Orçamentos/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Suporte 30/40 mm/Documentos",
+                  "share/Obras/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Suporte 30/40 mm/Informações Técnicas"
+                ]
+              ],
+              "ops": [
+                {
+                  "op": "mv",
+                  "from": "/share/Orçamentos/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Suporte 30/40 mm/Documentos",
+                  "to": "/share/Obras/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Suporte 30/40 mm/Informações Técnicas",
+                  "result": "ok"
+                }
+              ],
+              "outcome": "resolves"
+            },
+            {
+              "type": "ssh",
+              "command": "cd /;mv share/Orçamentos/2026/'Metalúrgica Silva & Filhos, Lda.'/'26-0001 - Suporte 30/40 mm'/Geometria share/Obras/2026/'Metalúrgica Silva & Filhos, Lda.'/'26-0001 - Suporte 30/40 mm'/CAD/Artigo",
+              "argv": [
+                [
+                  "cd",
+                  "/"
+                ],
+                [
+                  "mv",
+                  "share/Orçamentos/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Suporte 30/40 mm/Geometria",
+                  "share/Obras/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Suporte 30/40 mm/CAD/Artigo"
+                ]
+              ],
+              "ops": [
+                {
+                  "op": "mv",
+                  "from": "/share/Orçamentos/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Suporte 30/40 mm/Geometria",
+                  "to": "/share/Obras/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Suporte 30/40 mm/CAD/Artigo",
+                  "result": "ok"
+                }
+              ],
+              "outcome": "resolves"
+            },
+            {
+              "type": "ssh",
+              "command": "if test -d share/Obras/2026/'Metalúrgica Silva & Filhos, Lda.'/'26-0001 - Suporte 30/40 mm'/\"Informações Técnicas\"; then echo 1; else echo 0; fi",
+              "argv": [
+                [
+                  "if",
+                  "test",
+                  "-d",
+                  "share/Obras/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Suporte 30/40 mm/Informações Técnicas"
+                ],
+                [
+                  "then",
+                  "echo",
+                  "1"
+                ],
+                [
+                  "else",
+                  "echo",
+                  "0"
+                ],
+                [
+                  "fi"
+                ]
+              ],
+              "ops": [
+                {
+                  "op": "test-d",
+                  "path": "/home/ssh-user/share/Obras/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Suporte 30/40 mm/Informações Técnicas",
+                  "result": false
+                }
+              ],
+              "stdout": "0\n",
+              "outcome": "resolves"
+            },
+            {
+              "type": "ssh",
+              "command": "if test -d share/Obras/2026/'Metalúrgica Silva & Filhos, Lda.'/'26-0001 - Suporte 30/40 mm'/CAD/Artigo; then echo 1; else echo 0; fi",
+              "argv": [
+                [
+                  "if",
+                  "test",
+                  "-d",
+                  "share/Obras/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Suporte 30/40 mm/CAD/Artigo"
+                ],
+                [
+                  "then",
+                  "echo",
+                  "1"
+                ],
+                [
+                  "else",
+                  "echo",
+                  "0"
+                ],
+                [
+                  "fi"
+                ]
+              ],
+              "ops": [
+                {
+                  "op": "test-d",
+                  "path": "/home/ssh-user/share/Obras/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Suporte 30/40 mm/CAD/Artigo",
+                  "result": false
+                }
+              ],
+              "stdout": "0\n",
+              "outcome": "resolves"
+            },
+            {
+              "type": "printer",
+              "host": "127.0.0.1",
+              "port": 9100,
+              "connectTimeoutMs": 1500,
+              "negotiationMandatory": false,
+              "send": "\n      \u001bia3,^TS00126-0001,14/11/2026,Suporte 30/40 mm,Metalúrgica Silva & Filhos, Lda.,26-0001,\n      ",
+              "wireUtf8Bytes": 104,
+              "wireHex": "0a2020202020201b6961332c5e545330303132362d303030312c31342f31312f323032362c5375706f7274652033302f3430206d6d2c4d6574616cc3ba72676963612053696c766120262046696c686f732c204c64612e2c32362d303030312c0a2020202020200a"
+            },
+            {
+              "type": "printer",
+              "host": "127.0.0.2",
+              "port": 9100,
+              "connectTimeoutMs": 1500,
+              "negotiationMandatory": false,
+              "send": "\u001bia3,^TS00226-0001,14/11/2026,Suporte 30/40 mm,Metalúrgica Silva & Filhos, Lda.,",
+              "wireUtf8Bytes": 82,
+              "wireHex": "1b6961332c5e545330303232362d303030312c31342f31312f323032362c5375706f7274652033302f3430206d6d2c4d6574616cc3ba72676963612053696c766120262046696c686f732c204c64612e2c0a"
+            }
+          ],
+          "dbAfter": {
+            "budgets": 1,
+            "tasks": 1,
+            "jobs": 1
+          },
+          "nasChanges": {
+            "created": [
+              "/share/Obras/2026",
+              "/share/Obras/2026/Metalúrgica Silva & Filhos, Lda.",
+              "/share/Obras/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Suporte 30",
+              "/share/Obras/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Suporte 30/40 mm",
+              "/share/Obras/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Suporte 30/40 mm/CAD",
+              "/share/Obras/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Suporte 30/40 mm/CAD/Artigo",
+              "/share/Obras/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Suporte 30/40 mm/CAD/Equipamento",
+              "/share/Obras/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Suporte 30/40 mm/CAM",
+              "/share/Obras/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Suporte 30/40 mm/Informações Técnicas"
+            ],
+            "removed": [
+              "/share/Orçamentos/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Suporte 30/40 mm/Documentos",
+              "/share/Orçamentos/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Suporte 30/40 mm/Geometria"
+            ]
+          }
+        }
+      ],
+      "nasFoldersAtEnd": [
+        "/share/Obras/2026",
+        "/share/Obras/2026/Metalúrgica Silva & Filhos, Lda.",
+        "/share/Obras/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Suporte 30",
+        "/share/Obras/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Suporte 30/40 mm",
+        "/share/Obras/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Suporte 30/40 mm/CAD",
+        "/share/Obras/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Suporte 30/40 mm/CAD/Artigo",
+        "/share/Obras/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Suporte 30/40 mm/CAD/Equipamento",
+        "/share/Obras/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Suporte 30/40 mm/CAM",
+        "/share/Obras/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Suporte 30/40 mm/Informações Técnicas",
+        "/share/Orçamentos/2026",
+        "/share/Orçamentos/2026/Metalúrgica Silva & Filhos, Lda.",
+        "/share/Orçamentos/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Suporte 30",
+        "/share/Orçamentos/2026/Metalúrgica Silva & Filhos, Lda./26-0001 - Suporte 30/40 mm"
+      ]
+    }
+  ]
+}

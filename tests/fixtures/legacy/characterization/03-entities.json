@@ -1,0 +1,551 @@
+{
+  "area": "03-entities",
+  "steps": [
+    {
+      "id": "entity-types",
+      "title": "Entity types",
+      "request": {
+        "method": "GET",
+        "path": "/api/entity/getentityTypes",
+        "auth": "admin",
+        "body": null
+      },
+      "response": {
+        "status": 200,
+        "contentType": "application/json; charset=utf-8",
+        "json": [
+          {
+            "_id": 1,
+            "name": "Cliente"
+          },
+          {
+            "_id": 2,
+            "name": "Fornecedor"
+          },
+          {
+            "_id": 3,
+            "name": "Cliente e Fornecedor"
+          }
+        ]
+      },
+      "db": {}
+    },
+    {
+      "id": "entity-create-client",
+      "title": "Create client",
+      "request": {
+        "method": "POST",
+        "path": "/api/entity",
+        "auth": "admin",
+        "body": {
+          "name": "Metalúrgica do Vale do Ave, Lda.",
+          "fiscalNumber": "500100200",
+          "address": "Rua da Indústria, 12",
+          "zipCode": "4760-100",
+          "location": "Vila Nova de Famalicão",
+          "paymentCondition": "Pronto pagamento",
+          "type": "Cliente"
+        }
+      },
+      "response": {
+        "status": 200,
+        "contentType": "application/json; charset=utf-8",
+        "json": {
+          "_id": "{{entities:1}}",
+          "name": "Metalúrgica do Vale do Ave, Lda.",
+          "fiscalNumber": "500100200",
+          "address": "Rua da Indústria, 12",
+          "zipCode": "4760-100",
+          "location": "Vila Nova de Famalicão",
+          "paymentCondition": "Pronto pagamento",
+          "type": "Cliente",
+          "__v": 0
+        }
+      },
+      "db": {
+        "entities": {
+          "inserted": [
+            {
+              "_id": {
+                "$oid": "{{entities:1}}"
+              },
+              "name": "Metalúrgica do Vale do Ave, Lda.",
+              "fiscalNumber": "500100200",
+              "address": "Rua da Indústria, 12",
+              "zipCode": "4760-100",
+              "location": "Vila Nova de Famalicão",
+              "paymentCondition": "Pronto pagamento",
+              "type": "Cliente",
+              "__v": {
+                "$numberInt": "0"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "entity-create-client-supplier",
+      "title": "Create client and supplier (only required fields)",
+      "request": {
+        "method": "POST",
+        "path": "/api/entity",
+        "auth": "admin",
+        "body": {
+          "name": "Cortiças Reunidas",
+          "paymentCondition": "Transferência a 30 dias",
+          "type": "Cliente e Fornecedor"
+        }
+      },
+      "response": {
+        "status": 200,
+        "contentType": "application/json; charset=utf-8",
+        "json": {
+          "_id": "{{entities:2}}",
+          "name": "Cortiças Reunidas",
+          "paymentCondition": "Transferência a 30 dias",
+          "type": "Cliente e Fornecedor",
+          "__v": 0
+        }
+      },
+      "db": {
+        "entities": {
+          "inserted": [
+            {
+              "_id": {
+                "$oid": "{{entities:2}}"
+              },
+              "name": "Cortiças Reunidas",
+              "paymentCondition": "Transferência a 30 dias",
+              "type": "Cliente e Fornecedor",
+              "__v": {
+                "$numberInt": "0"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "entity-create-supplier",
+      "title": "Create supplier",
+      "request": {
+        "method": "POST",
+        "path": "/api/entity",
+        "auth": "admin",
+        "body": {
+          "name": "Aços Especiais Lda.",
+          "fiscalNumber": "500300400",
+          "address": "Av. Central, 1",
+          "zipCode": "4000-001",
+          "location": "Porto",
+          "paymentCondition": "Pronto pagamento",
+          "type": "Fornecedor"
+        }
+      },
+      "response": {
+        "status": 200,
+        "contentType": "application/json; charset=utf-8",
+        "json": {
+          "_id": "{{entities:3}}",
+          "name": "Aços Especiais Lda.",
+          "fiscalNumber": "500300400",
+          "address": "Av. Central, 1",
+          "zipCode": "4000-001",
+          "location": "Porto",
+          "paymentCondition": "Pronto pagamento",
+          "type": "Fornecedor",
+          "__v": 0
+        }
+      },
+      "db": {
+        "entities": {
+          "inserted": [
+            {
+              "_id": {
+                "$oid": "{{entities:3}}"
+              },
+              "name": "Aços Especiais Lda.",
+              "fiscalNumber": "500300400",
+              "address": "Av. Central, 1",
+              "zipCode": "4000-001",
+              "location": "Porto",
+              "paymentCondition": "Pronto pagamento",
+              "type": "Fornecedor",
+              "__v": {
+                "$numberInt": "0"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "entity-create-duplicate",
+      "title": "Create entity with an existing name",
+      "request": {
+        "method": "POST",
+        "path": "/api/entity",
+        "auth": "admin",
+        "body": {
+          "name": "Cortiças Reunidas",
+          "paymentCondition": "Pronto pagamento",
+          "type": "Cliente"
+        }
+      },
+      "response": {
+        "status": 400,
+        "contentType": "text/html; charset=utf-8",
+        "text": "Nome de entidade já registado"
+      },
+      "db": {}
+    },
+    {
+      "id": "entity-create-validation",
+      "title": "Create entity with unknown type",
+      "request": {
+        "method": "POST",
+        "path": "/api/entity",
+        "auth": "admin",
+        "body": {
+          "name": "Tipo Errado",
+          "paymentCondition": "Pronto pagamento",
+          "type": "Parceiro"
+        }
+      },
+      "response": {
+        "status": 400,
+        "contentType": "text/html; charset=utf-8",
+        "text": "\"type\" must be one of [Cliente, Fornecedor, Cliente e Fornecedor]"
+      },
+      "db": {}
+    },
+    {
+      "id": "entity-all",
+      "title": "All entities sorted by name",
+      "request": {
+        "method": "GET",
+        "path": "/api/entity/getAll",
+        "auth": "admin",
+        "body": null
+      },
+      "response": {
+        "status": 200,
+        "contentType": "application/json; charset=utf-8",
+        "json": [
+          {
+            "_id": "{{entities:3}}",
+            "name": "Aços Especiais Lda.",
+            "fiscalNumber": "500300400",
+            "address": "Av. Central, 1",
+            "zipCode": "4000-001",
+            "location": "Porto",
+            "paymentCondition": "Pronto pagamento",
+            "type": "Fornecedor",
+            "__v": 0
+          },
+          {
+            "_id": "{{entities:2}}",
+            "name": "Cortiças Reunidas",
+            "paymentCondition": "Transferência a 30 dias",
+            "type": "Cliente e Fornecedor",
+            "__v": 0
+          },
+          {
+            "_id": "{{entities:1}}",
+            "name": "Metalúrgica do Vale do Ave, Lda.",
+            "fiscalNumber": "500100200",
+            "address": "Rua da Indústria, 12",
+            "zipCode": "4760-100",
+            "location": "Vila Nova de Famalicão",
+            "paymentCondition": "Pronto pagamento",
+            "type": "Cliente",
+            "__v": 0
+          }
+        ]
+      },
+      "db": {}
+    },
+    {
+      "id": "entity-all-case-insensitive",
+      "title": "Routes are case-insensitive (Express)",
+      "request": {
+        "method": "GET",
+        "path": "/api/Entity/GETALL",
+        "auth": "admin",
+        "body": null
+      },
+      "response": {
+        "status": 200,
+        "contentType": "application/json; charset=utf-8",
+        "json": [
+          {
+            "_id": "{{entities:3}}",
+            "name": "Aços Especiais Lda.",
+            "fiscalNumber": "500300400",
+            "address": "Av. Central, 1",
+            "zipCode": "4000-001",
+            "location": "Porto",
+            "paymentCondition": "Pronto pagamento",
+            "type": "Fornecedor",
+            "__v": 0
+          },
+          {
+            "_id": "{{entities:2}}",
+            "name": "Cortiças Reunidas",
+            "paymentCondition": "Transferência a 30 dias",
+            "type": "Cliente e Fornecedor",
+            "__v": 0
+          },
+          {
+            "_id": "{{entities:1}}",
+            "name": "Metalúrgica do Vale do Ave, Lda.",
+            "fiscalNumber": "500100200",
+            "address": "Rua da Indústria, 12",
+            "zipCode": "4760-100",
+            "location": "Vila Nova de Famalicão",
+            "paymentCondition": "Pronto pagamento",
+            "type": "Cliente",
+            "__v": 0
+          }
+        ]
+      },
+      "db": {}
+    },
+    {
+      "id": "entity-clients",
+      "title": "Clients (Cliente + Cliente e Fornecedor) sorted by name",
+      "request": {
+        "method": "GET",
+        "path": "/api/entity/getallclients",
+        "auth": "admin",
+        "body": null
+      },
+      "response": {
+        "status": 200,
+        "contentType": "application/json; charset=utf-8",
+        "json": [
+          {
+            "_id": "{{entities:2}}",
+            "name": "Cortiças Reunidas",
+            "paymentCondition": "Transferência a 30 dias",
+            "type": "Cliente e Fornecedor",
+            "__v": 0
+          },
+          {
+            "_id": "{{entities:1}}",
+            "name": "Metalúrgica do Vale do Ave, Lda.",
+            "fiscalNumber": "500100200",
+            "address": "Rua da Indústria, 12",
+            "zipCode": "4760-100",
+            "location": "Vila Nova de Famalicão",
+            "paymentCondition": "Pronto pagamento",
+            "type": "Cliente",
+            "__v": 0
+          }
+        ]
+      },
+      "db": {}
+    },
+    {
+      "id": "entity-by-id",
+      "title": "One entity",
+      "request": {
+        "method": "GET",
+        "path": "/api/entity/{{entities:1}}",
+        "auth": "admin",
+        "body": null
+      },
+      "response": {
+        "status": 200,
+        "contentType": "application/json; charset=utf-8",
+        "json": {
+          "_id": "{{entities:1}}",
+          "name": "Metalúrgica do Vale do Ave, Lda.",
+          "fiscalNumber": "500100200",
+          "address": "Rua da Indústria, 12",
+          "zipCode": "4760-100",
+          "location": "Vila Nova de Famalicão",
+          "paymentCondition": "Pronto pagamento",
+          "type": "Cliente",
+          "__v": 0
+        }
+      },
+      "db": {}
+    },
+    {
+      "id": "entity-by-id-missing",
+      "title": "Unknown entity",
+      "request": {
+        "method": "GET",
+        "path": "/api/entity/0123456789abcdef01234567",
+        "auth": "admin",
+        "body": null
+      },
+      "response": {
+        "status": 400,
+        "contentType": "text/html; charset=utf-8",
+        "text": "Entidade não encontrada"
+      },
+      "db": {}
+    },
+    {
+      "id": "entity-update",
+      "title": "Update entity (picked fields)",
+      "request": {
+        "method": "PUT",
+        "path": "/api/entity/{{entities:2}}",
+        "auth": "admin",
+        "body": {
+          "name": "Cortiças Reunidas",
+          "fiscalNumber": "500999888",
+          "address": "Lugar da Cortiça",
+          "zipCode": "4535-000",
+          "location": "Santa Maria da Feira",
+          "paymentCondition": "Transferência a 30 dias",
+          "type": "Cliente e Fornecedor"
+        }
+      },
+      "response": {
+        "status": 200,
+        "contentType": "application/json; charset=utf-8",
+        "json": {
+          "_id": "{{entities:2}}",
+          "name": "Cortiças Reunidas",
+          "fiscalNumber": "500999888",
+          "address": "Lugar da Cortiça",
+          "zipCode": "4535-000",
+          "location": "Santa Maria da Feira",
+          "paymentCondition": "Transferência a 30 dias",
+          "type": "Cliente e Fornecedor"
+        }
+      },
+      "db": {
+        "entities": {
+          "updated": [
+            {
+              "_id": {
+                "$oid": "{{entities:2}}"
+              },
+              "changed": [
+                "address",
+                "fiscalNumber",
+                "location",
+                "zipCode"
+              ],
+              "after": {
+                "_id": {
+                  "$oid": "{{entities:2}}"
+                },
+                "name": "Cortiças Reunidas",
+                "paymentCondition": "Transferência a 30 dias",
+                "type": "Cliente e Fornecedor",
+                "__v": {
+                  "$numberInt": "0"
+                },
+                "address": "Lugar da Cortiça",
+                "fiscalNumber": "500999888",
+                "location": "Santa Maria da Feira",
+                "zipCode": "4535-000"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "entity-update-missing",
+      "title": "Update unknown entity",
+      "request": {
+        "method": "PUT",
+        "path": "/api/entity/0123456789abcdef01234567",
+        "auth": "admin",
+        "body": {
+          "name": "X",
+          "paymentCondition": "Pronto pagamento",
+          "type": "Cliente"
+        }
+      },
+      "response": {
+        "status": 400,
+        "contentType": "text/html; charset=utf-8",
+        "text": "Entidade não existe na bd"
+      },
+      "db": {}
+    },
+    {
+      "id": "entity-search",
+      "title": "Search as the UI sends it (prefix, case-insensitive)",
+      "request": {
+        "method": "POST",
+        "path": "/api/entity/search",
+        "auth": "admin",
+        "body": {
+          "name": "meta",
+          "nif": "",
+          "localidade": "",
+          "morada": "",
+          "codigoPostal": ""
+        }
+      },
+      "response": {
+        "status": 200,
+        "contentType": "application/json; charset=utf-8",
+        "json": [
+          {
+            "_id": "{{entities:1}}",
+            "name": "Metalúrgica do Vale do Ave, Lda.",
+            "fiscalNumber": "500100200",
+            "address": "Rua da Indústria, 12",
+            "zipCode": "4760-100",
+            "location": "Vila Nova de Famalicão",
+            "paymentCondition": "Pronto pagamento",
+            "type": "Cliente",
+            "__v": 0
+          }
+        ]
+      },
+      "db": {}
+    },
+    {
+      "id": "entity-search-partial-body",
+      "title": "Search with only name (other fields become ^undefined)",
+      "request": {
+        "method": "POST",
+        "path": "/api/entity/search",
+        "auth": "admin",
+        "body": {
+          "name": "a"
+        }
+      },
+      "response": {
+        "status": 200,
+        "contentType": "application/json; charset=utf-8",
+        "json": []
+      },
+      "db": {}
+    },
+    {
+      "id": "entity-search-no-match",
+      "title": "Search without match",
+      "request": {
+        "method": "POST",
+        "path": "/api/entity/search",
+        "auth": "admin",
+        "body": {
+          "name": "zzz",
+          "nif": "",
+          "localidade": "",
+          "morada": "",
+          "codigoPostal": ""
+        }
+      },
+      "response": {
+        "status": 200,
+        "contentType": "application/json; charset=utf-8",
+        "json": []
+      },
+      "db": {}
+    }
+  ]
+}

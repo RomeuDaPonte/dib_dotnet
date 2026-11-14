@@ -1,6 +1,6 @@
 # Dib4t — Rewrite plan: Node/React ➜ .NET (ASP.NET Core + Blazor WebAssembly)
 
-> Status: **Plan / not started** · Created 2026-11-12 · Updated 2026-11-13 (two databases: legacy untouched, new app on MongoDB 9.0.8 fed by legacy backups; port 3010; latest packages; test policy; responsive layout; NAS and printers not reachable from the dev network: converted from the legacy code, real-device checks deferred to the owner, §5.1)
+> Status: **Plan / not started** · Created 2026-11-12 · Updated 2026-11-14 (owner decisions: §14 answered, §9 decided, ADR-0001…0005 in `docs/decisions/`; N5 dropped) · 2026-11-14 (reference budget PDFs from the legacy code: 11 samples, PDF layout facts in §7.1, D22–D23, owner check N5) · 2026-11-14 (SSH command golden files from the legacy code, D19–D21, ESC byte in label templates, §5, §9) · 2026-11-14 (logging: every DB, HTTP, NAS and printer interaction logged to a local log store, Settings → Registos log viewer with search, daily 02:00 cleanup of logs older than one month, §3.3) · 2026-11-13 (two databases: legacy untouched, new app on MongoDB 9.0.8 fed by legacy backups; port 3010; latest packages; test policy; responsive layout; NAS and printers not reachable from the dev network: converted from the legacy code, real-device checks deferred to the owner, §5.1)
 > Source of truth for the behavior: `../back-end` (Node/Express/Mongoose) and `../front-end` (React 17 / MUI v4).
 
 ---
@@ -21,6 +21,7 @@ Rebuild the Dib4t ERP web app (budgets, jobs, entities, settings, dashboard, rea
 | C8 | **Tests ship with every feature** | No feature is done without **unit tests** and an **end-to-end (Playwright) test**. E2E tests also run the same scenario against the **old app** and compare behavior (§11). See the Definition of Done in §10. |
 | C9 | **Fix the legacy layout bugs** | The old UI breaks when the browser font size or zoom changes and at other screen resolutions. The new UI must be responsive and scale with font size and zoom (§8.4). Colors stay the same (C5); layout is allowed to differ. |
 | C10 | **No changes to the old app** | The legacy front-end, back-end, configuration and database (`mongo:4.1.4`, port 4002) stay exactly as they are. Tests and tooling use the old app as-is. |
+| C11 | **Everything is logged, and the logs can be searched in the app** | Every database interaction, every API request, every NAS (SSH) and printer (TCP) interaction, plus errors and background jobs, is logged. Settings has a **Registos** tab to view and search all logs. A job deletes logs **older than one month every day at 02:00**. Logging must have **minimal impact on performance**. The logs live in their own local store, **not** in the MongoDB database, so C4 still holds and backups do not contain them (§3.3). |
 
 ---
 
@@ -39,7 +40,7 @@ Rebuild the Dib4t ERP web app (budgets, jobs, entities, settings, dashboard, rea
 | SSH (prod) | **SSH.NET** (`Renci.SshNet`) | Replaces `ssh2-promise` for NAS folder operations. |
 | Label printer (prod) | `System.Net.Sockets.TcpClient` | Replaces `telnet-client` (raw TCP to port 9100, no negotiation, 1500 ms timeout). |
 | PDF | **PDFsharp 6 (MIT)** | The legacy PDF is laid out with absolute coordinates. PDFsharp draws at exact points, so it matches 1:1. QuestPDF is an option if its license fits. |
-| Logging | **Serilog** (console + rolling file) | Replaces winston; keeps an `uncaughtExceptions` style file sink. |
+| Logging | **Serilog** → console + **local SQLite log store** (batched, asynchronous) | Replaces winston. SQLite (one file on the log volume) gives indexed, full-text search for the Registos tab without adding anything to MongoDB (C4) and without another container (§3.3). |
 | Charts | MudBlazor `MudChart` (pie) | Replaces react-google-charts on the dashboard. |
 | Tests | xUnit v3, **AwesomeAssertions**, NSubstitute, **Testcontainers (`mongo:9.0.8`)**, **bUnit**, **Playwright** + axe-core | Unit, integration, component and E2E coverage. AwesomeAssertions is the Apache-2.0 fork of FluentAssertions, which became commercial in v8. |
 | Packaging | Docker (`mcr.microsoft.com/dotnet/aspnet:11.0`) | Same deployment style as the current apps. |
@@ -57,7 +58,8 @@ Rebuild the Dib4t ERP web app (budgets, jobs, entities, settings, dashboard, rea
 | BCrypt.Net-Next | 4.2.1 | |
 | SSH.NET | 2026.0.0 | |
 | PDFsharp | 6.5.0 | |
-| Serilog.AspNetCore / Serilog.Sinks.File | 10.0.0 / 7.0.0 | |
+| Serilog.AspNetCore | 10.0.0 | Brings Serilog 4.x, whose built-in batching (`IBatchedLogEventSink`) the log store sink uses. No `Serilog.Sinks.File`: the SQLite store replaces the rolling file. |
+| Microsoft.Data.Sqlite | 11.0.x | Log store (§3.3). Same release train as .NET 11; re-checked in Phase 1 with the other versions. |
 | Riok.Mapperly | 4.3.1 | |
 | xunit.v3 / xunit.runner.visualstudio / Microsoft.NET.Test.Sdk | 4.0.3 / 4.0.1 / 18.12.0 | |
 | AwesomeAssertions | 9.6.0 | |
@@ -116,14 +118,18 @@ dib4t-dotnet/
 │  │                              #   UpdateStateDates, SetNewStatistics, UpdateRegisteredValue, ...
 │  ├─ Dib4t.Application/          # Use-case services (BudgetService, JobService, ...), ports (interfaces):
 │  │                              #   I*Repository, INasFileShare, ILabelPrinter, IBudgetPdfGenerator,
-│  │                              #   IPasswordHasher, ITokenService, IDatabaseBackupService, ICurrentUser.
+│  │                              #   IPasswordHasher, ITokenService, IDatabaseBackupService, ICurrentUser,
+│  │                              #   ILogQueryService (Registos tab).
 │  │                              #   FluentValidation validators, Result<T>/Error types. Uses TimeProvider.
 │  ├─ Dib4t.Infrastructure/       # MongoDB (class maps, repositories, UpdateDefinition builders),
 │  │                              #   SSH.NET NAS adapter (+ NoOp adapter for non-prod), TCP label printer,
-│  │                              #   PDFsharp generator, .dibbak backup format, BCrypt, JWT.
+│  │                              #   PDFsharp generator, .dibbak backup format, BCrypt, JWT,
+│  │                              #   Logging/: SQLite log store + Serilog sink, Mongo command logger,
+│  │                              #   log query service, log cleanup job (§3.3).
 │  ├─ Dib4t.Contracts/            # Request/response DTOs shared by server and client (JSON shape = legacy API).
 │  ├─ Dib4t.Server/               # ASP.NET Core host: Controllers, auth handler, policies, exception
-│  │                              #   handler, Serilog, health checks, hosts the WASM client.
+│  │                              #   handler, Serilog + request logging, LogsController, hosted jobs
+│  │                              #   (log cleanup, scheduled backup), health checks, hosts the WASM client.
 │  └─ Dib4t.Client/               # Blazor WebAssembly: Pages, Components, Layout, Theme,
 │                                 #   typed API clients, state/view-model services, JS interop (clipboard,
 │                                 #   file download/upload streaming, localStorage).
@@ -157,9 +163,57 @@ SharedKernel  ←  Contracts  ←  Client
 - Options pattern with `ValidateDataAnnotations().ValidateOnStart()`: `MongoOptions`, `JwtOptions`, `NasOptions`, `PrinterOptions`.
 - **No secrets in the repo.** The legacy repo commits its JWT key and the SSH password in `config/default.json`. In the new repo they live in user-secrets (dev) and environment variables (prod). Rotating the SSH credential is recommended.
 - `TimeProvider` for every "now" (budget year, state dates, PDF date), so tests are deterministic.
-- `IExceptionHandler` returns `500 "Something failed."` as plain text (legacy parity) and logs the exception.
+- `IExceptionHandler` returns `500 "Something failed."` as plain text (legacy parity, D16) and logs the exception with its stack trace to the log store. The response carries the request id in an `x-request-id` header (the body stays the legacy text), so an error seen by a user can be found in Registos.
+- Logging everywhere, with minimal overhead: see §3.3.
 - Health check `/health` (Mongo ping).
 - `Result<T>` with typed errors (`NotFound`, `Validation`, `Conflict`, `BusinessRule`). Controllers map them to the **legacy status code and message** (§6).
+
+### 3.3 Logging and the log viewer (C11)
+
+**Where the logs live.** In a local **SQLite** file, `/app/logs/dib4t-logs.db` on the existing `dib4t-logs` volume (§12), **not** in MongoDB:
+- C4 forbids new collections in the `dib4t` database, and logs must not end up in `.dibbak` backups or be wiped by a restore. A restore does not touch the log store; the restore itself is logged.
+- SQLite runs inside the app process: no extra container, no network hop, and indexed queries plus full-text search (FTS5) for the Registos tab. A separate MongoDB database was considered and rejected, because it would share the 0.5 GB WiredTiger cache with the business data.
+- Settings: WAL journal, `synchronous=NORMAL`, `auto_vacuum=INCREMENTAL`, small page cache (8 MB). Schema: `logs(id INTEGER PRIMARY KEY, timestamp_utc INTEGER, level, category, source_context, message, exception, properties_json, request_id, user_name)`, indexes on `timestamp_utc`, `(level, timestamp_utc)`, `(category, timestamp_utc)` and `request_id`, plus an FTS5 table over `message`, `exception`, `properties_json`. A one-row `meta` table holds the schema version and the time of the last cleanup. All of this is part of the log store file only.
+- Console output stays on for `docker logs` (Warning and up in Production, to keep it small), with the Docker `json-file` log driver capped (`max-size: 10m`, `max-file: 3`).
+
+**What is logged.** Every entry has a timestamp (UTC), level, **category**, message template + structured properties, request id (trace id) and user name (from the token) when there is one.
+
+| Category | What | How (one central place, not code in every repository) | Level |
+|---|---|---|---|
+| `Database` | **Every MongoDB command** the app sends: command name, database, collection, duration (ms), result size (`n`, `nModified`, `nMatched`, returned documents), success or error code/message | MongoDB driver event subscriber (`ClusterConfigurator.Subscribe` on `CommandStartedEvent` / `CommandSucceededEvent` / `CommandFailedEvent`, matched by `RequestId`). Driver heartbeats and handshakes (`hello`, `isMaster`, `ping`, `saslStart`…) are skipped: they are not app interactions. **Command bodies and replies are never logged** (they contain password hashes and business data); only names, counts and timings | Information; failures Error; slow commands (> `Logs:SlowCommandMs`, default 500 ms) Warning |
+| `Database` | Use-case events that give the command log a meaning: budget created/cloned/revised (number), job created/state changed (number, from → to), user created/edited (email, roles), restore started/finished with the verification result, backup written | Application services, `LoggerMessage` source-generated methods | Information |
+| `Http` | **Every API request**: method, route template, status code, duration, user, request id. Request and response bodies are not logged | Serilog request logging middleware (one entry per request, not two). `GET /api/logs` itself at Debug, so browsing the logs does not flood them | Information; 4xx Warning; 5xx Error |
+| `Nas` | **Every SSH interaction** with the NAS: connect/disconnect, each command (the exact command text after escaping), exit code, stdout/stderr (trimmed to 2 KB), duration. The non-Production no-op adapter logs "would run: …" with the same command text | `INasFileShare` adapter (SSH.NET) | Information; failures Error; D4 check Warning |
+| `Printer` | **Every printer interaction**: IP, port, template, payload size, connect/send/close timings, result (including the legacy "no reply within 2 s" outcome, §5), errors | `ILabelPrinter` adapter (`TcpClient`) | Information; failures Error |
+| `App` | Startup (version, environment, Mongo `buildInfo.version` check), shutdown, configuration problems, unhandled exceptions with stack trace (D16) | Host + `IExceptionHandler` | Information / Error |
+| `Jobs` | Background jobs: log cleanup (rows deleted, duration), scheduled backup (file, size), each start/finish/failure | Hosted services | Information; failures Error |
+| `Auth` | Login success/failure (email, reason; never the password), invalid tokens, permission denied | Account service + auth handler | Information / Warning |
+
+**Never logged:** passwords, bcrypt hashes, JWTs, the `Jwt:Key`, SSH credentials, request/response bodies, Mongo command documents, file contents of backups. A Serilog destructuring policy masks properties named `password`, `token`, `key`, `secret`; an integration test fails if any of these appears in the log store after a full E2E run (§11).
+
+**Minimal performance impact.**
+- Logging calls never wait for disk: Serilog's built-in batching (`IBatchedLogEventSink`) puts events in a **bounded in-memory queue** (10,000 events). One background writer inserts them in **batches** (up to 1,000 events, or every 2 s) in a single transaction with a prepared statement. A full batch insert costs a few milliseconds and runs off the request path.
+- If the queue is full (only if the disk stalls), new events are **dropped instead of blocking requests**, and a Warning "N log entries dropped" is written when the queue drains.
+- Hot paths use `LoggerMessage` source-generated methods (no boxing or string formatting unless the level is enabled); the Mongo event handler only copies a few fields and enqueues; started/succeeded matching uses a `ConcurrentDictionary` keyed by `RequestId`.
+- Queries for the Registos tab run on the SQLite file, never on MongoDB, so viewing logs costs the business database nothing.
+- Expected volume (< 20 users): about 20–50k entries a day, 1–1.5 M rows for 30 days, a few hundred MB on disk. A size guard (`Logs:MaxSizeMB`, default 2048) deletes the oldest entries first if the file still grows past it.
+- **Budget:** at most **1 ms added to the p95 request time** and no measurable change in throughput, checked in the Phase 6 performance run (with and without logging, §10).
+- Levels can be changed per category at runtime from configuration (`Serilog:MinimumLevel:Override`) without a restart.
+
+**Cleanup job: every day at 02:00, deletes logs older than one month.**
+- `LogCleanupService : BackgroundService`, inside the app (no cron container, §12). It computes the next 02:00 in **`Logs:Cleanup:TimeZone`** (default `Europe/Lisbon`; the container itself runs in UTC) with `TimeProvider`, so tests can move time. In Lisbon 02:00 happens exactly once every day, also on the DST change days (the clock changes at 01:00 there); tests cover both days.
+- Deletes every entry with `timestamp < now − 1 calendar month` (`DateTimeOffset.AddMonths(-1)` in the configured time zone, e.g. 2027-03-31 02:00 → older than 2027-02-28 02:00). It deletes in chunks of 5,000 rows per transaction so the writer is never blocked for long, then runs `PRAGMA incremental_vacuum` and a WAL checkpoint to give the space back.
+- **Catch-up:** if the app was not running at 02:00, the job runs once at startup when the last successful cleanup (in the `meta` table) is more than 24 h old.
+- It logs its own result (category `Jobs`: rows deleted, duration, file size before/after), and an Error if it fails; it then retries at the next 02:00.
+- The schedule and retention are fixed by the requirement but kept in options (`Logs:Cleanup:At = 02:00`, `Logs:RetentionMonths = 1`) for tests. The scheduled database backup (§12) defaults to **03:00** so the two jobs never overlap.
+
+**Registos tab (Settings).** A new tab in `/landing/settings`, shown only with `canSeeDefinicoes` (same policy as the other settings tabs). New-app only, like `GET /api/account/me`, so it is listed in the legacy-comparison allow-list (§11).
+- Filters: **time range** (presets: last hour, today, 24 h, 7 days, 30 days; or from/to with date and time pickers; default last 24 h), **level** (multi-select), **category** (multi-select: Database, Http, Nas, Printer, App, Jobs, Auth), **user**, **request id**, and a **free-text search** over message, exception and properties (FTS5; prefix search, quoted phrases).
+- Results: newest first, **server-side paging with a keyset cursor** (`timestamp, id`), 100 rows per page with "Carregar mais"; the table never loads the whole log. Columns: time (local, `dd/MM/yyyy HH:mm:ss.fff`), level (colored chip with the theme status colors: error red, warning yellow, info default), category, user, message. A row expands to show all properties and the exception stack trace.
+- Clicking a request id filters to **every entry of that request** (the HTTP line, its Mongo commands, NAS/printer calls, errors), which is the main way to investigate a problem a user reports.
+- Optional auto-refresh (off by default, every 10 s when on, only for "now"-ending ranges).
+- Responsive like every page (§8.4): on phones the table becomes a list of cards; filters move to a collapsible panel.
+- API: `GET /api/logs?from&to&levels&categories&user&requestId&q&cursor&limit` (S, max `limit` 200) → `{ items: [...], nextCursor }`; `GET /api/logs/facets` (S) → known categories and users for the filter lists. Plain-text legacy-style errors for bad input (`400 "Filtro inválido: …"`).
 
 ---
 
@@ -288,8 +342,9 @@ Before any code, run an aggregation per collection (`$objectToArray` + `$type`) 
 | `POST /api/job/print/:budgetId` | Non-prod → `400 "Só funciona em produção!"`. Prod: print selected templates (`producao`/`maquinacao`) to all matching printers. Error if none is configured. | `LabelPrintingService`. |
 
 **Label printer protocol** (`PrinterSettings.print`): raw TCP to `ip:port`, connect timeout 1500 ms, send the template string, close, swallow errors (logged; returns false). Templates (date is `job.startDate` as `d/M/yyyy`, no zero padding, server local time):
-- `producao`: `"\n      ia3,^TS001{num},{date},{descriptive},{client},{num},\n      "` (the leading/trailing whitespace is part of the payload)
-- `maquinacao`: `"ia3,^TS002{num},{date},{descriptive},{client},"`
+- `producao`: `"\n      \x1Bia3,^TS001{num},{date},{descriptive},{client},{num},\n      "` (the leading/trailing whitespace is part of the payload)
+- `maquinacao`: `"\x1Bia3,^TS002{num},{date},{descriptive},{client},"`
+- `\x1B` is a literal **ESC** byte in the legacy source (invisible in most editors): `ESC i a 3` switches the printer to template mode. Found while recording the SSH golden files (2026-11-14); the recorded payloads with exact hex bytes are in `tests/fixtures/legacy/ssh/ssh-commands.json` (`printer` events).
 
 **Wire behavior, derived from the legacy code** (`models/printerSettings.js` + `telnet-client` 1.4.9 `lib/index.js`, no capture needed):
 - Connect with `negotiationMandatory: false`, so `connect()` resolves as soon as the TCP connection is up; nothing is written before the payload (`initialLFCR`/`initialCTRLC` are off).
@@ -314,6 +369,7 @@ The NAS (`192.168.2.10`) and the label printers are **not reachable from the dev
 | N2 | Budget create/clone/rename and job create make and move the expected folders under `/share/Orçamentos` and `/share/Obras` (compare with the old app on a test client/budget). | Phase 3, Phase 4 |
 | N3 | Both label templates (`producao`, `maquinacao`) print correctly on the real printers, including accented text. | Phase 4 |
 | N4 | Deploy on the NAS, with NAS/printer side effects off until switch-over (§4.7). | Phase 6 |
+| ~~N5~~ | ~~Time zone of the legacy back-end container~~. **Not needed** (2026-11-14): D23 decided to print the Europe/Lisbon date, so the new app does not depend on the legacy container's time zone. | — |
 
 ---
 
@@ -361,6 +417,7 @@ Auth column: **A** = anonymous, **T** = token, **S** = token + `canSeeDefinicoes
 | | `PATCH dueDate/:id`, `statisticsDates/:id`, `register/:id`, `state/:id`, `changeJobPriority/:id`, `singleProperty/:id`, `updateVerifications/:id` | T | see §7.3 |
 | | `POST /api/job/print/:budgetId` | T | prod only |
 | Database | `GET /api/database/info`, `GET /api/database/backup`, `POST /api/database/restore` | S | §7.6 |
+| Logs | `GET /api/logs`, `GET /api/logs/facets` | S | **New-app only** (C11): search the log store with filters and a keyset cursor (§3.3). Not in the legacy comparison |
 
 ---
 
@@ -376,14 +433,19 @@ Auth column: **A** = anonymous, **T** = token, **S** = token + `canSeeDefinicoes
 - **Patch whitelist & validation**: `total`, `daysNeededToDoTheWork` (number ≥ 0), `paymentMethod`, `description` (non-empty string), `margin` (number ≥ 1), `complete` (bool), `validity` (int ≥ 1).
 - **Menu actions**: "Obter pdf" (if complete), "Detalhes obra" + "Imprimir" (if has job), "Clonar" (always), "Nova revisão" (complete && !hasJob), "Criar obra" (complete && pdfDownloaded && !hasJob).
 - **Copy path** (clipboard): with a job → `D:\NAS\Obras\{jobStartYear or 20+YY}\{client}\{num} - {desc}` + `\CAD` (dev/approval/approved), `\CAM` (machining), root otherwise; without a job → `\\DIB4T\Orçamentos\{budgetYear}\{client}\{num} - {desc}`.
-- **PDF** ("Proposta comercial", A4, Roboto): reproduce the pdfmake layout exactly. Logo (from `helpers/logoForPdf.js`, base64 JPEG → embedded resource) 80 pt wide at (30,10). Title at (424,70) 15 pt bold. Lines at y=95 (2 pt) and y=320 (1 pt) from x=20 to x=580. Grey rect `#eff0f2` at (270,145) 290×115. Company block (DIB4T LDA, address, NIF, email, site, document date `d/M/yyyy`, issuer name/email). Client block. "Descritivo", "Designação técnica" + justified description. Delivery time ("N semanas" if days > 7, ceil(days/7), else "N dias"), validity, payment terms, VAT note, Total (right-aligned, 18 pt). The canvas coordinates are offset by the 40 pt page margins. **Acceptance = visual diff (pixel compare) against PDFs generated by the legacy app for the same budgets.**
+- **PDF** ("Proposta comercial", A4, Roboto): reproduce the pdfmake layout exactly. Logo (from `helpers/logoForPdf.js`, base64 JPEG → embedded resource) 80 pt wide at (30,10). Title at (424,70) 15 pt bold. Lines at y=95 (2 pt) and y=320 (1 pt) from x=20 to x=580. Grey rect `#eff0f2` at (270,145) 290×115. Company block (DIB4T LDA, address, NIF, email, site, document date `d/M/yyyy`, issuer name/email). Client block. "Descritivo", "Designação técnica" + justified description. Delivery time ("N semanas" if days > 7, ceil(days/7), else "N dias"), validity, payment terms, VAT note, Total (right-aligned, 18 pt). The canvas coordinates are offset by the 40 pt page margins. **Acceptance = visual diff (pixel compare) against PDFs generated by the legacy app for the same budgets**: `tests/fixtures/legacy/pdf/` (11 real budgets from the anonymized fixture, see its `README.md`). Facts found with them (Phase 0):
+  - Every element is absolutely positioned: long texts wrap at the right margin and **overlap** the next fixed line (long client name over the address, long payment condition over the VAT line). The new app lets these blocks **grow downward** instead (D22, ADR-0005).
+  - The description flows across pages; as soon as it needs a second page the whole footer (dotted line, delivery, validity, payment, VAT, Total) moves to **page 2**, even when the description continues on page 3.
+  - Revision 0 prints `Nº YY-NNNN ` (trailing space), revision n `Nº YY-NNNN | R n`. Legacy document date `d/M/yyyy` in **UTC**; the new app prints the **Europe/Lisbon** date (D23). Total = JS `Number#toString()` (`4143.75`, `222000`, no thousands separator) + `" €"`.
+  - Glyphs missing from pdfmake's Roboto (`₂`, `₃`, U+F0A7) draw `.notdef`; tabs are not expanded to tab stops. PDF 1.3, A4 `595.28 × 841.89`, info `Producer`/`Creator` = `pdfmake`; `CreationDate` and subset tags are not compared.
 
 ### 7.2 Entities and settings
 - Entity CRUD; client-side filter on name (case-insensitive), location and type.
 - Users: create/edit dialog with roles as checkboxes (`canSeeOrcamentos`, `canSeeObras`, `canSeeAdjudicacoes`, `canSeeEntidades`, `canSeeDefinicoes`, `canSeeDashboard`, `canSeeLeituras`) and field of competencies; password + confirmation.
 - Prices (single doc), payment methods (add on Enter, delete), printers (list + add/edit/delete form, IPv4 regex).
 - Startup seeding (idempotent, same checks): default prices `{automation 10, consultancy 10, development 10, margin 35, machining 10, assembly 10}` if none; admin user `userlogado@gmail.com` (same hash, same roles) if missing.
-- Info tab: "Webapp ERP", Software ID `69988ec8-c573-4799-bafc-0b6d30340961`, version (bump to 1.0.0 for the new app, or keep 0.9.1: open question), "2018, DIB4T".
+- **Registos tab (new, C11)**: view and search all logs (filters, full-text search, request drill-down), §3.3.
+- Info tab: "Webapp ERP", Software ID `69988ec8-c573-4799-bafc-0b6d30340961`, version **1.0.0** (ADR-0003; legacy shows 0.9.1), "2018, DIB4T".
 
 ### 7.3 Jobs
 - **Create**: budget must exist; no other budget with the same number may have `hasGenerateJob`; revision 0 must exist; mark the budget `hasGenerateJob`; job from the form (`finalPrice`, `dueDate`, initial `state`, `orderIdentification`, `isOfficialOrderIdentification`), `createdBy = token.name`; `SetNewStatistics(tasks)`: zero the costs; budgeted hours per type (dev/machining/assembly = Σ quantity of tasks of that type); deviation = budgeted; priority `Média`. Then prod NAS + labels.
@@ -391,7 +453,7 @@ Auth column: **A** = anonymous, **T** = token, **S** = token + `canSeeDefinicoes
 - **Registered values** (`register`): development→dev hours, assembly→assembly hours, machining→machining hours, automation, components, others, `custoNaoQualidade`→costNonQuality, `materials`.
 - **Single property** whitelist: deliveryDate (only in Montagem / Para faturação, else 400), orderIdentification, isOfficialOrderIdentification, comments, invoicedPercent, with Mongoose-like casting (string → number/date/bool).
 - **Verifications**: replace the machining or assembly sub-document (validatedBy = current user name, set by the client today; the new server should set it from the token).
-- **Counters** per state; **dashboard**: for jobs in Para faturação/Faturada with `startDate` between `{year}-01-01` and `{year}-12-31` (UTC midnight), counts of `validTryOnFirstTest` "1"/"2"/"3".
+- **Counters** per state; **dashboard**: for jobs in Para faturação/Faturada with `startDate` in the year (legacy: `{year}-01-01` to `{year}-12-31` UTC midnight, Dec 31 excluded; new app: the whole year in Europe/Lisbon, D10), counts of `validTryOnFirstTest` "1"/"2"/"3".
 - **Jobs UI**: tabs Todas/Desenvolvimento/Em aprovação/Aprovadas/Maquinação/Montagem/Para faturação/Faturadas (billed + deleted, sorted by due date) with counts. The **initial tab comes from the user's `fieldOfCompetencies`**. Columns: Nº, Cliente, Descritivo, Data de início, Finalizar até (date picker + countdown icon: red when ≤ 0 days, yellow 1–4, green 5–9, "9+" beyond; hidden for invoicing/billed/deleted), priority icon (Alta yellow ↑, Baixa blue ↓), Estado (red when Apagada), "Ft %" in the invoicing tab. Actions: copy path, comments modal (only when comments exist; info icon `#535bd5`), change state menu (Faturada/Eliminar only from Para faturação), priority/print menu, order check icon (lightGreen), delivered icon (lightGreen), non-conformity warning (red) when any Nok or validTryOnFirstTest ≠ "1". Statistics modal fields depend on the current state (§ legacy `jobStatisticsModal.jsx`, `useJobStatisticsForm.js`). Dense-table toggle, pagination 5/10/25 (default 25), sortable columns.
 - **Job details page**: header boxes (job no., client/descriptive/ATT, ORC author+date, job creator+start date, delivery validatedBy+date [editable], invoice invoicedBy+percent [editable]+date, order identification + official checkbox, state icon). Cost summary (tasks total, budget total, registered expenses, profit € and % with profit **lightgreen** / loss **red**). State end-date editors. Cost table rows (Development, Components, Automation, Assembly, Machining, Materials, Others, Non-quality cost) with live deviation using `JobCostCalculations` (port of `taskHelper.js`, including the average-hour-price rule and the fallback to configured prices when nothing was budgeted). Observations. Verifications (Nok/Ok checkbox pairs + first-test select, validatedBy).
 
@@ -421,7 +483,7 @@ Every `/landing/*` route requires auth (`[Authorize]` + `AuthorizeRouteView`). M
 ### 8.2 Client architecture
 - `AuthenticationStateProvider` reads the JWT from **`localStorage["token"]`** (legacy: `sessionStorage`; changed so the login is never lost, §4.6), decodes the claims for the UI (name, roles, fieldOfCompetencies), and syncs logout across tabs.
 - `AuthHeaderHandler : DelegatingHandler` adds `x-auth-token`. A global error handler shows "An anexpected error occurred" for non-4xx errors (legacy text) and passes 4xx bodies to the caller.
-- Typed clients: `IAccountApi`, `IBudgetApi`, `ITaskApi`, `IEntityApi`, `IJobApi`, `IPricesApi`, `IPrinterSettingsApi`, `IDatabaseApi`.
+- Typed clients: `IAccountApi`, `IBudgetApi`, `ITaskApi`, `IEntityApi`, `IJobApi`, `IPricesApi`, `IPrinterSettingsApi`, `IDatabaseApi`, `ILogsApi`. Page state `LogsState` (filters, cursor paging, auto-refresh).
 - Page state services (scoped): `BudgetsState`, `BudgetDetailsState` (replaces BudgetContext + CanBudgetBeEdited), `JobsState`, `JobDetailsState` (replaces JobContext + JobResultsContext), `JobStatisticsState`. Components bind to them and raise intents; the state services call the API clients.
 - Shared calculations come from `Dib4t.SharedKernel` (the same code the server uses), so client and server numbers agree.
 - Notifications: MudBlazor `ISnackbar`, **top-right**, success / error / warning / info. Original Portuguese texts are kept verbatim.
@@ -487,25 +549,33 @@ Screenshots of the matrix are kept as baselines (Playwright visual comparison) s
 
 ## 9. Legacy defects found during analysis: decide per item (keep for parity vs. fix)
 
-None of the fixes needs a DB change, and none touches the old app (C10): fixes are made in the new app only. **Recommendation** column = suggested default.
+None of the fixes needs a DB change, and none touches the old app (C10): fixes are made in the new app only. **Decided 2026-11-14**: the owner accepted every recommendation below and decided the open items (D10, D18, D21, D22, D23); record: `docs/decisions/0005-legacy-defects.md`.
 
 | # | Legacy behavior (file) | Impact | Recommendation |
 |---|---|---|---|
 | D1 | `PATCH /job/state/:jobId` looks up `req.params.id` (undefined) → always `400 "Obra não existe"` (`routes/job.js`) | "Eliminar" and moving jobs out of Faturada/Apagada never work | **Fix** (use `jobId`) |
 | D2 | `DELETE /account/:id` calls `remove(req.param.id)` → `User.deleteOne(undefined)` **deletes the first user** (`routes/account.js`) | Dangerous; not used by the UI | **Fix** (delete by id); keep it out of the UI |
-| D3 | Job creation in prod: `updateFolderPath` references an undefined `newValues` when revision > 0 and the descriptive changed → 500 after the job is saved, folders not moved, labels not printed (`models/budget.js`) | Prod data/NAS inconsistency | **Fix**: implement the intended rename (rev-0 descriptive → current) |
-| D4 | `moveBudgetFolderToJobs` compares a Promise with `< 1`, so the check never runs (`helpers/pathHlelper.js`) | Silent NAS failures | Run the real check, but **log a warning** instead of failing (same user-visible outcome) |
+| D3 | Job creation in prod: `updateFolderPath` references an undefined `newValues` when revision > 0 and the descriptive changed → 500 after the job is saved, folders not moved, labels not printed (`models/budget.js`). Real data: 11 such revisions, **5 jobs** made from them (`tests/fixtures/legacy/ssh/folder-name-chars.json`) | Prod data/NAS inconsistency | **Fix** together with D19: take the **source** folder from revision 0 (its date year and descriptive: where legacy created/renamed it); the `/share/Obras` destination keeps the legacy formula (the job's revision) |
+| D4 | `moveBudgetFolderToJobs` compares a Promise with `< 1`, so the check never runs; the two `test -d` commands are also **not awaited** and use paths **relative to the SSH home** (`share/Obras/…`), so even awaited they would test the wrong folder (`helpers/pathHlelper.js`) | Silent NAS failures | Run the real check on the **absolute** paths, but **log a warning** instead of failing (same user-visible outcome) |
 | D5 | Budget folder rename on `PUT /budget/:id` is **not** gated by prod | Fails outside prod | Gate it with the environment like the other NAS calls |
 | D6 | Budget create in prod: if folder creation fails → 500, budget saved **without its default task** (the details page then never renders) | Broken budget | **Fix the order**: create the default task before the NAS step |
 | D7 | `validateUpdateBudget` returns the error object instead of `{error}`, so validation is skipped | Weak validation | Apply the intended validation (the UI always sends the fields) |
 | D8 | `POST /api/task` always fails validation (`budgetId` "not allowed") | Unused by the UI | Implement as intended |
 | D9 | Budget search uses the user input as a raw regex | Power-user feature / 500 on bad input | Keep the regex semantics; invalid regex → 400 instead of 500 |
-| D10 | Dashboard year range ends at `{year}-12-31T00:00Z` (Dec 31 excluded) | Minor stats skew | Keep for parity (or fix and announce) |
+| D10 | Dashboard year range ends at `{year}-12-31T00:00Z` (Dec 31 excluded) | Minor stats skew | **Fix** (decided 2026-11-14, ADR-0005): whole calendar year in Europe/Lisbon, `[1 Jan, 1 Jan next year)` |
 | D11 | Job `priority` default resolves to `undefined` | Old jobs without priority | Keep the read behavior (treated as low, no icon) |
 | D12 | JWT without expiry, short hard-coded key | Security | **Keep no expiry** (decided: users stay logged in until they press logout, §4.6). **Fix the key** in the new app only: own ≥ 256-bit key from secrets, not in the code. The old app is left as is (C10) |
 | D13 | Import modal sets `total + 1` to force a reload (front-end) | Hack | Replace with an explicit reload in `BudgetDetailsState` |
 | D14 | "Lembrar" (remember me) checkbox does nothing | Cosmetic | Remove it: the new app always remembers the login (§4.6) |
 | D15 | `canSeeAdjudicacoes` role exists in the UI but not in `GET /roles` | Cosmetic | Keep |
+| D16 | `middleware/error.js` ("Something failed.") is never registered: unhandled errors return **Express's default HTML page with the stack trace** (local paths, code lines), status 500 (`startup/routes.js`; recorded in the characterization fixtures) | Information leak; ugly error text in the UI | **Fix** (decided 2026-11-14): plain-text `500 "Something failed."` (the intended legacy behavior) with the request id in the `x-request-id` header; exception and stack trace only in the log store, visible in Settings → Registos (§3.3). The comparison allow-lists `expressErrorPage` → this text |
+| D17 | `PATCH /job/statisticsDates/:id` on a job that has no `jobStatisticsDates` yet (no statistics submitted) → 500 (`models/job.js`) | The date pickers fail on new jobs | **Fix**: create the sub-document like `setStatistics` does |
+| D18 | `PATCH /job/register` with `taskType: "consultancy"` does nothing (`case development \|\| consultancy` only matches development) (`models/job.js`) | Registered consultancy hours are lost | **Fix** (decided 2026-11-14, ADR-0005): `consultancy` sets `devStatistic.numberOfHoursUsed` like `development` |
+| D19 | Job creation in prod from a revision dated in a **later year** than revision 0: the move uses the revision's year, but the folder is under revision 0's year → `mv` fails → 500 after the job is saved, empty `Obras/…/CAD`, `CAM` left behind, folders not moved, no labels (`routes/job.js`). Recorded: `ssh-golden` scenario `job-create-rev1-later-year`. Real data: 21 such revisions, **8 jobs** made from them | Prod NAS inconsistency around new year | **Fix** with D3 (source folder from revision 0). Owner check N2 |
+| D20 | A `'` in the client name or descriptive breaks the single-quote concatenation → `sh` syntax error → 500; on create the budget is saved **without its default task** and no folder exists (`models/budget.js`, `helpers/pathHlelper.js`). Scenarios `budget-create-apostrophe-*`. Real data: 0 | Broken budget, shell injection risk | **Fix**: quote every argument correctly (§5 "SSH safety"); the resulting path is the intended literal one |
+| D21 | A `/` in the descriptive creates **nested** folders (`…/26-0001 - Suporte 30/40 mm`); renaming to a descriptive with `/` fails (`mv` target parent missing → 500, edit not saved). Scenarios `*-slash-*`. Real data: 0 | Odd folder tree | Keep the resulting paths for existing budgets (parity, so job creation finds the folders); **reject `/` in new or changed descriptives** with 400 (decided 2026-11-14, ADR-0005) |
+| D22 | Budget PDF: every text is absolutely positioned, so long values wrap onto the next fixed line and **overlap** it: a long client name over the address, a long payment condition over the VAT line (`helpers/budgetPdfGenerator.js`; samples `02`, `10` in `tests/fixtures/legacy/pdf/`) | Hard-to-read proposals for some clients | **Fix** (decided 2026-11-14, ADR-0005): blocks grow downward (footer moves up if it would pass the bottom margin); visual diff allow-lists samples `02`, `10` |
+| D23 | Budget PDF "Data do Documento" uses the server's local time; the legacy container most likely runs in UTC (its dockerfile sets no `TZ`), so a budget created 23:00–24:00 UTC in summer (00:00–01:00 Lisbon) shows the **previous day** (sample `09`). Real data: **37 of 3,397** budgets | Rare off-by-one date on proposals | **Fix** (decided 2026-11-14, ADR-0005): print the **Europe/Lisbon** date (`App:TimeZone`); sample `09` expects `25/5/2022` |
 
 ---
 
@@ -541,11 +611,25 @@ None of the fixes needs a DB change, and none touches the old app (C10): fixes a
   - Checks: built-in leak check (no output string equals or contains any original scrambled value); the inventory of the anonymized file is **identical** to the original's in every property (paths, presence, types, nulls, Int32/Double split, array sizes, enum values, non-NFC and date-like counts); restores into the legacy app; login with `utilizador02@dib4t.local` / `dib4t-dev` works; pages render.
   - `.gitignore`: `*.dibbak` ignored except `tests/fixtures/legacy/*.anon.dibbak`.
 - [x] Run the data-shape inventory (§4.5) → fixtures. Findings in §4.5; `docs/data/legacy-data-shapes.md`, `tests/fixtures/legacy/data-shapes.json`.
-- [ ] **Record characterization fixtures** from the legacy API: a scripted run (e.g. `.http`/Playwright API) of every endpoint in §6 against a seeded DB; save requests, responses and the resulting DB documents as golden files.
+- [x] **Record characterization fixtures** from the legacy API: a scripted run (e.g. `.http`/Playwright API) of every endpoint in §6 against a seeded DB; save requests, responses and the resulting DB documents as golden files.
+  - `legacy.sh characterize` (`tools/legacy/characterize.cs`, .NET file-based app) on a **fresh** legacy DB → `tests/fixtures/legacy/characterization/` (format, normalization and findings in its `README.md`). **216 steps** over every §6 route: happy paths, Joi errors, every legacy status/message, auth failures (no/invalid token, missing settings role), case-insensitive routing, the full job state workflow incl. the 405, backup/restore. The scenario builds its own data (users, settings, entities, budgets with revisions/clones/imports, 3 jobs).
+  - Per step: request (method, path, auth label, body), response (status, content type, JSON/text) and the DB changes (inserted/updated with changed fields/deleted) as **canonical Extended JSON**, so BSON types are part of the contract. MongoDB.Driver 3.x refuses MongoDB 4.1.4 (needs 4.4+), so the DB is read after each step through the legacy backup endpoint (raw BSON, no side effects).
+  - Normalized (ids → `{{collection:n}}`, run-time dates → `{{now}}`, year → `{{yy}}`/`{{yyyy}}`, JWT, bcrypt, PDF/backup bodies summarized, local paths scrubbed). **Deterministic**: three runs on fresh DBs gave byte-identical files (2026-11-14).
+  - Not covered: production-only NAS/printer paths and the D5 rename (never triggered, §5.1), the 409 busy lock (Phase 5).
+  - New findings: D16–D18 in §9; D1, D2, D7, D8, D9 confirmed by recorded steps.
 - [x] Printer bytes: derived from the legacy code instead of a capture (§5, "Wire behavior"): `UTF8(template + "\n")`, then close.
-- [ ] SSH commands: write the expected command sequences per operation (budget create/clone/rename, job create) **from the legacy code** as golden files (§5.1). No NAS access.
-- [ ] Sample PDFs for 5–10 real budgets (generated by the old app running locally; no NAS needed).
-- [ ] Decide the open questions (§14) and the defect list (§9).
+- [x] SSH commands: write the expected command sequences per operation (budget create/clone/rename, job create) **from the legacy code** as golden files (§5.1). No NAS access.
+  - `legacy.sh ssh-golden` (`tools/legacy/ssh-golden.js`, Node 16) runs the **unchanged** legacy routers and models against a throwaway DB `dib4t_ssh_golden` on the legacy `mongo:4.1.4` (the `dib4t` DB is never touched), with `ssh2-promise` replaced by a recorder on a **virtual NAS file system** (same resolve/reject semantics as `exec()`), `telnet-client` by a payload recorder and a virtual clock (`TZ=Europe/Lisbon`). No network access, SSH credentials never read.
+  - → `tests/fixtures/legacy/ssh/ssh-commands.json`: **22 scenarios** (create, clone, rename, job create; dev vs prod; NAS says folder missing; `'`, `/`, `"`, spaces, `$`/backticks, non-NFC names; revisions with another descriptive or year). Per command: the exact legacy string, its `sh` word split, and the effective **`ops` with absolute paths** = the contract for `INasFileShare` (Phase 3/4 tests against the `openssh-server` fake compare `ops` and the resulting folder tree). Contract per operation and findings: its `README.md`. Deterministic (two runs byte-identical, 2026-11-14).
+  - `folder-name-chars.json`: counts only, from the anonymized production fixture (punctuation and spaces kept): 0 names with `'` or `/`; **33 descriptives with leading/trailing spaces** (kept in folder names: never trim); 5 jobs hit D3 and 8 jobs hit the new D19.
+  - New findings: D19–D21 in §9; D3, D4 extended; the label templates start with an **ESC byte** (§5).
+
+- [x] Sample PDFs for 5–10 real budgets (generated by the old app running locally; no NAS needed).
+  - `legacy.sh pdf-samples` (`tools/legacy/pdf-samples.js`, Node 16) restores the anonymized production fixture into a throwaway DB `dib4t_pdf_samples` on the legacy `mongo:4.1.4` (`dib4t` never touched) and downloads each PDF through the **unchanged** `GET /api/budget/getPdf/:id` route, decoding the base64 body like the legacy UI. `TZ=UTC` (the legacy production container sets none), fixed clock for `CreationDate`, seeded `Math.random` for the font subset tags → **deterministic** (two runs byte-identical, 2026-11-14).
+  - → `tests/fixtures/legacy/pdf/`: **11 PDFs** picked by rules from real budgets (typical, revision, ≤ 7 days, longest description, most lines, no description, Double total, empty client fields, UTC-vs-Lisbon date, longest header texts, tabs/missing glyphs) + `manifest.json` (printed inputs, response headers, pages, fonts, sha256) + `README.md` (what each sample tests, layout facts, how to compare). 11 rather than 10: the special-characters case (586 tabs, Word bullets U+F0A7 in real descriptions) needed its own sample.
+  - Cross-checked against the running legacy app on `:3001` (fixture restored): 10 of 11 byte-identical apart from `CreationDate` and subset tags; `09` differs only in the date (host in Europe/Lisbon), as expected.
+  - New findings: multi-page and overlap behavior, number and date formats (§7.1 "PDF"); D22, D23 in §9; owner check N5 (§5.1).
+- [x] Decide the open questions (§14) and the defect list (§9). Owner answers 2026-11-14 → `docs/decisions/` ADR-0001…0005 (index in its `README.md`).
 - **Exit:** fixtures committed under `tests/fixtures/legacy`; decisions recorded in `docs/decisions/` (ADRs).
 
 ### Definition of Done (applies to every feature in every phase)
@@ -555,13 +639,15 @@ A feature is done only when all of these are in the same pull request:
 3. **bUnit tests** for components with logic (state-dependent rendering, enabling/disabling).
 4. **E2E test (Playwright)** for the user flow in the new app, **plus the legacy comparison**: the same scenario run against the old app (each app on its own database, both loaded from the same backup), comparing visible results and the resulting documents (§11).
 5. **Layout check**: the feature's pages pass the §8.4 responsive matrix.
-6. CI green; no new analyzer warnings.
+6. **Logging** (C11): the feature's use-case events are logged (§3.3); its DB, HTTP, NAS and printer interactions appear in the log store through the central logging, with no secret or body content. Checked in its integration tests.
+7. CI green; no new analyzer warnings.
 
 ### Phase 1: Foundation
 - [ ] Solution, projects and dependency rules (§3), `Directory.Build.props`, central packages, `.editorconfig`, analyzers, architecture tests.
 - [ ] CI pipeline (build, unit, integration, E2E incl. legacy comparison and layout matrix), Dockerfile, `docker-compose.dev.yml` (legacy: `mongo:4.1.4` + back-end + front-end, unchanged; new: `mongo:9.0.8` + new app on `:3010`; all `linux/amd64`).
 - [ ] E2E harness: Playwright fixture that loads the same seed backup into both databases (legacy restore on 4.1.4, new-app restore on 9.0.8), starts both apps, and exposes page objects for both UIs (§11).
 - [ ] **Backup restore (import) slice first**: `.dibbak` reader + restore endpoint (API only) so every later phase can load real legacy data into the new app and test on it.
+- [ ] **Logging foundation (C11, §3.3)**, before any feature so every later slice logs automatically: Serilog with the batched SQLite log-store sink (bounded queue, drop-not-block), console sink, destructuring policy for secrets, request logging middleware, Mongo command event logging (no command bodies), request id / user enrichment, `IExceptionHandler` (D16). Tests: batching and drop behavior, every Mongo command of a repository call produces one `Database` entry with collection and duration, no secret in the store, a 5xx response carries `x-request-id` and the matching Error entry exists.
 - [ ] Mongo infrastructure (MongoDB.Driver 3.13.0, startup version check, `retryWrites=false`): `JsNumberSerializer`, conventions, class maps for all 8 collections, round-trip tests against fixtures (read every variant, write, and check the BSON types match §4.3).
 - [ ] Auth: `JwtBearer` with the `x-auth-token` header and own key, tokens without expiry stored in `localStorage`, roles checked against the DB, `GET /api/account/me`, bcrypt verification of imported passwords, policies, login endpoint, **login page** and logout (synced across tabs). E2E: still logged in after closing and reopening the browser and after a server restart; logged out only by the logout button (and in every tab); a removed role disappears without a new login.
 - [ ] Blazor shell: MudBlazor theme (§8.3), **responsive** landing layout (§8.4: temporary/mini/permanent drawer), role-based menu, theme toggle, logout, snackbar, global HTTP error handling. Layout matrix test running from the first page.
@@ -569,6 +655,7 @@ A feature is done only when all of these are in the same pull request:
 
 ### Phase 2: Settings and entities
 - [ ] Users (list, create, edit), prices, payment methods, printers, info tab, startup seeding.
+- [ ] **Registos tab** + `GET /api/logs` / `facets` (filters, FTS search, keyset paging, request drill-down, auto-refresh, phone layout) and the **daily 02:00 log cleanup job** (time zone, DST days, month-end dates, catch-up at startup, chunked delete + vacuum, size guard). E2E: create a budget, then find its HTTP request and its Mongo commands in Registos by request id and by text search; a user without `canSeeDefinicoes` sees no tab and gets 401 from the API.
 - [ ] Entities: list/filter/sort/paginate, create/edit, types, clients list, search endpoint.
 - **Exit:** characterization tests green for account/prices/printer-settings/entity endpoints; import suite (§11.3) green for these collections.
 
@@ -576,14 +663,14 @@ A feature is done only when all of these are in the same pull request:
 - [ ] Budget list (latest revisions, search, revisions collapse, copy path, row menu), new/edit/clone dialogs, new revision, numbering (+ collision guard §4.7).
 - [ ] Budget details: header grid, live totals and margin colors, lock/unlock, import, tasks editor (save on blur), description + "Concluir", payment method.
 - [ ] PDF generation (PDFsharp) + download (base64 contract) + `wasPdfDownloaded`.
-- [ ] `INasFileShare` (prod SSH.NET / dev no-op) for create/clone/rename, converted from the legacy code and tested against the `openssh-server` fake only (§5.1). Real NAS: owner check N2.
+- [ ] `INasFileShare` (prod SSH.NET / dev no-op) for create/clone/rename, converted from the legacy code and tested against the `openssh-server` fake only (§5.1), with a `Nas` log entry per SSH command (§3.3). Real NAS: owner check N2.
 - **Exit:** PDF visual diff within tolerance; imported budgets of every kind (all revisions, locked, with/without job) open, edit, revise and clone in the new app.
 
 ### Phase 4: Jobs
 - [ ] Create job (dialog with due date = today + daysNeededToDoTheWork), prod NAS move + label printing (`ILabelPrinter`), converted from the legacy code and tested against fakes only (§5.1). Real NAS/printers: owner checks N2, N3.
 - [ ] Jobs board: tabs/counters, priority ordering, due-date picker + countdown icons, state menu, statistics modal per state (incl. 405 handling), comments modal, priority/print menu, icons.
 - [ ] Job details page: header, cost summary, state dates, cost table with live calculations, observations, verifications.
-- [ ] Print endpoint + print dialog.
+- [ ] Print endpoint + print dialog. Every printer interaction logged (`Printer` category, §3.3), tested against the TCP listener fake.
 - **Exit:** characterization tests for every job endpoint; printer golden bytes match the code-derived payload (§5); SSH command sequence matches the code-derived golden files (against a test SSH server in a container). Real-device checks N2/N3 (§5.1) are done by the owner and do not block this exit.
 
 ### Phase 5: Dashboard, readings, backup/restore
@@ -595,6 +682,7 @@ A feature is done only when all of these are in the same pull request:
 
 ### Phase 6: Hardening, UAT, side-by-side production run
 - [ ] Full regression run of the E2E suite (new app + legacy comparison) and the complete layout matrix; screenshot review with legacy in UAT.
+- [ ] Logging overhead check (C11): the E2E suite and a load run (20 simulated users) with and without logging; p95 request time may grow by at most 1 ms, queue never drops at that load; log store size after a simulated month stays within the estimate (§3.3).
 - [ ] Performance check (job lists with populated budgets: use `$lookup` aggregations instead of the legacy N+1 / load-all patterns, e.g. `getByBudgetNumber` loads every job today).
 - [ ] Security review (SSH escaping, authz on every endpoint, request size limits, no secrets in logs).
 - [ ] Owner on-site checks N1–N3 (§5.1) done before deploying.
@@ -625,7 +713,8 @@ Policy: tests are written **together with each feature** (Definition of Done, §
    - the resulting DB documents, field by field and by BSON type.
    Differences fail the test unless listed in an allow-list that points to a decided defect in §9 or a layout fix in §8.4. Generated values (`_id`s, dates, tokens) are normalized before comparing.
 8. **Layout matrix (E2E):** the §8.4 viewport × zoom × font-size checks and visual baselines for every page.
-9. **Production-only paths** are tested with fakes in E2E (test SSH server container, TCP listener for the printer) by running the new app with a test configuration that enables them; real NAS and printer are never touched by tests (they are not reachable from the development network; §5.1).
+9. **Logging (C11):** integration tests on a real SQLite file (sink batching, drop policy, FTS search, keyset paging, cleanup with `FakeTimeProvider` across DST and month ends, catch-up); Testcontainers test that each repository operation logs its Mongo commands without document content; a check after the full E2E run that no password, hash, token or key appears in the log store.
+10. **Production-only paths** are tested with fakes in E2E (test SSH server container, TCP listener for the printer) by running the new app with a test configuration that enables them; real NAS and printer are never touched by tests (they are not reachable from the development network; §5.1).
 
 ---
 
@@ -636,9 +725,9 @@ Policy: tests are written **together with each feature** (Definition of Done, §
 | # | Container | Image | What it does |
 |---|---|---|---|
 | 1 | `dib4t-db` | `mongo:9.0.8` (`linux/amd64`) | The new database. Volume for `/data/db`. Not published on a host port. |
-| 2 | `dib4t-app` | `dib4t-dotnet` (built from `mcr.microsoft.com/dotnet/aspnet:11.0`) | One ASP.NET Core process that serves **everything**: the Blazor WebAssembly files, the `/api` endpoints, the health check, the NAS (SSH) and printer (TCP) calls, and the scheduled backups. Port `3010`. |
+| 2 | `dib4t-app` | `dib4t-dotnet` (built from `mcr.microsoft.com/dotnet/aspnet:11.0`) | One ASP.NET Core process that serves **everything**: the Blazor WebAssembly files, the `/api` endpoints, the health check, the NAS (SSH) and printer (TCP) calls, the scheduled backups, the log store and the daily log cleanup (§3.3). Port `3010`. |
 
-Nothing else runs: no separate front-end or web server (Kestrel serves the static WASM files), no reverse proxy, no cron or backup container, no migration or seeding job (seeding of the admin user and the startup checks run inside the app), no message queue or cache. The test-only containers (legacy app on `mongo:4.1.4`, SSH server, printer listener) exist only in CI and on developer machines.
+Nothing else runs: no separate front-end or web server (Kestrel serves the static WASM files), no reverse proxy, no cron, backup or log container (the 02:00 log cleanup and the backups are hosted services in the app), no migration or seeding job (seeding of the admin user and the startup checks run inside the app), no message queue or cache. The test-only containers (legacy app on `mongo:4.1.4`, SSH server, printer listener) exist only in CI and on developer machines.
 
 **Memory (fewer than 20 users):** about **1.5 GB in total** is enough: database 1 GB (0.5 GB WiredTiger cache + the server's own overhead), app 512 MB (typically 150–300 MB in use). The load comes from the size of the data, not from the number of users: the cache only needs to hold the data and indexes, which for this app is tens of MB: a backup exported from the old app (2026-11) is **under 2 MB** compressed, so roughly 10–20 MB of data. The limits above leave large headroom; no tuning is expected. The cache size must be set explicitly, because inside a container MongoDB otherwise sizes it from the NAS's total RAM and would take far too much.
 
@@ -663,7 +752,8 @@ services:
       ASPNETCORE_URLS: http://+:3010
       Mongo__ConnectionString: mongodb://dib4t-db:27017/dib4t?retryWrites=false
       # Jwt__Key, Nas__* from an env file / Docker secrets, never in the repo
-    volumes: [ "dib4t-logs:/app/logs", "/share/<backup folder>:/app/backups" ]
+    volumes: [ "dib4t-logs:/app/logs", "/share/<backup folder>:/app/backups" ]   # /app/logs holds dib4t-logs.db (§3.3)
+    logging: { driver: json-file, options: { max-size: "10m", max-file: "3" } }
     depends_on: { dib4t-db: { condition: service_healthy } }
     restart: unless-stopped
 volumes: { dib4t-db-data: {}, dib4t-logs: {} }
@@ -681,9 +771,9 @@ NAS / server host (AMD RX-421ND, x86-64)
 ```
 - Development also runs the new app on `:3010` (legacy dev: front-end `:3000`, back-end `:3001`).
 - Config through env vars: `Mongo__ConnectionString`, `Jwt__Key`, `Nas__Host`, `Nas__User`, `Nas__Password` (or key file), Kestrel URL.
-- Container user without root privileges, health check, log volume.
+- Container user without root privileges, health check, log volume (SQLite log store, a few hundred MB for 30 days, capped by `Logs:MaxSizeMB`). Set `Logs:Cleanup:TimeZone` (default `Europe/Lisbon`); the container clock stays UTC.
 - Rollback: users go back to the old app, which was never changed. (After the switch-over, work done in the new app would have to be re-entered; the new app's own backups keep it.)
-- Backups of the new database: the backup feature in the UI (download `.dibbak`), plus a **scheduled backup inside the app** (`BackgroundService`, daily at a configurable time) that writes a `.dibbak` to the mounted NAS folder and keeps the last N files (`Backup:Schedule`, `Backup:Keep`). No extra container.
+- Backups of the new database: the backup feature in the UI (download `.dibbak`), plus a **scheduled backup inside the app** (`BackgroundService`, daily at a configurable time, default **03:00**, after the 02:00 log cleanup) that writes a `.dibbak` to the mounted NAS folder and keeps the last N files (`Backup:Schedule`, `Backup:Keep`). No extra container.
 
 ---
 
@@ -703,16 +793,20 @@ NAS / server host (AMD RX-421ND, x86-64)
 | Large backup files in the browser | Medium | JS streaming interop (§7.6) |
 | Legacy comparison tests are flaky (two UIs, timing) | Medium | Wait on network/DB state, not timeouts; run comparison on a dedicated seeded DB per test |
 | Responsive redesign drifts from the familiar look | Low/Medium | Same theme tokens and components; layout changes only where §8.4 requires; UAT review with users |
+| Logging slows the app or fills the disk | Low | Batched asynchronous writes off the request path, drop-not-block queue, no bodies logged, 1 ms p95 budget checked in Phase 6; daily cleanup + size guard (§3.3) |
+| Secrets or personal data leak into logs | Low/Medium | Never log bodies or Mongo command documents, masking policy, automated check over the log store after the E2E run; Registos only for `canSeeDefinicoes` |
 | Scope: legacy quirks reproduced by accident or "fixed" by accident | Medium | Characterization tests + explicit defect decisions (§9) |
 
 ---
 
 ## 14. Open questions (need an answer before or during Phase 0)
 
-Answered: two databases — the old app stays on its `mongo:4.1.4` unchanged, the new app has its own `mongo:9.0.8` (x86-64 Docker) filled by importing old-app backups (§2.2, §4); the new app runs on port **3010**; use the newest libraries (§2.1); no changes to the old app; during the pilot NAS folders and label printing are off in the new app and switched on at the switch-over (§4.7); login never expires, only logout ends it (§4.6).
+Answered: two databases — the old app stays on its `mongo:4.1.4` unchanged, the new app has its own `mongo:9.0.8` (x86-64 Docker) filled by importing old-app backups (§2.2, §4); the new app runs on port **3010**; use the newest libraries (§2.1); no changes to the old app; during the pilot NAS folders and label printing are off in the new app and switched on at the switch-over (§4.7); login never expires, only logout ends it (§4.6); errors and logs: every DB, HTTP, NAS and printer interaction is logged to a local log store, searchable in Settings → Registos, logs older than one month deleted daily at 02:00 (C11, §3.3).
 
-1. Hostname for the new app in production (port is 3010)?
-2. Smallest screen the app must support (phone, or tablet and up)? The plan assumes phones (360 px) work.
-3. Approve the defect decisions in §9 (especially D1, D3, D6).
-4. Version shown in the Info tab for the new app (`1.0.0`?).
-5. Are there other consumers of the API (scanner stations, scripts) that must keep working?
+Answered 2026-11-14 (records in `docs/decisions/`):
+
+1. ~~Hostname~~ → none: local network only, users open **`http://<NAS IP>:3010`**; plain HTTP, so no secure-context browser APIs (clipboard keeps the `execCommand` fallback) (ADR-0001).
+2. ~~Smallest screen~~ → **phones, tablets and desktops**, from 360 px (ADR-0002).
+3. ~~Defect decisions~~ → every proposed fix accepted; D10 fix, D18 count as intended, D21 reject `/`, D22 grow downward, D23 Lisbon date (ADR-0005, §9).
+4. ~~Version~~ → **1.0.0** (ADR-0003).
+5. ~~Other API consumers~~ → **none**: the legacy API only serves its own front-end (owner, corrected 2026-11-14). The §6 contract is still kept for the legacy comparison, but no legacy-token or `:4001` transition is needed (ADR-0004).

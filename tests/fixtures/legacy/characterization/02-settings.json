@@ -1,0 +1,833 @@
+{
+  "area": "02-settings",
+  "steps": [
+    {
+      "id": "prices-get",
+      "title": "Prices (fields only, no _id)",
+      "request": {
+        "method": "GET",
+        "path": "/api/prices",
+        "auth": "admin",
+        "body": null
+      },
+      "response": {
+        "status": 200,
+        "contentType": "application/json; charset=utf-8",
+        "json": {
+          "automation": 10,
+          "consultancy": 10,
+          "development": 10,
+          "machining": 10,
+          "assembly": 10,
+          "margin": 35
+        }
+      },
+      "db": {}
+    },
+    {
+      "id": "prices-get-limited",
+      "title": "Prices are readable without settings role",
+      "request": {
+        "method": "GET",
+        "path": "/api/prices",
+        "auth": "limited",
+        "body": null
+      },
+      "response": {
+        "status": 200,
+        "contentType": "application/json; charset=utf-8",
+        "json": {
+          "automation": 10,
+          "consultancy": 10,
+          "development": 10,
+          "machining": 10,
+          "assembly": 10,
+          "margin": 35
+        }
+      },
+      "db": {}
+    },
+    {
+      "id": "prices-update",
+      "title": "Update prices",
+      "request": {
+        "method": "POST",
+        "path": "/api/prices",
+        "auth": "admin",
+        "body": {
+          "automation": 32.5,
+          "consultancy": 45,
+          "development": 30,
+          "machining": 38,
+          "assembly": 28,
+          "margin": 35
+        }
+      },
+      "response": {
+        "status": 200,
+        "contentType": "application/json; charset=utf-8",
+        "json": {
+          "automation": 32.5,
+          "consultancy": 45,
+          "development": 30,
+          "machining": 38,
+          "assembly": 28,
+          "margin": 35
+        }
+      },
+      "db": {
+        "prices": {
+          "updated": [
+            {
+              "_id": {
+                "$oid": "{{prices:1}}"
+              },
+              "changed": [
+                "automation",
+                "consultancy",
+                "development",
+                "machining",
+                "assembly"
+              ],
+              "after": {
+                "_id": {
+                  "$oid": "{{prices:1}}"
+                },
+                "automation": {
+                  "$numberDouble": "32.5"
+                },
+                "consultancy": {
+                  "$numberInt": "45"
+                },
+                "development": {
+                  "$numberInt": "30"
+                },
+                "margin": {
+                  "$numberInt": "35"
+                },
+                "machining": {
+                  "$numberInt": "38"
+                },
+                "assembly": {
+                  "$numberInt": "28"
+                },
+                "__v": {
+                  "$numberInt": "0"
+                }
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "prices-update-validation",
+      "title": "Margin 0 → 400",
+      "request": {
+        "method": "POST",
+        "path": "/api/prices",
+        "auth": "admin",
+        "body": {
+          "automation": 1,
+          "consultancy": 1,
+          "development": 1,
+          "machining": 1,
+          "assembly": 1,
+          "margin": 0
+        }
+      },
+      "response": {
+        "status": 400,
+        "contentType": "text/html; charset=utf-8",
+        "text": "\"margin\" must be larger than or equal to 1"
+      },
+      "db": {}
+    },
+    {
+      "id": "prices-update-forbidden",
+      "title": "Prices update without settings role → 401",
+      "request": {
+        "method": "POST",
+        "path": "/api/prices",
+        "auth": "limited",
+        "body": {
+          "automation": 1,
+          "consultancy": 1,
+          "development": 1,
+          "machining": 1,
+          "assembly": 1,
+          "margin": 10
+        }
+      },
+      "response": {
+        "status": 401,
+        "contentType": "text/html; charset=utf-8",
+        "text": "Não tem permissão para concluir esta acção."
+      },
+      "db": {}
+    },
+    {
+      "id": "payment-conditions-empty",
+      "title": "Payment methods on a fresh DB",
+      "request": {
+        "method": "GET",
+        "path": "/api/entity/getAllPaymentConditions",
+        "auth": "admin",
+        "body": null
+      },
+      "response": {
+        "status": 200,
+        "contentType": "application/json; charset=utf-8",
+        "json": []
+      },
+      "db": {}
+    },
+    {
+      "id": "payment-method-add",
+      "title": "Add payment method",
+      "request": {
+        "method": "POST",
+        "path": "/api/entity/addPaymentMethod",
+        "auth": "admin",
+        "body": {
+          "name": "Pronto pagamento"
+        }
+      },
+      "response": {
+        "status": 200,
+        "contentType": "application/json; charset=utf-8",
+        "json": {
+          "_id": "{{paymentmethods:1}}",
+          "name": "Pronto pagamento",
+          "__v": 0
+        }
+      },
+      "db": {
+        "paymentmethods": {
+          "inserted": [
+            {
+              "_id": {
+                "$oid": "{{paymentmethods:1}}"
+              },
+              "name": "Pronto pagamento",
+              "__v": {
+                "$numberInt": "0"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "payment-method-add-2",
+      "title": "Add payment method with accents",
+      "request": {
+        "method": "POST",
+        "path": "/api/entity/addPaymentMethod",
+        "auth": "admin",
+        "body": {
+          "name": "Transferência a 30 dias"
+        }
+      },
+      "response": {
+        "status": 200,
+        "contentType": "application/json; charset=utf-8",
+        "json": {
+          "_id": "{{paymentmethods:2}}",
+          "name": "Transferência a 30 dias",
+          "__v": 0
+        }
+      },
+      "db": {
+        "paymentmethods": {
+          "inserted": [
+            {
+              "_id": {
+                "$oid": "{{paymentmethods:2}}"
+              },
+              "name": "Transferência a 30 dias",
+              "__v": {
+                "$numberInt": "0"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "payment-method-add-3",
+      "title": "Add payment method (deleted below)",
+      "request": {
+        "method": "POST",
+        "path": "/api/entity/addPaymentMethod",
+        "auth": "admin",
+        "body": {
+          "name": "Cheque"
+        }
+      },
+      "response": {
+        "status": 200,
+        "contentType": "application/json; charset=utf-8",
+        "json": {
+          "_id": "{{paymentmethods:3}}",
+          "name": "Cheque",
+          "__v": 0
+        }
+      },
+      "db": {
+        "paymentmethods": {
+          "inserted": [
+            {
+              "_id": {
+                "$oid": "{{paymentmethods:3}}"
+              },
+              "name": "Cheque",
+              "__v": {
+                "$numberInt": "0"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "payment-method-duplicate",
+      "title": "Duplicate payment method",
+      "request": {
+        "method": "POST",
+        "path": "/api/entity/addPaymentMethod",
+        "auth": "admin",
+        "body": {
+          "name": "Cheque"
+        }
+      },
+      "response": {
+        "status": 400,
+        "contentType": "text/html; charset=utf-8",
+        "text": "Modo de pagamento com esse nome já está registado"
+      },
+      "db": {}
+    },
+    {
+      "id": "payment-method-validation",
+      "title": "Payment method without name",
+      "request": {
+        "method": "POST",
+        "path": "/api/entity/addPaymentMethod",
+        "auth": "admin",
+        "body": {}
+      },
+      "response": {
+        "status": 400,
+        "contentType": "text/html; charset=utf-8",
+        "text": "\"name\" is required"
+      },
+      "db": {}
+    },
+    {
+      "id": "payment-method-delete",
+      "title": "Delete payment method (returns it)",
+      "request": {
+        "method": "DELETE",
+        "path": "/api/entity/deletePaymentMethod/{{paymentmethods:3}}",
+        "auth": "admin",
+        "body": null
+      },
+      "response": {
+        "status": 200,
+        "contentType": "application/json; charset=utf-8",
+        "json": {
+          "_id": "{{paymentmethods:3}}",
+          "name": "Cheque",
+          "__v": 0
+        }
+      },
+      "db": {
+        "paymentmethods": {
+          "deleted": [
+            {
+              "_id": {
+                "$oid": "{{paymentmethods:3}}"
+              },
+              "name": "Cheque",
+              "__v": {
+                "$numberInt": "0"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "payment-method-delete-missing",
+      "title": "Delete unknown payment method",
+      "request": {
+        "method": "DELETE",
+        "path": "/api/entity/deletePaymentMethod/0123456789abcdef01234567",
+        "auth": "admin",
+        "body": null
+      },
+      "response": {
+        "status": 400,
+        "contentType": "text/html; charset=utf-8",
+        "text": "Modo de pagamento não existe na base de dados"
+      },
+      "db": {}
+    },
+    {
+      "id": "payment-conditions",
+      "title": "Payment methods list",
+      "request": {
+        "method": "GET",
+        "path": "/api/entity/getAllPaymentConditions",
+        "auth": "admin",
+        "body": null
+      },
+      "response": {
+        "status": 200,
+        "contentType": "application/json; charset=utf-8",
+        "json": [
+          {
+            "_id": "{{paymentmethods:1}}",
+            "name": "Pronto pagamento",
+            "__v": 0
+          },
+          {
+            "_id": "{{paymentmethods:2}}",
+            "name": "Transferência a 30 dias",
+            "__v": 0
+          }
+        ]
+      },
+      "db": {}
+    },
+    {
+      "id": "printers-empty",
+      "title": "Printer settings on a fresh DB",
+      "request": {
+        "method": "GET",
+        "path": "/api/printer-settings",
+        "auth": "admin",
+        "body": null
+      },
+      "response": {
+        "status": 200,
+        "contentType": "application/json; charset=utf-8",
+        "json": []
+      },
+      "db": {}
+    },
+    {
+      "id": "printer-add-producao",
+      "title": "Add printer (producao)",
+      "request": {
+        "method": "POST",
+        "path": "/api/printer-settings",
+        "auth": "admin",
+        "body": {
+          "ip": "127.0.0.1",
+          "port": 9100,
+          "templateName": "producao"
+        }
+      },
+      "response": {
+        "status": 200,
+        "contentType": "application/json; charset=utf-8",
+        "json": {
+          "_id": "{{printersettings:1}}",
+          "ip": "127.0.0.1",
+          "port": 9100,
+          "templateName": "producao",
+          "__v": 0
+        }
+      },
+      "db": {
+        "printersettings": {
+          "inserted": [
+            {
+              "_id": {
+                "$oid": "{{printersettings:1}}"
+              },
+              "ip": "127.0.0.1",
+              "port": {
+                "$numberInt": "9100"
+              },
+              "templateName": "producao",
+              "__v": {
+                "$numberInt": "0"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "printer-add-maquinacao",
+      "title": "Add printer (maquinacao)",
+      "request": {
+        "method": "POST",
+        "path": "/api/printer-settings",
+        "auth": "admin",
+        "body": {
+          "ip": "127.0.0.2",
+          "port": 9100,
+          "templateName": "maquinacao"
+        }
+      },
+      "response": {
+        "status": 200,
+        "contentType": "application/json; charset=utf-8",
+        "json": {
+          "_id": "{{printersettings:2}}",
+          "ip": "127.0.0.2",
+          "port": 9100,
+          "templateName": "maquinacao",
+          "__v": 0
+        }
+      },
+      "db": {
+        "printersettings": {
+          "inserted": [
+            {
+              "_id": {
+                "$oid": "{{printersettings:2}}"
+              },
+              "ip": "127.0.0.2",
+              "port": {
+                "$numberInt": "9100"
+              },
+              "templateName": "maquinacao",
+              "__v": {
+                "$numberInt": "0"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "printer-add-validation-ip",
+      "title": "Invalid IP",
+      "request": {
+        "method": "POST",
+        "path": "/api/printer-settings",
+        "auth": "admin",
+        "body": {
+          "ip": "999.1.1.1",
+          "port": 9100,
+          "templateName": "producao"
+        }
+      },
+      "response": {
+        "status": 400,
+        "contentType": "text/html; charset=utf-8",
+        "text": "\"ip\" must be a valid ip address with a optional CIDR"
+      },
+      "db": {}
+    },
+    {
+      "id": "printer-add-validation-template",
+      "title": "Unknown template",
+      "request": {
+        "method": "POST",
+        "path": "/api/printer-settings",
+        "auth": "admin",
+        "body": {
+          "ip": "127.0.0.3",
+          "port": 9100,
+          "templateName": "outro"
+        }
+      },
+      "response": {
+        "status": 400,
+        "contentType": "text/html; charset=utf-8",
+        "text": "\"templateName\" must be one of [producao, maquinacao]"
+      },
+      "db": {}
+    },
+    {
+      "id": "printer-add-forbidden",
+      "title": "Printer route without settings role → 401",
+      "request": {
+        "method": "POST",
+        "path": "/api/printer-settings",
+        "auth": "limited",
+        "body": {
+          "ip": "127.0.0.3",
+          "port": 9100,
+          "templateName": "producao"
+        }
+      },
+      "response": {
+        "status": 401,
+        "contentType": "text/html; charset=utf-8",
+        "text": "Não tem permissão para concluir esta acção."
+      },
+      "db": {}
+    },
+    {
+      "id": "printers",
+      "title": "Printer list",
+      "request": {
+        "method": "GET",
+        "path": "/api/printer-settings",
+        "auth": "admin",
+        "body": null
+      },
+      "response": {
+        "status": 200,
+        "contentType": "application/json; charset=utf-8",
+        "json": [
+          {
+            "_id": "{{printersettings:1}}",
+            "ip": "127.0.0.1",
+            "port": 9100,
+            "templateName": "producao",
+            "__v": 0
+          },
+          {
+            "_id": "{{printersettings:2}}",
+            "ip": "127.0.0.2",
+            "port": 9100,
+            "templateName": "maquinacao",
+            "__v": 0
+          }
+        ]
+      },
+      "db": {}
+    },
+    {
+      "id": "printer-by-template",
+      "title": "Printers by template",
+      "request": {
+        "method": "GET",
+        "path": "/api/printer-settings/producao",
+        "auth": "admin",
+        "body": null
+      },
+      "response": {
+        "status": 200,
+        "contentType": "application/json; charset=utf-8",
+        "json": [
+          {
+            "_id": "{{printersettings:1}}",
+            "ip": "127.0.0.1",
+            "port": 9100,
+            "templateName": "producao",
+            "__v": 0
+          }
+        ]
+      },
+      "db": {}
+    },
+    {
+      "id": "printer-by-template-missing",
+      "title": "Unknown template → 404",
+      "request": {
+        "method": "GET",
+        "path": "/api/printer-settings/outro",
+        "auth": "admin",
+        "body": null
+      },
+      "response": {
+        "status": 404,
+        "contentType": "text/html; charset=utf-8",
+        "text": "Template settings not found."
+      },
+      "db": {}
+    },
+    {
+      "id": "printer-update",
+      "title": "Update printer",
+      "request": {
+        "method": "PUT",
+        "path": "/api/printer-settings/{{printersettings:1}}",
+        "auth": "admin",
+        "body": {
+          "ip": "127.0.0.11",
+          "port": 9101,
+          "templateName": "producao"
+        }
+      },
+      "response": {
+        "status": 200,
+        "contentType": "application/json; charset=utf-8",
+        "json": {
+          "_id": "{{printersettings:1}}",
+          "ip": "127.0.0.11",
+          "port": 9101,
+          "templateName": "producao",
+          "__v": 0
+        }
+      },
+      "db": {
+        "printersettings": {
+          "updated": [
+            {
+              "_id": {
+                "$oid": "{{printersettings:1}}"
+              },
+              "changed": [
+                "ip",
+                "port"
+              ],
+              "after": {
+                "_id": {
+                  "$oid": "{{printersettings:1}}"
+                },
+                "ip": "127.0.0.11",
+                "port": {
+                  "$numberInt": "9101"
+                },
+                "templateName": "producao",
+                "__v": {
+                  "$numberInt": "0"
+                }
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "printer-update-bad-id",
+      "title": "Update with a non-ObjectId id",
+      "request": {
+        "method": "PUT",
+        "path": "/api/printer-settings/abc",
+        "auth": "admin",
+        "body": {
+          "ip": "127.0.0.11",
+          "port": 9101,
+          "templateName": "producao"
+        }
+      },
+      "response": {
+        "status": 400,
+        "contentType": "text/html; charset=utf-8",
+        "text": "\"id\" with value \"abc\" fails to match the valid mongo id pattern"
+      },
+      "db": {}
+    },
+    {
+      "id": "printer-update-missing",
+      "title": "Update unknown printer → 404",
+      "request": {
+        "method": "PUT",
+        "path": "/api/printer-settings/0123456789abcdef01234567",
+        "auth": "admin",
+        "body": {
+          "ip": "127.0.0.11",
+          "port": 9101,
+          "templateName": "producao"
+        }
+      },
+      "response": {
+        "status": 404,
+        "contentType": "text/html; charset=utf-8",
+        "text": "Printer settings not found."
+      },
+      "db": {}
+    },
+    {
+      "id": "printer-delete",
+      "title": "Delete printer (returns it)",
+      "request": {
+        "method": "DELETE",
+        "path": "/api/printer-settings/{{printersettings:2}}",
+        "auth": "admin",
+        "body": null
+      },
+      "response": {
+        "status": 200,
+        "contentType": "application/json; charset=utf-8",
+        "json": {
+          "_id": "{{printersettings:2}}",
+          "ip": "127.0.0.2",
+          "port": 9100,
+          "templateName": "maquinacao",
+          "__v": 0
+        }
+      },
+      "db": {
+        "printersettings": {
+          "deleted": [
+            {
+              "_id": {
+                "$oid": "{{printersettings:2}}"
+              },
+              "ip": "127.0.0.2",
+              "port": {
+                "$numberInt": "9100"
+              },
+              "templateName": "maquinacao",
+              "__v": {
+                "$numberInt": "0"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "printer-delete-missing",
+      "title": "Delete unknown printer → 404",
+      "request": {
+        "method": "DELETE",
+        "path": "/api/printer-settings/0123456789abcdef01234567",
+        "auth": "admin",
+        "body": null
+      },
+      "response": {
+        "status": 404,
+        "contentType": "text/html; charset=utf-8",
+        "text": "Printer settings not found."
+      },
+      "db": {}
+    },
+    {
+      "id": "printer-add-maquinacao-again",
+      "title": "Add printer (maquinacao) again",
+      "request": {
+        "method": "POST",
+        "path": "/api/printer-settings",
+        "auth": "admin",
+        "body": {
+          "ip": "127.0.0.2",
+          "port": 9100,
+          "templateName": "maquinacao"
+        }
+      },
+      "response": {
+        "status": 200,
+        "contentType": "application/json; charset=utf-8",
+        "json": {
+          "_id": "{{printersettings:3}}",
+          "ip": "127.0.0.2",
+          "port": 9100,
+          "templateName": "maquinacao",
+          "__v": 0
+        }
+      },
+      "db": {
+        "printersettings": {
+          "inserted": [
+            {
+              "_id": {
+                "$oid": "{{printersettings:3}}"
+              },
+              "ip": "127.0.0.2",
+              "port": {
+                "$numberInt": "9100"
+              },
+              "templateName": "maquinacao",
+              "__v": {
+                "$numberInt": "0"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ]
+}

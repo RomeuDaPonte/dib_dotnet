@@ -1,0 +1,395 @@
+{
+  "area": "06-database",
+  "steps": [
+    {
+      "id": "db-info",
+      "title": "Database info (sizes masked)",
+      "request": {
+        "method": "GET",
+        "path": "/api/database/info",
+        "auth": "admin",
+        "body": null
+      },
+      "response": {
+        "status": 200,
+        "contentType": "application/json; charset=utf-8",
+        "json": {
+          "name": "dib4t",
+          "host": "localhost",
+          "port": 27017,
+          "serverVersion": "4.1.4",
+          "collections": 8,
+          "documents": 50,
+          "avgObjSize": "{{varies}}",
+          "dataSize": "{{varies}}",
+          "storageSize": "{{varies}}",
+          "indexes": 8,
+          "indexSize": "{{varies}}",
+          "collectionsInfo": [
+            {
+              "name": "budgets",
+              "count": 7,
+              "size": "{{varies}}",
+              "avgObjSize": "{{varies}}",
+              "storageSize": "{{varies}}",
+              "indexes": 1,
+              "indexSize": "{{varies}}"
+            },
+            {
+              "name": "entities",
+              "count": 3,
+              "size": "{{varies}}",
+              "avgObjSize": "{{varies}}",
+              "storageSize": "{{varies}}",
+              "indexes": 1,
+              "indexSize": "{{varies}}"
+            },
+            {
+              "name": "jobs",
+              "count": 3,
+              "size": "{{varies}}",
+              "avgObjSize": "{{varies}}",
+              "storageSize": "{{varies}}",
+              "indexes": 1,
+              "indexSize": "{{varies}}"
+            },
+            {
+              "name": "paymentmethods",
+              "count": 2,
+              "size": "{{varies}}",
+              "avgObjSize": "{{varies}}",
+              "storageSize": "{{varies}}",
+              "indexes": 1,
+              "indexSize": "{{varies}}"
+            },
+            {
+              "name": "prices",
+              "count": 1,
+              "size": "{{varies}}",
+              "avgObjSize": "{{varies}}",
+              "storageSize": "{{varies}}",
+              "indexes": 1,
+              "indexSize": "{{varies}}"
+            },
+            {
+              "name": "printersettings",
+              "count": 2,
+              "size": "{{varies}}",
+              "avgObjSize": "{{varies}}",
+              "storageSize": "{{varies}}",
+              "indexes": 1,
+              "indexSize": "{{varies}}"
+            },
+            {
+              "name": "tasks",
+              "count": 28,
+              "size": "{{varies}}",
+              "avgObjSize": "{{varies}}",
+              "storageSize": "{{varies}}",
+              "indexes": 1,
+              "indexSize": "{{varies}}"
+            },
+            {
+              "name": "users",
+              "count": 4,
+              "size": "{{varies}}",
+              "avgObjSize": "{{varies}}",
+              "storageSize": "{{varies}}",
+              "indexes": 1,
+              "indexSize": "{{varies}}"
+            }
+          ],
+          "fetchedAt": "{{now}}",
+          "busyWith": null
+        }
+      },
+      "db": {}
+    },
+    {
+      "id": "db-info-forbidden",
+      "title": "Database info without settings role",
+      "request": {
+        "method": "GET",
+        "path": "/api/database/info",
+        "auth": "limited",
+        "body": null
+      },
+      "response": {
+        "status": 401,
+        "contentType": "text/html; charset=utf-8",
+        "text": "Não tem permissão para concluir esta acção."
+      },
+      "db": {}
+    },
+    {
+      "id": "db-backup",
+      "title": "Backup download (body summarized)",
+      "request": {
+        "method": "GET",
+        "path": "/api/database/backup",
+        "auth": "admin",
+        "body": null
+      },
+      "response": {
+        "status": 200,
+        "contentType": "application/gzip",
+        "contentDisposition": "attachment; filename=\"dib4t-backup-{{stamp}}.dibbak\"",
+        "accessControlExposeHeaders": "Content-Disposition",
+        "body": {
+          "gzip": true,
+          "magic": "DIBBAK01",
+          "header": {
+            "format": "dib4t-backup",
+            "version": 1,
+            "createdAt": "{{now}}",
+            "createdBy": "ana.admin@dib4t.local",
+            "database": "dib4t",
+            "serverVersion": "4.1.4",
+            "collections": [
+              "budgets",
+              "entities",
+              "jobs",
+              "paymentmethods",
+              "prices",
+              "printersettings",
+              "tasks",
+              "users"
+            ]
+          },
+          "collections": [
+            {
+              "meta": {
+                "name": "budgets",
+                "options": {},
+                "indexes": [
+                  {
+                    "v": 2,
+                    "key": {
+                      "_id": 1
+                    },
+                    "name": "_id_",
+                    "ns": "dib4t.budgets"
+                  }
+                ],
+                "count": 7
+              },
+              "documents": 7
+            },
+            {
+              "meta": {
+                "name": "entities",
+                "options": {},
+                "indexes": [
+                  {
+                    "v": 2,
+                    "key": {
+                      "_id": 1
+                    },
+                    "name": "_id_",
+                    "ns": "dib4t.entities"
+                  }
+                ],
+                "count": 3
+              },
+              "documents": 3
+            },
+            {
+              "meta": {
+                "name": "jobs",
+                "options": {},
+                "indexes": [
+                  {
+                    "v": 2,
+                    "key": {
+                      "_id": 1
+                    },
+                    "name": "_id_",
+                    "ns": "dib4t.jobs"
+                  }
+                ],
+                "count": 3
+              },
+              "documents": 3
+            },
+            {
+              "meta": {
+                "name": "paymentmethods",
+                "options": {},
+                "indexes": [
+                  {
+                    "v": 2,
+                    "key": {
+                      "_id": 1
+                    },
+                    "name": "_id_",
+                    "ns": "dib4t.paymentmethods"
+                  }
+                ],
+                "count": 2
+              },
+              "documents": 2
+            },
+            {
+              "meta": {
+                "name": "prices",
+                "options": {},
+                "indexes": [
+                  {
+                    "v": 2,
+                    "key": {
+                      "_id": 1
+                    },
+                    "name": "_id_",
+                    "ns": "dib4t.prices"
+                  }
+                ],
+                "count": 1
+              },
+              "documents": 1
+            },
+            {
+              "meta": {
+                "name": "printersettings",
+                "options": {},
+                "indexes": [
+                  {
+                    "v": 2,
+                    "key": {
+                      "_id": 1
+                    },
+                    "name": "_id_",
+                    "ns": "dib4t.printersettings"
+                  }
+                ],
+                "count": 2
+              },
+              "documents": 2
+            },
+            {
+              "meta": {
+                "name": "tasks",
+                "options": {},
+                "indexes": [
+                  {
+                    "v": 2,
+                    "key": {
+                      "_id": 1
+                    },
+                    "name": "_id_",
+                    "ns": "dib4t.tasks"
+                  }
+                ],
+                "count": 28
+              },
+              "documents": 28
+            },
+            {
+              "meta": {
+                "name": "users",
+                "options": {},
+                "indexes": [
+                  {
+                    "v": 2,
+                    "key": {
+                      "_id": 1
+                    },
+                    "name": "_id_",
+                    "ns": "dib4t.users"
+                  }
+                ],
+                "count": 4
+              },
+              "documents": 4
+            }
+          ],
+          "end": {
+            "collections": 8,
+            "documents": 50
+          }
+        }
+      },
+      "db": {}
+    },
+    {
+      "id": "db-restore-empty",
+      "title": "Restore without a body",
+      "request": {
+        "method": "POST",
+        "path": "/api/database/restore",
+        "auth": "admin",
+        "body": {
+          "contentType": "application/octet-stream",
+          "content": "(empty)"
+        }
+      },
+      "response": {
+        "status": 400,
+        "contentType": "text/html; charset=utf-8",
+        "text": "Nenhum ficheiro de backup recebido."
+      },
+      "db": {}
+    },
+    {
+      "id": "db-restore-garbage",
+      "title": "Restore a non-backup file",
+      "request": {
+        "method": "POST",
+        "path": "/api/database/restore",
+        "auth": "admin",
+        "body": {
+          "contentType": "application/octet-stream",
+          "content": "the ASCII text 'this is not a backup'"
+        }
+      },
+      "response": {
+        "status": 400,
+        "contentType": "text/html; charset=utf-8",
+        "text": "O ficheiro não é um backup válido da Dib4t."
+      },
+      "db": {}
+    },
+    {
+      "id": "db-restore-truncated",
+      "title": "Restore a truncated backup",
+      "request": {
+        "method": "POST",
+        "path": "/api/database/restore",
+        "auth": "admin",
+        "body": {
+          "contentType": "application/octet-stream",
+          "content": "first half of the db-backup body"
+        }
+      },
+      "response": {
+        "status": 400,
+        "contentType": "text/html; charset=utf-8",
+        "text": "O ficheiro não é um backup válido da Dib4t."
+      },
+      "db": {}
+    },
+    {
+      "id": "db-restore",
+      "title": "Restore the backup just taken (DB unchanged)",
+      "request": {
+        "method": "POST",
+        "path": "/api/database/restore",
+        "auth": "admin",
+        "body": {
+          "contentType": "application/octet-stream",
+          "content": "the db-backup body"
+        }
+      },
+      "response": {
+        "status": 200,
+        "contentType": "application/json; charset=utf-8",
+        "json": {
+          "backupCreatedAt": "{{now}}",
+          "backupDatabase": "dib4t",
+          "collections": 8,
+          "documents": 50
+        }
+      },
+      "db": {}
+    }
+  ]
+}

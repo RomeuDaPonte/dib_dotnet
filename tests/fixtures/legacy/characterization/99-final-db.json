@@ -1,0 +1,1334 @@
+{
+  "budgets": [
+    {
+      "_id": {
+        "$oid": "{{budgets:1}}"
+      },
+      "revision": {
+        "$numberInt": "0"
+      },
+      "complete": false,
+      "wasPdfDownloaded": false,
+      "margin": {
+        "$numberInt": "25"
+      },
+      "daysNeededToDoTheWork": {
+        "$numberInt": "45"
+      },
+      "validity": {
+        "$numberInt": "60"
+      },
+      "hasGenerateJob": false,
+      "client": {
+        "$oid": "{{entities:1}}"
+      },
+      "descriptive": "Máquina de corte",
+      "personInCharge": "Eng.ª Maria Lopes",
+      "madeBy": {
+        "$oid": "{{users:3}}"
+      },
+      "budgetNumber": "{{yy}}-0001",
+      "paymentMethod": "Transferência a 30 dias",
+      "total": {
+        "$numberDouble": "12345.67"
+      },
+      "date": {
+        "$date": "{{now}}"
+      },
+      "__v": {
+        "$numberInt": "0"
+      },
+      "description": "Fornecimento conforme especificação.\nInclui montagem e ensaios."
+    },
+    {
+      "_id": {
+        "$oid": "{{budgets:2}}"
+      },
+      "revision": {
+        "$numberInt": "0"
+      },
+      "complete": false,
+      "wasPdfDownloaded": false,
+      "margin": {
+        "$numberInt": "25"
+      },
+      "daysNeededToDoTheWork": {
+        "$numberInt": "60"
+      },
+      "validity": {
+        "$numberInt": "30"
+      },
+      "hasGenerateJob": false,
+      "client": {
+        "$oid": "{{entities:2}}"
+      },
+      "descriptive": "Retrofit prensa 200t",
+      "personInCharge": "Sr. Paulo",
+      "madeBy": {
+        "$oid": "{{users:2}}"
+      },
+      "budgetNumber": "{{yy}}-0002",
+      "paymentMethod": "Transferência a 30 dias",
+      "total": {
+        "$numberDouble": "12345.67"
+      },
+      "date": {
+        "$date": "{{now}}"
+      },
+      "__v": {
+        "$numberInt": "0"
+      },
+      "description": "Fornecimento conforme especificação.\nInclui montagem e ensaios."
+    },
+    {
+      "_id": {
+        "$oid": "{{budgets:3}}"
+      },
+      "revision": {
+        "$numberInt": "1"
+      },
+      "complete": false,
+      "wasPdfDownloaded": false,
+      "margin": {
+        "$numberInt": "25"
+      },
+      "daysNeededToDoTheWork": {
+        "$numberInt": "45"
+      },
+      "validity": {
+        "$numberInt": "60"
+      },
+      "hasGenerateJob": true,
+      "client": {
+        "$oid": "{{entities:1}}"
+      },
+      "descriptive": "Máquina de corte (rev. 1)",
+      "personInCharge": "Eng.ª Maria",
+      "madeBy": {
+        "$oid": "{{users:2}}"
+      },
+      "budgetNumber": "{{yy}}-0001",
+      "paymentMethod": "Transferência a 30 dias",
+      "total": {
+        "$numberDouble": "12345.67"
+      },
+      "description": "Fornecimento conforme especificação.\nInclui montagem e ensaios.",
+      "date": {
+        "$date": "{{now}}"
+      },
+      "__v": {
+        "$numberInt": "0"
+      }
+    },
+    {
+      "_id": {
+        "$oid": "{{budgets:4}}"
+      },
+      "revision": {
+        "$numberInt": "2"
+      },
+      "complete": false,
+      "wasPdfDownloaded": false,
+      "margin": {
+        "$numberInt": "25"
+      },
+      "daysNeededToDoTheWork": {
+        "$numberInt": "45"
+      },
+      "validity": {
+        "$numberInt": "60"
+      },
+      "hasGenerateJob": false,
+      "client": {
+        "$oid": "{{entities:1}}"
+      },
+      "descriptive": "Máquina de corte",
+      "personInCharge": "Eng.ª Maria Lopes",
+      "madeBy": {
+        "$oid": "{{users:3}}"
+      },
+      "budgetNumber": "{{yy}}-0001",
+      "paymentMethod": "Transferência a 30 dias",
+      "total": {
+        "$numberDouble": "12345.67"
+      },
+      "description": "Fornecimento conforme especificação.\nInclui montagem e ensaios.",
+      "date": {
+        "$date": "{{now}}"
+      },
+      "__v": {
+        "$numberInt": "0"
+      }
+    },
+    {
+      "_id": {
+        "$oid": "{{budgets:5}}"
+      },
+      "revision": {
+        "$numberInt": "0"
+      },
+      "complete": false,
+      "wasPdfDownloaded": false,
+      "margin": {
+        "$numberInt": "25"
+      },
+      "daysNeededToDoTheWork": {
+        "$numberInt": "45"
+      },
+      "validity": {
+        "$numberInt": "60"
+      },
+      "hasGenerateJob": false,
+      "client": {
+        "$oid": "{{entities:2}}"
+      },
+      "descriptive": "Máquina de corte — cópia",
+      "personInCharge": "Sr. Paulo",
+      "madeBy": {
+        "$oid": "{{users:2}}"
+      },
+      "budgetNumber": "{{yy}}-0003",
+      "paymentMethod": "Transferência a 30 dias",
+      "total": {
+        "$numberDouble": "12345.67"
+      },
+      "description": "Fornecimento conforme especificação.\nInclui montagem e ensaios.",
+      "date": {
+        "$date": "{{now}}"
+      },
+      "__v": {
+        "$numberInt": "0"
+      }
+    },
+    {
+      "_id": {
+        "$oid": "{{budgets:6}}"
+      },
+      "revision": {
+        "$numberInt": "0"
+      },
+      "complete": false,
+      "wasPdfDownloaded": false,
+      "margin": {
+        "$numberInt": "25"
+      },
+      "daysNeededToDoTheWork": {
+        "$numberInt": "45"
+      },
+      "validity": {
+        "$numberInt": "60"
+      },
+      "hasGenerateJob": true,
+      "client": {
+        "$oid": "{{entities:1}}"
+      },
+      "descriptive": "Linha de montagem",
+      "personInCharge": "Sr. Paulo",
+      "madeBy": {
+        "$oid": "{{users:2}}"
+      },
+      "budgetNumber": "{{yy}}-0004",
+      "paymentMethod": "Transferência a 30 dias",
+      "total": {
+        "$numberDouble": "12345.67"
+      },
+      "description": "Fornecimento conforme especificação.\nInclui montagem e ensaios.",
+      "date": {
+        "$date": "{{now}}"
+      },
+      "__v": {
+        "$numberInt": "0"
+      }
+    },
+    {
+      "_id": {
+        "$oid": "{{budgets:7}}"
+      },
+      "revision": {
+        "$numberInt": "0"
+      },
+      "complete": false,
+      "wasPdfDownloaded": false,
+      "margin": {
+        "$numberInt": "25"
+      },
+      "daysNeededToDoTheWork": {
+        "$numberInt": "45"
+      },
+      "validity": {
+        "$numberInt": "60"
+      },
+      "hasGenerateJob": true,
+      "client": {
+        "$oid": "{{entities:2}}"
+      },
+      "descriptive": "Garra de manipulação",
+      "personInCharge": "Eng.ª Maria",
+      "madeBy": {
+        "$oid": "{{users:3}}"
+      },
+      "budgetNumber": "{{yy}}-0005",
+      "paymentMethod": "Transferência a 30 dias",
+      "total": {
+        "$numberDouble": "12345.67"
+      },
+      "description": "Fornecimento conforme especificação.\nInclui montagem e ensaios.",
+      "date": {
+        "$date": "{{now}}"
+      },
+      "__v": {
+        "$numberInt": "0"
+      }
+    }
+  ],
+  "entities": [
+    {
+      "_id": {
+        "$oid": "{{entities:1}}"
+      },
+      "name": "Metalúrgica do Vale do Ave, Lda.",
+      "fiscalNumber": "500100200",
+      "address": "Rua da Indústria, 12",
+      "zipCode": "4760-100",
+      "location": "Vila Nova de Famalicão",
+      "paymentCondition": "Pronto pagamento",
+      "type": "Cliente",
+      "__v": {
+        "$numberInt": "0"
+      }
+    },
+    {
+      "_id": {
+        "$oid": "{{entities:2}}"
+      },
+      "name": "Cortiças Reunidas",
+      "paymentCondition": "Transferência a 30 dias",
+      "type": "Cliente e Fornecedor",
+      "__v": {
+        "$numberInt": "0"
+      },
+      "address": "Lugar da Cortiça",
+      "fiscalNumber": "500999888",
+      "location": "Santa Maria da Feira",
+      "zipCode": "4535-000"
+    },
+    {
+      "_id": {
+        "$oid": "{{entities:3}}"
+      },
+      "name": "Aços Especiais Lda.",
+      "fiscalNumber": "500300400",
+      "address": "Av. Central, 1",
+      "zipCode": "4000-001",
+      "location": "Porto",
+      "paymentCondition": "Pronto pagamento",
+      "type": "Fornecedor",
+      "__v": {
+        "$numberInt": "0"
+      }
+    }
+  ],
+  "jobs": [
+    {
+      "_id": {
+        "$oid": "{{jobs:1}}"
+      },
+      "invoicedPercent": {
+        "$numberInt": "100"
+      },
+      "finalPrice": {
+        "$numberDouble": "15000.5"
+      },
+      "state": "Faturada",
+      "orderIdentification": "ENC-2030/001-A",
+      "isOfficialOrderIdentification": true,
+      "components": {
+        "$numberInt": "150"
+      },
+      "automation": {
+        "$numberInt": "45"
+      },
+      "materials": {
+        "$numberInt": "300"
+      },
+      "others": {
+        "$numberInt": "0"
+      },
+      "costNonQuality": {
+        "$numberInt": "0"
+      },
+      "commentType": [],
+      "budget": {
+        "$oid": "{{budgets:3}}"
+      },
+      "createdBy": "Ana Administradora",
+      "dueDate": {
+        "$date": "2030-01-15T00:00:00.000Z"
+      },
+      "startDate": {
+        "$date": "{{now}}"
+      },
+      "devStatistic": {
+        "numberOfHoursUsed": {
+          "$numberInt": "20"
+        },
+        "budgetedHours": {
+          "$numberInt": "20"
+        },
+        "deviation": {
+          "$numberInt": "0"
+        },
+        "_id": {
+          "$oid": "{{oid:14}}"
+        }
+      },
+      "machiningStatistic": {
+        "numberOfHoursUsed": {
+          "$numberInt": "14"
+        },
+        "budgetedHours": {
+          "$numberInt": "15"
+        },
+        "deviation": {
+          "$numberInt": "1"
+        },
+        "verificationAndShapeControl": "Ok",
+        "dimensionalVerificationAndControl": "Nok",
+        "analysisOfTheDegreeOfFinish": "n/a",
+        "_id": {
+          "$oid": "{{oid:15}}"
+        },
+        "validatedBy": "Bruno Maquinação"
+      },
+      "assemblyStatistic": {
+        "numberOfHoursUsed": {
+          "$numberInt": "12"
+        },
+        "budgetedHours": {
+          "$numberInt": "10"
+        },
+        "deviation": {
+          "$numberInt": "-2"
+        },
+        "pneumaticCircuits": "Ok",
+        "electricalBoardsAndCircuits": "Ok",
+        "kinematics": "Nok",
+        "programmingFeaturesPLC": "n/a",
+        "operator_equipmentSafetyConditions": "Ok",
+        "visualInspection": "Ok",
+        "validTryOnFirstTest": "2",
+        "_id": {
+          "$oid": "{{oid:16}}"
+        },
+        "validatedBy": "Ana Administradora"
+      },
+      "priority": "Média",
+      "__v": {
+        "$numberInt": "3"
+      },
+      "comments": "",
+      "jobStatisticsDates": {
+        "_id": {
+          "$oid": "{{oid:12}}"
+        },
+        "devEndedInDate": {
+          "$date": "2030-01-02T00:00:00.000Z"
+        },
+        "onApprovalEndedInDate": {
+          "$date": "{{now}}"
+        },
+        "approvedEndedInDate": {
+          "$date": "{{now}}"
+        },
+        "machiningEndedInDate": {
+          "$date": "{{now}}"
+        },
+        "assemblyEndedInDate": {
+          "$date": "{{now}}"
+        },
+        "forInvoicingEndedInDate": {
+          "$date": "{{now}}"
+        }
+      },
+      "deliveryDate": {
+        "$date": "2030-03-02T00:00:00.000Z"
+      },
+      "invoicedBy": "Ana Administradora"
+    },
+    {
+      "_id": {
+        "$oid": "{{jobs:2}}"
+      },
+      "invoicedPercent": {
+        "$numberInt": "0"
+      },
+      "finalPrice": {
+        "$numberInt": "8000"
+      },
+      "state": "Montagem",
+      "orderIdentification": "ENC-2030/777",
+      "isOfficialOrderIdentification": true,
+      "components": {
+        "$numberInt": "0"
+      },
+      "automation": {
+        "$numberInt": "0"
+      },
+      "materials": {
+        "$numberInt": "20"
+      },
+      "others": {
+        "$numberInt": "3"
+      },
+      "costNonQuality": {
+        "$numberInt": "15"
+      },
+      "commentType": [],
+      "budget": {
+        "$oid": "{{budgets:6}}"
+      },
+      "createdBy": "Ana Administradora",
+      "dueDate": {
+        "$date": "2030-03-01T00:00:00.000Z"
+      },
+      "startDate": {
+        "$date": "{{now}}"
+      },
+      "devStatistic": {
+        "numberOfHoursUsed": {
+          "$numberInt": "25"
+        },
+        "budgetedHours": {
+          "$numberInt": "20"
+        },
+        "deviation": {
+          "$numberInt": "-5"
+        },
+        "_id": {
+          "$oid": "{{oid:17}}"
+        }
+      },
+      "machiningStatistic": {
+        "numberOfHoursUsed": {
+          "$numberInt": "7"
+        },
+        "budgetedHours": {
+          "$numberInt": "15"
+        },
+        "deviation": {
+          "$numberInt": "15"
+        },
+        "verificationAndShapeControl": "Ok",
+        "dimensionalVerificationAndControl": "Nok",
+        "analysisOfTheDegreeOfFinish": "n/a",
+        "_id": {
+          "$oid": "{{oid:6}}"
+        }
+      },
+      "assemblyStatistic": {
+        "numberOfHoursUsed": {
+          "$numberDouble": "4.5"
+        },
+        "budgetedHours": {
+          "$numberInt": "10"
+        },
+        "deviation": {
+          "$numberInt": "10"
+        },
+        "pneumaticCircuits": "n/a",
+        "electricalBoardsAndCircuits": "n/a",
+        "kinematics": "n/a",
+        "programmingFeaturesPLC": "n/a",
+        "operator_equipmentSafetyConditions": "n/a",
+        "visualInspection": "n/a",
+        "validTryOnFirstTest": "1",
+        "_id": {
+          "$oid": "{{oid:7}}"
+        }
+      },
+      "priority": "Alta",
+      "__v": {
+        "$numberInt": "0"
+      },
+      "comments": "",
+      "jobStatisticsDates": {
+        "_id": {
+          "$oid": "{{oid:18}}"
+        },
+        "approvedEndedInDate": {
+          "$date": "{{now}}"
+        },
+        "onApprovalEndedInDate": {
+          "$date": "{{now}}"
+        },
+        "machiningEndedInDate": {
+          "$date": "{{now}}"
+        }
+      }
+    },
+    {
+      "_id": {
+        "$oid": "{{jobs:3}}"
+      },
+      "invoicedPercent": {
+        "$numberInt": "0"
+      },
+      "finalPrice": {
+        "$numberInt": "4200"
+      },
+      "state": "Montagem",
+      "orderIdentification": "PO 4502",
+      "isOfficialOrderIdentification": true,
+      "components": {
+        "$numberInt": "0"
+      },
+      "automation": {
+        "$numberInt": "0"
+      },
+      "materials": {
+        "$numberInt": "0"
+      },
+      "others": {
+        "$numberInt": "0"
+      },
+      "costNonQuality": {
+        "$numberInt": "0"
+      },
+      "commentType": [],
+      "budget": {
+        "$oid": "{{budgets:7}}"
+      },
+      "createdBy": "Ana Administradora",
+      "dueDate": {
+        "$date": "2030-01-05T00:00:00.000Z"
+      },
+      "startDate": {
+        "$date": "{{now}}"
+      },
+      "devStatistic": {
+        "numberOfHoursUsed": {
+          "$numberInt": "0"
+        },
+        "budgetedHours": {
+          "$numberInt": "20"
+        },
+        "deviation": {
+          "$numberInt": "20"
+        },
+        "_id": {
+          "$oid": "{{oid:8}}"
+        }
+      },
+      "machiningStatistic": {
+        "numberOfHoursUsed": {
+          "$numberInt": "0"
+        },
+        "budgetedHours": {
+          "$numberInt": "15"
+        },
+        "deviation": {
+          "$numberInt": "15"
+        },
+        "verificationAndShapeControl": "n/a",
+        "dimensionalVerificationAndControl": "n/a",
+        "analysisOfTheDegreeOfFinish": "n/a",
+        "_id": {
+          "$oid": "{{oid:9}}"
+        }
+      },
+      "assemblyStatistic": {
+        "numberOfHoursUsed": {
+          "$numberInt": "0"
+        },
+        "budgetedHours": {
+          "$numberInt": "10"
+        },
+        "deviation": {
+          "$numberInt": "10"
+        },
+        "pneumaticCircuits": "n/a",
+        "electricalBoardsAndCircuits": "n/a",
+        "kinematics": "Ok",
+        "programmingFeaturesPLC": "n/a",
+        "operator_equipmentSafetyConditions": "n/a",
+        "visualInspection": "Nok",
+        "validTryOnFirstTest": "3",
+        "_id": {
+          "$oid": "{{oid:10}}"
+        }
+      },
+      "priority": "Baixa",
+      "__v": {
+        "$numberInt": "0"
+      },
+      "deliveryDate": {
+        "$date": "2030-02-20T00:00:00.000Z"
+      }
+    }
+  ],
+  "paymentmethods": [
+    {
+      "_id": {
+        "$oid": "{{paymentmethods:1}}"
+      },
+      "name": "Pronto pagamento",
+      "__v": {
+        "$numberInt": "0"
+      }
+    },
+    {
+      "_id": {
+        "$oid": "{{paymentmethods:2}}"
+      },
+      "name": "Transferência a 30 dias",
+      "__v": {
+        "$numberInt": "0"
+      }
+    }
+  ],
+  "prices": [
+    {
+      "_id": {
+        "$oid": "{{prices:1}}"
+      },
+      "automation": {
+        "$numberDouble": "32.5"
+      },
+      "consultancy": {
+        "$numberInt": "45"
+      },
+      "development": {
+        "$numberInt": "30"
+      },
+      "margin": {
+        "$numberInt": "35"
+      },
+      "machining": {
+        "$numberInt": "38"
+      },
+      "assembly": {
+        "$numberInt": "28"
+      },
+      "__v": {
+        "$numberInt": "0"
+      }
+    }
+  ],
+  "printersettings": [
+    {
+      "_id": {
+        "$oid": "{{printersettings:1}}"
+      },
+      "ip": "127.0.0.11",
+      "port": {
+        "$numberInt": "9101"
+      },
+      "templateName": "producao",
+      "__v": {
+        "$numberInt": "0"
+      }
+    },
+    {
+      "_id": {
+        "$oid": "{{printersettings:3}}"
+      },
+      "ip": "127.0.0.2",
+      "port": {
+        "$numberInt": "9100"
+      },
+      "templateName": "maquinacao",
+      "__v": {
+        "$numberInt": "0"
+      }
+    }
+  ],
+  "tasks": [
+    {
+      "_id": {
+        "$oid": "{{tasks:1}}"
+      },
+      "budgetId": {
+        "$oid": "{{budgets:1}}"
+      },
+      "taskType": "components",
+      "description": "Componentes pneumáticos",
+      "unitPrice": {
+        "$numberDouble": "1250.75"
+      },
+      "quantity": {
+        "$numberDouble": "1.5"
+      },
+      "__v": {
+        "$numberInt": "0"
+      }
+    },
+    {
+      "_id": {
+        "$oid": "{{tasks:3}}"
+      },
+      "budgetId": {
+        "$oid": "{{budgets:1}}"
+      },
+      "taskType": "development",
+      "description": "Projeto mecânico",
+      "unitPrice": {
+        "$numberInt": "30"
+      },
+      "quantity": {
+        "$numberInt": "20"
+      },
+      "__v": {
+        "$numberInt": "0"
+      }
+    },
+    {
+      "_id": {
+        "$oid": "{{tasks:4}}"
+      },
+      "budgetId": {
+        "$oid": "{{budgets:1}}"
+      },
+      "taskType": "machining",
+      "description": "Maquinação de peças em aço inox",
+      "unitPrice": {
+        "$numberDouble": "38.5"
+      },
+      "quantity": {
+        "$numberInt": "15"
+      },
+      "__v": {
+        "$numberInt": "0"
+      }
+    },
+    {
+      "_id": {
+        "$oid": "{{tasks:5}}"
+      },
+      "budgetId": {
+        "$oid": "{{budgets:1}}"
+      },
+      "taskType": "assembly",
+      "description": "",
+      "unitPrice": {
+        "$numberInt": "28"
+      },
+      "quantity": {
+        "$numberInt": "10"
+      },
+      "__v": {
+        "$numberInt": "0"
+      }
+    },
+    {
+      "_id": {
+        "$oid": "{{tasks:7}}"
+      },
+      "taskType": "components",
+      "budgetId": {
+        "$oid": "{{budgets:3}}"
+      },
+      "description": "Componentes pneumáticos",
+      "unitPrice": {
+        "$numberDouble": "1250.75"
+      },
+      "quantity": {
+        "$numberDouble": "1.5"
+      },
+      "__v": {
+        "$numberInt": "0"
+      }
+    },
+    {
+      "_id": {
+        "$oid": "{{tasks:8}}"
+      },
+      "taskType": "development",
+      "budgetId": {
+        "$oid": "{{budgets:3}}"
+      },
+      "description": "Projeto mecânico",
+      "unitPrice": {
+        "$numberInt": "30"
+      },
+      "quantity": {
+        "$numberInt": "20"
+      },
+      "__v": {
+        "$numberInt": "0"
+      }
+    },
+    {
+      "_id": {
+        "$oid": "{{tasks:9}}"
+      },
+      "taskType": "machining",
+      "budgetId": {
+        "$oid": "{{budgets:3}}"
+      },
+      "description": "Maquinação de peças em aço inox",
+      "unitPrice": {
+        "$numberDouble": "38.5"
+      },
+      "quantity": {
+        "$numberInt": "15"
+      },
+      "__v": {
+        "$numberInt": "0"
+      }
+    },
+    {
+      "_id": {
+        "$oid": "{{tasks:10}}"
+      },
+      "taskType": "assembly",
+      "budgetId": {
+        "$oid": "{{budgets:3}}"
+      },
+      "description": "",
+      "unitPrice": {
+        "$numberInt": "28"
+      },
+      "quantity": {
+        "$numberInt": "10"
+      },
+      "__v": {
+        "$numberInt": "0"
+      }
+    },
+    {
+      "_id": {
+        "$oid": "{{tasks:11}}"
+      },
+      "taskType": "components",
+      "budgetId": {
+        "$oid": "{{budgets:4}}"
+      },
+      "description": "Componentes pneumáticos",
+      "unitPrice": {
+        "$numberDouble": "1250.75"
+      },
+      "quantity": {
+        "$numberDouble": "1.5"
+      },
+      "__v": {
+        "$numberInt": "0"
+      }
+    },
+    {
+      "_id": {
+        "$oid": "{{tasks:12}}"
+      },
+      "taskType": "development",
+      "budgetId": {
+        "$oid": "{{budgets:4}}"
+      },
+      "description": "Projeto mecânico",
+      "unitPrice": {
+        "$numberInt": "30"
+      },
+      "quantity": {
+        "$numberInt": "20"
+      },
+      "__v": {
+        "$numberInt": "0"
+      }
+    },
+    {
+      "_id": {
+        "$oid": "{{tasks:13}}"
+      },
+      "taskType": "machining",
+      "budgetId": {
+        "$oid": "{{budgets:4}}"
+      },
+      "description": "Maquinação de peças em aço inox",
+      "unitPrice": {
+        "$numberDouble": "38.5"
+      },
+      "quantity": {
+        "$numberInt": "15"
+      },
+      "__v": {
+        "$numberInt": "0"
+      }
+    },
+    {
+      "_id": {
+        "$oid": "{{tasks:14}}"
+      },
+      "taskType": "assembly",
+      "budgetId": {
+        "$oid": "{{budgets:4}}"
+      },
+      "description": "",
+      "unitPrice": {
+        "$numberInt": "28"
+      },
+      "quantity": {
+        "$numberInt": "10"
+      },
+      "__v": {
+        "$numberInt": "0"
+      }
+    },
+    {
+      "_id": {
+        "$oid": "{{tasks:15}}"
+      },
+      "taskType": "components",
+      "budgetId": {
+        "$oid": "{{budgets:5}}"
+      },
+      "description": "Componentes pneumáticos",
+      "unitPrice": {
+        "$numberDouble": "1250.75"
+      },
+      "quantity": {
+        "$numberDouble": "1.5"
+      },
+      "__v": {
+        "$numberInt": "0"
+      }
+    },
+    {
+      "_id": {
+        "$oid": "{{tasks:16}}"
+      },
+      "taskType": "development",
+      "budgetId": {
+        "$oid": "{{budgets:5}}"
+      },
+      "description": "Projeto mecânico",
+      "unitPrice": {
+        "$numberInt": "30"
+      },
+      "quantity": {
+        "$numberInt": "20"
+      },
+      "__v": {
+        "$numberInt": "0"
+      }
+    },
+    {
+      "_id": {
+        "$oid": "{{tasks:17}}"
+      },
+      "taskType": "machining",
+      "budgetId": {
+        "$oid": "{{budgets:5}}"
+      },
+      "description": "Maquinação de peças em aço inox",
+      "unitPrice": {
+        "$numberDouble": "38.5"
+      },
+      "quantity": {
+        "$numberInt": "15"
+      },
+      "__v": {
+        "$numberInt": "0"
+      }
+    },
+    {
+      "_id": {
+        "$oid": "{{tasks:18}}"
+      },
+      "taskType": "assembly",
+      "budgetId": {
+        "$oid": "{{budgets:5}}"
+      },
+      "description": "",
+      "unitPrice": {
+        "$numberInt": "28"
+      },
+      "quantity": {
+        "$numberInt": "10"
+      },
+      "__v": {
+        "$numberInt": "0"
+      }
+    },
+    {
+      "_id": {
+        "$oid": "{{tasks:19}}"
+      },
+      "taskType": "components",
+      "budgetId": {
+        "$oid": "{{budgets:2}}"
+      },
+      "description": "Componentes pneumáticos",
+      "unitPrice": {
+        "$numberDouble": "1250.75"
+      },
+      "quantity": {
+        "$numberDouble": "1.5"
+      },
+      "__v": {
+        "$numberInt": "0"
+      }
+    },
+    {
+      "_id": {
+        "$oid": "{{tasks:20}}"
+      },
+      "taskType": "development",
+      "budgetId": {
+        "$oid": "{{budgets:2}}"
+      },
+      "description": "Projeto mecânico",
+      "unitPrice": {
+        "$numberInt": "30"
+      },
+      "quantity": {
+        "$numberInt": "20"
+      },
+      "__v": {
+        "$numberInt": "0"
+      }
+    },
+    {
+      "_id": {
+        "$oid": "{{tasks:21}}"
+      },
+      "taskType": "machining",
+      "budgetId": {
+        "$oid": "{{budgets:2}}"
+      },
+      "description": "Maquinação de peças em aço inox",
+      "unitPrice": {
+        "$numberDouble": "38.5"
+      },
+      "quantity": {
+        "$numberInt": "15"
+      },
+      "__v": {
+        "$numberInt": "0"
+      }
+    },
+    {
+      "_id": {
+        "$oid": "{{tasks:22}}"
+      },
+      "taskType": "assembly",
+      "budgetId": {
+        "$oid": "{{budgets:2}}"
+      },
+      "description": "",
+      "unitPrice": {
+        "$numberInt": "28"
+      },
+      "quantity": {
+        "$numberInt": "10"
+      },
+      "__v": {
+        "$numberInt": "0"
+      }
+    },
+    {
+      "_id": {
+        "$oid": "{{tasks:23}}"
+      },
+      "taskType": "components",
+      "budgetId": {
+        "$oid": "{{budgets:6}}"
+      },
+      "description": "Componentes pneumáticos",
+      "unitPrice": {
+        "$numberDouble": "1250.75"
+      },
+      "quantity": {
+        "$numberDouble": "1.5"
+      },
+      "__v": {
+        "$numberInt": "0"
+      }
+    },
+    {
+      "_id": {
+        "$oid": "{{tasks:24}}"
+      },
+      "taskType": "development",
+      "budgetId": {
+        "$oid": "{{budgets:6}}"
+      },
+      "description": "Projeto mecânico",
+      "unitPrice": {
+        "$numberInt": "30"
+      },
+      "quantity": {
+        "$numberInt": "20"
+      },
+      "__v": {
+        "$numberInt": "0"
+      }
+    },
+    {
+      "_id": {
+        "$oid": "{{tasks:25}}"
+      },
+      "taskType": "machining",
+      "budgetId": {
+        "$oid": "{{budgets:6}}"
+      },
+      "description": "Maquinação de peças em aço inox",
+      "unitPrice": {
+        "$numberDouble": "38.5"
+      },
+      "quantity": {
+        "$numberInt": "15"
+      },
+      "__v": {
+        "$numberInt": "0"
+      }
+    },
+    {
+      "_id": {
+        "$oid": "{{tasks:26}}"
+      },
+      "taskType": "assembly",
+      "budgetId": {
+        "$oid": "{{budgets:6}}"
+      },
+      "description": "",
+      "unitPrice": {
+        "$numberInt": "28"
+      },
+      "quantity": {
+        "$numberInt": "10"
+      },
+      "__v": {
+        "$numberInt": "0"
+      }
+    },
+    {
+      "_id": {
+        "$oid": "{{tasks:27}}"
+      },
+      "taskType": "components",
+      "budgetId": {
+        "$oid": "{{budgets:7}}"
+      },
+      "description": "Componentes pneumáticos",
+      "unitPrice": {
+        "$numberDouble": "1250.75"
+      },
+      "quantity": {
+        "$numberDouble": "1.5"
+      },
+      "__v": {
+        "$numberInt": "0"
+      }
+    },
+    {
+      "_id": {
+        "$oid": "{{tasks:28}}"
+      },
+      "taskType": "development",
+      "budgetId": {
+        "$oid": "{{budgets:7}}"
+      },
+      "description": "Projeto mecânico",
+      "unitPrice": {
+        "$numberInt": "30"
+      },
+      "quantity": {
+        "$numberInt": "20"
+      },
+      "__v": {
+        "$numberInt": "0"
+      }
+    },
+    {
+      "_id": {
+        "$oid": "{{tasks:29}}"
+      },
+      "taskType": "machining",
+      "budgetId": {
+        "$oid": "{{budgets:7}}"
+      },
+      "description": "Maquinação de peças em aço inox",
+      "unitPrice": {
+        "$numberDouble": "38.5"
+      },
+      "quantity": {
+        "$numberInt": "15"
+      },
+      "__v": {
+        "$numberInt": "0"
+      }
+    },
+    {
+      "_id": {
+        "$oid": "{{tasks:30}}"
+      },
+      "taskType": "assembly",
+      "budgetId": {
+        "$oid": "{{budgets:7}}"
+      },
+      "description": "",
+      "unitPrice": {
+        "$numberInt": "28"
+      },
+      "quantity": {
+        "$numberInt": "10"
+      },
+      "__v": {
+        "$numberInt": "0"
+      }
+    }
+  ],
+  "users": [
+    {
+      "_id": {
+        "$oid": "{{users:2}}"
+      },
+      "roles": [
+        "canSeeOrcamentos",
+        "canSeeObras",
+        "canSeeHistorico",
+        "canSeeEntidades",
+        "canSeeDefinicoes",
+        "canSeeDashboard",
+        "canSeeLeituras"
+      ],
+      "fieldOfCompetencies": "Desenvolvimento",
+      "name": "Ana Administradora",
+      "email": "ana.admin@dib4t.local",
+      "password": "{{bcrypt:$2a$10$}}",
+      "__v": {
+        "$numberInt": "0"
+      }
+    },
+    {
+      "_id": {
+        "$oid": "{{users:3}}"
+      },
+      "roles": [
+        "canSeeObras",
+        "canSeeLeituras",
+        "canSeeHistorico"
+      ],
+      "fieldOfCompetencies": "Montagem",
+      "name": "Bruno Maquinação Silva",
+      "email": "bruno.limitado@dib4t.local",
+      "password": "{{bcrypt:$2a$10$}}",
+      "__v": {
+        "$numberInt": "1"
+      }
+    },
+    {
+      "_id": {
+        "$oid": "{{users:4}}"
+      },
+      "roles": [
+        "canSeeDashboard"
+      ],
+      "fieldOfCompetencies": "Desenvolvimento",
+      "name": "Carla Sem Área",
+      "email": "carla.semarea@dib4t.local",
+      "password": "{{bcrypt:$2a$10$}}",
+      "__v": {
+        "$numberInt": "0"
+      }
+    }
+  ]
+}

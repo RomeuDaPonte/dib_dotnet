@@ -22,6 +22,14 @@
 #   token                print a settings-capable JWT for the legacy API (dev only)
 #   seed                 fill a FRESH legacy DB with synthetic data through the legacy API
 #                        (seed-legacy.cs; users get the password "layout-test")
+#   characterize         record the characterization golden files (characterize.cs) on a FRESH
+#                        legacy DB → tests/fixtures/legacy/characterization/ (PLAN.md §11.2)
+#   ssh-golden           write the NAS SSH command golden files (ssh-golden.js) by running the
+#                        unchanged legacy routes with a recording SSH client on a virtual NAS, in a
+#                        throwaway DB "dib4t_ssh_golden" → tests/fixtures/legacy/ssh/ (PLAN.md §5.1)
+#   pdf-samples          write reference budget PDFs (pdf-samples.js) by running the unchanged legacy
+#                        PDF route on the anonymized production fixture, in a throwaway DB
+#                        "dib4t_pdf_samples" → tests/fixtures/legacy/pdf/ (PLAN.md §7.1)
 #   layout [options]     run the §8.4 layout matrix against the legacy UI (layout-matrix.cs)
 #   logs [backend|frontend|mongo]
 #
@@ -250,6 +258,48 @@ cmd_seed() {
     dotnet run "$SCRIPT_DIR/seed-legacy.cs")
 }
 
+cmd_characterize() {
+  backend_up || die "legacy back-end is not running (LEGACY_NO_FRONTEND=1 legacy.sh up --fresh)"
+  local users
+  users="$(docker exec "$MONGO_CONTAINER" mongo dib4t --quiet --eval 'db.users.countDocuments({})')"
+  [ "$users" = 1 ] || die "characterize expects a fresh DB (found $users users); run: legacy.sh up --fresh"
+  dotnet_env
+  log "recording characterization fixtures from the legacy API"
+  (cd "$REPO_ROOT" && LEGACY_API="http://localhost:$BACKEND_PORT/api" LEGACY_TOKEN="$(legacy_token)" \
+    CHARACTERIZATION_OUT="${CHARACTERIZATION_OUT:-tests/fixtures/legacy/characterization}" \
+    dotnet run "$SCRIPT_DIR/characterize.cs")
+}
+
+cmd_ssh_golden() {
+  local started=0
+  if ! mongo_ping; then
+    check_prereqs
+    start_mongo
+    started=1
+    trap stop_mongo EXIT # leave mongo as it was found, also on failure
+    wait_for "mongo" 60 mongo_ping
+  fi
+  ensure_node_modules "$BACKEND_DIR"
+  log "recording SSH command golden files from the legacy code (no NAS access)"
+  (cd "$REPO_ROOT" && DIB4T_LEGACY_ROOT="$LEGACY_ROOT" node "$SCRIPT_DIR/ssh-golden.js" \
+    "${SSH_GOLDEN_OUT:-tests/fixtures/legacy/ssh}")
+}
+
+cmd_pdf_samples() {
+  local started=0
+  if ! mongo_ping; then
+    check_prereqs
+    start_mongo
+    started=1
+    trap stop_mongo EXIT # leave mongo as it was found, also on failure
+    wait_for "mongo" 60 mongo_ping
+  fi
+  ensure_node_modules "$BACKEND_DIR"
+  log "generating reference PDFs with the legacy code (anonymized fixture, throwaway DB)"
+  (cd "$REPO_ROOT" && DIB4T_LEGACY_ROOT="$LEGACY_ROOT" node "$SCRIPT_DIR/pdf-samples.js" \
+    "${PDF_SAMPLES_OUT:-tests/fixtures/legacy/pdf}")
+}
+
 cmd_layout() {
   backend_up && frontend_up || die "legacy app is not fully running (legacy.sh up)"
   dotnet_env
@@ -272,8 +322,11 @@ case "${1:-}" in
   restore) shift; cmd_restore "$@" ;;
   backup)  shift; cmd_backup "$@" ;;
   seed)    cmd_seed ;;
+  characterize) cmd_characterize ;;
+  ssh-golden) cmd_ssh_golden ;;
+  pdf-samples) cmd_pdf_samples ;;
   layout)  shift; cmd_layout "$@" ;;
   token)   legacy_token; echo ;;
   logs)    shift; cmd_logs "$@" ;;
-  *) sed -n '2,30p' "$0"; exit 1 ;;
+  *) sed -n '2,35p' "$0"; exit 1 ;;
 esac
