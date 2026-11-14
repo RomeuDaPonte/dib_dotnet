@@ -83,7 +83,9 @@ if [ "$IMAGE" = 1 ]; then
   step "Docker image (linux/amd64) + smoke test"
   docker build --platform linux/amd64 -q -t dib4t-dotnet:verify . >/dev/null || fail "docker build"
   cleanup
-  docker run -d --name "$SMOKE_CONTAINER" --platform linux/amd64 -p "127.0.0.1:$SMOKE_PORT:3010" dib4t-dotnet:verify >/dev/null
+  # No database: the connection string is only validated at startup; the version check logs "not reachable" and retries.
+  docker run -d --name "$SMOKE_CONTAINER" --platform linux/amd64 -p "127.0.0.1:$SMOKE_PORT:3010" \
+    -e Mongo__ConnectionString='mongodb://127.0.0.1:1/dib4t?retryWrites=false' dib4t-dotnet:verify >/dev/null
   for _ in $(seq 1 60); do curl -sf -o /dev/null "http://127.0.0.1:$SMOKE_PORT/" && break; sleep 1; done
   check() { # <path> <expected status>
     local code; code=$(curl -s -o /dev/null -w '%{http_code}' "http://127.0.0.1:$SMOKE_PORT$1")
