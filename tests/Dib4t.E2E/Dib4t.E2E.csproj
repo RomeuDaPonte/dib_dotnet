@@ -1,8 +1,19 @@
 <Project Sdk="Microsoft.NET.Sdk">
-  <!-- PLAN.md §3, §11: Playwright: new app E2E, legacy-vs-new comparison, layout matrix. -->
+  <!-- PLAN.md §3, §11.6–11.8: Playwright: new app E2E, legacy-vs-new comparison, layout matrix.
+       The harness (Harness/) starts the UNCHANGED legacy app on mongo:4.1.4 (tools/legacy/legacy.sh) and the new
+       app (in-process Kestrel) on its own mongo:9.0.8 (Testcontainers), loads the same seed backup into both, and
+       exposes page objects for both UIs (Pages/). -->
 
-  <PropertyGroup>
-    <!-- No tests yet: Microsoft.Testing.Platform exits with 8 ("zero tests ran"). Remove with the first test. -->
-    <TestingPlatformCommandLineArguments>$(TestingPlatformCommandLineArguments) --ignore-exit-code 8</TestingPlatformCommandLineArguments>
-  </PropertyGroup>
+  <ItemGroup>
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" />
+    <PackageReference Include="Microsoft.Playwright" />
+    <PackageReference Include="Testcontainers.MongoDb" />
+    <!-- Test oracle only: reads both databases and the .dibbak files independently of the app's own code. -->
+    <PackageReference Include="MongoDB.Driver" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\Dib4t.Server\Dib4t.Server.csproj" />
+  </ItemGroup>
 </Project>

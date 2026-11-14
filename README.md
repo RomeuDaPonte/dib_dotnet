@@ -17,6 +17,12 @@ dotnet run --project src/Dib4t.Server    # http://localhost:3010
 
 Unit, integration and E2E suites separately: `tests/unit.slnf`, `tests/integration.slnf`, `tests/e2e.slnf`.
 
+The E2E suite (`tests/Dib4t.E2E`) starts the unchanged legacy app itself (`tools/legacy/legacy.sh`, own DB volume
+`dib4t-legacy-e2e`) and the new app on a Testcontainers `mongo:9.0.8`, and loads the same seed backup into both.
+The legacy ports (3000/3001/27017) must be free: stop a running legacy app with `tools/legacy/legacy.sh down`, or set
+`DIB4T_E2E_REUSE_LEGACY=1` to use it (its database is replaced by the seed). `DIB4T_E2E_HEADED=1` shows the browser;
+traces of failed tests go to `TestResults/e2e-artifacts/`.
+
 ## Docker
 
 ```sh

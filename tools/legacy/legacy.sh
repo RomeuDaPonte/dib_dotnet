@@ -36,6 +36,8 @@
 # Environment overrides:
 #   DIB4T_LEGACY_ROOT   folder holding back-end/ and front-end/ (default: ../ of dib4t-dotnet)
 #   LEGACY_NO_FRONTEND=1  start only mongo + back-end (API-only tests)
+#   LEGACY_MONGO_VOLUME  Docker volume of the legacy DB (default dib4t-legacy-db; the E2E harness uses
+#                        dib4t-legacy-e2e so a test run never touches the dev copy of the data)
 
 set -euo pipefail
 
@@ -48,7 +50,7 @@ RUN_DIR="$SCRIPT_DIR/.run"            # pid files + logs (git-ignored)
 
 MONGO_IMAGE="mongo:4.1.4"
 MONGO_CONTAINER="dib4t-legacy-mongo"
-MONGO_VOLUME="dib4t-legacy-db"
+MONGO_VOLUME="${LEGACY_MONGO_VOLUME:-dib4t-legacy-db}"
 MONGO_PORT=27017
 BACKEND_PORT=3001
 FRONTEND_PORT=3000
@@ -123,7 +125,10 @@ start_backend() {
   ensure_node_modules "$BACKEND_DIR"
   log "starting legacy back-end on :$BACKEND_PORT"
   # NODE_ENV must NOT be "prod": dev DB (localhost:27017), dev port, no SSH/NAS, no printing.
-  (cd "$BACKEND_DIR" && env -u NODE_ENV nohup node index.js >"$RUN_DIR/backend.log" 2>&1 & echo $! >"$RUN_DIR/backend.pid")
+  # The redirections apply to the whole background job: a forked shell must not keep the caller's stdout/stderr open
+  # (a caller reading them, like the E2E harness, would otherwise wait forever).
+  (cd "$BACKEND_DIR" && exec env -u NODE_ENV nohup node index.js) </dev/null >"$RUN_DIR/backend.log" 2>&1 &
+  echo $! >"$RUN_DIR/backend.pid"
   wait_for "legacy back-end" 60 backend_up
   wait_for "legacy DB seed (admin user)" 30 backend_db_ready
 }
@@ -133,8 +138,9 @@ start_frontend() {
   port_open "$FRONTEND_PORT" && die "port $FRONTEND_PORT is taken by another process"
   ensure_node_modules "$FRONTEND_DIR"
   log "starting legacy front-end on :$FRONTEND_PORT (first compile takes a while)"
-  (cd "$FRONTEND_DIR" && BROWSER=none PORT="$FRONTEND_PORT" CI=true \
-    nohup npx react-scripts start >"$RUN_DIR/frontend.log" 2>&1 & echo $! >"$RUN_DIR/frontend.pid")
+  (cd "$FRONTEND_DIR" && BROWSER=none PORT="$FRONTEND_PORT" CI=true exec nohup npx react-scripts start) \
+    </dev/null >"$RUN_DIR/frontend.log" 2>&1 &
+  echo $! >"$RUN_DIR/frontend.pid"
   wait_for "legacy front-end" 300 frontend_up
 }
 
@@ -328,5 +334,5 @@ case "${1:-}" in
   layout)  shift; cmd_layout "$@" ;;
   token)   legacy_token; echo ;;
   logs)    shift; cmd_logs "$@" ;;
-  *) sed -n '2,35p' "$0"; exit 1 ;;
+  *) sed -n '2,41p' "$0"; exit 1 ;;
 esac
