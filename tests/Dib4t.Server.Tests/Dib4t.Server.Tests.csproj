@@ -1,9 +1,14 @@
 <Project Sdk="Microsoft.NET.Sdk">
-  <!-- PLAN.md §3, §11: API and hosting tests with WebApplicationFactory. -->
+  <!-- PLAN.md §3, §11: API and hosting tests with WebApplicationFactory (+ Testcontainers mongo:9.0.8). -->
 
   <ItemGroup>
     <FrameworkReference Include="Microsoft.AspNetCore.App" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" />
+    <PackageReference Include="Testcontainers.MongoDb" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Include="..\Shared\*.cs" LinkBase="Shared" />
   </ItemGroup>
 
   <ItemGroup>

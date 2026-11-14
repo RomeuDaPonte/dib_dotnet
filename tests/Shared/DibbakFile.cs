@@ -4,7 +4,7 @@ using System.Text.Json;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization;
 
-namespace Dib4t.E2E.Harness;
+namespace Dib4t.Tests.Common;
 
 /// <summary>
 /// Minimal, independent reader of the legacy backup format (back-end/helpers/backupFormat.js, PLAN.md §7.6):

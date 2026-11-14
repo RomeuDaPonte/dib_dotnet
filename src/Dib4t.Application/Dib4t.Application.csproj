@@ -2,6 +2,10 @@
   <!-- PLAN.md §3: use-case services, ports (interfaces), validators, Result types. -->
 
   <ItemGroup>
+    <InternalsVisibleTo Include="Dib4t.Application.Tests" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\Dib4t.Domain\Dib4t.Domain.csproj" />
   </ItemGroup>
 </Project>

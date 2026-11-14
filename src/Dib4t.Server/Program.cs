@@ -1,8 +1,12 @@
+using Dib4t.Application;
+using Dib4t.Infrastructure;
 using Dib4t.Server.Components;
 using Microsoft.AspNetCore.Diagnostics;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddApplication();
+builder.Services.AddInfrastructure(builder.Configuration);
 builder.Services.AddControllers();
 builder.Services.AddRazorComponents()
     .AddInteractiveWebAssemblyComponents();

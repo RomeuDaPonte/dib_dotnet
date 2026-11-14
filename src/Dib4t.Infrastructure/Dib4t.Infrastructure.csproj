@@ -2,6 +2,17 @@
   <!-- PLAN.md §3: MongoDB, NAS (SSH.NET), label printer, PDF, backup format, logging store. -->
 
   <ItemGroup>
+    <!-- Options binding/validation and hosting abstractions for the adapters (no HTTP code lives here). -->
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+    <PackageReference Include="MongoDB.Driver" />
+    <PackageReference Include="System.IO.Hashing" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <InternalsVisibleTo Include="Dib4t.Infrastructure.Tests" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\Dib4t.Application\Dib4t.Application.csproj" />
   </ItemGroup>
 </Project>

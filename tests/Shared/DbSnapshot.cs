@@ -2,7 +2,7 @@ using System.Globalization;
 using MongoDB.Bson;
 using MongoDB.Bson.IO;
 
-namespace Dib4t.E2E.Harness;
+namespace Dib4t.Tests.Common;
 
 /// <summary>
 /// All documents of a database, per collection, ordered by <c>_id</c>. Compared field by field <b>including the BSON

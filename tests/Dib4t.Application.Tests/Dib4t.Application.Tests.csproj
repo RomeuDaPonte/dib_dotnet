@@ -1,10 +1,9 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <!-- PLAN.md §3, §11: use-case services against substituted ports (unit). -->
 
-  <PropertyGroup>
-    <!-- No tests yet: Microsoft.Testing.Platform exits with 8 ("zero tests ran"). Remove with the first test. -->
-    <TestingPlatformCommandLineArguments>$(TestingPlatformCommandLineArguments) --ignore-exit-code 8</TestingPlatformCommandLineArguments>
-  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="NSubstitute" />
+  </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\Dib4t.Application\Dib4t.Application.csproj" />

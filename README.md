@@ -23,6 +23,13 @@ The legacy ports (3000/3001/27017) must be free: stop a running legacy app with 
 `DIB4T_E2E_REUSE_LEGACY=1` to use it (its database is replaced by the seed). `DIB4T_E2E_HEADED=1` shows the browser;
 traces of failed tests go to `TestResults/e2e-artifacts/`.
 
+`dotnet run` in Development uses the database of `docker-compose.dev.yml` (`dib4t-db`, `localhost:27018`). Load a
+legacy backup into it with `curl -H 'Content-Type: application/octet-stream' --data-binary @<file>.dibbak
+http://localhost:3010/api/database/restore` (open outside Production until the auth step).
+
+The import compatibility suite (`tests/Dib4t.ImportCompatibility.Tests`) also restores a full, real production
+backup byte for byte when `DIB4T_FULL_BACKUP=<path to .dibbak>` is set (never commit that file); skipped otherwise.
+
 ## Docker
 
 ```sh

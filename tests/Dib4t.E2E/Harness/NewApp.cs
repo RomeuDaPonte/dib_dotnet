@@ -1,4 +1,5 @@
 using System.Net;
+using System.Net.Http.Headers;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Hosting.Server;
 using Microsoft.AspNetCore.Hosting.Server.Features;
@@ -56,38 +57,23 @@ public sealed class NewApp : IAppUnderTest, IAsyncDisposable
     }
 
     /// <summary>
-    /// TEMPORARY (until the backup restore slice, PLAN.md §10 Phase 1): loads the backup's raw BSON documents straight
-    /// into the new database. Replace with <c>POST /api/database/restore</c> once the endpoint exists, so the E2E
-    /// scenarios exercise the app's own import path.
+    /// Restores through the app's own import path, <c>POST /api/database/restore</c> (PLAN.md §7.6), exactly as a user
+    /// uploads a backup downloaded from the legacy app.
     /// </summary>
-    public async Task RestoreAsync(string backupPath, CancellationToken cancellationToken)
-    {
-        var backup = DibbakFile.Read(backupPath);
-        await _database!.Client.DropDatabaseAsync(DatabaseName, cancellationToken);
-        foreach (var collection in backup.Collections)
-        {
-            await _database.CreateCollectionAsync(collection.Name, cancellationToken: cancellationToken);
-            if (collection.Documents.Count == 0)
-            {
-                continue;
-            }
+    public async Task RestoreAsync(string backupPath, CancellationToken cancellationToken) =>
+        await RestoreAsync(await File.ReadAllBytesAsync(backupPath, cancellationToken), cancellationToken);
 
-            var target = _database.GetCollection<RawBsonDocument>(collection.Name);
-            foreach (var batch in collection.Documents.Chunk(1000))
-            {
-                var documents = batch.Select(bytes => new RawBsonDocument(bytes)).ToList();
-                try
-                {
-                    await target.InsertManyAsync(
-                        documents,
-                        new InsertManyOptions { IsOrdered = true, BypassDocumentValidation = true },
-                        cancellationToken);
-                }
-                finally
-                {
-                    documents.ForEach(d => d.Dispose());
-                }
-            }
+    /// <inheritdoc cref="RestoreAsync(string, CancellationToken)"/>
+    public async Task RestoreAsync(byte[] backup, CancellationToken cancellationToken)
+    {
+        using var api = new HttpClient { BaseAddress = ApiBaseUrl, Timeout = TimeSpan.FromMinutes(5) };
+        using var content = new ByteArrayContent(backup);
+        content.Headers.ContentType = new MediaTypeHeaderValue("application/octet-stream");
+        using var response = await api.PostAsync(new Uri("database/restore", UriKind.Relative), content, cancellationToken);
+        var body = await response.Content.ReadAsStringAsync(cancellationToken);
+        if (!response.IsSuccessStatusCode)
+        {
+            throw new InvalidOperationException($"new-app restore failed ({(int)response.StatusCode}): {body}");
         }
     }
 

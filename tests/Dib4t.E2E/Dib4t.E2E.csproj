@@ -14,6 +14,12 @@
   </ItemGroup>
 
   <ItemGroup>
+    <!-- Shared test code: independent .dibbak oracle (DibbakFile), DbSnapshot comparer, test backup writer. -->
+    <Compile Include="..\Shared\*.cs" LinkBase="Shared" />
+    <Using Include="Dib4t.Tests.Common" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\..\src\Dib4t.Server\Dib4t.Server.csproj" />
   </ItemGroup>
 </Project>

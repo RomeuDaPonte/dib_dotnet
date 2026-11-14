@@ -1,12 +1,19 @@
 <Project Sdk="Microsoft.NET.Sdk">
-  <!-- PLAN.md §3, §11: legacy app (unchanged, mongo:4.1.4) makes backups, the new app imports them (§11.3). -->
-
-  <PropertyGroup>
-    <!-- No tests yet: Microsoft.Testing.Platform exits with 8 ("zero tests ran"). Remove with the first test. -->
-    <TestingPlatformCommandLineArguments>$(TestingPlatformCommandLineArguments) --ignore-exit-code 8</TestingPlatformCommandLineArguments>
-  </PropertyGroup>
+  <!-- PLAN.md §3, §11.3: legacy backups import into the new app (on mongo:9.0.8) through POST /api/database/restore,
+       every document byte for byte. Backups made by the running legacy app are covered in Dib4t.E2E
+       (DatabaseRestoreTests); scripted legacy fill-ups per feature come with the feature slices. -->
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\Dib4t.Infrastructure\Dib4t.Infrastructure.csproj" />
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" />
+    <PackageReference Include="Testcontainers.MongoDb" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Include="..\Shared\*.cs" LinkBase="Shared" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\Dib4t.Server\Dib4t.Server.csproj" />
   </ItemGroup>
 </Project>

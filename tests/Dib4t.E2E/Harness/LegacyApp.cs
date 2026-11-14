@@ -74,11 +74,12 @@ public sealed class LegacyApp : IAppUnderTest, IAsyncDisposable
         }
     }
 
-    public async Task<DbSnapshot> SnapshotAsync(CancellationToken cancellationToken)
-    {
-        var backup = await _api.GetByteArrayAsync(new Uri("database/backup", UriKind.Relative), cancellationToken);
-        return DibbakFile.Parse(backup).ToSnapshot();
-    }
+    public async Task<DbSnapshot> SnapshotAsync(CancellationToken cancellationToken) =>
+        DibbakFile.Parse(await DownloadBackupAsync(cancellationToken)).ToSnapshot();
+
+    /// <summary>A <c>.dibbak</c> made by the legacy app itself (<c>GET /api/database/backup</c>, Settings → Base de dados).</summary>
+    public Task<byte[]> DownloadBackupAsync(CancellationToken cancellationToken) =>
+        _api.GetByteArrayAsync(new Uri("database/backup", UriKind.Relative), cancellationToken);
 
     public async ValueTask DisposeAsync()
     {
