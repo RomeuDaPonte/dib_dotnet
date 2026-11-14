@@ -1,0 +1,4 @@
+# The file-based legacy tools are scripts, not app code: the app's stricter analyzer severities do not apply.
+[*.cs]
+dotnet_diagnostic.CA1849.severity = none
+dotnet_diagnostic.CA2016.severity = none

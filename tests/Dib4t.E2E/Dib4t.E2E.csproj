@@ -1,0 +1,8 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!-- PLAN.md §3, §11: Playwright: new app E2E, legacy-vs-new comparison, layout matrix. -->
+
+  <PropertyGroup>
+    <!-- No tests yet: Microsoft.Testing.Platform exits with 8 ("zero tests ran"). Remove with the first test. -->
+    <TestingPlatformCommandLineArguments>$(TestingPlatformCommandLineArguments) --ignore-exit-code 8</TestingPlatformCommandLineArguments>
+  </PropertyGroup>
+</Project>

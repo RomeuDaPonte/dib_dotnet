@@ -1,0 +1,3 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!-- PLAN.md §3: no dependencies. Well-known string constants and pure calculations. -->
+</Project>

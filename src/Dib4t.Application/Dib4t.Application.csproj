@@ -1,0 +1,7 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!-- PLAN.md §3: use-case services, ports (interfaces), validators, Result types. -->
+
+  <ItemGroup>
+    <ProjectReference Include="..\Dib4t.Domain\Dib4t.Domain.csproj" />
+  </ItemGroup>
+</Project>

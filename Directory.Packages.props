@@ -1,0 +1,43 @@
+<Project>
+  <!-- PLAN.md §2.1: Central Package Management, one version per package. Re-checked 2026-11-14 (start of Phase 1).
+       Only add a PackageReference (without Version) in a project when the code uses it. -->
+  <PropertyGroup>
+    <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
+    <!-- Pin transitive packages too, so no package can pull in a different MongoDB.Driver etc. -->
+    <CentralPackageTransitivePinningEnabled>true</CentralPackageTransitivePinningEnabled>
+  </PropertyGroup>
+
+  <ItemGroup Label="ASP.NET Core / Blazor (11.0.x)">
+    <PackageVersion Include="Microsoft.AspNetCore.Components.WebAssembly" Version="11.0.0" />
+    <PackageVersion Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="11.0.0" />
+    <PackageVersion Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="11.0.0" />
+    <PackageVersion Include="Microsoft.Data.Sqlite" Version="11.0.0" />
+  </ItemGroup>
+
+  <ItemGroup Label="Libraries">
+    <PackageVersion Include="MongoDB.Driver" Version="3.14.0" />
+    <PackageVersion Include="MudBlazor" Version="9.13.0" />
+    <PackageVersion Include="FluentValidation" Version="12.2.0" />
+    <PackageVersion Include="FluentValidation.DependencyInjectionExtensions" Version="12.2.0" />
+    <PackageVersion Include="BCrypt.Net-Next" Version="4.2.1" />
+    <PackageVersion Include="SSH.NET" Version="2026.0.0" />
+    <PackageVersion Include="PDFsharp" Version="6.5.0" />
+    <PackageVersion Include="Serilog.AspNetCore" Version="10.0.0" />
+    <PackageVersion Include="Riok.Mapperly" Version="4.3.1" />
+  </ItemGroup>
+
+  <!-- xunit.v3 4.x runs on Microsoft.Testing.Platform (global.json "test.runner"); VSTest packages are not used. -->
+  <ItemGroup Label="Tests">
+    <PackageVersion Include="xunit.v3" Version="4.0.3" />
+    <PackageVersion Include="AwesomeAssertions" Version="9.6.0" />
+    <PackageVersion Include="NSubstitute" Version="6.2.0" />
+    <PackageVersion Include="Testcontainers.MongoDb" Version="4.16.0" />
+    <PackageVersion Include="bunit" Version="2.15.2" />
+    <PackageVersion Include="Microsoft.Playwright" Version="1.64.1" />
+    <PackageVersion Include="Deque.AxeCore.Playwright" Version="4.14.0" />
+    <PackageVersion Include="NetArchTest.Rules" Version="1.3.2" />
+    <PackageVersion Include="coverlet.MTP" Version="10.1.0" />
+    <PackageVersion Include="Microsoft.AspNetCore.Mvc.Testing" Version="11.0.0" />
+    <PackageVersion Include="Microsoft.Extensions.TimeProvider.Testing" Version="11.0.0" />
+  </ItemGroup>
+</Project>

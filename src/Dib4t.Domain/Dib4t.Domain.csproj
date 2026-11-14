@@ -1,0 +1,7 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!-- PLAN.md §3: aggregates and domain rules. No persistence or framework types. -->
+
+  <ItemGroup>
+    <ProjectReference Include="..\Dib4t.SharedKernel\Dib4t.SharedKernel.csproj" />
+  </ItemGroup>
+</Project>

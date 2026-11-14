@@ -1,0 +1,12 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!-- PLAN.md §3, §11: Blazor component tests (bUnit). -->
+
+  <PropertyGroup>
+    <!-- No tests yet: Microsoft.Testing.Platform exits with 8 ("zero tests ran"). Remove with the first test. -->
+    <TestingPlatformCommandLineArguments>$(TestingPlatformCommandLineArguments) --ignore-exit-code 8</TestingPlatformCommandLineArguments>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\Dib4t.Client\Dib4t.Client.csproj" />
+  </ItemGroup>
+</Project>

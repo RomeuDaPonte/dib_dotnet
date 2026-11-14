@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!-- PLAN.md §3.1: dependency rules (project graph, packages, type dependencies). -->
+
+  <ItemGroup>
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+    <PackageReference Include="NetArchTest.Rules" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\Dib4t.SharedKernel\Dib4t.SharedKernel.csproj" />
+    <ProjectReference Include="..\..\src\Dib4t.Domain\Dib4t.Domain.csproj" />
+    <ProjectReference Include="..\..\src\Dib4t.Application\Dib4t.Application.csproj" />
+    <ProjectReference Include="..\..\src\Dib4t.Infrastructure\Dib4t.Infrastructure.csproj" />
+    <ProjectReference Include="..\..\src\Dib4t.Contracts\Dib4t.Contracts.csproj" />
+    <ProjectReference Include="..\..\src\Dib4t.Client\Dib4t.Client.csproj" />
+    <ProjectReference Include="..\..\src\Dib4t.Server\Dib4t.Server.csproj" />
+  </ItemGroup>
+</Project>

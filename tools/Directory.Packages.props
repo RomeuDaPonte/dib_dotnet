@@ -1,0 +1,6 @@
+<Project>
+  <!-- The file-based legacy tools pin versions in their #:package directives (no Central Package Management). -->
+  <PropertyGroup>
+    <ManagePackageVersionsCentrally>false</ManagePackageVersionsCentrally>
+  </PropertyGroup>
+</Project>

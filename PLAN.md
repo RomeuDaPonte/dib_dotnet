@@ -1,6 +1,6 @@
 # Dib4t — Rewrite plan: Node/React ➜ .NET (ASP.NET Core + Blazor WebAssembly)
 
-> Status: **Plan / not started** · Created 2026-11-12 · Updated 2026-11-14 (owner decisions: §14 answered, §9 decided, ADR-0001…0005 in `docs/decisions/`; N5 dropped) · 2026-11-14 (reference budget PDFs from the legacy code: 11 samples, PDF layout facts in §7.1, D22–D23, owner check N5) · 2026-11-14 (SSH command golden files from the legacy code, D19–D21, ESC byte in label templates, §5, §9) · 2026-11-14 (logging: every DB, HTTP, NAS and printer interaction logged to a local log store, Settings → Registos log viewer with search, daily 02:00 cleanup of logs older than one month, §3.3) · 2026-11-13 (two databases: legacy untouched, new app on MongoDB 9.0.8 fed by legacy backups; port 3010; latest packages; test policy; responsive layout; NAS and printers not reachable from the dev network: converted from the legacy code, real-device checks deferred to the owner, §5.1)
+> Status: **Phase 1 in progress** · Created 2026-11-12 · Updated 2026-11-14 (Phase 1 step 1: solution skeleton, central packages re-checked, architecture tests, xUnit on Microsoft.Testing.Platform, §2.1, §10) · 2026-11-14 (owner decisions: §14 answered, §9 decided, ADR-0001…0005 in `docs/decisions/`; N5 dropped) · 2026-11-14 (reference budget PDFs from the legacy code: 11 samples, PDF layout facts in §7.1, D22–D23, owner check N5) · 2026-11-14 (SSH command golden files from the legacy code, D19–D21, ESC byte in label templates, §5, §9) · 2026-11-14 (logging: every DB, HTTP, NAS and printer interaction logged to a local log store, Settings → Registos log viewer with search, daily 02:00 cleanup of logs older than one month, §3.3) · 2026-11-13 (two databases: legacy untouched, new app on MongoDB 9.0.8 fed by legacy backups; port 3010; latest packages; test policy; responsive layout; NAS and printers not reachable from the dev network: converted from the legacy code, real-device checks deferred to the owner, §5.1)
 > Source of truth for the behavior: `../back-end` (Node/Express/Mongoose) and `../front-end` (React 17 / MUI v4).
 
 ---
@@ -33,7 +33,7 @@ Rebuild the Dib4t ERP web app (budgets, jobs, entities, settings, dashboard, rea
 | Server | ASP.NET Core 11, **Controllers** (API) + Blazor Web App host | Controllers suit a large, existing REST surface that has to stay identical. |
 | Client | **Blazor WebAssembly** (Blazor Web App template, `InteractiveWebAssembly` render mode for all pages, **prerendering off**) | Meets "WebAssembly". With prerendering off, the token lives in browser storage (`localStorage`, so the user stays logged in, §4.6). |
 | UI kit | **MudBlazor** (Material Design) | Closest to MUI: same components (AppBar, Drawer, Tabs, Table, Dialog, Snackbar, DatePicker) and palette model, so the look carries over. |
-| DB driver | **MongoDB.Driver** (official C# driver) | Fine-grained control over BSON types and `$set` updates, which compatibility depends on (§4). **3.13.0** (latest). Fully supports MongoDB 9.0 (since 3.10). See §2.2. |
+| DB driver | **MongoDB.Driver** (official C# driver) | Fine-grained control over BSON types and `$set` updates, which compatibility depends on (§4). **3.14.0** (latest, re-checked 2026-11-14). Fully supports MongoDB 9.0 (since 3.10). See §2.2. |
 | Validation | **FluentValidation** | Ports the Joi schemas. Shared between server and client where useful. |
 | Auth | `Microsoft.AspNetCore.Authentication.JwtBearer`, token read from the `x-auth-token` header | Same header and claims as the old API; its own key (§4.6). |
 | Passwords | **BCrypt.Net-Next** | Reads and writes the bcryptjs `$2a/$2b$10$` hashes already in `users`. |
@@ -52,8 +52,8 @@ Rebuild the Dib4t ERP web app (budgets, jobs, entities, settings, dashboard, rea
 | Package | Version | Note |
 |---|---|---|
 | .NET SDK / runtime, `Microsoft.AspNetCore.*`, `Microsoft.Extensions.*` | **11.0.x** (SDK 11.0.100) | `Components.WebAssembly`, `Components.WebAssembly.Server`, `Mvc.Testing`, `TimeProvider.Testing` at 11.0.0 |
-| **MongoDB.Driver** | **3.13.0** | Latest; supports server 9.0. |
-| MudBlazor | 9.12.0 | Ships `net8.0`/`net9.0`/`net10.0` builds, no `net11.0` build yet; the `net10.0` build runs on .NET 11. Verified in Phase 1 (smoke test of every component used); if it fails, the solution falls back to .NET 10 LTS. |
+| **MongoDB.Driver** | **3.14.0** | Latest (was 3.13.0 on 2026-11-12); supports server 9.0. The Phase 0 tools keep `MongoDB.Bson` 3.13.0 in their `#:package` lines (they only read BSON). |
+| MudBlazor | 9.13.0 (was 9.12.0) | Ships `net8.0`/`net9.0`/`net10.0` builds, no `net11.0` build yet; the `net10.0` build runs on .NET 11. Verified in Phase 1 (smoke test of every component used); if it fails, the solution falls back to .NET 10 LTS. |
 | FluentValidation (+ DependencyInjectionExtensions) | 12.2.0 | |
 | BCrypt.Net-Next | 4.2.1 | |
 | SSH.NET | 2026.0.0 | |
@@ -61,17 +61,17 @@ Rebuild the Dib4t ERP web app (budgets, jobs, entities, settings, dashboard, rea
 | Serilog.AspNetCore | 10.0.0 | Brings Serilog 4.x, whose built-in batching (`IBatchedLogEventSink`) the log store sink uses. No `Serilog.Sinks.File`: the SQLite store replaces the rolling file. |
 | Microsoft.Data.Sqlite | 11.0.x | Log store (§3.3). Same release train as .NET 11; re-checked in Phase 1 with the other versions. |
 | Riok.Mapperly | 4.3.1 | |
-| xunit.v3 / xunit.runner.visualstudio / Microsoft.NET.Test.Sdk | 4.0.3 / 4.0.1 / 18.12.0 | |
+| xunit.v3 | 4.0.3 | Runs on **Microsoft.Testing.Platform** (`global.json` → `"test": { "runner": "Microsoft.Testing.Platform" }`): xunit.v3 4.x no longer supports the VSTest target on the .NET 10+ SDK, so `xunit.runner.visualstudio` and `Microsoft.NET.Test.Sdk` are not used. Run with `dotnet test --solution Dib4t.slnx`. |
 | AwesomeAssertions | 9.6.0 | |
 | NSubstitute | 6.2.0 | |
 | Testcontainers.MongoDb | 4.16.0 | Image pinned to `mongo:9.0.8`, platform `linux/amd64` in CI (§2.2) |
 | bunit | 2.15.2 | Has a `net11.0` build |
 | Microsoft.Playwright / Deque.AxeCore.Playwright | 1.64.1 / 4.14.0 | |
 | NetArchTest.Rules | 1.3.2 | |
-| coverlet.collector | 10.1.0 | |
+| coverlet.MTP | 10.1.0 | Coverage for Microsoft.Testing.Platform (replaces `coverlet.collector`, which is VSTest-only). |
 
 - No `AspNetCore.HealthChecks.MongoDb`: the `/health` Mongo ping is a 10-line custom `IHealthCheck`, which avoids a package that could pull a newer driver.
-- Renovate/Dependabot keeps everything current. Versions are re-checked at the start of Phase 1. The Mongo image tag is updated only within `9.0.x` patch releases, and tests run on the new tag before production does.
+- Renovate/Dependabot keeps everything current. Versions were re-checked at the start of Phase 1 (2026-11-14, against nuget.org; everything else unchanged). The Mongo image tag is updated only within `9.0.x` patch releases, and tests run on the new tag before production does.
 
 ### 2.2 Databases: legacy stays on 4.1.4, new app gets its own MongoDB 9.0.8
 
@@ -140,6 +140,7 @@ dib4t-dotnet/
    ├─ Dib4t.Server.Tests/           # WebApplicationFactory API tests
    ├─ Dib4t.ImportCompatibility.Tests/ # Legacy app (unchanged, mongo:4.1.4) makes backups → new app imports them (§11.3)
    ├─ Dib4t.Client.Tests/           # bUnit
+   ├─ Dib4t.Architecture.Tests/     # Dependency rules of §3.1 (project graph, packages, NetArchTest type rules)
    └─ Dib4t.E2E/                    # Playwright (.NET): new app E2E, legacy-vs-new comparison, layout matrix
 ```
 
@@ -643,12 +644,21 @@ A feature is done only when all of these are in the same pull request:
 7. CI green; no new analyzer warnings.
 
 ### Phase 1: Foundation
-- [ ] Solution, projects and dependency rules (§3), `Directory.Build.props`, central packages, `.editorconfig`, analyzers, architecture tests.
+- [x] Solution, projects and dependency rules (§3), `Directory.Build.props`, central packages, `.editorconfig`, analyzers, architecture tests.
+  - `Dib4t.slnx` with the 7 `src/` projects and 8 test projects of §3, plus **`tests/Dib4t.Architecture.Tests`** (not in the §3 tree before). Each library has a public `<Name>Assembly` marker type (architecture tests, later DI scanning); no feature code yet.
+  - `Directory.Build.props`: `net11.0`, nullable, `TreatWarningsAsErrors`, `AnalysisLevel=latest-recommended`, `EnforceCodeStyleInBuild`, **`Version` 1.0.0** with `IncludeSourceRevisionInInformationalVersion=false` (ADR-0003: the informational version is exactly `1.0.0`, no `+commit`). `tests/Directory.Build.props` adds xunit.v3, AwesomeAssertions and coverlet.MTP to every test project.
+  - `Directory.Packages.props`: Central Package Management with **transitive pinning** (no package can pull another MongoDB.Driver); every §2.1 package listed, but a project references a package only when its code uses it (today: WebAssembly, WebAssembly.Server, Mvc.Testing, NetArchTest).
+  - `.editorconfig`: file-scoped namespaces, braces, `_camelCase` private fields, PascalCase constants and static readonly fields, unused usings (IDE0005), CA2016 (pass the `CancellationToken`) and CA1849 as errors; CA2007 off. `dotnet format Dib4t.slnx --verify-no-changes` is clean (add it to CI).
+  - `tools/` has its own `Directory.Build.props`, `Directory.Packages.props` and `.editorconfig`, so the Phase 0 file-based tools keep their `#:package` versions and build exactly as before (checked: all four `.cs` tools build with 0 warnings).
+  - Server: Blazor Web App host, every page `InteractiveWebAssembly` with **prerendering off**, `lang="pt"`, port **3010** in `launchSettings.json`, controllers mapped. Unknown client routes re-execute to the client's `/not-found` page (404 + HTML); `/api/*` is excluded from status-code pages, so API responses stay the legacy ones (unknown API route = empty 404).
+  - Architecture tests (31): project graph from the `.csproj` files (transitive closure must stay inside the §3.1 graph; every `src/` project must have a rule; no cycles); SharedKernel and Domain have no packages; MongoDB/SSH.NET/PDFsharp/BCrypt/SQLite only in Infrastructure; no ASP.NET Core/MudBlazor/Serilog in the inner projects; NetArchTest type rules (forbidden namespaces per assembly, no `HttpClient` in Client components, no Infrastructure/MongoDB in controllers, no types named `Task`/`Entity`); every assembly is version `1.0.0`. Checked against deliberate violations (Domain → Contracts reference, a `Domain.Entity` type, a component injecting `HttpClient`): 6 tests failed as expected.
+  - Server tests (4, `WebApplicationFactory`): host page served without prerendered content, `blazor.web.js` served, unknown client route 404 with HTML, unknown API route 404 without a body.
+  - Test projects without tests yet pass `--ignore-exit-code 8` (Microsoft.Testing.Platform fails on "zero tests ran"); remove it from a project together with its first test.
 - [ ] CI pipeline (build, unit, integration, E2E incl. legacy comparison and layout matrix), Dockerfile, `docker-compose.dev.yml` (legacy: `mongo:4.1.4` + back-end + front-end, unchanged; new: `mongo:9.0.8` + new app on `:3010`; all `linux/amd64`).
 - [ ] E2E harness: Playwright fixture that loads the same seed backup into both databases (legacy restore on 4.1.4, new-app restore on 9.0.8), starts both apps, and exposes page objects for both UIs (§11).
 - [ ] **Backup restore (import) slice first**: `.dibbak` reader + restore endpoint (API only) so every later phase can load real legacy data into the new app and test on it.
 - [ ] **Logging foundation (C11, §3.3)**, before any feature so every later slice logs automatically: Serilog with the batched SQLite log-store sink (bounded queue, drop-not-block), console sink, destructuring policy for secrets, request logging middleware, Mongo command event logging (no command bodies), request id / user enrichment, `IExceptionHandler` (D16). Tests: batching and drop behavior, every Mongo command of a repository call produces one `Database` entry with collection and duration, no secret in the store, a 5xx response carries `x-request-id` and the matching Error entry exists.
-- [ ] Mongo infrastructure (MongoDB.Driver 3.13.0, startup version check, `retryWrites=false`): `JsNumberSerializer`, conventions, class maps for all 8 collections, round-trip tests against fixtures (read every variant, write, and check the BSON types match §4.3).
+- [ ] Mongo infrastructure (MongoDB.Driver 3.14.0, startup version check, `retryWrites=false`): `JsNumberSerializer`, conventions, class maps for all 8 collections, round-trip tests against fixtures (read every variant, write, and check the BSON types match §4.3).
 - [ ] Auth: `JwtBearer` with the `x-auth-token` header and own key, tokens without expiry stored in `localStorage`, roles checked against the DB, `GET /api/account/me`, bcrypt verification of imported passwords, policies, login endpoint, **login page** and logout (synced across tabs). E2E: still logged in after closing and reopening the browser and after a server restart; logged out only by the logout button (and in every tab); a removed role disappears without a new login.
 - [ ] Blazor shell: MudBlazor theme (§8.3), **responsive** landing layout (§8.4: temporary/mini/permanent drawer), role-based menu, theme toggle, logout, snackbar, global HTTP error handling. Layout matrix test running from the first page.
 - **Exit:** a legacy backup imports through the API, and an existing user from that backup logs in to the new app with their current password.

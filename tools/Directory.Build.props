@@ -1,0 +1,4 @@
+<Project>
+  <!-- Stops the repo-root Directory.Build.props from applying to the file-based legacy tools
+       (tools/legacy/*.cs): they keep their own #:package / #:property directives. -->
+</Project>

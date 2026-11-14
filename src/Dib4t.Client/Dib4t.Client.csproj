@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk.BlazorWebAssembly">
+  <!-- PLAN.md §3: Blazor WebAssembly client. References Contracts only: never Domain, Application,
+       Infrastructure or the MongoDB driver (§3.1, checked by Dib4t.Architecture.Tests). -->
+  <PropertyGroup>
+    <NoDefaultLaunchSettingsFile>true</NoDefaultLaunchSettingsFile>
+    <StaticWebAssetProjectMode>Default</StaticWebAssetProjectMode>
+    <BlazorDisableThrowNavigationException>true</BlazorDisableThrowNavigationException>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Dib4t.Contracts\Dib4t.Contracts.csproj" />
+  </ItemGroup>
+</Project>

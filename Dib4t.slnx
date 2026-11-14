@@ -1,0 +1,29 @@
+<Solution>
+  <Folder Name="/Solution Items/">
+    <File Path=".editorconfig" />
+    <File Path="Directory.Build.props" />
+    <File Path="Directory.Packages.props" />
+    <File Path="global.json" />
+    <File Path="PLAN.md" />
+  </Folder>
+  <Folder Name="/src/">
+    <Project Path="src/Dib4t.SharedKernel/Dib4t.SharedKernel.csproj" />
+    <Project Path="src/Dib4t.Domain/Dib4t.Domain.csproj" />
+    <Project Path="src/Dib4t.Application/Dib4t.Application.csproj" />
+    <Project Path="src/Dib4t.Infrastructure/Dib4t.Infrastructure.csproj" />
+    <Project Path="src/Dib4t.Contracts/Dib4t.Contracts.csproj" />
+    <Project Path="src/Dib4t.Server/Dib4t.Server.csproj" />
+    <Project Path="src/Dib4t.Client/Dib4t.Client.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <File Path="tests/Directory.Build.props" />
+    <Project Path="tests/Dib4t.Architecture.Tests/Dib4t.Architecture.Tests.csproj" />
+    <Project Path="tests/Dib4t.Domain.Tests/Dib4t.Domain.Tests.csproj" />
+    <Project Path="tests/Dib4t.Application.Tests/Dib4t.Application.Tests.csproj" />
+    <Project Path="tests/Dib4t.Infrastructure.Tests/Dib4t.Infrastructure.Tests.csproj" />
+    <Project Path="tests/Dib4t.Server.Tests/Dib4t.Server.Tests.csproj" />
+    <Project Path="tests/Dib4t.ImportCompatibility.Tests/Dib4t.ImportCompatibility.Tests.csproj" />
+    <Project Path="tests/Dib4t.Client.Tests/Dib4t.Client.Tests.csproj" />
+    <Project Path="tests/Dib4t.E2E/Dib4t.E2E.csproj" />
+  </Folder>
+</Solution>

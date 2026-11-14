@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+  <!-- PLAN.md §3: ASP.NET Core host. Controllers (API), composition root, hosts the WebAssembly client. -->
+  <PropertyGroup>
+    <BlazorDisableThrowNavigationException>true</BlazorDisableThrowNavigationException>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Dib4t.Infrastructure\Dib4t.Infrastructure.csproj" />
+    <ProjectReference Include="..\Dib4t.Contracts\Dib4t.Contracts.csproj" />
+    <ProjectReference Include="..\Dib4t.Client\Dib4t.Client.csproj" />
+  </ItemGroup>
+</Project>

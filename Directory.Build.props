@@ -1,0 +1,30 @@
+<Project>
+  <!-- PLAN.md §3: shared settings for every project under src/ and tests/.
+       tools/ has its own Directory.Build.props that stops this chain (file-based legacy tools). -->
+  <PropertyGroup>
+    <TargetFramework>net11.0</TargetFramework>
+    <LangVersion>latest</LangVersion>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+
+    <!-- Analyzers: warnings are errors; code style (.editorconfig) is enforced in the build. -->
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <AnalysisLevel>latest-recommended</AnalysisLevel>
+    <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
+    <!-- Needed for IDE0005 (unused usings) in the build; missing XML docs are not an error. -->
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <NoWarn>$(NoWarn);CS1591</NoWarn>
+
+    <!-- ADR-0003: the version is set once here and read at runtime from the informational version.
+         No "+<commit>" suffix, so Settings → Info shows exactly "1.0.0". -->
+    <Version>1.0.0</Version>
+    <IncludeSourceRevisionInInformationalVersion>false</IncludeSourceRevisionInInformationalVersion>
+    <Company>DIB4T</Company>
+    <Product>Dib4t</Product>
+    <Copyright>2018, DIB4T</Copyright>
+
+    <Deterministic>true</Deterministic>
+    <ContinuousIntegrationBuild Condition="'$(CI)' == 'true'">true</ContinuousIntegrationBuild>
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+</Project>

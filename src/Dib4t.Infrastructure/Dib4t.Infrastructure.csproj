@@ -1,0 +1,7 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!-- PLAN.md §3: MongoDB, NAS (SSH.NET), label printer, PDF, backup format, logging store. -->
+
+  <ItemGroup>
+    <ProjectReference Include="..\Dib4t.Application\Dib4t.Application.csproj" />
+  </ItemGroup>
+</Project>

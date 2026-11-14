@@ -1,0 +1,25 @@
+@* Every page is interactive WebAssembly with prerendering off (PLAN.md §2): the token lives in localStorage (§4.6). *@
+<!DOCTYPE html>
+<html lang="pt">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <BasePath />
+    <ResourcePreloader />
+    <link rel="stylesheet" href="@Assets["app.css"]" />
+    <ImportMap />
+    <HeadOutlet @rendermode="RenderModeWithoutPrerendering" />
+</head>
+
+<body>
+    <Routes @rendermode="RenderModeWithoutPrerendering" />
+    <script src="@Assets["_framework/blazor.web.js"]"></script>
+</body>
+
+</html>
+
+@code {
+    private static readonly IComponentRenderMode RenderModeWithoutPrerendering =
+        new InteractiveWebAssemblyRenderMode(prerender: false);
+}
