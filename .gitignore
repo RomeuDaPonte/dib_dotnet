@@ -26,3 +26,6 @@ tools/legacy/.run/
 # Backups: real ones never go in the repo; only anonymized fixtures (tools/legacy/dibbak.cs anonymize)
 *.dibbak
 !tests/fixtures/legacy/*.anon.dibbak
+
+# Local log store of development runs (PLAN.md §3.3)
+src/Dib4t.Server/logs/

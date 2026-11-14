@@ -1,10 +1,12 @@
 using System.Net;
+using Dib4t.Tests.Common.Logging;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 
 namespace Dib4t.Server.Tests;
 
 /// <summary>The server hosts the WebAssembly client (PLAN.md §2, §3).</summary>
-public sealed class HostingTests(WebApplicationFactory<Program> factory) : IClassFixture<WebApplicationFactory<Program>>
+public sealed class HostingTests(HostingTests.App factory) : IClassFixture<HostingTests.App>
 {
     private readonly HttpClient _client = factory.CreateClient();
 
@@ -46,5 +48,19 @@ public sealed class HostingTests(WebApplicationFactory<Program> factory) : IClas
 
         response.StatusCode.Should().Be(HttpStatusCode.NotFound);
         body.Should().BeEmpty();
+    }
+
+    /// <summary>The app without a database, with its own temporary log store.</summary>
+    public sealed class App : WebApplicationFactory<Program>
+    {
+        private readonly string _logStorePath = LogStoreFile.NewTempPath();
+
+        protected override void ConfigureWebHost(IWebHostBuilder builder) => builder.UseSetting("Logs:Path", _logStorePath);
+
+        public override async ValueTask DisposeAsync()
+        {
+            await base.DisposeAsync();
+            LogStoreFile.Delete(_logStorePath);
+        }
     }
 }

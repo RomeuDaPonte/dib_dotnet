@@ -6,9 +6,9 @@ namespace Dib4t.Tests.Common;
 
 /// <summary>
 /// The new app (in-memory <see cref="WebApplicationFactory{TEntryPoint}"/>, environment <c>Development</c>) on its
-/// own <c>mongo:9.0.8</c> database, one per test class.
+/// own <c>mongo:9.0.8</c> database and its own temporary log store file, one per test class.
 /// </summary>
-public sealed class AppWithMongo : IAsyncLifetime
+public class AppWithMongo : IAsyncLifetime
 {
     private readonly MongoFixture _mongo = new();
 
@@ -16,14 +16,22 @@ public sealed class AppWithMongo : IAsyncLifetime
 
     public IMongoDatabase Database { get; private set; } = null!;
 
+    /// <summary>The app's log store (PLAN.md §3.3), deleted with the fixture.</summary>
+    public string LogStorePath { get; } = Path.Combine(Path.GetTempPath(), $"dib4t-test-logs-{Guid.NewGuid():N}.db");
+
     public async ValueTask InitializeAsync()
     {
         await _mongo.InitializeAsync();
         var name = _mongo.NewDatabaseName();
         Database = _mongo.Client.GetDatabase(name);
-        Factory = new WebApplicationFactory<Program>().WithWebHostBuilder(builder => builder
-            .UseEnvironment("Development")
-            .UseSetting("Mongo:ConnectionString", _mongo.ConnectionString(name)));
+        Factory = new WebApplicationFactory<Program>().WithWebHostBuilder(builder =>
+        {
+            builder
+                .UseEnvironment("Development")
+                .UseSetting("Mongo:ConnectionString", _mongo.ConnectionString(name))
+                .UseSetting("Logs:Path", LogStorePath);
+            ConfigureWebHost(builder);
+        });
     }
 
     public async ValueTask DisposeAsync()
@@ -34,5 +42,16 @@ public sealed class AppWithMongo : IAsyncLifetime
         }
 
         await _mongo.DisposeAsync();
+        foreach (var file in new[] { LogStorePath, LogStorePath + "-wal", LogStorePath + "-shm" })
+        {
+            File.Delete(file);
+        }
+
+        GC.SuppressFinalize(this);
+    }
+
+    /// <summary>Extra test configuration (e.g. test-only endpoints).</summary>
+    protected virtual void ConfigureWebHost(IWebHostBuilder builder)
+    {
     }
 }

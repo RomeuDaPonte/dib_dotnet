@@ -5,6 +5,9 @@
     <!-- Options binding/validation and hosting abstractions for the adapters (no HTTP code lives here). -->
     <FrameworkReference Include="Microsoft.AspNetCore.App" />
     <PackageReference Include="MongoDB.Driver" />
+    <!-- Log store (PLAN.md §3.3): SQLite file with FTS5, written by a Serilog sink. -->
+    <PackageReference Include="Microsoft.Data.Sqlite" />
+    <PackageReference Include="Serilog" />
     <PackageReference Include="System.IO.Hashing" />
   </ItemGroup>
 

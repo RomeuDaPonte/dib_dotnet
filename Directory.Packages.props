@@ -28,6 +28,8 @@
     <PackageVersion Include="SSH.NET" Version="2026.0.0" />
     <PackageVersion Include="PDFsharp" Version="6.5.0" />
     <PackageVersion Include="Serilog.AspNetCore" Version="10.0.0" />
+    <!-- Infrastructure (log store sink, enrichers): the same Serilog core that Serilog.AspNetCore 10.0.0 brings. -->
+    <PackageVersion Include="Serilog" Version="4.3.0" />
     <PackageVersion Include="Riok.Mapperly" Version="4.3.1" />
   </ItemGroup>
 

@@ -33,6 +33,9 @@ public sealed class NewApp : IAppUnderTest, IAsyncDisposable
     /// <summary>Connection string of the new app's database (<c>Mongo:ConnectionString</c>, §12).</summary>
     public string ConnectionString { get; private set; } = null!;
 
+    /// <summary>The new app's log store (PLAN.md §3.3): a temp file per run, deleted on dispose.</summary>
+    public string LogStorePath { get; } = Path.Combine(Path.GetTempPath(), $"dib4t-e2e-logs-{Guid.NewGuid():N}.db");
+
     public async Task StartAsync(CancellationToken cancellationToken)
     {
         await _mongo.StartAsync(cancellationToken);
@@ -46,7 +49,8 @@ public sealed class NewApp : IAppUnderTest, IAsyncDisposable
 
         _factory = new WebApplicationFactory<Program>().WithWebHostBuilder(builder => builder
             .UseEnvironment("Development")
-            .UseSetting("Mongo:ConnectionString", ConnectionString));
+            .UseSetting("Mongo:ConnectionString", ConnectionString)
+            .UseSetting("Logs:Path", LogStorePath));
         // A free port on the loopback interface (UseKestrel(0) falls back to the fixed default port 5000).
         _factory.UseKestrel(kestrel => kestrel.Listen(IPAddress.Loopback, 0));
         _factory.StartServer();
@@ -98,5 +102,9 @@ public sealed class NewApp : IAppUnderTest, IAsyncDisposable
         }
 
         await _mongo.DisposeAsync();
+        foreach (var file in new[] { LogStorePath, LogStorePath + "-wal", LogStorePath + "-shm" })
+        {
+            File.Delete(file);
+        }
     }
 }

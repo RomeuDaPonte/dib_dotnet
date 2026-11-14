@@ -9,8 +9,8 @@ internal static class MongoServiceCollectionExtensions
 {
     /// <summary>
     /// One <see cref="IMongoClient"/> per process, created on first use: the host starts without a reachable database
-    /// (static files, health of the process). The startup version check and the command logging come with the Mongo
-    /// infrastructure step (PLAN.md §10 Phase 1).
+    /// (static files, health of the process). Every command is logged by <see cref="MongoCommandLogger"/>
+    /// (PLAN.md §3.3). The startup version check comes with the Mongo infrastructure step (§10 Phase 1).
     /// </summary>
     public static IServiceCollection AddMongo(this IServiceCollection services, IConfiguration configuration)
     {
@@ -18,8 +18,14 @@ internal static class MongoServiceCollectionExtensions
             .Bind(configuration.GetSection(MongoOptions.SectionName))
             .ValidateDataAnnotations();
 
+        services.AddSingleton<MongoCommandLogger>();
         services.AddSingleton<IMongoClient>(provider =>
-            new MongoClient(provider.GetRequiredService<IOptions<MongoOptions>>().Value.ConnectionString));
+        {
+            var settings = MongoClientSettings.FromConnectionString(
+                provider.GetRequiredService<IOptions<MongoOptions>>().Value.ConnectionString);
+            settings.ClusterConfigurator = provider.GetRequiredService<MongoCommandLogger>().Subscribe;
+            return new MongoClient(settings);
+        });
         services.AddSingleton(provider =>
         {
             var url = MongoUrl.Create(provider.GetRequiredService<IOptions<MongoOptions>>().Value.ConnectionString);

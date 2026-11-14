@@ -3,10 +3,13 @@
 
   <ItemGroup>
     <PackageReference Include="Testcontainers.MongoDb" />
+    <!-- Reads the log store file independently of the app (PLAN.md §11.9). -->
+    <PackageReference Include="Microsoft.Data.Sqlite" />
   </ItemGroup>
 
   <ItemGroup>
     <Compile Include="..\Shared\*.cs" Exclude="..\Shared\AppWithMongo.cs" LinkBase="Shared" />
+    <Compile Include="..\Shared\Logging\*.cs" LinkBase="Shared\Logging" />
   </ItemGroup>
 
   <ItemGroup>
