@@ -1,0 +1,10 @@
+{
+  "solution": {
+    "path": "../Dib4t.slnx",
+    "projects": [
+      "tests/Dib4t.Infrastructure.Tests/Dib4t.Infrastructure.Tests.csproj",
+      "tests/Dib4t.Server.Tests/Dib4t.Server.Tests.csproj",
+      "tests/Dib4t.ImportCompatibility.Tests/Dib4t.ImportCompatibility.Tests.csproj"
+    ]
+  }
+}

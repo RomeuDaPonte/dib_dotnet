@@ -1,0 +1,16 @@
+# Only what the image build needs: global.json, the props files, .editorconfig and src/.
+**/bin/
+**/obj/
+.git/
+.github/
+.vs/
+.idea/
+artifacts/
+docs/
+tests/
+tools/
+*.dibbak
+*.md
+docker-compose*.yml
+Dockerfile
+.dockerignore

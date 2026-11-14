@@ -15,4 +15,23 @@ dotnet test --solution Dib4t.slnx        # xUnit v3 on Microsoft.Testing.Platfor
 dotnet run --project src/Dib4t.Server    # http://localhost:3010
 ```
 
+Unit, integration and E2E suites separately: `tests/unit.slnf`, `tests/integration.slnf`, `tests/e2e.slnf`.
+
+## Docker
+
+```sh
+docker build --platform linux/amd64 -t dib4t-dotnet:1.0.0 .
+docker compose -f docker-compose.dev.yml up -d --build                     # new app :3010 + mongo:9.0.8
+docker compose -f docker-compose.dev.yml --profile legacy up -d --build    # legacy app :3000/:3001 + mongo:4.1.4
+```
+
+## Before every commit
+
+```sh
+tools/verify.sh          # format, build, unit + coverage, integration, E2E, Docker image smoke test
+tools/verify.sh --fast   # format, build, unit only
+```
+
+There is no CI: each feature is verified locally with `tools/verify.sh`, then committed.
+
 Prerequisites: `tools/check-prereqs.sh`. Legacy app tooling: `tools/legacy/legacy.sh`.

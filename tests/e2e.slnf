@@ -1,0 +1,8 @@
+{
+  "solution": {
+    "path": "../Dib4t.slnx",
+    "projects": [
+      "tests/Dib4t.E2E/Dib4t.E2E.csproj"
+    ]
+  }
+}

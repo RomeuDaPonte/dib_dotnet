@@ -1,0 +1,100 @@
+# PLAN.md §10 Phase 1, §12: local side-by-side stack. Everything linux/amd64, like the NAS.
+#
+#   New app (default):   docker compose -f docker-compose.dev.yml up -d --build
+#     dib4t-db   mongo:9.0.8            127.0.0.1:27018 (dev only; not published in production)
+#     dib4t-app  this repo's Dockerfile http://localhost:3010   (ASPNETCORE_ENVIRONMENT=Development)
+#
+#   Legacy app (unchanged, C10):   docker compose -f docker-compose.dev.yml --profile legacy up -d --build
+#     legacy-db        mongo:4.1.4      127.0.0.1:27017
+#     legacy-backend   ../back-end/dockerfile    http://localhost:3001
+#     legacy-frontend  ../front-end/Dockerfile   http://localhost:3000
+#
+# The legacy code is built from its own, unchanged Dockerfiles. Its ports are fixed by that code
+# (back-end/config/default.json: DB "mongodb://localhost:27017/dib4t", devPort 3001; the front-end calls the
+# API on the page origin with the last digit replaced by "1"). So the back-end shares the network namespace of
+# legacy-db (its "localhost:27017" is that Mongo) and those ports are published from legacy-db.
+# The legacy back-end Dockerfile sets NODE_ENV=prod; it is overridden here, so it never uses the production DB,
+# the NAS (SSH) or the label printers (PLAN.md §5.1).
+#
+# Do not run the legacy profile and tools/legacy/legacy.sh at the same time (same ports). Both use the volume
+# "dib4t-legacy-db", so a dev copy restored with one is visible in the other.
+# DIB4T_LEGACY_ROOT: folder holding back-end/ and front-end/ (default: the parent of this repo).
+
+name: dib4t-dev
+
+services:
+  dib4t-db:
+    image: mongo:9.0.8
+    platform: linux/amd64
+    command: ["--wiredTigerCacheSizeGB", "0.5"]
+    ports: ["127.0.0.1:27018:27017"]
+    volumes: ["dib4t-db-data:/data/db"]
+    ulimits: { nofile: { soft: 64000, hard: 64000 } }
+    healthcheck:
+      test: ["CMD", "mongosh", "--quiet", "--eval", "db.adminCommand('ping').ok"]
+      interval: 5s
+      timeout: 5s
+      retries: 30
+      start_period: 10s
+
+  dib4t-app:
+    build: { context: ., platforms: ["linux/amd64"] }
+    image: dib4t-dotnet:dev
+    platform: linux/amd64
+    ports: ["3010:3010"]
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development   # never Production locally: no NAS, no printers (§5.1)
+      ASPNETCORE_HTTP_PORTS: "3010"
+      Mongo__ConnectionString: mongodb://dib4t-db:27017/dib4t?retryWrites=false
+    volumes: ["dib4t-logs:/app/logs"]
+    depends_on: { dib4t-db: { condition: service_healthy } }
+
+  legacy-db:
+    profiles: [legacy]
+    image: mongo:4.1.4
+    platform: linux/amd64
+    command: ["--bind_ip_all"]
+    ports:
+      - "127.0.0.1:27017:27017"
+      - "127.0.0.1:3001:3001"   # legacy-backend runs in this container's network namespace
+    volumes: ["dib4t-legacy-db:/data/db"]
+    stop_grace_period: 30s      # a killed 4.1.4 mongod leaves stale collection counts
+    healthcheck:
+      test: ["CMD", "mongo", "--quiet", "--eval", "db.adminCommand({ping:1}).ok"]
+      interval: 5s
+      timeout: 5s
+      retries: 30
+
+  legacy-backend:
+    profiles: [legacy]
+    build:
+      context: ${DIB4T_LEGACY_ROOT:-..}/back-end
+      dockerfile: dockerfile
+      platforms: ["linux/amd64"]
+    image: dib4t-legacy-backend:dev
+    platform: linux/amd64
+    network_mode: service:legacy-db
+    environment:
+      NODE_ENV: development     # overrides ENV NODE_ENV=prod of the legacy Dockerfile
+    depends_on: { legacy-db: { condition: service_healthy } }
+
+  legacy-frontend:
+    profiles: [legacy]
+    build:
+      context: ${DIB4T_LEGACY_ROOT:-..}/front-end
+      dockerfile: Dockerfile
+      platforms: ["linux/amd64"]
+    image: dib4t-legacy-frontend:dev
+    platform: linux/amd64
+    ports: ["127.0.0.1:3000:3000"]
+    environment:
+      BROWSER: none
+      CI: "true"
+    stdin_open: true            # react-scripts start exits when stdin closes
+    depends_on: [legacy-backend]
+
+volumes:
+  dib4t-db-data: {}
+  dib4t-logs: {}
+  dib4t-legacy-db:
+    name: dib4t-legacy-db       # shared with tools/legacy/legacy.sh

@@ -2,6 +2,9 @@
   <!-- PLAN.md §3: ASP.NET Core host. Controllers (API), composition root, hosts the WebAssembly client. -->
   <PropertyGroup>
     <BlazorDisableThrowNavigationException>true</BlazorDisableThrowNavigationException>
+    <!-- The SDK restores the package with _framework/blazor.web.js only when it sees .razor files. The Dockerfile
+         restores from the project files alone (layer cache), so this must be explicit or the image has no blazor.web.js. -->
+    <RequiresAspNetWebAssets>true</RequiresAspNetWebAssets>
   </PropertyGroup>
 
   <ItemGroup>
