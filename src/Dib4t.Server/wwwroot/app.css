@@ -1,11 +1,43 @@
 /* PLAN.md §8.4: sizes in rem, no fixed heights for content, no position: absolute for layout. */
+/* Roboto (PLAN.md §8.3), bundled so the LAN-only server needs no internet (fontsource variable font, OFL 1.1:
+   fonts/roboto/OFL.txt). One file per subset covers every weight MUI/MudBlazor use. */
+@font-face {
+  font-family: "Roboto";
+  font-style: normal;
+  font-display: swap;
+  font-weight: 100 900;
+  src: url("fonts/roboto/roboto-latin-ext-wght-normal.woff2") format("woff2-variations");
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF,
+    U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+
+@font-face {
+  font-family: "Roboto";
+  font-style: normal;
+  font-display: swap;
+  font-weight: 100 900;
+  src: url("fonts/roboto/roboto-latin-wght-normal.woff2") format("woff2-variations");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329,
+    U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
 html, body {
   margin: 0;
 }
 
+/* The theme provider's variables once the client runs; the dark defaults while it loads. */
 body {
-  background: #303030;
+  background: var(--mud-palette-background, #303030);
+  color: var(--mud-palette-text-primary, #ffffff);
+  font-family: var(--mud-typography-default-family, "Roboto", "Helvetica", "Arial", sans-serif);
+}
+
+/* Tooltips as MUI v4 draws them (grey[700] at 0.92, white, 10px → 0.625rem, medium). */
+.mud-tooltip.mud-tooltip-default {
+  background-color: rgba(97, 97, 97, 0.92);
   color: #ffffff;
+  font-size: 0.625rem;
+  font-weight: 500;
 }
 
 /* Login (legacy login.jsx / login.css; layout fixed per §8.4 rule 7). */
@@ -60,41 +92,133 @@ body {
   margin-top: 1rem;
 }
 
-/* Landing placeholder (the shell step brings the responsive drawer layout). */
-.landing-header {
-  background: #ff9800;
-  color: rgba(0, 0, 0, 0.87);
-  padding: 0.5rem 1rem;
+/* Landing shell (legacy landing.jsx / landingStyles.js; layout fixed per §8.4 rule 4, LB-01). */
+.landing-main.mud-main-content {
+  padding-top: 0; /* the app bar is in the flow (sticky), not fixed over the content */
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.landing-appbar.mud-appbar {
+  position: sticky;
+  top: 0;
+}
+
+/* MudLayout shifts every .mud-appbar next to an open drawer; this one is already inside the shifted content. */
+.landing.mud-layout .landing-appbar.mud-appbar {
+  margin-left: 0;
+  margin-right: 0;
+  width: auto;
+}
+
+.landing-appbar .mud-toolbar.mud-toolbar-appbar {
+  height: auto;
+  min-height: 4rem;
+  gap: 0.5rem;
+  padding: 0.5rem 1.5rem 0.5rem 1rem; /* legacy toolbar paddingRight 24 */
 }
 
 .landing-user {
+  flex: 1 1 auto;
+  min-width: 0;
   margin: 0;
-  font-size: 1.25rem;
+  font-size: 1.25rem; /* MUI h6 */
   font-weight: 500;
-  overflow-wrap: anywhere;
+  line-height: 1.6;
+  letter-spacing: 0.0075em;
+  overflow-wrap: break-word; /* LB-01b: wraps at spaces instead of "U."; a long word breaks only if it must */
 }
 
-.landing-menu {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 1rem;
-  padding: 0.5rem 1rem;
-}
-
-.landing-menu ul {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 1rem;
-  list-style: none;
+.landing-theme {
+  flex: 0 0 auto;
   margin: 0;
-  padding: 0;
-}
-
-.landing-menu a {
-  color: inherit;
 }
 
 .landing-content {
-  padding: 1rem;
+  flex: 1 1 auto;
+  min-width: 0;
+  padding: 2rem 1.5rem; /* legacy container: spacing(4) top/bottom, gutters 24 */
+  overflow-wrap: anywhere;
+}
+
+@media (max-width: 599.98px) {
+  .landing-appbar .mud-toolbar.mud-toolbar-appbar {
+    padding-inline: 0.5rem 1rem;
+  }
+
+  .landing-content {
+    padding: 1rem;
+  }
+}
+
+/* Content column next to the drawer: nothing under the overlay drawer, the mini or the full width when docked. */
+.landing--mini .landing-main.mud-main-content {
+  margin-left: var(--mud-drawer-width-mini-left);
+}
+
+.landing--open .landing-main.mud-main-content {
+  margin-left: var(--mud-drawer-width-left);
+}
+
+/* A closed overlay drawer is out of the tab order and the accessibility tree (MudBlazor only moves it off screen);
+   it hides after the slide-out. */
+.landing-drawer.mud-drawer-temporary.mud-drawer--closed {
+  visibility: hidden;
+  transition: left 225ms cubic-bezier(0, 0, 0.2, 1), visibility 0s linear 225ms;
+}
+
+.landing-drawer .mud-divider {
+  flex: 0 0 auto;
+}
+
+/* Very narrow (in em, so a larger font or zoom also counts): the name gets its own row under the menu button and
+   the switch instead of one letter per line. */
+@media (max-width: 22em) {
+  .landing-appbar .mud-toolbar.mud-toolbar-appbar {
+    flex-wrap: wrap;
+  }
+
+  .landing-user {
+    order: 1;
+    flex-basis: 100%;
+  }
+
+  .landing-theme {
+    margin-left: auto;
+  }
+}
+
+.landing-drawer .mud-drawer-content {
+  min-height: 100%;
+  height: auto;
+}
+
+.landing-drawer-header {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  min-height: 4rem;
+  padding: 0 0.5rem;
+}
+
+.landing-logo {
+  display: block;
+  width: 45%;
+  margin: 1em auto;
+  box-shadow: 1px 1px 15px 5px #ccc;
+}
+
+.landing-menu {
+  flex: 0 0 auto;
+}
+
+/* Legacy put the logout button 50em below the menu (off screen on most windows); here it sits at the bottom of the
+   drawer, or right after the menu when the window is short (the drawer scrolls). */
+.landing-logout {
+  display: flex;
+  justify-content: center;
+  margin-top: auto;
+  padding: 1rem 0;
 }

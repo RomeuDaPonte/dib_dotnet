@@ -8,6 +8,8 @@
     <FrameworkReference Include="Microsoft.AspNetCore.App" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" />
     <PackageReference Include="Microsoft.Playwright" />
+    <!-- §8.4 layout matrix: axe-core scan, no serious/critical violations. -->
+    <PackageReference Include="Deque.AxeCore.Playwright" />
     <PackageReference Include="Testcontainers.MongoDb" />
     <!-- Test oracle only: reads both databases and the .dibbak files independently of the app's own code. -->
     <PackageReference Include="MongoDB.Driver" />

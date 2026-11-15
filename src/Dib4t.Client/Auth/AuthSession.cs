@@ -31,17 +31,19 @@ public sealed class AuthSession : AuthenticationStateProvider, IDisposable
 
     public override Task<AuthenticationState> GetAuthenticationStateAsync() => _start ??= StartAsync();
 
-    /// <summary>Signs in; <c>null</c> on success, else the server's text for the error notification.</summary>
-    public async Task<string?> LoginAsync(string email, string password)
+    /// <summary>
+    /// Signs in. On failure the result carries the server's text for the error notification (a 4xx), or is
+    /// <see cref="ApiResult{T}.IsUnexpected"/> (already notified by <see cref="ErrorNotificationHandler"/>).
+    /// </summary>
+    public async Task<ApiResult<string>> LoginAsync(string email, string password)
     {
         var result = await _account.LoginAsync(email, password);
-        if (!result.IsSuccess)
+        if (result.IsSuccess)
         {
-            return result.ErrorText;
+            await _tokens.SetAsync(result.Value!);
         }
 
-        await _tokens.SetAsync(result.Value!);
-        return null;
+        return result;
     }
 
     /// <summary>The logout button: removes the token in this tab and, through the storage event, in every other.</summary>

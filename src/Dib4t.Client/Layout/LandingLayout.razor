@@ -1,30 +1,135 @@
 @inherits LayoutComponentBase
 @layout MainLayout
+@implements IDisposable
 @inject AuthSession Session
+@inject Theme.ThemeState ThemeState
+@inject NavigationManager Navigation
 
-@* Every /landing/* page needs a login (PLAN.md §8.1); without one (or after a logout in any tab) → the login page.
-   Placeholder chrome: the shell step replaces it with the responsive MudBlazor layout (§8.4). *@
+@* Legacy components/landing.jsx + menuListItem.jsx (PLAN.md §8.3), with the layout fixed per §8.4 rule 4 (LB-01):
+   the drawer is temporary (overlay) below md, mini on md (closed: icons only) and open on lg and up, where it still
+   collapses to the mini width like the legacy permanent drawer. The app bar is a normal sticky element inside the
+   content column, not position: absolute, and the user name wraps instead of being cut (LB-01b).
+   Every /landing/* page needs a login (§8.1); without one (or after a logout in any tab) → the login page. *@
 <AuthorizeView>
     <Authorized>
-        <header class="landing-header">
-            <h1 class="landing-user">@Session.User?.Name</h1>
-        </header>
-        <nav class="landing-menu" aria-label="Menu">
-            <ul>
-                @foreach (var item in Navigation.MenuItems.For(Session.User?.Roles ?? []))
-                {
-                    <li><a href="@item.Path">@item.Label</a></li>
-                }
-            </ul>
-            <MudTooltip Text="Sair">
-                <MudIconButton Icon="@Icons.Material.Filled.PowerSettingsNew" Size="Size.Large" aria-label="Sair" OnClick="Session.LogoutAsync" />
-            </MudTooltip>
-        </nav>
-        <main class="landing-content">
-            @Body
-        </main>
+        <MudBreakpointProvider OnBreakpointChanged="OnBreakpointChanged">
+            <MudLayout Class="@LayoutClass">
+                <MudDrawer @bind-Open="_open" Variant="_variant" ClipMode="DrawerClipMode.Never" Elevation="2"
+                           Class="landing-drawer" id="landing-drawer">
+                    <div class="landing-drawer-header">
+                        @if (_open)
+                        {
+                            <MudIconButton Icon="@Icons.Material.TwoTone.ChevronLeft" aria-label="Fechar menu" OnClick="Close" />
+                        }
+                    </div>
+                    <MudDivider />
+                    <img class="landing-logo" src="images/MenuLogo.jpg" alt="Dib4t" />
+                    <MudDivider />
+                    <MudNavMenu Class="landing-menu" aria-label="Menu">
+                        @foreach (var item in Dib4t.Client.Navigation.MenuItems.For(Session.User?.Roles ?? []))
+                        {
+                            <MudNavLink Href="@item.Path" Icon="@item.Icon" Match="NavLinkMatch.Prefix"
+                                        title="@item.Label">@item.Label</MudNavLink>
+                        }
+                    </MudNavMenu>
+                    <div class="landing-logout">
+                        <MudTooltip Text="Sair">
+                            <MudIconButton Icon="@Icons.Material.Filled.PowerSettingsNew" Size="Size.Large" aria-label="Sair"
+                                           OnClick="Session.LogoutAsync" />
+                        </MudTooltip>
+                    </div>
+                </MudDrawer>
+                <MudMainContent Class="landing-main">
+                    <MudAppBar Fixed="false" Elevation="4" Class="landing-appbar">
+                        @if (!_open)
+                        {
+                            <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit"
+                                           aria-label="Abrir menu" aria-controls="landing-drawer" OnClick="Open" />
+                        }
+                        <h1 class="landing-user">@Session.User?.Name</h1>
+                        <MudSwitch T="bool" Value="ThemeState.IsLight" ValueChanged="ThemeState.SetLight" Color="Color.Secondary"
+                                   AriaLabel="Tema claro" Class="landing-theme" />
+                    </MudAppBar>
+                    <main class="landing-content">
+                        @Body
+                    </main>
+                </MudMainContent>
+            </MudLayout>
+        </MudBreakpointProvider>
     </Authorized>
     <NotAuthorized>
         <RedirectToLogin />
     </NotAuthorized>
 </AuthorizeView>
+
+@code {
+    private DrawerVariant _variant = DrawerVariant.Temporary;
+    private bool _open;
+    private ShellMode? _mode;
+
+    /// <summary>The drawer per screen width (§8.4 rule 4): phone/tablet, md (laptop), lg and up (desktop).</summary>
+    public enum ShellMode
+    {
+        Overlay,
+        Mini,
+        Open,
+    }
+
+    public static ShellMode ModeFor(Breakpoint breakpoint) => breakpoint switch
+    {
+        Breakpoint.Xs or Breakpoint.Sm => ShellMode.Overlay,
+        Breakpoint.Md => ShellMode.Mini,
+        _ => ShellMode.Open,
+    };
+
+    protected override void OnInitialized()
+    {
+        ThemeState.SetLight(false); // legacy: the shell starts dark
+        Navigation.LocationChanged += OnLocationChanged;
+    }
+
+    /// <summary>Back to dark for the login page (always dark) and the next login.</summary>
+    public void Dispose()
+    {
+        Navigation.LocationChanged -= OnLocationChanged;
+        ThemeState.SetLight(false);
+    }
+
+    private void OnBreakpointChanged(Breakpoint breakpoint)
+    {
+        var mode = ModeFor(breakpoint);
+        if (mode == _mode)
+        {
+            return; // keep what the user opened or closed
+        }
+
+        _mode = mode;
+        _variant = mode == ShellMode.Overlay ? DrawerVariant.Temporary : DrawerVariant.Mini;
+        _open = mode == ShellMode.Open;
+    }
+
+    /// <summary>
+    /// The content column's offset follows the drawer (app.css). Set here, not by MudLayout, whose drawer classes do
+    /// not follow a variant that changes at run time.
+    /// </summary>
+    private string LayoutClass => (_variant, _open) switch
+    {
+        (DrawerVariant.Temporary, _) => "landing landing--overlay",
+        (_, true) => "landing landing--open",
+        _ => "landing landing--mini",
+    };
+
+    private void Open() => _open = true;
+
+    private void Close() => _open = false;
+
+    /// <summary>The overlay drawer closes once a page is chosen; the docked drawer stays as it is.</summary>
+    private void OnLocationChanged(object? sender, LocationChangedEventArgs e)
+    {
+        if (_variant == DrawerVariant.Temporary && _open)
+        {
+            _open = false;
+            InvokeAsync(StateHasChanged);
+        }
+    }
+}

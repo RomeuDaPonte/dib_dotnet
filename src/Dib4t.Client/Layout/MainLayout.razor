@@ -1,10 +1,20 @@
 @inherits LayoutComponentBase
+@implements IDisposable
+@inject Theme.ThemeState ThemeState
 
-@* The MudBlazor providers for every page. The responsive shell (drawer, theme switch) comes with the shell step
-   (PLAN.md §8.3, §8.4); until then the legacy dark palette is the only one. *@
-<MudThemeProvider Theme="Theme.Dib4tTheme.Theme" IsDarkMode="true" />
+@* The MudBlazor providers for every page. Dark unless the landing shell's theme switch is on (PLAN.md §8.3); the
+   login page is always dark because LandingLayout resets the switch when it closes. *@
+<MudThemeProvider Theme="Theme.Dib4tTheme.Theme" IsDarkMode="ThemeState.IsDarkMode" />
 <MudPopoverProvider />
 <MudDialogProvider />
 <MudSnackbarProvider />
 
 @Body
+
+@code {
+    protected override void OnInitialized() => ThemeState.Changed += OnThemeChanged;
+
+    public void Dispose() => ThemeState.Changed -= OnThemeChanged;
+
+    private void OnThemeChanged() => InvokeAsync(StateHasChanged);
+}

@@ -1,5 +1,6 @@
 using Dib4t.Client.Api;
 using Dib4t.Client.Auth;
+using Dib4t.Client.Theme;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using MudBlazor;
@@ -17,9 +18,13 @@ builder.Services.AddMudServices(options =>
 builder.Services.AddAuthorizationCore();
 builder.Services.AddCascadingAuthenticationState();
 builder.Services.AddScoped<TokenStore>();
+// Handlers: the token header (and "Invalid token." → logged out), then the global error notification (§8.2).
 builder.Services.AddScoped(provider => new HttpClient(new AuthHeaderHandler(provider.GetRequiredService<TokenStore>())
 {
-    InnerHandler = new HttpClientHandler(),
+    InnerHandler = new ErrorNotificationHandler(provider.GetRequiredService<ISnackbar>())
+    {
+        InnerHandler = new HttpClientHandler(),
+    },
 })
 {
     BaseAddress = new Uri(builder.HostEnvironment.BaseAddress),
@@ -27,5 +32,6 @@ builder.Services.AddScoped(provider => new HttpClient(new AuthHeaderHandler(prov
 builder.Services.AddScoped<IAccountApi, AccountApi>();
 builder.Services.AddScoped<AuthSession>();
 builder.Services.AddScoped<AuthenticationStateProvider>(provider => provider.GetRequiredService<AuthSession>());
+builder.Services.AddScoped<ThemeState>();
 
 await builder.Build().RunAsync();

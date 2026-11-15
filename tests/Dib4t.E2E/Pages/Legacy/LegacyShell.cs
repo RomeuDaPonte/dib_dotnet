@@ -10,6 +10,13 @@ public sealed class LegacyShell(IPage page)
 
     public ILocator Menu => page.Locator(".MuiDrawer-paper .MuiListItemText-primary");
 
+    public ILocator AppBar => page.Locator("header.MuiAppBar-root");
+
+    public ILocator Drawer => page.Locator(".MuiDrawer-paper");
+
+    /// <summary>The theme switch on the right of the app bar (off = dark, on = light).</summary>
+    public ILocator ThemeSwitch => page.Locator("header input[type=checkbox]");
+
     /// <summary>The menu item texts, in order (they depend on the user's roles).</summary>
     public Task<IReadOnlyList<string>> MenuItemsAsync() => Menu.AllInnerTextsAsync();
 }

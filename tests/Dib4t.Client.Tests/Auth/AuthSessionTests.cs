@@ -65,9 +65,9 @@ public sealed class AuthSessionTests
         Task<AuthenticationState>? announced = null;
         context.Session.AuthenticationStateChanged += task => announced = task;
 
-        var error = await context.Session.LoginAsync("ana.admin@dib4t.local", "char-test-1");
+        var result = await context.Session.LoginAsync("ana.admin@dib4t.local", "char-test-1");
 
-        error.Should().BeNull();
+        result.IsSuccess.Should().BeTrue();
         context.StorageModule.Invocations.Should().Contain(i => i.Identifier == "setToken" && (string)i.Arguments[0]! == token);
         (await announced!).User.Identity!.Name.Should().Be("Ana");
     }
@@ -78,9 +78,10 @@ public sealed class AuthSessionTests
         await using var context = new ClientTestContext();
         context.Account.LoginAsync("ana.admin@dib4t.local", "wrong-pass").Returns(ApiResult.Failure<string>(HttpStatusCode.BadRequest, "Password incorreta!"));
 
-        var error = await context.Session.LoginAsync("ana.admin@dib4t.local", "wrong-pass");
+        var result = await context.Session.LoginAsync("ana.admin@dib4t.local", "wrong-pass");
 
-        error.Should().Be("Password incorreta!");
+        result.ErrorText.Should().Be("Password incorreta!");
+        result.IsUnexpected.Should().BeFalse();
         context.Invocations("setToken").Should().Be(0);
     }
 

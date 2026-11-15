@@ -68,14 +68,14 @@
         _submitting = true;
         try
         {
-            var error = await Session.LoginAsync(_form.Email ?? string.Empty, _form.Password ?? string.Empty);
-            if (error is null)
+            var result = await Session.LoginAsync(_form.Email ?? string.Empty, _form.Password ?? string.Empty);
+            if (result.IsSuccess)
             {
                 Navigation.NavigateTo("landing/home");
             }
-            else
+            else if (!result.IsUnexpected)
             {
-                Snackbar.Add(error, Severity.Error);
+                Snackbar.Add(result.ErrorText ?? string.Empty, Severity.Error); // legacy toast.error(ex.response.data)
             }
         }
         finally

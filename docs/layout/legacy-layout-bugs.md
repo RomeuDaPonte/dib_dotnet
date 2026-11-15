@@ -16,13 +16,15 @@ E2E layout matrix (§11). "Rule" points to the §8.4 rule that fixes it.
 
 ## Shell (all `/landing/*` pages)
 
-- [ ] **LB-01 Permanent drawer on small screens.** The 240 px drawer is always open, also on phones.
+- [x] **LB-01 Permanent drawer on small screens.** The 240 px drawer is always open, also on phones.
   At 360 px the content gets about 120 px. From 150 % zoom on 360×640 the page scrolls horizontally by
   74 px (H74 on every page), and at 200 % the menu items themselves are outside the viewport (O6–O7).
   Evidence: `budgets/360x640_z100_f16.jpg` (table reduced to its warning icons), every page at 360×640 150/200 %.
   Cause: `landing.jsx:88` `variant="permanent"`, `landingStyles.js` `height: 100vh`, absolute AppBar.
   Rule 4 (temporary drawer below `md`, mini on `md`, sticky AppBar).
-- [ ] **LB-01b AppBar name truncated to "U."** on phones (`*/360x640_*`). Rule 4/9.
+  *Fixed (Phase 1 shell step, 2026-11-15):* overlay drawer below md, mini on md, open on lg+, sticky app bar;
+  `home` passes all 45 matrix cases in `tests/Dib4t.E2E/LayoutMatrixTests`.
+- [x] **LB-01b AppBar name truncated to "U."** on phones (`*/360x640_*`). Rule 4/9.
 
 ## Login (`/`)
 

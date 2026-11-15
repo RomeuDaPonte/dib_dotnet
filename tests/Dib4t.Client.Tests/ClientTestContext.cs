@@ -1,6 +1,7 @@
 using Bunit;
 using Dib4t.Client.Api;
 using Dib4t.Client.Auth;
+using Dib4t.Client.Theme;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.Extensions.DependencyInjection;
@@ -38,7 +39,10 @@ public class ClientTestContext : BunitContext
         Services.AddScoped<TokenStore>();
         Services.AddScoped<AuthSession>();
         Services.AddScoped<AuthenticationStateProvider>(provider => provider.GetRequiredService<AuthSession>());
+        Services.AddScoped<ThemeState>();
     }
+
+    public ThemeState Theme => Services.GetRequiredService<ThemeState>();
 
     public IAccountApi Account { get; } = Substitute.For<IAccountApi>();
 

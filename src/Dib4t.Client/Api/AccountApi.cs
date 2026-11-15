@@ -8,7 +8,7 @@ namespace Dib4t.Client.Api;
 public sealed class AccountApi(HttpClient http) : IAccountApi
 {
     /// <summary>Legacy axios interceptor text for errors that are not 4xx (network, 5xx).</summary>
-    public const string UnexpectedError = "An anexpected error occurred";
+    public const string UnexpectedError = ErrorNotificationHandler.UnexpectedError;
 
     public async Task<ApiResult<string>> LoginAsync(string email, string password)
     {
@@ -18,7 +18,7 @@ public sealed class AccountApi(HttpClient http) : IAccountApi
             var text = await response.Content.ReadAsStringAsync();
             return response.IsSuccessStatusCode
                 ? ApiResult.Success(text, response.StatusCode)
-                : ApiResult.Failure<string>(response.StatusCode, (int)response.StatusCode is >= 400 and < 500 ? text : UnexpectedError);
+                : ApiResult.Failure<string>(response.StatusCode, ErrorNotificationHandler.IsExpectedError((int)response.StatusCode) ? text : UnexpectedError);
         }
         catch (HttpRequestException)
         {

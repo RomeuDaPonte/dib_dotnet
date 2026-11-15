@@ -9,6 +9,12 @@ namespace Dib4t.Client.Api;
 public sealed record ApiResult<T>(T? Value, HttpStatusCode? Status, string? ErrorText)
 {
     public bool IsSuccess => ErrorText is null && Status is >= HttpStatusCode.OK and < HttpStatusCode.MultipleChoices;
+
+    /// <summary>
+    /// A failure that is not a 4xx (network error, 5xx): <see cref="ErrorNotificationHandler"/> has already shown the
+    /// error notification, so the caller shows nothing more.
+    /// </summary>
+    public bool IsUnexpected => !IsSuccess && ErrorNotificationHandler.IsUnexpected((int?)Status);
 }
 
 /// <summary>Factories of <see cref="ApiResult{T}"/>.</summary>

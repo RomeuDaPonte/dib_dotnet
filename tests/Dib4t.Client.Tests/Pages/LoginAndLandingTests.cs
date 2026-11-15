@@ -71,6 +71,23 @@ public sealed class LoginAndLandingTests
     }
 
     [Fact]
+    public async Task A_login_that_fails_with_a_server_error_adds_no_second_notification()
+    {
+        await using var context = new ClientTestContext();
+        context.Account.LoginAsync("ana.admin@dib4t.local", "char-test-1")
+            .Returns(ApiResult.Failure<string>(HttpStatusCode.InternalServerError, AccountApi.UnexpectedError));
+        var page = RenderLogin(context);
+
+        await page.Find("#email").InputAsync(new() { Value = "ana.admin@dib4t.local" });
+        await page.Find("#password").InputAsync(new() { Value = "char-test-1" });
+        await page.Find("form").SubmitAsync();
+
+        await context.Account.Received(1).LoginAsync("ana.admin@dib4t.local", "char-test-1");
+        context.Services.GetRequiredService<ISnackbar>().ShownSnackbars.Should().BeEmpty("ErrorNotificationHandler already showed it");
+        context.Services.GetRequiredService<NavigationManager>().Uri.Should().Be("http://localhost/");
+    }
+
+    [Fact]
     public async Task An_open_session_skips_the_login_page()
     {
         await using var context = new ClientTestContext(ClientTestContext.Token("Ana"));
@@ -100,7 +117,7 @@ public sealed class LoginAndLandingTests
         var landing = RenderLanding(context);
 
         landing.WaitForAssertion(() => landing.Find("header h1").TextContent.Should().Be("Ana Administradora"));
-        landing.FindAll("nav li").Select(li => li.TextContent).Should().Equal("Obras", "Definições");
+        landing.FindAll("nav a").Select(a => a.TextContent).Should().Equal("Obras", "Definições");
         landing.Markup.Should().Contain("Home component");
 
         await landing.Find("button[aria-label=Sair]").ClickAsync(new());
