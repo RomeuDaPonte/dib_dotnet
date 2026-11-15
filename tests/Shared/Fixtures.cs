@@ -10,6 +10,9 @@ public static class Fixtures
 
     public static string Characterization(string file) => Path.Combine(Root, "legacy", "characterization", file);
 
+    /// <summary>Login contract answers of the legacy code (Joi, isemail, bcryptjs, jsonwebtoken; tools/legacy/auth-golden.js).</summary>
+    public static string AuthGolden => Path.Combine(Root, "legacy", "auth", "auth-golden.json");
+
     private static string FindRoot()
     {
         for (var directory = new DirectoryInfo(AppContext.BaseDirectory); directory is not null; directory = directory.Parent)

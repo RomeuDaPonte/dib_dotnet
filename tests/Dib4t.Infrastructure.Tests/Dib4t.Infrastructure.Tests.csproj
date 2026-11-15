@@ -3,6 +3,7 @@
 
   <ItemGroup>
     <PackageReference Include="Testcontainers.MongoDb" />
+    <PackageReference Include="Microsoft.Extensions.TimeProvider.Testing" />
     <!-- Reads the log store file independently of the app (PLAN.md §11.9). -->
     <PackageReference Include="Microsoft.Data.Sqlite" />
   </ItemGroup>

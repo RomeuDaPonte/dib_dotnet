@@ -1,7 +1,10 @@
 using System.Text.Json;
+using Dib4t.Application.Account;
 using Dib4t.Application.Common;
 using Dib4t.Application.Database;
+using Dib4t.Domain.Users;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using NSubstitute;
 using NSubstitute.ExceptionExtensions;
 
@@ -16,12 +19,27 @@ public sealed class DatabaseRestoreServiceTests
     private readonly IDatabaseBackupService _backups = Substitute.For<IDatabaseBackupService>();
     private readonly DatabaseOperationLock _lock = new();
     private readonly RecordingLogger<DatabaseRestoreService> _logger = new();
+    private readonly UserSessionCache _sessions = new(Options.Create(new UserSessionOptions()), TimeProvider.System);
     private readonly DatabaseRestoreService _service;
 
     public DatabaseRestoreServiceTests() =>
-        _service = new DatabaseRestoreService(_backups, _lock, _logger);
+        _service = new DatabaseRestoreService(_backups, _lock, _sessions, _logger);
 
     private static CancellationToken Cancellation => TestContext.Current.CancellationToken;
+
+    [Fact]
+    public async Task Success_forgets_the_cached_users_so_tokens_are_checked_against_the_restored_ones()
+    {
+        var loads = 0;
+        Task<User?> Load(CancellationToken _) { loads++; return Task.FromResult<User?>(null); }
+        await _sessions.GetOrLoadAsync("5f1e9a2b3c4d5e6f70819203", Load, Cancellation);
+        _backups.RestoreAsync(Arg.Any<Stream>(), Arg.Any<CancellationToken>()).Returns(Result<RestoreSummary>.Success(Summary));
+
+        await _service.RestoreAsync(new MemoryStream([1]), Cancellation);
+        await _sessions.GetOrLoadAsync("5f1e9a2b3c4d5e6f70819203", Load, Cancellation);
+
+        loads.Should().Be(2);
+    }
 
     [Fact]
     public async Task Empty_file_is_rejected_without_taking_the_lock()

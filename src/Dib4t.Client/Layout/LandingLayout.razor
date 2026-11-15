@@ -1,0 +1,30 @@
+@inherits LayoutComponentBase
+@layout MainLayout
+@inject AuthSession Session
+
+@* Every /landing/* page needs a login (PLAN.md §8.1); without one (or after a logout in any tab) → the login page.
+   Placeholder chrome: the shell step replaces it with the responsive MudBlazor layout (§8.4). *@
+<AuthorizeView>
+    <Authorized>
+        <header class="landing-header">
+            <h1 class="landing-user">@Session.User?.Name</h1>
+        </header>
+        <nav class="landing-menu" aria-label="Menu">
+            <ul>
+                @foreach (var item in Navigation.MenuItems.For(Session.User?.Roles ?? []))
+                {
+                    <li><a href="@item.Path">@item.Label</a></li>
+                }
+            </ul>
+            <MudTooltip Text="Sair">
+                <MudIconButton Icon="@Icons.Material.Filled.PowerSettingsNew" Size="Size.Large" aria-label="Sair" OnClick="Session.LogoutAsync" />
+            </MudTooltip>
+        </nav>
+        <main class="landing-content">
+            @Body
+        </main>
+    </Authorized>
+    <NotAuthorized>
+        <RedirectToLogin />
+    </NotAuthorized>
+</AuthorizeView>

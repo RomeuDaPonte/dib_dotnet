@@ -15,7 +15,7 @@ public sealed class DatabaseRestoreEndpointTests(AppWithMongo app) : IClassFixtu
 {
     private static readonly Uri RestoreUri = new("/api/database/restore", UriKind.Relative);
 
-    private readonly HttpClient _client = app.Factory.CreateClient();
+    private readonly HttpClient _client = app.CreateClient(TestUser.Admin);
 
     private static CancellationToken Cancellation => TestContext.Current.CancellationToken;
 
@@ -138,29 +138,39 @@ public sealed class DatabaseRestoreEndpointTests(AppWithMongo app) : IClassFixtu
         using var response = await PostAsync(new DibbakTestWriter().Magic().HeaderFrame().CollectionFrame("other").EndFrame(1, 1).ToFile());
 
         (await response.Content.ReadAsStringAsync(Cancellation)).Should().Be("O ficheiro de backup está corrompido (contagens não coincidem).");
-        (await (await app.Database.ListCollectionNamesAsync(cancellationToken: Cancellation)).ToListAsync(Cancellation)).Should().Equal("kept");
+        (await (await app.Database.ListCollectionNamesAsync(cancellationToken: Cancellation)).ToListAsync(Cancellation))
+            .Where(name => name != "users").Should().Equal("kept"); // "users": the test client's signed-in user
     }
 
-    [Fact]
-    public async Task Restore_is_blocked_in_production_until_auth_exists()
+    /// <summary>Auth column S (PLAN.md §6): the legacy <c>authCanSeeSettings</c> answers, in every environment.</summary>
+    [Theory]
+    [InlineData("Development")]
+    [InlineData("Production")]
+    public async Task Restore_needs_a_token_with_the_settings_role(string environment)
     {
-        // TEMPORARY guard (BlockedInProductionUntilAuthAttribute) until the auth step adds the settings-role policy.
-        await using var production = app.Factory.WithWebHostBuilder(builder => builder.UseEnvironment("Production"));
-        using var client = production.CreateClient();
-        using var content = new ByteArrayContent(DibbakTestWriter.Valid().ToFile());
-        content.Headers.ContentType = new MediaTypeHeaderValue("application/octet-stream");
+        await using var host = app.Factory.WithWebHostBuilder(builder => builder
+            .UseEnvironment(environment)
+            .UseSetting("Jwt:Key", "a-production-like-test-key-0123456789abcdef"));
+        var file = DibbakTestWriter.Valid().ToFile();
 
-        using var response = await client.PostAsync(RestoreUri, content, Cancellation);
+        using var anonymous = await PostAsync(host.CreateClient(), file);
+        using var limited = await PostAsync(host.CreateDefaultClient(
+            new TestUserHandler(TestUser.Limited, app.Database, TestUser.Limited.TokenFrom(host.Services))), file);
+        using var admin = await PostAsync(host.CreateDefaultClient(
+            new TestUserHandler(TestUser.Admin, app.Database, TestUser.Admin.TokenFrom(host.Services))), []);
 
-        response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
-        (await response.Content.ReadAsStringAsync(Cancellation)).Should().Be("Access denied. No token provided.");
+        ((int)anonymous.StatusCode, await anonymous.Content.ReadAsStringAsync(Cancellation)).Should().Be((401, "Access denied. No token provided."));
+        ((int)limited.StatusCode, await limited.Content.ReadAsStringAsync(Cancellation)).Should().Be((401, "Não tem permissão para concluir esta acção."));
+        ((int)admin.StatusCode, await admin.Content.ReadAsStringAsync(Cancellation)).Should().Be((400, "Nenhum ficheiro de backup recebido."));
     }
 
-    private async Task<HttpResponseMessage> PostAsync(byte[] body, string path = "/api/database/restore")
+    private Task<HttpResponseMessage> PostAsync(byte[] body, string path = "/api/database/restore") => PostAsync(_client, body, path);
+
+    private static async Task<HttpResponseMessage> PostAsync(HttpClient client, byte[] body, string path = "/api/database/restore")
     {
         using var content = new ByteArrayContent(body);
         content.Headers.ContentType = new MediaTypeHeaderValue("application/octet-stream");
-        return await _client.PostAsync(new Uri(path, UriKind.Relative), content, Cancellation);
+        return await client.PostAsync(new Uri(path, UriKind.Relative), content, Cancellation);
     }
 
     private static async Task<JsonElement> RecordedStepAsync(string id)

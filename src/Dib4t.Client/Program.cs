@@ -1,5 +1,31 @@
+using Dib4t.Client.Api;
+using Dib4t.Client.Auth;
+using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
+using MudBlazor;
+using MudBlazor.Services;
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
+
+builder.Services.AddMudServices(options =>
+{
+    // Legacy react-toastify notifications: top right (PLAN.md §8.2).
+    options.SnackbarConfiguration.PositionClass = Defaults.Classes.Position.TopRight;
+});
+
+// Auth (PLAN.md §4.6, §8.2). Components never touch HttpClient: they use AuthSession / the typed API clients.
+builder.Services.AddAuthorizationCore();
+builder.Services.AddCascadingAuthenticationState();
+builder.Services.AddScoped<TokenStore>();
+builder.Services.AddScoped(provider => new HttpClient(new AuthHeaderHandler(provider.GetRequiredService<TokenStore>())
+{
+    InnerHandler = new HttpClientHandler(),
+})
+{
+    BaseAddress = new Uri(builder.HostEnvironment.BaseAddress),
+});
+builder.Services.AddScoped<IAccountApi, AccountApi>();
+builder.Services.AddScoped<AuthSession>();
+builder.Services.AddScoped<AuthenticationStateProvider>(provider => provider.GetRequiredService<AuthSession>());
 
 await builder.Build().RunAsync();

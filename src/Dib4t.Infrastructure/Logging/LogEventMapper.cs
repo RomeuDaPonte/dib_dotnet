@@ -126,6 +126,8 @@ internal static class LogCategoryMap
         ("Dib4t.Infrastructure.Mongo", LogCategories.Database),
         ("Dib4t.Infrastructure.Backup", LogCategories.Database),
         ("Dib4t.Application.Database", LogCategories.Database),
+        ("Dib4t.Application.Account", LogCategories.Auth),
+        ("Dib4t.Server.Auth", LogCategories.Auth),
         ("Microsoft.AspNetCore.Authentication", LogCategories.Auth),
         ("Microsoft.AspNetCore.Authorization", LogCategories.Auth),
     ];

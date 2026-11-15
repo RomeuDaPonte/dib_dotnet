@@ -1,0 +1,949 @@
+{
+  "generatedBy": "tools/legacy/auth-golden.js",
+  "legacyPackages": {
+    "joi": "14.3.1",
+    "isemail": "3.2.0",
+    "bcryptjs": "2.4.3",
+    "jsonwebtoken": "8.5.1"
+  },
+  "loginValidation": [
+    {
+      "body": "{}",
+      "message": "\"email\" is required"
+    },
+    {
+      "body": "{\"email\":\"ana.admin@dib4t.local\"}",
+      "message": "\"password\" is required"
+    },
+    {
+      "body": "{\"password\":\"char-test-1\"}",
+      "message": "\"email\" is required"
+    },
+    {
+      "body": "{\"email\":\"ana.admin@dib4t.local\",\"password\":\"char-test-1\"}",
+      "message": null
+    },
+    {
+      "body": "{\"password\":\"char-test-1\",\"email\":\"ana.admin@dib4t.local\"}",
+      "message": null
+    },
+    {
+      "body": "{\"email\":\"\",\"password\":\"char-test-1\"}",
+      "message": "\"email\" is not allowed to be empty"
+    },
+    {
+      "body": "{\"email\":null,\"password\":\"char-test-1\"}",
+      "message": "\"email\" must be a string"
+    },
+    {
+      "body": "{\"email\":12345678901,\"password\":\"char-test-1\"}",
+      "message": "\"email\" must be a string"
+    },
+    {
+      "body": "{\"email\":true,\"password\":\"char-test-1\"}",
+      "message": "\"email\" must be a string"
+    },
+    {
+      "body": "{\"email\":[\"ana.admin@dib4t.local\"],\"password\":\"char-test-1\"}",
+      "message": "\"email\" must be a string"
+    },
+    {
+      "body": "{\"email\":{\"a\":1},\"password\":\"char-test-1\"}",
+      "message": "\"email\" must be a string"
+    },
+    {
+      "body": "{\"email\":\"a@b\",\"password\":\"char-test-1\"}",
+      "message": "\"email\" length must be at least 5 characters long"
+    },
+    {
+      "body": "{\"email\":\"a@b.c\",\"password\":\"char-test-1\"}",
+      "message": null
+    },
+    {
+      "body": "{\"email\":\"abcd\",\"password\":\"char-test-1\"}",
+      "message": "\"email\" length must be at least 5 characters long"
+    },
+    {
+      "body": "{\"email\":\"not-an-email\",\"password\":\"char-test-1\"}",
+      "message": "\"email\" must be a valid email"
+    },
+    {
+      "body": "{\"email\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa@dib4t.local\",\"password\":\"char-test-1\"}",
+      "message": "\"email\" must be a valid email"
+    },
+    {
+      "body": "{\"email\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa@dib4t.local\",\"password\":\"char-test-1\"}",
+      "message": "\"email\" length must be less than or equal to 255 characters long"
+    },
+    {
+      "body": "{\"email\":\" ana.admin@dib4t.local\",\"password\":\"char-test-1\"}",
+      "message": "\"email\" must be a valid email"
+    },
+    {
+      "body": "{\"email\":\"ana.admin@dib4t.local \",\"password\":\"char-test-1\"}",
+      "message": "\"email\" must be a valid email"
+    },
+    {
+      "body": "{\"email\":\"ANA.ADMIN@DIB4T.LOCAL\",\"password\":\"char-test-1\"}",
+      "message": null
+    },
+    {
+      "body": "{\"email\":\"joão@dib4t.pt\",\"password\":\"char-test-1\"}",
+      "message": null
+    },
+    {
+      "body": "{\"email\":\"ana.admin@dib4t.local\",\"password\":\"\"}",
+      "message": "\"password\" is not allowed to be empty"
+    },
+    {
+      "body": "{\"email\":\"ana.admin@dib4t.local\",\"password\":null}",
+      "message": "\"password\" must be a string"
+    },
+    {
+      "body": "{\"email\":\"ana.admin@dib4t.local\",\"password\":12345}",
+      "message": "\"password\" must be a string"
+    },
+    {
+      "body": "{\"email\":\"ana.admin@dib4t.local\",\"password\":\"1234\"}",
+      "message": "\"password\" length must be at least 5 characters long"
+    },
+    {
+      "body": "{\"email\":\"ana.admin@dib4t.local\",\"password\":\"12345\"}",
+      "message": null
+    },
+    {
+      "body": "{\"email\":\"ana.admin@dib4t.local\",\"password\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\"}",
+      "message": null
+    },
+    {
+      "body": "{\"email\":\"ana.admin@dib4t.local\",\"password\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\"}",
+      "message": "\"password\" length must be less than or equal to 255 characters long"
+    },
+    {
+      "body": "{\"email\":\"ana.admin@dib4t.local\",\"password\":\"😀😀\"}",
+      "message": "\"password\" length must be at least 5 characters long"
+    },
+    {
+      "body": "{\"email\":\"ana.admin@dib4t.local\",\"password\":\"😀😀a\"}",
+      "message": null
+    },
+    {
+      "body": "{\"email\":\"ana.admin@dib4t.local\",\"password\":\"     \"}",
+      "message": null
+    },
+    {
+      "body": "{\"email\":\"\",\"password\":\"\"}",
+      "message": "\"email\" is not allowed to be empty"
+    },
+    {
+      "body": "{\"email\":\"x\",\"password\":1}",
+      "message": "\"email\" length must be at least 5 characters long"
+    },
+    {
+      "body": "{\"email\":\"ana.admin@dib4t.local\",\"password\":\"char-test-1\",\"remember\":true}",
+      "message": "\"remember\" is not allowed"
+    },
+    {
+      "body": "{\"remember\":true,\"email\":\"ana.admin@dib4t.local\",\"password\":\"char-test-1\"}",
+      "message": "\"remember\" is not allowed"
+    },
+    {
+      "body": "{\"remember\":true}",
+      "message": "\"email\" is required"
+    },
+    {
+      "body": "{\"remember\":true,\"email\":\"x\"}",
+      "message": "\"email\" length must be at least 5 characters long"
+    },
+    {
+      "body": "{\"email\":\"ana.admin@dib4t.local\",\"password\":\"char-test-1\",\"b\":1,\"a\":2}",
+      "message": "\"b\" is not allowed"
+    },
+    {
+      "body": "{\"1\":1,\"2\":1,\"email\":\"ana.admin@dib4t.local\",\"password\":\"char-test-1\",\"x\":1}",
+      "message": "\"1\" is not allowed"
+    },
+    {
+      "body": "{\"email\":\"ana.admin@dib4t.local\",\"password\":\"char-test-1\",\"\":1}",
+      "message": "\"\" is not allowed"
+    },
+    {
+      "body": "{\"email\":\"ana.admin@dib4t.local\",\"password\":\"char-test-1\",\"passwordConfirmation\":\"char-test-1\"}",
+      "message": "\"passwordConfirmation\" is not allowed"
+    },
+    {
+      "body": "{\"email\":\"ana.admin@dib4t.local\",\"password\":\"char-test-1\",\"__proto__\":1}",
+      "message": null
+    },
+    {
+      "body": "{\"email\":1,\"password\":\"char-test-1\",\"email\":\"ana.admin@dib4t.local\"}",
+      "message": null
+    },
+    {
+      "body": "{\"email\":\"ana.admin@dib4t.local\",\"password\":\"char-test-1\",\"x\":1,\"x\":2}",
+      "message": "\"x\" is not allowed"
+    },
+    {
+      "body": "[]",
+      "message": "\"value\" must be an object"
+    },
+    {
+      "body": "[\"ana.admin@dib4t.local\",\"char-test-1\"]",
+      "message": "\"value\" must be an object"
+    }
+  ],
+  "email": [
+    {
+      "email": "ana.admin@dib4t.local",
+      "valid": true
+    },
+    {
+      "email": "a@b",
+      "valid": true
+    },
+    {
+      "email": "a@b.c",
+      "valid": true
+    },
+    {
+      "email": "a.b.c@d.e.f",
+      "valid": true
+    },
+    {
+      "email": "a+tag@x.pt",
+      "valid": true
+    },
+    {
+      "email": "A@X.PT",
+      "valid": true
+    },
+    {
+      "email": "o'neil@x.pt",
+      "valid": true
+    },
+    {
+      "email": "!#$%&'*+-/=?^_`{|}~@x.pt",
+      "valid": true
+    },
+    {
+      "email": "a@123",
+      "valid": true
+    },
+    {
+      "email": "a@x.123",
+      "valid": true
+    },
+    {
+      "email": "a@1x.pt",
+      "valid": true
+    },
+    {
+      "email": "a@x.1pt",
+      "valid": true
+    },
+    {
+      "email": "a@x.p1",
+      "valid": true
+    },
+    {
+      "email": "",
+      "valid": false
+    },
+    {
+      "email": "a",
+      "valid": false
+    },
+    {
+      "email": "@x.pt",
+      "valid": false
+    },
+    {
+      "email": "a@",
+      "valid": false
+    },
+    {
+      "email": "a@@x.pt",
+      "valid": false
+    },
+    {
+      "email": "a@b@c.pt",
+      "valid": false
+    },
+    {
+      "email": "a..b@x.pt",
+      "valid": false
+    },
+    {
+      "email": ".a@x.pt",
+      "valid": false
+    },
+    {
+      "email": "a.@x.pt",
+      "valid": false
+    },
+    {
+      "email": "a@x..pt",
+      "valid": false
+    },
+    {
+      "email": "a@.x.pt",
+      "valid": false
+    },
+    {
+      "email": "a@x.pt.",
+      "valid": false
+    },
+    {
+      "email": "a@-x.pt",
+      "valid": false
+    },
+    {
+      "email": "a@x-.pt",
+      "valid": false
+    },
+    {
+      "email": "a@x.-pt",
+      "valid": false
+    },
+    {
+      "email": "a@x.pt-",
+      "valid": false
+    },
+    {
+      "email": "a@x-y.pt",
+      "valid": true
+    },
+    {
+      "email": "a@x_y.pt",
+      "valid": false
+    },
+    {
+      "email": "a@x~y.pt",
+      "valid": false
+    },
+    {
+      "email": "a@x!.pt",
+      "valid": false
+    },
+    {
+      "email": "a b@x.pt",
+      "valid": false
+    },
+    {
+      "email": " a@x.pt",
+      "valid": false
+    },
+    {
+      "email": "a@x.pt ",
+      "valid": false
+    },
+    {
+      "email": "a @x.pt",
+      "valid": false
+    },
+    {
+      "email": "a@ x.pt",
+      "valid": false
+    },
+    {
+      "email": "a\t@x.pt",
+      "valid": false
+    },
+    {
+      "email": "a@x.pt\t",
+      "valid": false
+    },
+    {
+      "email": "a\r\n @x.pt",
+      "valid": false
+    },
+    {
+      "email": "a\r\n@x.pt",
+      "valid": false
+    },
+    {
+      "email": "a\r@x.pt",
+      "valid": false
+    },
+    {
+      "email": "a\n@x.pt",
+      "valid": false
+    },
+    {
+      "email": "a@x.pt\r\n",
+      "valid": false
+    },
+    {
+      "email": "a@x\r\n .pt",
+      "valid": false
+    },
+    {
+      "email": "a(comment)@x.pt",
+      "valid": false
+    },
+    {
+      "email": "(c)a@x.pt",
+      "valid": false
+    },
+    {
+      "email": "a@(c)x.pt",
+      "valid": false
+    },
+    {
+      "email": "a@x.pt(c)",
+      "valid": false
+    },
+    {
+      "email": "a@x(c).pt",
+      "valid": false
+    },
+    {
+      "email": "a(c@x.pt",
+      "valid": false
+    },
+    {
+      "email": "a(c\\)@x.pt",
+      "valid": false
+    },
+    {
+      "email": "\"quoted\"@x.pt",
+      "valid": true
+    },
+    {
+      "email": "\"quo ted\"@x.pt",
+      "valid": false
+    },
+    {
+      "email": "\"quo\\\"ted\"@x.pt",
+      "valid": true
+    },
+    {
+      "email": "\"quo\\ted\"@x.pt",
+      "valid": true
+    },
+    {
+      "email": "\"\"@x.pt",
+      "valid": true
+    },
+    {
+      "email": "\"a\"b@x.pt",
+      "valid": false
+    },
+    {
+      "email": "a.\"b\"@x.pt",
+      "valid": false
+    },
+    {
+      "email": "\"a\".b@x.pt",
+      "valid": false
+    },
+    {
+      "email": "\"unclosed@x.pt",
+      "valid": false
+    },
+    {
+      "email": "\"a\\\"@x.pt",
+      "valid": false
+    },
+    {
+      "email": "\"a\tb\"@x.pt",
+      "valid": false
+    },
+    {
+      "email": "\"a\u0001b\"@x.pt",
+      "valid": false
+    },
+    {
+      "email": "\"ab\"@x.pt",
+      "valid": false
+    },
+    {
+      "email": "\"a\nb\"@x.pt",
+      "valid": false
+    },
+    {
+      "email": "\"ab\"@x.pt",
+      "valid": false
+    },
+    {
+      "email": "a@[1.2.3.4]",
+      "valid": true
+    },
+    {
+      "email": "a@[1.2.3.256]",
+      "valid": false
+    },
+    {
+      "email": "a@[01.2.3.4]",
+      "valid": true
+    },
+    {
+      "email": "a@[1.2.3]",
+      "valid": false
+    },
+    {
+      "email": "a@[IPv6:::1]",
+      "valid": true
+    },
+    {
+      "email": "a@[ipv6:1:2:3:4:5:6:7:8]",
+      "valid": true
+    },
+    {
+      "email": "a@[IPv6:1:2:3:4:5:6:7]",
+      "valid": false
+    },
+    {
+      "email": "a@[IPv6:1:2:3:4:5:6:7:8:9]",
+      "valid": false
+    },
+    {
+      "email": "a@[IPv6:1::2:3:4:5:6:7]",
+      "valid": false
+    },
+    {
+      "email": "a@[IPv6:1::2:3:4:5:6]",
+      "valid": true
+    },
+    {
+      "email": "a@[IPv6:1::2::3]",
+      "valid": false
+    },
+    {
+      "email": "a@[IPv6::1:2:3:4:5:6:7]",
+      "valid": false
+    },
+    {
+      "email": "a@[IPv6:1:2:3:4:5:6:7:]",
+      "valid": false
+    },
+    {
+      "email": "a@[IPv6:1:2:3:4:5:6:1.2.3.4]",
+      "valid": true
+    },
+    {
+      "email": "a@[IPv6:1:2:3:4:5:1.2.3.4]",
+      "valid": false
+    },
+    {
+      "email": "a@[IPv6:g::1]",
+      "valid": false
+    },
+    {
+      "email": "a@[IPv6:12345::1]",
+      "valid": false
+    },
+    {
+      "email": "a@[ab]",
+      "valid": false
+    },
+    {
+      "email": "a@[a\\b]",
+      "valid": false
+    },
+    {
+      "email": "a@[a b]",
+      "valid": false
+    },
+    {
+      "email": "a@[1.2.3.4].pt",
+      "valid": false
+    },
+    {
+      "email": "a@x.[1.2.3.4]",
+      "valid": false
+    },
+    {
+      "email": "a@x[1.2.3.4]",
+      "valid": false
+    },
+    {
+      "email": "a@[1.2.3.4]x",
+      "valid": false
+    },
+    {
+      "email": "a@[1.2.3.4",
+      "valid": false
+    },
+    {
+      "email": "a@[a[b]",
+      "valid": false
+    },
+    {
+      "email": "a@[\u0000]",
+      "valid": false
+    },
+    {
+      "email": "a@[\u0001]",
+      "valid": false
+    },
+    {
+      "email": "a\\b@x.pt",
+      "valid": false
+    },
+    {
+      "email": "a\"b@x.pt",
+      "valid": false
+    },
+    {
+      "email": "a,b@x.pt",
+      "valid": false
+    },
+    {
+      "email": "a;b@x.pt",
+      "valid": false
+    },
+    {
+      "email": "a<b@x.pt",
+      "valid": false
+    },
+    {
+      "email": "a:b@x.pt",
+      "valid": false
+    },
+    {
+      "email": "a[b@x.pt",
+      "valid": false
+    },
+    {
+      "email": "\u0000@x.pt",
+      "valid": false
+    },
+    {
+      "email": "a\u0001@x.pt",
+      "valid": false
+    },
+    {
+      "email": "a@x.pt",
+      "valid": false
+    },
+    {
+      "email": "a@x.pt",
+      "valid": false
+    },
+    {
+      "email": "a @x.pt",
+      "valid": true
+    },
+    {
+      "email": "joão@x.pt",
+      "valid": true
+    },
+    {
+      "email": "a@joão.pt",
+      "valid": true
+    },
+    {
+      "email": "joão@x.pt",
+      "valid": true
+    },
+    {
+      "email": "😀@x.pt",
+      "valid": true
+    },
+    {
+      "email": "a@😀.pt",
+      "valid": true
+    },
+    {
+      "email": "a@x.pt。com",
+      "valid": true
+    },
+    {
+      "email": "ação.çé@dib4t.pt",
+      "valid": true
+    },
+    {
+      "email": "a@xn--jo-9ia.pt",
+      "valid": true
+    },
+    {
+      "email": "a@JOÃO.PT",
+      "valid": true
+    },
+    {
+      "email": "a@é.pt",
+      "valid": true
+    },
+    {
+      "email": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa@x.pt",
+      "valid": true
+    },
+    {
+      "email": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa@x.pt",
+      "valid": false
+    },
+    {
+      "email": "éééééééééééééééééééééééééééééééé@x.pt",
+      "valid": true
+    },
+    {
+      "email": "ééééééééééééééééééééééééééééééééé@x.pt",
+      "valid": false
+    },
+    {
+      "email": "a@bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb.pt",
+      "valid": true
+    },
+    {
+      "email": "a@bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb.pt",
+      "valid": false
+    },
+    {
+      "email": "a@x.bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "valid": true
+    },
+    {
+      "email": "a@x.bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "valid": false
+    },
+    {
+      "email": "a@éééééééééééééééééééééééééééééééééééééééééééééééééééééééé.pt",
+      "valid": true
+    },
+    {
+      "email": "a@ééééééééééééééééééééééééééééééééééééééééééééééééééééééééé.pt",
+      "valid": true
+    },
+    {
+      "email": "a@éééééééééééééééééééééééééééééééééééééééééééééééééééééééééééé.pt",
+      "valid": false
+    },
+    {
+      "email": "a@bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb.bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb.bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb.bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "valid": false
+    },
+    {
+      "email": "a@bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb.bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb.bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb.bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "valid": false
+    },
+    {
+      "email": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa@bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb.bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb.bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "valid": true
+    },
+    {
+      "email": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa@bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb.bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb.bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "valid": false
+    }
+  ],
+  "bcrypt": [
+    {
+      "password": "char-test-1",
+      "hash": "$2a$10$abcdefghijklmnopqrstuulIqNP2RZqLbQ20GBTeJA/lCcwIkMZ4e"
+    },
+    {
+      "password": "dib4t-dev",
+      "hash": "$2a$10$abcdefghijklmnopqrstuuf16iKdr1KPlt5MO6mFF1tllrIqJ4ghq"
+    },
+    {
+      "password": "12345",
+      "hash": "$2a$10$abcdefghijklmnopqrstuuwlDZ3uF4mEzK4WQDG4arnn1xTv1J226"
+    },
+    {
+      "password": "palavra-passe çãé",
+      "hash": "$2a$10$abcdefghijklmnopqrstuu/Z6uSGoXXqu/bMVgcHg.pT1UC13palK"
+    },
+    {
+      "password": "😀😀a",
+      "hash": "$2a$10$abcdefghijklmnopqrstuudzRtNqJm/nt6ToRDkjnke9D8XoXEmyy"
+    },
+    {
+      "password": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+      "hash": "$2a$10$abcdefghijklmnopqrstuumbPZs6w2qUT64KqFBzDPghLhp5LquFG"
+    },
+    {
+      "password": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+      "hash": "$2a$10$abcdefghijklmnopqrstuuhBb/0dYbuuS1CS8hp30IXhlFBW2VAWG"
+    },
+    {
+      "password": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+      "hash": "$2a$10$abcdefghijklmnopqrstuuhBb/0dYbuuS1CS8hp30IXhlFBW2VAWG"
+    },
+    {
+      "password": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxy",
+      "hash": "$2a$10$abcdefghijklmnopqrstuuhBb/0dYbuuS1CS8hp30IXhlFBW2VAWG"
+    },
+    {
+      "password": "éééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééé",
+      "hash": "$2a$10$abcdefghijklmnopqrstuu3WPvXjVwyQ/qCoOEhfsb8Hz5o0U5kEi"
+    },
+    {
+      "password": "zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz",
+      "hash": "$2a$10$abcdefghijklmnopqrstuubOnlcRXxFKdPW7F1Y8v8IF.4Z8A7h16"
+    },
+    {
+      "password": "char-test-1",
+      "hash": "$2a$10$ABCDEFGHIJKLMNOPQRSTUuRVQfqNjkujLCQElqH25RqnP3yjNOI3a"
+    },
+    {
+      "password": "dib4t-dev",
+      "hash": "$2a$10$ABCDEFGHIJKLMNOPQRSTUuViCYhB1zqI5aycpEzAVJnqMKGH3HGR6"
+    },
+    {
+      "password": "12345",
+      "hash": "$2a$10$ABCDEFGHIJKLMNOPQRSTUuRrWz2umrwgXc5cIMSOv77q1BdKlAeGW"
+    },
+    {
+      "password": "palavra-passe çãé",
+      "hash": "$2a$10$ABCDEFGHIJKLMNOPQRSTUuvtoHKE82KVt354XG4mCGMqSqeXmnnt6"
+    },
+    {
+      "password": "😀😀a",
+      "hash": "$2a$10$ABCDEFGHIJKLMNOPQRSTUuE7V1DANRv3iOBEvBx9xEFA7cluUhqvm"
+    },
+    {
+      "password": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+      "hash": "$2a$10$ABCDEFGHIJKLMNOPQRSTUur30ysTV9ql9uU/VXJQlB6OpgEmItjki"
+    },
+    {
+      "password": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+      "hash": "$2a$10$ABCDEFGHIJKLMNOPQRSTUuUstJLzupb5sKKZC98BcDD3YdGmWrbfy"
+    },
+    {
+      "password": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+      "hash": "$2a$10$ABCDEFGHIJKLMNOPQRSTUuUstJLzupb5sKKZC98BcDD3YdGmWrbfy"
+    },
+    {
+      "password": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxy",
+      "hash": "$2a$10$ABCDEFGHIJKLMNOPQRSTUuUstJLzupb5sKKZC98BcDD3YdGmWrbfy"
+    },
+    {
+      "password": "éééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééé",
+      "hash": "$2a$10$ABCDEFGHIJKLMNOPQRSTUuzMcLZGe4fgy4BPFq.ZuAMy4JlgF6JqG"
+    },
+    {
+      "password": "zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz",
+      "hash": "$2a$10$ABCDEFGHIJKLMNOPQRSTUu08HnWaUIFrPpEkAnWvknzqx5vrgNQxe"
+    },
+    {
+      "password": "char-test-1",
+      "hash": "$2a$04$012345678901234567890u2SKtoHeDIrtsdndc6DzFlaXE2POkyCa"
+    },
+    {
+      "password": "dib4t-dev",
+      "hash": "$2a$04$012345678901234567890ughW4pO4cffw1LdeuINh7l89PE4hQB/C"
+    },
+    {
+      "password": "12345",
+      "hash": "$2a$04$012345678901234567890usjE4d.PW/TimPwrBPoN.8zaZW/P8Nx6"
+    },
+    {
+      "password": "palavra-passe çãé",
+      "hash": "$2a$04$012345678901234567890uvL96JYv59e84leWKpPUip4KeOe7TWqu"
+    },
+    {
+      "password": "😀😀a",
+      "hash": "$2a$04$012345678901234567890uF9p0MAJeiDRIkXq7TOBfUnOMMPeHfpi"
+    },
+    {
+      "password": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+      "hash": "$2a$04$012345678901234567890u6NDHdlvDjT57V5QsP9gwAEeLYb.eGYO"
+    },
+    {
+      "password": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+      "hash": "$2a$04$012345678901234567890uDUz6ooNX1oTDcDYe6R4588izjkdkqZm"
+    },
+    {
+      "password": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+      "hash": "$2a$04$012345678901234567890uDUz6ooNX1oTDcDYe6R4588izjkdkqZm"
+    },
+    {
+      "password": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxy",
+      "hash": "$2a$04$012345678901234567890uDUz6ooNX1oTDcDYe6R4588izjkdkqZm"
+    },
+    {
+      "password": "éééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééé",
+      "hash": "$2a$04$012345678901234567890uDuy1y27.ZveZmXBkbGMaySYjKh.Hn46"
+    },
+    {
+      "password": "zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz",
+      "hash": "$2a$04$012345678901234567890uezk660KZM29vor6EJ0oEKwQnN1LHWpy"
+    },
+    {
+      "password": "char-test-1",
+      "hash": "$2b$10$abcdefghijklmnopqrstuulIqNP2RZqLbQ20GBTeJA/lCcwIkMZ4e"
+    },
+    {
+      "password": "dib4t-dev",
+      "hash": "$2b$10$abcdefghijklmnopqrstuuf16iKdr1KPlt5MO6mFF1tllrIqJ4ghq"
+    },
+    {
+      "password": "12345",
+      "hash": "$2b$10$abcdefghijklmnopqrstuuwlDZ3uF4mEzK4WQDG4arnn1xTv1J226"
+    },
+    {
+      "password": "palavra-passe çãé",
+      "hash": "$2b$10$abcdefghijklmnopqrstuu/Z6uSGoXXqu/bMVgcHg.pT1UC13palK"
+    },
+    {
+      "password": "😀😀a",
+      "hash": "$2b$10$abcdefghijklmnopqrstuudzRtNqJm/nt6ToRDkjnke9D8XoXEmyy"
+    },
+    {
+      "password": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+      "hash": "$2b$10$abcdefghijklmnopqrstuumbPZs6w2qUT64KqFBzDPghLhp5LquFG"
+    },
+    {
+      "password": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+      "hash": "$2b$10$abcdefghijklmnopqrstuuhBb/0dYbuuS1CS8hp30IXhlFBW2VAWG"
+    },
+    {
+      "password": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+      "hash": "$2b$10$abcdefghijklmnopqrstuuhBb/0dYbuuS1CS8hp30IXhlFBW2VAWG"
+    },
+    {
+      "password": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxy",
+      "hash": "$2b$10$abcdefghijklmnopqrstuuhBb/0dYbuuS1CS8hp30IXhlFBW2VAWG"
+    },
+    {
+      "password": "éééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééé",
+      "hash": "$2b$10$abcdefghijklmnopqrstuu3WPvXjVwyQ/qCoOEhfsb8Hz5o0U5kEi"
+    },
+    {
+      "password": "zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz",
+      "hash": "$2b$10$abcdefghijklmnopqrstuubOnlcRXxFKdPW7F1Y8v8IF.4Z8A7h16"
+    }
+  ],
+  "jwt": {
+    "key": "auth-golden-test-key-0123456789abcdef",
+    "iat": 1794650400,
+    "cases": [
+      {
+        "payload": {
+          "_id": "5f1e9a2b3c4d5e6f70819203",
+          "name": "Ana Administradora",
+          "email": "ana.admin@dib4t.local",
+          "roles": [
+            "canSeeOrcamentos",
+            null,
+            "canSeeDefinicoes"
+          ],
+          "fieldOfCompetencies": "Desenvolvimento"
+        },
+        "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1ZjFlOWEyYjNjNGQ1ZTZmNzA4MTkyMDMiLCJuYW1lIjoiQW5hIEFkbWluaXN0cmFkb3JhIiwiZW1haWwiOiJhbmEuYWRtaW5AZGliNHQubG9jYWwiLCJyb2xlcyI6WyJjYW5TZWVPcmNhbWVudG9zIixudWxsLCJjYW5TZWVEZWZpbmljb2VzIl0sImZpZWxkT2ZDb21wZXRlbmNpZXMiOiJEZXNlbnZvbHZpbWVudG8iLCJpYXQiOjE3OTQ2NTA0MDB9.UX45u8BBY30fkkt1o-120LyctYgqDU2N-3Jf_GUKYrQ"
+      },
+      {
+        "payload": {
+          "_id": "5f1e9a2b3c4d5e6f70819203",
+          "roles": [],
+          "fieldOfCompetencies": "Desenvolvimento"
+        },
+        "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1ZjFlOWEyYjNjNGQ1ZTZmNzA4MTkyMDMiLCJyb2xlcyI6W10sImZpZWxkT2ZDb21wZXRlbmNpZXMiOiJEZXNlbnZvbHZpbWVudG8iLCJpYXQiOjE3OTQ2NTA0MDB9.gAUgwQbues6Sl1x9IGesKdI0m7xk9VCHHy-xXvJkF4o"
+      },
+      {
+        "payload": {
+          "_id": "5f1e9a2b3c4d5e6f70819203",
+          "name": "Bruno Maquinação \"Silva\" </script>",
+          "email": "ana.admin@dib4t.local",
+          "roles": [
+            "canSeeOrcamentos",
+            null,
+            "canSeeDefinicoes"
+          ],
+          "fieldOfCompetencies": "Desenvolvimento"
+        },
+        "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1ZjFlOWEyYjNjNGQ1ZTZmNzA4MTkyMDMiLCJuYW1lIjoiQnJ1bm8gTWFxdWluYcOnw6NvIFwiU2lsdmFcIiA8L3NjcmlwdD4iLCJlbWFpbCI6ImFuYS5hZG1pbkBkaWI0dC5sb2NhbCIsInJvbGVzIjpbImNhblNlZU9yY2FtZW50b3MiLG51bGwsImNhblNlZURlZmluaWNvZXMiXSwiZmllbGRPZkNvbXBldGVuY2llcyI6IkRlc2Vudm9sdmltZW50byIsImlhdCI6MTc5NDY1MDQwMH0.wl3HJB_-wRZgSIqngzSn11ov5rYaKDlqU_akPw2GX-c"
+      }
+    ]
+  }
+}

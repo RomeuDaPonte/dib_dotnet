@@ -104,6 +104,7 @@ public sealed class MongoStartupTests(MongoFixture mongo) : IClassFixture<MongoF
             ["Mongo:ConnectionString"] = connectionString,
             ["Mongo:StartupCheckRetryInterval"] = retryInterval,
             ["Logs:Path"] = NewLogStore(),
+            ["Jwt:Key"] = new string('k', 32), // validated at startup with the other options
         });
         var recording = new RecordingLoggerProvider();
         builder.Logging.SetMinimumLevel(LogLevel.Trace).AddProvider(recording);

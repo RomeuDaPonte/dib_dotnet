@@ -17,7 +17,7 @@ public sealed class LegacyBackupImportTests(AppWithMongo app) : IClassFixture<Ap
     /// <summary>Path of a full, real production backup (kept outside the repo); the size test is skipped without it.</summary>
     public const string FullBackupVariable = "DIB4T_FULL_BACKUP";
 
-    private readonly HttpClient _client = app.Factory.CreateClient();
+    private readonly HttpClient _client = app.CreateClient(TestUser.Admin); // restore needs the settings role
 
     private static CancellationToken Cancellation => TestContext.Current.CancellationToken;
 

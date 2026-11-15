@@ -1,6 +1,8 @@
 using Dib4t.Application.Database;
 using Dib4t.Contracts.Database;
+using Dib4t.Server.Auth;
 using Dib4t.Server.Http;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Net.Http.Headers;
 
@@ -8,7 +10,7 @@ namespace Dib4t.Server.Controllers;
 
 /// <summary><c>/api/database</c> (legacy <c>routes/database.js</c>, PLAN.md §6, §7.6).</summary>
 [Route("api/database")]
-[BlockedInProductionUntilAuth]
+[Authorize(Policy = Policies.CanSeeDefinicoes)]
 public sealed class DatabaseController(DatabaseRestoreService restoreService) : ControllerBase
 {
     /// <summary>Legacy <c>express.raw({ limit: "1gb" })</c>: 1 GiB.</summary>

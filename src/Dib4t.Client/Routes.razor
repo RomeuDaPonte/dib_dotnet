@@ -1,3 +1,5 @@
+@* No [Authorize] on pages: the server maps client pages as endpoints and would apply it to the GET of the host page.
+   /landing/* pages are protected by LandingLayout instead (PLAN.md §8.1). *@
 <Router AppAssembly="typeof(Routes).Assembly" NotFoundPage="typeof(Pages.NotFound)">
     <Found Context="routeData">
         <RouteView RouteData="routeData" DefaultLayout="typeof(Layout.MainLayout)" />

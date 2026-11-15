@@ -11,6 +11,16 @@ public sealed class LegacyLoginPage(IPage page)
 
     public ILocator Submit => page.GetByRole(AriaRole.Button, new() { Name = "Submit" });
 
+    /// <summary>react-toastify notifications (top right).</summary>
+    public ILocator Notification => page.Locator(".Toastify__toast-body");
+
+    public async Task SubmitAsync(string email, string password)
+    {
+        await Email.FillAsync(email);
+        await Password.FillAsync(password);
+        await Submit.ClickAsync();
+    }
+
     public async Task GotoAsync()
     {
         // The legacy front-end derives its API URL from the page origin (src/_constants/url.js), so it must be

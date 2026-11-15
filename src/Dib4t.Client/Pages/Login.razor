@@ -1,0 +1,86 @@
+@page "/"
+@layout MainLayout
+@inject AuthSession Session
+@inject NavigationManager Navigation
+@inject ISnackbar Snackbar
+
+<PageTitle>Dib4t</PageTitle>
+
+@* Legacy components/account/login.jsx (always dark, PLAN.md §8.3). Layout fixed per §8.4 rule 7: the image column
+   is hidden below md and uses object-fit instead of the legacy width: 100vh. "Lembrar" is gone (D14): the login is
+   always remembered (§4.6). *@
+<main class="login">
+    <div class="login-image" aria-hidden="true"></div>
+    <MudPaper Square="true" Elevation="6" Class="login-panel">
+        <MudAvatar Class="login-avatar">
+            <MudIcon Icon="@Icons.Material.Filled.Lock" />
+        </MudAvatar>
+        <h1 class="login-title">Sign in</h1>
+        <form class="login-form" novalidate @onsubmit="SubmitAsync">
+            <MudTextField T="string" @bind-Value="_form.Email" @bind-Value:after="Revalidate" Immediate="true"
+                          Label="Email Address" InputId="email" InputType="InputType.Email" Variant="Variant.Outlined"
+                          Margin="Margin.Normal" AutoFocus="true" Error="@(_errors.Email is not null)" ErrorText="@_errors.Email" />
+            <MudTextField T="string" @bind-Value="_form.Password" @bind-Value:after="Revalidate" Immediate="true"
+                          Label="Password" InputId="password" InputType="InputType.Password" Variant="Variant.Outlined"
+                          Margin="Margin.Normal" Error="@(_errors.Password is not null)" ErrorText="@_errors.Password" />
+            <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary" FullWidth="true"
+                       Disabled="_submitting" Class="login-submit">Submit</MudButton>
+        </form>
+    </MudPaper>
+</main>
+
+@code {
+    private readonly LoginForm _form = new();
+
+    [CascadingParameter]
+    private Task<AuthenticationState>? AuthenticationState { get; set; }
+
+    private LoginFormErrors _errors = LoginFormErrors.None;
+    private bool _validateOnChange;
+    private bool _submitting;
+
+    protected override async Task OnInitializedAsync()
+    {
+        // The login is never lost (§4.6): an open session goes straight to the app.
+        if (AuthenticationState is not null && (await AuthenticationState).User.Identity?.IsAuthenticated == true)
+        {
+            Navigation.NavigateTo("landing/home", replace: true);
+        }
+    }
+
+    private void Revalidate()
+    {
+        if (_validateOnChange)
+        {
+            _errors = _form.Validate();
+        }
+    }
+
+    private async Task SubmitAsync()
+    {
+        _validateOnChange = true; // legacy: validateOnChange from the first submit on
+        _errors = _form.Validate();
+        if (_errors.Any || _submitting)
+        {
+            return;
+        }
+
+        _submitting = true;
+        try
+        {
+            var error = await Session.LoginAsync(_form.Email ?? string.Empty, _form.Password ?? string.Empty);
+            if (error is null)
+            {
+                Navigation.NavigateTo("landing/home");
+            }
+            else
+            {
+                Snackbar.Add(error, Severity.Error);
+            }
+        }
+        finally
+        {
+            _submitting = false;
+        }
+    }
+}

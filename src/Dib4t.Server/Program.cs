@@ -1,5 +1,6 @@
 using Dib4t.Application;
 using Dib4t.Infrastructure;
+using Dib4t.Server.Auth;
 using Dib4t.Server.Components;
 using Dib4t.Server.Http;
 using Dib4t.Server.Logging;
@@ -9,6 +10,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddApplication();
 builder.Services.AddInfrastructure(builder.Configuration);
+builder.Services.AddDib4tAuth(builder.Configuration);
 builder.AddDib4tLogging();
 builder.Services.AddExceptionHandler<LegacyExceptionHandler>();
 builder.Services.AddControllers();
@@ -34,6 +36,10 @@ app.Use((context, next) =>
 
     return next(context);
 });
+
+// The token is read only for [Authorize] endpoints (AuthSetup.ReadTokenHeader).
+app.UseAuthentication();
+app.UseAuthorization();
 
 app.MapStaticAssets();
 app.MapControllers();

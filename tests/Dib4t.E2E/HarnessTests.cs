@@ -51,7 +51,7 @@ public sealed class HarnessTests(E2EHarness harness) : E2ETest(harness)
         var response = await page.GotoAsync("/");
 
         response!.Status.Should().Be(200);
-        (await page.Heading.InnerTextAsync()).Should().Be("Dib4t");
+        (await page.Heading.InnerTextAsync()).Should().Be("Sign in", "/ is the login page (PLAN.md §8.1)");
         session.Errors.Should().BeEmpty();
     }
 

@@ -50,6 +50,13 @@ public class AppWithMongo : IAsyncLifetime
         GC.SuppressFinalize(this);
     }
 
+    /// <summary>A client whose requests are signed as <paramref name="user"/> (saved to the database before each one).</summary>
+    public HttpClient CreateClient(TestUser user)
+    {
+        ArgumentNullException.ThrowIfNull(user);
+        return Factory.CreateDefaultClient(new TestUserHandler(user, Database, user.TokenFrom(Factory.Services)));
+    }
+
     /// <summary>Extra test configuration (e.g. test-only endpoints).</summary>
     protected virtual void ConfigureWebHost(IWebHostBuilder builder)
     {

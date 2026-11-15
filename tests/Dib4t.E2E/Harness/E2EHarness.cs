@@ -19,6 +19,9 @@ public sealed class E2EHarness : IAsyncLifetime
 
     public IBrowser Browser { get; private set; } = null!;
 
+    /// <summary>For browsers the harness does not own, e.g. a persistent profile that is closed and reopened.</summary>
+    public IPlaywright Playwright => _playwright ?? throw new InvalidOperationException("not started");
+
     /// <summary>The seed backup as loaded into both apps (the expected database content after setup).</summary>
     public DibbakFile Seed { get; private set; } = null!;
 
@@ -32,7 +35,7 @@ public sealed class E2EHarness : IAsyncLifetime
         New = new NewApp();
 
         // The legacy front-end compile and the containers dominate the start-up time: start everything in parallel.
-        var playwright = Playwright.CreateAsync();
+        var playwright = Microsoft.Playwright.Playwright.CreateAsync();
         await Task.WhenAll(Legacy.StartAsync(cancellationToken), New.StartAsync(cancellationToken), playwright);
         _playwright = await playwright;
         Browser = await _playwright.Chromium.LaunchAsync(new() { Headless = !Options.Headed });

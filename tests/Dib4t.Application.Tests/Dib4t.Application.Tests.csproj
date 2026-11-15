@@ -3,6 +3,11 @@
 
   <ItemGroup>
     <PackageReference Include="NSubstitute" />
+    <PackageReference Include="Microsoft.Extensions.TimeProvider.Testing" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Include="..\Shared\Fixtures.cs" LinkBase="Shared" />
   </ItemGroup>
 
   <ItemGroup>

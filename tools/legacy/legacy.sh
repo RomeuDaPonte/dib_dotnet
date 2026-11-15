@@ -27,6 +27,9 @@
 #   ssh-golden           write the NAS SSH command golden files (ssh-golden.js) by running the
 #                        unchanged legacy routes with a recording SSH client on a virtual NAS, in a
 #                        throwaway DB "dib4t_ssh_golden" → tests/fixtures/legacy/ssh/ (PLAN.md §5.1)
+#   auth-golden          write the login contract golden file (auth-golden.js): the unchanged legacy Joi
+#                        login validation, isemail, bcryptjs and jsonwebtoken, run in Node (nothing is
+#                        started) → tests/fixtures/legacy/auth/ (PLAN.md §4.6)
 #   pdf-samples          write reference budget PDFs (pdf-samples.js) by running the unchanged legacy
 #                        PDF route on the anonymized production fixture, in a throwaway DB
 #                        "dib4t_pdf_samples" → tests/fixtures/legacy/pdf/ (PLAN.md §7.1)
@@ -276,6 +279,12 @@ cmd_characterize() {
     dotnet run "$SCRIPT_DIR/characterize.cs")
 }
 
+cmd_auth_golden() {
+  command -v node >/dev/null || die "node not found (need $NODE_VERSION)"
+  [ -d "$BACKEND_DIR/node_modules" ] || die "legacy back-end dependencies missing ($BACKEND_DIR/node_modules)"
+  (cd "$REPO_ROOT" && DIB4T_LEGACY_ROOT="$LEGACY_ROOT" node "$SCRIPT_DIR/auth-golden.js")
+}
+
 cmd_ssh_golden() {
   local started=0
   if ! mongo_ping; then
@@ -330,9 +339,10 @@ case "${1:-}" in
   seed)    cmd_seed ;;
   characterize) cmd_characterize ;;
   ssh-golden) cmd_ssh_golden ;;
+  auth-golden) cmd_auth_golden ;;
   pdf-samples) cmd_pdf_samples ;;
   layout)  shift; cmd_layout "$@" ;;
   token)   legacy_token; echo ;;
   logs)    shift; cmd_logs "$@" ;;
-  *) sed -n '2,41p' "$0"; exit 1 ;;
+  *) sed -n '2,44p' "$0"; exit 1 ;;
 esac

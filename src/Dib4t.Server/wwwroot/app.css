@@ -1,3 +1,100 @@
+/* PLAN.md §8.4: sizes in rem, no fixed heights for content, no position: absolute for layout. */
 html, body {
   margin: 0;
+}
+
+body {
+  background: #303030;
+  color: #ffffff;
+}
+
+/* Login (legacy login.jsx / login.css; layout fixed per §8.4 rule 7). */
+.login {
+  display: grid;
+  grid-template-columns: 1fr;
+  min-height: 100dvh;
+}
+
+.login-image {
+  display: none;
+  background: url("images/LogInImg.jpg") center / cover no-repeat;
+}
+
+@media (min-width: 960px) {
+  .login {
+    grid-template-columns: 9fr 3fr; /* legacy md 9/12 + 3/12 */
+  }
+
+  .login-image {
+    display: block;
+  }
+}
+
+.login-panel {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 1em;
+  min-width: 0;
+}
+
+.login-avatar.mud-avatar {
+  background-color: #ffffff;
+  color: #303030;
+  margin: 0.5em;
+}
+
+.login-title {
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: 400;
+  line-height: 1.334;
+}
+
+.login-form {
+  margin-top: 1em;
+  width: 100%;
+}
+
+.login-submit {
+  margin-top: 1rem;
+}
+
+/* Landing placeholder (the shell step brings the responsive drawer layout). */
+.landing-header {
+  background: #ff9800;
+  color: rgba(0, 0, 0, 0.87);
+  padding: 0.5rem 1rem;
+}
+
+.landing-user {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 500;
+  overflow-wrap: anywhere;
+}
+
+.landing-menu {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.5rem 1rem;
+}
+
+.landing-menu ul {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.landing-menu a {
+  color: inherit;
+}
+
+.landing-content {
+  padding: 1rem;
 }

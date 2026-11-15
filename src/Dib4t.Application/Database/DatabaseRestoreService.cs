@@ -1,3 +1,4 @@
+using Dib4t.Application.Account;
 using Dib4t.Application.Common;
 using Microsoft.Extensions.Logging;
 
@@ -7,6 +8,7 @@ namespace Dib4t.Application.Database;
 public sealed partial class DatabaseRestoreService(
     IDatabaseBackupService backups,
     DatabaseOperationLock operationLock,
+    UserSessionCache sessions,
     ILogger<DatabaseRestoreService> logger)
 {
     /// <summary>Restores <paramref name="backup"/> (seekable). Legacy order: empty file → 400, busy → 409, then the restore.</summary>
@@ -30,6 +32,7 @@ public sealed partial class DatabaseRestoreService(
             var result = await backups.RestoreAsync(backup, cancellationToken);
             if (result.IsSuccess)
             {
+                sessions.Clear(); // the users were replaced: a token's user is read again on its next request (§4.6)
                 LogRestoreFinished(result.Value.Collections, result.Value.Documents);
             }
             else

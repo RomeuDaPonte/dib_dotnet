@@ -1,9 +1,13 @@
+using Dib4t.Application.Account;
 using Dib4t.Application.Database;
+using Dib4t.Infrastructure.Auth;
 using Dib4t.Infrastructure.Backup;
 using Dib4t.Infrastructure.Logging;
 using Dib4t.Infrastructure.Mongo;
+using Dib4t.Infrastructure.Mongo.Repositories;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 
 namespace Dib4t.Infrastructure;
 
@@ -16,6 +20,24 @@ public static class DependencyInjection
         services.AddLogStore(configuration);
         services.AddMongo(configuration);
         services.AddScoped<IDatabaseBackupService, MongoDatabaseBackupService>();
+        services.AddScoped<IUserRepository, MongoUserRepository>();
+        services.AddAuthAdapters(configuration);
         return services;
+    }
+
+    private static void AddAuthAdapters(this IServiceCollection services, IConfiguration configuration)
+    {
+        services.AddOptions<JwtOptions>()
+            .Bind(configuration.GetSection(JwtOptions.SectionName))
+            .ValidateDataAnnotations()
+            .Validate(options => options.Key.Length == 0 || options.KeyBytes().Length >= JwtOptions.MinimumKeyBytes,
+                $"Jwt:Key must be at least {JwtOptions.MinimumKeyBytes} bytes (256 bits).")
+            .Validate<IHostEnvironment>(
+                (options, environment) => !environment.IsProduction()
+                    || !options.Key.StartsWith(JwtOptions.DevelopmentKeyPrefix, StringComparison.Ordinal),
+                "Jwt:Key is the development key; set the production key in Jwt__Key.")
+            .ValidateOnStart();
+        services.AddSingleton<ITokenService, JwtTokenService>();
+        services.AddSingleton<IPasswordHasher, BcryptPasswordHasher>();
     }
 }

@@ -17,7 +17,7 @@ public sealed class LoggingPipelineTests(LoggingApp app) : IClassFixture<Logging
 {
     private const string PasswordHash = "$2a$10$MarkerHashThatMustNeverBeLoggedXXXXXXXXXXXXXXXXXXXXX";
 
-    private readonly HttpClient _client = app.Factory.CreateClient();
+    private readonly HttpClient _client = app.CreateClient(TestUser.Admin); // the restore endpoint needs the settings role
 
     private static CancellationToken Cancellation => TestContext.Current.CancellationToken;
 
@@ -45,8 +45,11 @@ public sealed class LoggingPipelineTests(LoggingApp app) : IClassFixture<Logging
         database.Select(row => row.Message).Should().Contain(message => message.StartsWith("Database restore started", StringComparison.Ordinal))
             .And.Contain("Database restored: 1 collections, 1 documents");
         var commands = database.Where(row => row.SourceContext == "Dib4t.Infrastructure.Mongo.MongoCommandLogger").ToList();
+        // The token check reads the signed-in user first ("find" on users), unless it is still cached (PLAN.md §4.6);
+        // "drop": the test client's user is in "users" (TestUserHandler). Only the _id_ index: no createIndexes.
         commands.Select(row => JsonElement.Parse(row.PropertiesJson!).GetProperty("CommandName").GetString())
-            .Should().Equal("listCollections", "create", "insert"); // only the _id_ index: no createIndexes
+            .SkipWhile(name => name == "find")
+            .Should().Equal("listCollections", "drop", "create", "insert");
         commands.Should().AllSatisfy(row =>
         {
             var command = JsonElement.Parse(row.PropertiesJson!);

@@ -1,6 +1,10 @@
 @inherits LayoutComponentBase
 
-@* Placeholder layout. The MudBlazor shell (theme, responsive drawer, menu) is a later Phase 1 step (PLAN.md §8). *@
-<main>
-    @Body
-</main>
+@* The MudBlazor providers for every page. The responsive shell (drawer, theme switch) comes with the shell step
+   (PLAN.md §8.3, §8.4); until then the legacy dark palette is the only one. *@
+<MudThemeProvider Theme="Theme.Dib4tTheme.Theme" IsDarkMode="true" />
+<MudPopoverProvider />
+<MudDialogProvider />
+<MudSnackbarProvider />
+
+@Body
