@@ -1,0 +1,124 @@
+@inject IUsersApi Users
+@inject ISnackbar Snackbar
+
+@* Legacy settings/userModal.jsx: name, e-mail, password + confirmation, field of competencies, the role checkboxes
+   (D15: "Adjudicações" too), Cancel / Concluir; validated on submit, then on every change (validateOnChange after
+   the first submit). Full screen below sm (§8.4 rule 6). *@
+<MudDialog Visible="@(Form is not null)" VisibleChanged="VisibleChanged" Options="Options" Class="settings-dialog" AriaLabel="@Form?.Title">
+    <TitleContent><h2 class="settings-dialog-title">@Form?.Title</h2></TitleContent>
+    <DialogContent>
+        @if (Form is not null)
+        {
+        <form id="user-form" novalidate @onsubmit="SubmitAsync">
+            <MudTextField T="string" @bind-Value="Form.Name" @bind-Value:after="Revalidate" Immediate="true" Label="Nome do utilizador"
+                          InputId="user-name" AutoFocus="true" Margin="Margin.Normal" Error="@(_errors.Name is not null)" ErrorText="@_errors.Name" />
+            <MudTextField T="string" @bind-Value="Form.Email" @bind-Value:after="Revalidate" Immediate="true" Label="Email"
+                          InputId="user-email" InputType="InputType.Email" Margin="Margin.Normal" Error="@(_errors.Email is not null)" ErrorText="@_errors.Email" />
+            <MudTextField T="string" @bind-Value="Form.Password" @bind-Value:after="Revalidate" Immediate="true" Label="Password"
+                          InputId="user-password" InputType="InputType.Password" Margin="Margin.Normal" Error="@(_errors.Password is not null)" ErrorText="@_errors.Password" />
+            <MudTextField T="string" @bind-Value="Form.ConfirmPassword" @bind-Value:after="Revalidate" Immediate="true" Label="Confirmar password"
+                          InputId="user-confirm-password" InputType="InputType.Password" Margin="Margin.Normal"
+                          Error="@(_errors.ConfirmPassword is not null)" ErrorText="@_errors.ConfirmPassword" />
+            <LabeledSelect TValue="string" Id="user-field" Label="Area de competências" @bind-Value="Form.FieldOfCompetencies"
+                           Options="FieldOptions" Placeholder="@(Form.FieldOfCompetencies is null)" />
+            <div class="settings-roles" role="group" aria-label="Permissões">
+                @foreach (var (role, label) in UserForm.RoleCheckboxes)
+                {
+                    <MudCheckBox T="bool" Value="@Form.Roles.Contains(role)" ValueChanged="@(on => Toggle(role, on))" Label="@label" Color="Color.Primary" />
+                }
+            </div>
+        </form>
+        }
+    </DialogContent>
+    <DialogActions>
+        <MudButton Color="Color.Primary" OnClick="CloseAsync">Cancel</MudButton>
+        <MudButton Color="Color.Primary" ButtonType="ButtonType.Submit" form="user-form" Disabled="_saving">Concluir</MudButton>
+    </DialogActions>
+</MudDialog>
+
+@code {
+    private static readonly IReadOnlyList<(string Value, string Text)> FieldOptions = [.. FieldsOfCompetence.All.Select(f => (f, f))];
+
+    private static readonly DialogOptions Options = new() { MaxWidth = MaxWidth.ExtraSmall, FullWidth = true, CloseOnEscapeKey = true };
+
+    private UserForm? _shown;
+    private UserFormErrors _errors = UserFormErrors.None;
+    private bool _validateOnChange;
+    private bool _saving;
+
+    /// <summary>The form to edit; <c>null</c> = the dialog is closed.</summary>
+    [Parameter]
+    public UserForm? Form { get; set; }
+
+    /// <summary>The form and the API's answer after a successful save.</summary>
+    [Parameter]
+    public EventCallback<(UserForm Form, UserResponse Saved)> OnSaved { get; set; }
+
+    [Parameter]
+    public EventCallback OnClosed { get; set; }
+
+    protected override void OnParametersSet()
+    {
+        if (!ReferenceEquals(Form, _shown))
+        {
+            _shown = Form; // a new dialog: no messages until its first submit
+            _errors = UserFormErrors.None;
+            _validateOnChange = false;
+        }
+    }
+
+    private void Toggle(string role, bool on)
+    {
+        if (on)
+        {
+            Form!.Roles.Add(role);
+        }
+        else
+        {
+            Form!.Roles.Remove(role);
+        }
+    }
+
+    private void Revalidate()
+    {
+        if (_validateOnChange)
+        {
+            _errors = Form!.Validate();
+        }
+    }
+
+    private async Task SubmitAsync()
+    {
+        var form = Form!;
+        _validateOnChange = true;
+        _errors = form.Validate();
+        if (_errors.Any || _saving)
+        {
+            return;
+        }
+
+        _saving = true;
+        try
+        {
+            var request = form.ToRequest();
+            var result = form.IsNew ? await Users.CreateAsync(request) : await Users.UpdateAsync(form.Id!, request);
+            if (result.IsSuccess)
+            {
+                Snackbar.Add("Update bem sucedido!", Severity.Success);
+                await OnSaved.InvokeAsync((form, result.Value!));
+            }
+            else if (!result.IsUnexpected)
+            {
+                Snackbar.Add(result.ErrorText!, Severity.Error);
+            }
+        }
+        finally
+        {
+            _saving = false;
+        }
+    }
+
+    private Task VisibleChanged(bool visible) => visible ? Task.CompletedTask : CloseAsync();
+
+    private Task CloseAsync() => OnClosed.InvokeAsync();
+}

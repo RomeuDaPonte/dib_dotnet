@@ -21,4 +21,10 @@ public sealed class MongoOptions
     /// <summary>How long the startup version check waits before trying an unreachable server again.</summary>
     [Range(typeof(TimeSpan), "00:00:00.010", "01:00:00")]
     public TimeSpan StartupCheckRetryInterval { get; set; } = TimeSpan.FromSeconds(30);
+
+    /// <summary>
+    /// How long startup waits for the default-data seeding (<see cref="StartupSeeding"/>) before the app starts
+    /// without it and keeps trying in the background.
+    /// </summary>
+    public TimeSpan StartupSeedTimeout { get; set; } = TimeSpan.FromSeconds(5);
 }

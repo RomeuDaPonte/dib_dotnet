@@ -214,6 +214,17 @@ body {
   flex: 0 0 auto;
 }
 
+/* The current page's menu entry: a background tint, the text keeps full contrast (MudBlazor colors it primary on
+   the grey drawer, below WCAG AA; legacy marks no current entry). */
+.landing-drawer .mud-navmenu.mud-navmenu-default.landing-menu .mud-nav-link.active:not(.mud-nav-link-disabled) {
+  color: inherit;
+  background-color: var(--mud-palette-action-default-hover);
+}
+
+.landing-drawer .mud-navmenu.mud-navmenu-default.landing-menu .mud-nav-link.active:not(.mud-nav-link-disabled) .mud-nav-link-icon {
+  color: inherit;
+}
+
 /* Legacy put the logout button 50em below the menu (off screen on most windows); here it sits at the bottom of the
    drawer, or right after the menu when the window is short (the drawer scrolls). */
 .landing-logout {
@@ -221,4 +232,315 @@ body {
   justify-content: center;
   margin-top: auto;
   padding: 1rem 0;
+}
+
+/* ---------------------------------------------------------------- Settings (/landing/settings, PLAN.md §7.2, §8.4) */
+/* The tab bar wraps instead of scrolling: every tab stays visible at any width, zoom and font size. */
+.settings-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  border-bottom: 1px solid var(--mud-palette-divider);
+}
+
+.settings-tab {
+  display: flex;
+  flex: 0 1 auto;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
+  min-width: 6.5rem;
+  padding: 0.75rem 1rem;
+  border: 0;
+  border-bottom: 2px solid transparent;
+  background: none;
+  color: var(--mud-palette-text-secondary);
+  font: inherit;
+  font-size: 0.875rem;
+  font-weight: 500;
+  letter-spacing: 0.02857em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+.settings-tab:hover {
+  background-color: var(--mud-palette-action-default-hover);
+}
+
+.settings-tab:focus-visible {
+  outline: 2px solid var(--mud-palette-primary);
+  outline-offset: -2px;
+}
+
+/* Legacy colors the active label primary too; orange on the paper is below WCAG AA for this size, so the label
+   takes the primary text color and the primary indicator marks the tab. */
+.settings-tab--active {
+  border-bottom-color: var(--mud-palette-primary);
+  color: var(--mud-palette-text-primary);
+}
+
+.settings-panel {
+  padding: 1rem;
+}
+
+/* A labeled native <select> styled like the MudBlazor inputs (Components/LabeledSelect.razor). */
+.field-select {
+  display: flex;
+  flex-direction: column;
+  margin: 1rem 0 0.5rem;
+}
+
+.field-select-label {
+  color: var(--mud-palette-text-secondary);
+  font-size: 0.75rem;
+}
+
+.field-select-input {
+  min-height: 2.25rem;
+  padding: 0.25rem 0;
+  border: 0;
+  border-bottom: 1px solid var(--mud-palette-lines-inputs);
+  background-color: transparent;
+  color: var(--mud-palette-text-primary);
+  font: inherit;
+  font-size: 1rem;
+}
+
+.field-select-input option {
+  background-color: var(--mud-palette-surface);
+  color: var(--mud-palette-text-primary);
+}
+
+.field-select-input:focus {
+  outline: none;
+  border-bottom: 2px solid var(--mud-palette-primary);
+}
+
+.field-select-input[aria-invalid="true"] {
+  border-bottom-color: var(--mud-palette-error);
+}
+
+.field-select-error {
+  margin: 0.25rem 0 0;
+  color: var(--mud-palette-error);
+  font-size: 0.75rem;
+}
+
+.settings-pager {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0 1rem;
+  padding: 0 0.5rem;
+}
+
+.settings-pager .field-select {
+  flex-direction: row;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0;
+}
+
+.settings-pager .field-select-label {
+  font-size: 0.875rem;
+}
+
+.settings-pager-info {
+  font-size: 0.875rem;
+}
+
+.settings-denied {
+  margin: 1rem 0;
+}
+
+.settings-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 0 1rem;
+  padding-inline: 1rem;
+}
+
+.settings-filter {
+  flex: 1 1 15rem;
+  max-width: 24rem;
+}
+
+.settings-add {
+  margin-bottom: 0.5rem;
+}
+
+/* Legacy table head cells: 1.5em. */
+.settings-table .mud-table-head .mud-table-cell,
+.settings-prices thead th {
+  font-size: 1.5em;
+}
+
+.settings-prices thead th,
+.settings-prices tbody td {
+  text-align: center;
+  white-space: nowrap;
+}
+
+.settings-scroll {
+  overflow-x: auto;
+  margin-top: 2em;
+}
+
+.settings-wrap {
+  overflow-wrap: anywhere;
+}
+
+.settings-dense {
+  margin-top: 0.5rem;
+}
+
+.settings-dialog-title {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 500;
+  overflow-wrap: anywhere;
+}
+
+.settings-roles {
+  display: flex;
+  flex-direction: column;
+  margin-top: 1em;
+}
+
+/* The whole dialog scrolls (title, fields, buttons in order) instead of its middle part scrolling under the buttons
+   when the window is short or the text large. */
+.mud-dialog.settings-dialog {
+  overflow-y: auto;
+}
+
+.mud-dialog.settings-dialog .mud-dialog-content {
+  overflow: visible;
+  max-height: none;
+}
+
+@media (max-width: 599.98px) {
+  /* Dialogs full screen below sm (§8.4 rule 6). */
+  .mud-dialog.settings-dialog {
+    max-width: none;
+    width: 100%;
+    max-height: none;
+    height: 100%;
+    margin: 0;
+    border-radius: 0;
+  }
+}
+
+.settings-grid {
+  padding-block: 1rem;
+}
+
+.settings-heading {
+  margin: 0 0 0.5em;
+  font-size: 1.5rem;
+  font-weight: 400;
+}
+
+.settings-list {
+  margin: 0;
+  padding: 0.5rem 0;
+  list-style: none;
+}
+
+.settings-list-item {
+  padding: 0.5rem 1rem;
+}
+
+.settings-list-row {
+  display: flex;
+  flex-wrap: wrap; /* the buttons go under the text when the row is narrow */
+  align-items: center;
+  gap: 0.5rem 1rem;
+  width: 100%;
+}
+
+.settings-list-text {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 8rem;
+  min-width: 0;
+  overflow-wrap: anywhere; /* payment conditions up to 109 characters (§4.5 item 7) */
+}
+
+.settings-list-secondary {
+  color: var(--mud-palette-text-secondary);
+  font-size: 0.875rem;
+}
+
+.settings-new-printer {
+  margin-top: 1rem;
+}
+
+.settings-form-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-top: 1.5rem;
+}
+
+.settings-info-line {
+  margin: 0;
+  padding: 0.5rem;
+  font-size: 1.5rem;
+  line-height: 1.334;
+  overflow-wrap: anywhere;
+}
+
+/* Very narrow windows (in em: also large text / zoom): the toolbar stacks, button labels and dialog actions wrap. */
+.settings .mud-button-root,
+.settings-dialog .mud-button-root,
+.settings-tab {
+  height: auto;
+  min-height: 2.25rem;
+  white-space: normal;
+  overflow-wrap: break-word; /* whole words; a word is split only if it cannot fit */
+}
+
+.settings-dialog .mud-dialog-actions {
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+@media (max-width: 30em) {
+  .settings-toolbar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .settings-filter {
+    flex: 0 0 auto;
+    max-width: none;
+  }
+
+  .settings-panel {
+    padding: 0.5rem;
+  }
+
+  .settings-grid.mud-grid {
+    width: 100%;
+    margin: 0;
+  }
+
+  .settings-grid.mud-grid > .mud-grid-item {
+    padding: 0.5rem 0;
+  }
+
+  .settings-tab {
+    min-width: 0;
+    padding: 0.5rem;
+  }
+}
+
+/* A word longer than its button (e.g. "IMPRESSORA" at 180 CSS px) breaks instead of being cut. */
+.settings .mud-button-label,
+.settings-dialog .mud-button-label {
+  min-width: 0;
+  overflow-wrap: anywhere;
 }

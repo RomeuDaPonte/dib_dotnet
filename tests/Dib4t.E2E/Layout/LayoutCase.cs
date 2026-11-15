@@ -96,11 +96,14 @@ public sealed class LayoutCase
 
     /// <summary>
     /// The legacy tool's measurement (same selectors, thresholds and rules), returned as JSON. Kept in step with
-    /// <c>tools/legacy/layout-matrix.cs</c>: both apps must be measured the same way.
+    /// <c>tools/legacy/layout-matrix.cs</c>: both apps must be measured the same way. The optional argument (a CSS
+    /// selector) limits the control and text checks to that element, for states the legacy run did not measure (an
+    /// open modal dialog); without it the script measures the whole page exactly as the legacy tool does.
     /// </summary>
     public const string MeasureScript = """
-        () => {
+        (scope) => {
           const vw = window.innerWidth, de = document.documentElement;
+          const root = (scope && document.querySelector(scope)) || document.body;
           const label = el => ((el.getAttribute('aria-label') || el.innerText || el.value || el.placeholder || el.getAttribute('name') || el.getAttribute('title') || '').trim().replace(/\s+/g, ' ').slice(0, 40)) || el.tagName.toLowerCase();
           const visible = el => { const r = el.getBoundingClientRect(); if (r.width < 2 || r.height < 2) return false;
             if (r.right < 0 || r.bottom < -window.scrollY) return false;
@@ -108,7 +111,7 @@ public sealed class LayoutCase
           const inScrollX = el => { for (let p = el.parentElement; p && p !== document.body; p = p.parentElement) { const s = getComputedStyle(p);
             if ((s.overflowX === 'auto' || s.overflowX === 'scroll') && p.scrollWidth > p.clientWidth + 1) return true; } return false; };
           const sel = 'button, a[href], input:not([type=hidden]), select, textarea, [role=button], [role=tab], [role=menuitem], [role=checkbox], [role=combobox]';
-          const all = [...document.querySelectorAll(sel)].filter(visible);
+          const all = [...root.querySelectorAll(sel)].filter(visible);
           const ctl = all.filter(c => !all.some(o => o !== c && o.contains(c)));
           const rects = ctl.map(el => ({ el, r: el.getBoundingClientRect(), name: label(el) }));
           const offscreen = rects.filter(x => (x.r.right > vw + 1 || x.r.left < -1) && !inScrollX(x.el)).map(x => x.name);
@@ -119,7 +122,7 @@ public sealed class LayoutCase
             if (w > 2 && h > 2 && w * h > 0.15 * Math.min(a.width * a.height, b.width * b.height)) overlaps.push(rects[i].name + ' ↔ ' + rects[j].name);
           }
           const texts = [];
-          const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT, { acceptNode: n => n.data.trim() ? NodeFilter.FILTER_ACCEPT : NodeFilter.FILTER_REJECT });
+          const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, { acceptNode: n => n.data.trim() ? NodeFilter.FILTER_ACCEPT : NodeFilter.FILTER_REJECT });
           for (let n = walker.nextNode(); n; n = walker.nextNode()) {
             const el = n.parentElement;
             if (!el || ['SCRIPT', 'STYLE', 'NOSCRIPT', 'TITLE'].includes(el.tagName) || !visible(el)) continue;

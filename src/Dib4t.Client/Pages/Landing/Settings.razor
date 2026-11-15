@@ -1,0 +1,41 @@
+@page "/landing/settings"
+@layout LandingLayout
+@inject AuthSession Session
+
+<PageTitle>Dib4t</PageTitle>
+
+@* Legacy components/settings/settings.jsx: tabs Utilizadores, Preços, M/Pagamento, Impressoras, (Base de Dados,
+   Phase 5), Info. Registos (C11) comes with the logs step. Only for canSeeDefinicoes (the menu shows the page only
+   then; the API refuses the rest anyway). The tab bar wraps instead of scrolling (§8.4). *@
+@if (Session.User?.HasRole(RoleNames.CanSeeDefinicoes) == true)
+{
+    <MudPaper Elevation="1" Class="settings">
+        <SettingsTabs Tabs="Tabs" Label="Definições" @bind-Active="_active">
+            @switch (context)
+            {
+                case 0: <UsersTab /> break;
+                case 1: <PricesTab /> break;
+                case 2: <PaymentMethodsTab /> break;
+                case 3: <PrintersTab /> break;
+                default: <InfoTab /> break;
+            }
+        </SettingsTabs>
+    </MudPaper>
+}
+else
+{
+    <p class="settings-denied">@AuthTexts.NoPermission</p>
+}
+
+@code {
+    private static readonly IReadOnlyList<(string Text, string Icon)> Tabs =
+    [
+        ("Utilizadores", Icons.Material.TwoTone.PeopleAlt),
+        ("Preços", Icons.Material.TwoTone.EuroSymbol),
+        ("M/Pagamento", Icons.Material.TwoTone.Payments),
+        ("Impressoras", Icons.Material.Filled.Print),
+        ("Info", Icons.Material.Filled.Info),
+    ];
+
+    private int _active;
+}

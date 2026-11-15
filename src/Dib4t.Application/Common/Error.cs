@@ -25,6 +25,9 @@ public enum ErrorKind
 [SuppressMessage("Naming", "CA1716:Identifiers should not match keywords", Justification = "C# only; the name of PLAN.md §3.2.")]
 public sealed record Error(ErrorKind Kind, string Message)
 {
+    /// <summary>For the log only (never sent to the client): why a <see cref="ErrorKind.Failure"/> happened.</summary>
+    public string? Reason { get; init; }
+
     public static Error Validation(string message) => new(ErrorKind.Validation, message);
 
     public static Error NotFound(string message) => new(ErrorKind.NotFound, message);

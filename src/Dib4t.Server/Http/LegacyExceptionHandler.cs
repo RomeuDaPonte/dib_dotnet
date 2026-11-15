@@ -9,7 +9,7 @@ namespace Dib4t.Server.Http;
 /// </summary>
 public sealed partial class LegacyExceptionHandler(ILogger<LegacyExceptionHandler> logger) : IExceptionHandler
 {
-    public const string Message = "Something failed.";
+    public const string Message = Application.Common.LegacyMessages.SomethingFailed;
 
     public async ValueTask<bool> TryHandleAsync(HttpContext httpContext, Exception exception, CancellationToken cancellationToken)
     {

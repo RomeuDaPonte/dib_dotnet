@@ -46,10 +46,11 @@ public sealed class LoggingPipelineTests(LoggingApp app) : IClassFixture<Logging
             .And.Contain("Database restored: 1 collections, 1 documents");
         var commands = database.Where(row => row.SourceContext == "Dib4t.Infrastructure.Mongo.MongoCommandLogger").ToList();
         // The token check reads the signed-in user first ("find" on users), unless it is still cached (PLAN.md §4.6);
-        // "drop": the test client's user is in "users" (TestUserHandler). Only the _id_ index: no createIndexes.
+        // Two "drop"s: "users" (the test client's user, TestUserHandler) and "prices" (the startup seed). Only the
+        // _id_ index: no createIndexes.
         commands.Select(row => JsonElement.Parse(row.PropertiesJson!).GetProperty("CommandName").GetString())
             .SkipWhile(name => name == "find")
-            .Should().Equal("listCollections", "drop", "create", "insert");
+            .Should().Equal("listCollections", "drop", "drop", "create", "insert");
         commands.Should().AllSatisfy(row =>
         {
             var command = JsonElement.Parse(row.PropertiesJson!);

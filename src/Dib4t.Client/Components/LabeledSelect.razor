@@ -1,0 +1,58 @@
+@typeparam TValue
+
+@* A native <select> with its own <label> (MudSelect's combobox cannot be given an accessible name: axe
+   aria-input-field-name). Styled like the MudBlazor inputs (app.css .field-select). *@
+<div class="field-select @Class">
+    <label for="@Id" class="field-select-label">@Label</label>
+    <select id="@Id" class="field-select-input" value="@Format(Value)" @onchange="ChangedAsync" aria-invalid="@(Error is not null ? "true" : "false")"
+            aria-describedby="@(Error is not null ? Id + "-error" : null)">
+        @if (Placeholder)
+        {
+            <option value="" disabled selected="@(Value is null)"></option>
+        }
+        @foreach (var (value, text) in Options)
+        {
+            <option value="@Format(value)">@text</option>
+        }
+    </select>
+    @if (Error is not null)
+    {
+        <p id="@(Id + "-error")" class="field-select-error">@Error</p>
+    }
+</div>
+
+@code {
+    [Parameter, EditorRequired]
+    public string Id { get; set; } = string.Empty;
+
+    [Parameter, EditorRequired]
+    public string Label { get; set; } = string.Empty;
+
+    [Parameter]
+    public TValue? Value { get; set; }
+
+    [Parameter]
+    public EventCallback<TValue?> ValueChanged { get; set; }
+
+    [Parameter, EditorRequired]
+    public IReadOnlyList<(TValue Value, string Text)> Options { get; set; } = [];
+
+    /// <summary>An empty first option while no value is chosen.</summary>
+    [Parameter]
+    public bool Placeholder { get; set; }
+
+    [Parameter]
+    public string? Error { get; set; }
+
+    [Parameter]
+    public string? Class { get; set; }
+
+    private static string Format(TValue? value) => Convert.ToString(value, System.Globalization.CultureInfo.InvariantCulture) ?? string.Empty;
+
+    private Task ChangedAsync(ChangeEventArgs e)
+    {
+        var text = e.Value?.ToString();
+        var chosen = Options.FirstOrDefault(o => Format(o.Value) == text);
+        return ValueChanged.InvokeAsync(chosen.Text is null ? default : chosen.Value);
+    }
+}

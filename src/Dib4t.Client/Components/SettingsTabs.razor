@@ -1,0 +1,71 @@
+@* A tab bar that wraps onto more rows instead of scrolling (§8.4 reflow): every tab stays visible and reachable at
+   any width, zoom and font size. Legacy look: icon above the label, upper case, primary indicator under the active
+   tab. Arrow keys move between tabs (WAI-ARIA tabs pattern). *@
+<div class="settings-tabs" role="tablist" aria-label="@Label">
+    @for (var i = 0; i < Tabs.Count; i++)
+    {
+        var index = i;
+        var (text, icon) = Tabs[index];
+        <button type="button" role="tab" id="@TabId(index)" aria-selected="@(index == Active ? "true" : "false")"
+                aria-controls="@PanelId(index)" tabindex="@(index == Active ? 0 : -1)"
+                class="@($"settings-tab{(index == Active ? " settings-tab--active" : string.Empty)}")"
+                @ref="_buttons[index]" @onclick="() => SelectAsync(index)" @onkeydown="e => KeyAsync(e, index)">
+            <MudIcon Icon="@icon" />
+            <span>@text</span>
+        </button>
+    }
+</div>
+<div role="tabpanel" id="@PanelId(Active)" aria-labelledby="@TabId(Active)" class="settings-panel">
+    @ChildContent(Active)
+</div>
+
+@code {
+    [Parameter, EditorRequired]
+    public IReadOnlyList<(string Text, string Icon)> Tabs { get; set; } = [];
+
+    [Parameter, EditorRequired]
+    public RenderFragment<int> ChildContent { get; set; } = null!;
+
+    [Parameter]
+    public string? Label { get; set; }
+
+    [Parameter]
+    public int Active { get; set; }
+
+    [Parameter]
+    public EventCallback<int> ActiveChanged { get; set; }
+
+    private readonly Dictionary<int, ElementReference> _buttons = [];
+
+    private static string TabId(int index) => $"settings-tab-{index}";
+
+    private static string PanelId(int index) => $"settings-panel-{index}";
+
+    private async Task SelectAsync(int index)
+    {
+        Active = index;
+        await ActiveChanged.InvokeAsync(index);
+    }
+
+    private async Task KeyAsync(KeyboardEventArgs e, int index)
+    {
+        var next = e.Key switch
+        {
+            "ArrowRight" => (index + 1) % Tabs.Count,
+            "ArrowLeft" => (index - 1 + Tabs.Count) % Tabs.Count,
+            "Home" => 0,
+            "End" => Tabs.Count - 1,
+            _ => -1,
+        };
+        if (next < 0)
+        {
+            return;
+        }
+
+        await SelectAsync(next);
+        if (_buttons.TryGetValue(next, out var button))
+        {
+            await button.FocusAsync();
+        }
+    }
+}

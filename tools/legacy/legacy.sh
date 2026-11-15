@@ -30,6 +30,9 @@
 #   auth-golden          write the login contract golden file (auth-golden.js): the unchanged legacy Joi
 #                        login validation, isemail, bcryptjs and jsonwebtoken, run in Node (nothing is
 #                        started) → tests/fixtures/legacy/auth/ (PLAN.md §4.6)
+#   settings-golden      write the users/prices/payment-method/printer contract golden file
+#                        (settings-golden.js): the unchanged legacy Joi validations and Mongoose models run in
+#                        Node, offline (nothing is started) → tests/fixtures/legacy/settings/ (PLAN.md §6, §7.2)
 #   pdf-samples          write reference budget PDFs (pdf-samples.js) by running the unchanged legacy
 #                        PDF route on the anonymized production fixture, in a throwaway DB
 #                        "dib4t_pdf_samples" → tests/fixtures/legacy/pdf/ (PLAN.md §7.1)
@@ -285,6 +288,12 @@ cmd_auth_golden() {
   (cd "$REPO_ROOT" && DIB4T_LEGACY_ROOT="$LEGACY_ROOT" node "$SCRIPT_DIR/auth-golden.js")
 }
 
+cmd_settings_golden() {
+  ensure_node_modules "$BACKEND_DIR"
+  log "writing the settings contract golden file from the legacy code (offline)"
+  (cd "$REPO_ROOT" && DIB4T_LEGACY_ROOT="$LEGACY_ROOT" node "$SCRIPT_DIR/settings-golden.js")
+}
+
 cmd_ssh_golden() {
   local started=0
   if ! mongo_ping; then
@@ -340,6 +349,7 @@ case "${1:-}" in
   characterize) cmd_characterize ;;
   ssh-golden) cmd_ssh_golden ;;
   auth-golden) cmd_auth_golden ;;
+  settings-golden) cmd_settings_golden ;;
   pdf-samples) cmd_pdf_samples ;;
   layout)  shift; cmd_layout "$@" ;;
   token)   legacy_token; echo ;;

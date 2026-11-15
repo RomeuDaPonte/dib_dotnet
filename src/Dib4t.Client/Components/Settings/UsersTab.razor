@@ -1,0 +1,113 @@
+@inject IUsersApi Users
+@inject ISnackbar Snackbar
+
+@* Legacy settings/usersTable.jsx + usersTableToolbar.jsx + usersTableHead.jsx: filter, "Add User", table sorted by
+   name (sortable name/email), edit per row, pagination 5/10/25 (10), dense switch (on). The table scrolls inside
+   its own container instead of widening the page (§8.4 rule 5, legacy minWidth 650). *@
+<div class="settings-toolbar">
+    <MudTextField T="string" Value="_filter" ValueChanged="ApplyFilter" Immediate="true" Label="Filtrar" InputId="users-filter"
+                  Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" Margin="Margin.Normal" Class="settings-filter" />
+    <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="OpenNew" Class="settings-add">Add User</MudButton>
+</div>
+<MudTable @ref="_table" T="UserListItemResponse" Items="Visible" Dense="_dense" Hover="true" HorizontalScrollbar="true" Elevation="1"
+          RowsPerPage="_rowsPerPage" @bind-CurrentPage="_page" Breakpoint="Breakpoint.None" Class="settings-table" aria-label="Utilizadores">
+    <HeaderContent>
+        <MudTh><MudTableSortLabel T="UserListItemResponse" SortBy="u => u.Name ?? string.Empty" InitialDirection="SortDirection.Ascending">Nome do utilizador</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel T="UserListItemResponse" SortBy="u => u.Email ?? string.Empty">Email</MudTableSortLabel></MudTh>
+        <MudTh>Opções</MudTh>
+    </HeaderContent>
+    <RowTemplate>
+        <MudTd DataLabel="Nome do utilizador">@context.Name</MudTd>
+        <MudTd DataLabel="Email" Class="settings-wrap">@context.Email</MudTd>
+        <MudTd DataLabel="Opções">
+            <MudTooltip Text="Editar">
+                <MudIconButton Icon="@Icons.Material.TwoTone.Edit" aria-label="@($"Editar {context.Name}")" OnClick="() => OpenEdit(context)" />
+            </MudTooltip>
+        </MudTd>
+    </RowTemplate>
+    <PagerContent>
+        @* Legacy TablePagination (5/10/25, "Rows per page:", "1-10 of 12"); a labeled native select (axe). *@
+        <div class="settings-pager">
+            <LabeledSelect TValue="int" Id="users-rows-per-page" Label="Rows per page:" Value="_rowsPerPage" ValueChanged="RowsPerPageChanged"
+                           Options="RowsPerPageOptions" Class="settings-pager-size" />
+            <span class="settings-pager-info">@PageInfo</span>
+            <MudIconButton Icon="@Icons.Material.Filled.NavigateBefore" aria-label="Previous page" Disabled="_page == 0" OnClick="() => _page--" />
+            <MudIconButton Icon="@Icons.Material.Filled.NavigateNext" aria-label="Next page" Disabled="(_page + 1) * _rowsPerPage >= Count" OnClick="() => _page++" />
+        </div>
+    </PagerContent>
+</MudTable>
+<MudSwitch T="bool" @bind-Value="_dense" Label="Tabela densa" Color="Color.Primary" Class="settings-dense" />
+
+@* Always rendered: an inline MudDialog closes through Visible (removing it from the tree leaves it open). *@
+<UserDialog Form="_form" OnSaved="Saved" OnClosed="() => _form = null" />
+
+@code {
+    private List<UserListItemResponse> _all = [];
+    private string? _filter;
+    private bool _dense = true;
+    private static readonly IReadOnlyList<(int Value, string Text)> RowsPerPageOptions = [(5, "5"), (10, "10"), (25, "25")];
+
+    private MudTable<UserListItemResponse>? _table;
+    private int _page;
+    private int _rowsPerPage = 10;
+    private UserForm? _form;
+
+    /// <summary>Legacy filter: name contains the text (any case) or e-mail contains it (exact case).</summary>
+    private IEnumerable<UserListItemResponse> Visible => string.IsNullOrEmpty(_filter)
+        ? _all
+        : _all.Where(u => (u.Name ?? string.Empty).Contains(_filter, StringComparison.OrdinalIgnoreCase)
+                          || (u.Email ?? string.Empty).Contains(_filter, StringComparison.Ordinal));
+
+    private int Count => Visible.Count();
+
+    /// <summary>MUI v4's <c>labelDisplayedRows</c>: <c>{from}-{to} of {count}</c>.</summary>
+    private string PageInfo => Count == 0 ? "0-0 of 0" : $"{(_page * _rowsPerPage) + 1}-{Math.Min((_page + 1) * _rowsPerPage, Count)} of {Count}";
+
+    private void RowsPerPageChanged(int rows)
+    {
+        _rowsPerPage = rows;
+        _page = 0;
+        _table?.SetRowsPerPage(rows);
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        var result = await Users.ListAsync();
+        if (result.IsSuccess)
+        {
+            _all = [.. result.Value!];
+        }
+        else if (!result.IsUnexpected)
+        {
+            Snackbar.Add(result.ErrorText!, Severity.Error);
+        }
+    }
+
+    private void ApplyFilter(string? text)
+    {
+        _filter = text;
+        _page = 0;
+    }
+
+    private void OpenNew() => _form = UserForm.New();
+
+    private void OpenEdit(UserListItemResponse user) => _form = UserForm.Edit(user);
+
+    /// <summary>Legacy <c>updateList</c> / <c>addUser</c>: the answer replaces the row, or a new row is added.</summary>
+    private void Saved((UserForm Form, UserResponse Saved) change)
+    {
+        var item = new UserListItemResponse(change.Saved.Roles ?? [], change.Form.FieldOfCompetencies ?? FieldsOfCompetence.Default,
+            change.Saved.Id, change.Saved.Name, change.Saved.Email);
+        var index = _all.FindIndex(u => u.Id == item.Id);
+        if (index >= 0)
+        {
+            _all[index] = item;
+        }
+        else
+        {
+            _all.Insert(0, item);
+        }
+
+        _form = null;
+    }
+}

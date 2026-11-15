@@ -13,6 +13,12 @@ public static class Fixtures
     /// <summary>Login contract answers of the legacy code (Joi, isemail, bcryptjs, jsonwebtoken; tools/legacy/auth-golden.js).</summary>
     public static string AuthGolden => Path.Combine(Root, "legacy", "auth", "auth-golden.json");
 
+    /// <summary>
+    /// Users, prices, payment methods and printer settings contract answers of the legacy code (Joi, Mongoose casts and
+    /// saves; tools/legacy/settings-golden.js).
+    /// </summary>
+    public static string SettingsGolden => Path.Combine(Root, "legacy", "settings", "settings-golden.json");
+
     private static string FindRoot()
     {
         for (var directory = new DirectoryInfo(AppContext.BaseDirectory); directory is not null; directory = directory.Parent)

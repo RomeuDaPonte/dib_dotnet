@@ -29,6 +29,9 @@ public sealed class UserSessionCache(IOptions<UserSessionOptions> options, TimeP
         return user;
     }
 
+    /// <summary>Forgets one user (changed or deleted by an administrator): the next request reads the database.</summary>
+    public void Remove(string userId) => _entries.TryRemove(userId, out _);
+
     /// <summary>Forgets every user (e.g. after the database was replaced by a restore).</summary>
     public void Clear() => _entries.Clear();
 

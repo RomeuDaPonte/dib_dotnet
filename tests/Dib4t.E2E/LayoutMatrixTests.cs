@@ -40,7 +40,48 @@ public sealed class LayoutMatrixTests(E2EHarness harness) : E2ETest(harness)
             ("Abrir menu | Sair", page.GetByRole(AriaRole.Button, new() { Name = "Abrir menu" })
                 .Or(page.GetByRole(AriaRole.Button, new() { Name = "Sair" }))),
         ]),
+        new("settings-users", "/landing/settings", SignedIn: true, Ready: ".settings-table tbody tr", page =>
+        [
+            ("Filtrar", page.Locator("#users-filter")),
+            ("Add User", page.GetByRole(AriaRole.Button, new() { Name = "Add User" })),
+            ("Info", Tab(page, "Info")),
+        ]),
+        new("settings-user-dialog", "/landing/settings", SignedIn: true, Ready: ".settings-table tbody tr", page =>
+        [
+            ("Nome do utilizador", page.Locator("#user-name")),
+            ("Concluir", page.GetByRole(AriaRole.Button, new() { Name = "Concluir" })),
+        ], Open: async page =>
+        {
+            await page.GetByRole(AriaRole.Button, new() { Name = "Add User" }).ClickAsync();
+            await page.Locator("#user-name").WaitForAsync();
+        }, Scope: ".mud-dialog"),
+        new("settings-prices", "/landing/settings", SignedIn: true, Ready: ".settings-table tbody tr", page =>
+        [
+            ("Editar preços", page.GetByRole(AriaRole.Button, new() { Name = "Editar preços" })),
+        ], Open: page => OpenTabAsync(page, "Preços", ".settings-prices tbody td")),
+        new("settings-payment-methods", "/landing/settings", SignedIn: true, Ready: ".settings-table tbody tr", page =>
+        [
+            ("Adicinar", page.Locator("#payment-method-new")),
+        ], Open: page => OpenTabAsync(page, "M/Pagamento", "#payment-method-new")),
+        new("settings-printers", "/landing/settings", SignedIn: true, Ready: ".settings-table tbody tr", page =>
+        [
+            ("IP", page.Locator("#printer-ip")),
+            ("Guardar", page.GetByRole(AriaRole.Button, new() { Name = "Guardar" })),
+            ("Nova Impressora", page.GetByRole(AriaRole.Button, new() { Name = "Nova Impressora" })),
+        ], Open: page => OpenTabAsync(page, "Impressoras", "#printer-ip")),
+        new("settings-info", "/landing/settings", SignedIn: true, Ready: ".settings-table tbody tr", page =>
+        [
+            ("Utilizadores", Tab(page, "Utilizadores")),
+        ], Open: page => OpenTabAsync(page, "Info", ".settings-info")),
     ];
+
+    private static ILocator Tab(IPage page, string name) => page.GetByRole(AriaRole.Tab, new() { Name = name });
+
+    private static async Task OpenTabAsync(IPage page, string tab, string ready)
+    {
+        await Tab(page, tab).ClickAsync();
+        await page.Locator(ready).First.WaitForAsync();
+    }
 
     [Fact]
     public async Task Every_page_passes_the_layout_matrix()
@@ -132,12 +173,18 @@ public sealed class LayoutMatrixTests(E2EHarness harness) : E2ETest(harness)
         await page.GotoAsync("about:blank");
         await page.GotoAsync(layoutPage.Path);
         await page.Locator(layoutPage.Ready).First.WaitForAsync(new() { Timeout = 30_000 });
+        if (layoutPage.Open is not null)
+        {
+            await layoutPage.Open(page);
+            await page.EvaluateAsync("() => window.scrollTo(0, 0)"); // a click may have scrolled the page under the sticky app bar
+        }
+
         await page.EvaluateAsync("() => document.fonts.ready");
         await page.WaitForTimeoutAsync(350); // drawer transition (225 ms)
 
         Directory.CreateDirectory(Path.GetDirectoryName(screenshot)!);
         await page.ScreenshotAsync(new() { Path = screenshot, FullPage = true, Scale = ScreenshotScale.Css });
-        result.Fill(await page.EvaluateAsync<JsonElement>(LayoutCase.MeasureScript));
+        result.Fill(await page.EvaluateAsync<JsonElement>(LayoutCase.MeasureScript, layoutPage.Scope));
         // Before the reachability checks: their hover opens tooltips, which axe would catch mid-fade.
         var axe = await page.RunAxe();
         result.Accessibility.AddRange(axe.Violations
@@ -182,5 +229,12 @@ public sealed class LayoutMatrixTests(E2EHarness harness) : E2ETest(harness)
         return report.ToString();
     }
 
-    private sealed record LayoutPage(string Key, string Path, bool SignedIn, string Ready, Func<IPage, (string Name, ILocator Locator)[]> PrimaryActions);
+    /// <summary>
+    /// A page of the matrix. <c>Open</c> runs after <c>Ready</c> and brings it into the state to measure (a tab, a
+    /// dialog); <c>Scope</c> limits the control/text checks to one element (an open modal dialog: what is under it
+    /// cannot be used); the page-scroll check and axe always cover the whole page.
+    /// </summary>
+    private sealed record LayoutPage(
+        string Key, string Path, bool SignedIn, string Ready, Func<IPage, (string Name, ILocator Locator)[]> PrimaryActions,
+        Func<IPage, Task>? Open = null, string? Scope = null);
 }

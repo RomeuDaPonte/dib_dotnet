@@ -1,0 +1,123 @@
+@inject IPricesApi Prices
+@inject ISnackbar Snackbar
+
+@* Legacy settings/pricesTable.jsx + pricesModal.jsx: one row (margin in %, prices in €), "Editar" opens the dialog
+   (Cancel / Atualizar, validated on every change). The table scrolls in its own container (§8.4 rule 5). *@
+<div class="settings-scroll">
+    <MudSimpleTable Elevation="1" Class="settings-prices" aria-label="Preços">
+        <thead>
+            <tr>
+                <th>Margem</th>
+                <th>Automação</th>
+                <th>Consultadoria</th>
+                <th>Desenvolvimento</th>
+                <th>Maquinação</th>
+                <th>Montagem</th>
+                <th>Editar</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>@Show(_prices?.Margin) %</td>
+                <td>@Show(_prices?.Automation) €</td>
+                <td>@Show(_prices?.Consultancy) €</td>
+                <td>@Show(_prices?.Development) €</td>
+                <td>@Show(_prices?.Machining) €</td>
+                <td>@Show(_prices?.Assembly) €</td>
+                <td>
+                    <MudTooltip Text="Editar">
+                        <MudIconButton Icon="@Icons.Material.TwoTone.Edit" aria-label="Editar preços" OnClick="Open" Disabled="_prices is null" />
+                    </MudTooltip>
+                </td>
+            </tr>
+        </tbody>
+    </MudSimpleTable>
+</div>
+
+@* Always rendered: an inline MudDialog closes through Visible (removing it from the tree leaves it open). *@
+<MudDialog Visible="@(_form is not null)" VisibleChanged="@(v => { if (!v) { _form = null; } })" Options="Options" Class="settings-dialog" AriaLabel="Editar preços">
+    <TitleContent><h2 class="settings-dialog-title">Editar preços</h2></TitleContent>
+    <DialogContent>
+        @if (_form is not null)
+        {
+            <form id="prices-form" novalidate @onsubmit="SubmitAsync">
+                @foreach (var (key, label) in PricesForm.Fields)
+                {
+                    <MudTextField T="string" Value="@_form.Values[key]" ValueChanged="@(v => Change(key, v))" Immediate="true" Label="@label"
+                                  InputId="@($"prices-{key}")" AutoFocus="@(key == "automation")" Margin="Margin.Normal"
+                                  Error="@_errors.ContainsKey(key)" ErrorText="@_errors.GetValueOrDefault(key)" />
+                }
+            </form>
+        }
+    </DialogContent>
+    <DialogActions>
+        <MudButton Color="Color.Primary" OnClick="() => _form = null">Cancel</MudButton>
+        <MudButton Color="Color.Primary" ButtonType="ButtonType.Submit" form="prices-form" Disabled="_saving">Atualizar</MudButton>
+    </DialogActions>
+</MudDialog>
+
+@code {
+    private static readonly DialogOptions Options = new() { MaxWidth = MaxWidth.ExtraSmall, FullWidth = true, CloseOnEscapeKey = true };
+
+    private PricesResponse? _prices;
+    private PricesForm? _form;
+    private IReadOnlyDictionary<string, string> _errors = new Dictionary<string, string>();
+    private bool _saving;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var result = await Prices.GetAsync();
+        if (result.IsSuccess)
+        {
+            _prices = result.Value;
+        }
+        else if (!result.IsUnexpected)
+        {
+            Snackbar.Add(result.ErrorText!, Severity.Error);
+        }
+    }
+
+    private static string Show(double? value) => value is { } number ? JsNumber.ToString(number) : string.Empty;
+
+    private void Open()
+    {
+        _form = PricesForm.From(_prices!);
+        _errors = new Dictionary<string, string>();
+    }
+
+    /// <summary>Legacy: validateOnChange from the start.</summary>
+    private void Change(string key, string? value)
+    {
+        _form!.Values[key] = value;
+        _errors = _form.Validate();
+    }
+
+    private async Task SubmitAsync()
+    {
+        _errors = _form!.Validate();
+        if (_errors.Count > 0 || _saving)
+        {
+            return;
+        }
+
+        _saving = true;
+        try
+        {
+            var result = await Prices.UpdateAsync(_form.ToRequest());
+            if (result.IsSuccess)
+            {
+                _prices = result.Value;
+                _form = null;
+                Snackbar.Add("Preços atualizados com sucesso!", Severity.Success);
+            }
+            else if (!result.IsUnexpected)
+            {
+                Snackbar.Add(result.ErrorText!, Severity.Error);
+            }
+        }
+        finally
+        {
+            _saving = false;
+        }
+    }
+}

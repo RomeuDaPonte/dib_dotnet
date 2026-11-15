@@ -50,12 +50,31 @@ public sealed class HostingTests(HostingTests.App factory) : IClassFixture<Hosti
         body.Should().BeEmpty();
     }
 
-    /// <summary>The app without a database, with its own temporary log store.</summary>
+    /// <summary>
+    /// Without a database the app still starts, after waiting <c>Mongo:StartupSeedTimeout</c> for the startup seed
+    /// (PLAN.md §7.2), which it then keeps trying in the background.
+    /// </summary>
+    [Fact]
+    public async Task Starts_without_a_database_and_reports_the_seed_as_not_done()
+    {
+        var rows = await LogStoreFile.WaitForAsync(factory.LogStorePath,
+            r => r.Any(x => x.Message.StartsWith("Default data (prices, administrator) not seeded", StringComparison.Ordinal)),
+            cancellationToken: TestContext.Current.CancellationToken);
+
+        rows.Should().Contain(r => r.Level == "Error" && r.Category == "Database");
+    }
+
+    /// <summary>The app without a database (nothing listens on port 1), with its own temporary log store.</summary>
     public sealed class App : WebApplicationFactory<Program>
     {
         private readonly string _logStorePath = LogStoreFile.NewTempPath();
 
-        protected override void ConfigureWebHost(IWebHostBuilder builder) => builder.UseSetting("Logs:Path", _logStorePath);
+        public string LogStorePath => _logStorePath;
+
+        protected override void ConfigureWebHost(IWebHostBuilder builder) => builder
+            .UseSetting("Logs:Path", _logStorePath)
+            .UseSetting("Mongo:ConnectionString", "mongodb://127.0.0.1:1/dib4t?retryWrites=false&serverSelectionTimeoutMS=200&connectTimeoutMS=200")
+            .UseSetting("Mongo:StartupSeedTimeout", "00:00:00.300");
 
         public override async ValueTask DisposeAsync()
         {

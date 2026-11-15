@@ -1,0 +1,17 @@
+@* Legacy settings/legalInfo.jsx; version 1.0.0 (ADR-0003; legacy shows 0.9.1), from the assembly. *@
+<div class="settings-info">
+    <p class="settings-info-line">Webapp ERP</p>
+    <MudDivider />
+    <p class="settings-info-line">Software ID: 69988ec8-c573-4799-bafc-0b6d30340961</p>
+    <p class="settings-info-line">Versão: @Version</p>
+    <MudDivider />
+    <p class="settings-info-line">Este software foi totalmente desenvolvido pela DIB4T,LDA para uso interno.</p>
+    <p class="settings-info-line">2018, DIB4T</p>
+</div>
+
+@code {
+    /// <summary>The app version (ADR-0003: exactly <c>1.0.0</c>, no commit suffix).</summary>
+    public static string Version { get; } =
+        typeof(InfoTab).Assembly.GetCustomAttributes(typeof(System.Reflection.AssemblyInformationalVersionAttribute), false)
+            .OfType<System.Reflection.AssemblyInformationalVersionAttribute>().FirstOrDefault()?.InformationalVersion ?? "1.0.0";
+}

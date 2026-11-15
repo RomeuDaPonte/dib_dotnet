@@ -1,0 +1,154 @@
+@inject IPrinterSettingsApi Printers
+@inject ISnackbar Snackbar
+
+@* Legacy settings/printers.jsx: the list (edit on click or the pencil, delete), "Nova Impressora", and the form
+   (Adicionar/Editar Impressora: IP, Porta, Template; Guardar/Atualizar, Cancelar Edição). Two columns from sm. *@
+<MudGrid Spacing="3" Class="settings-grid">
+    <MudItem xs="12" sm="6">
+        <h3 class="settings-heading">Lista de Impressoras</h3>
+        <ul class="settings-list" aria-label="Impressoras">
+            @foreach (var printer in _printers)
+            {
+                <li class="settings-list-item">
+                    <div class="settings-list-row">
+                        <MudAvatar Size="Size.Medium"><MudIcon Icon="@Icons.Material.Filled.Print" /></MudAvatar>
+                        <span class="settings-list-text">
+                            <span>@($"{printer.Ip}:{Show(printer.Port)}")</span>
+                            <span class="settings-list-secondary">@printer.TemplateName</span>
+                        </span>
+                        <MudIconButton Icon="@Icons.Material.TwoTone.Edit" aria-label="@($"Editar {printer.Ip}")" OnClick="() => Edit(printer)" />
+                        <MudIconButton Icon="@Icons.Material.TwoTone.DeleteOutline" aria-label="@($"Apagar {printer.Ip}")" OnClick="() => DeleteAsync(printer)" />
+                    </div>
+                </li>
+            }
+        </ul>
+        <MudButton Variant="Variant.Filled" Color="Color.Primary" FullWidth="true" StartIcon="@Icons.Material.Filled.Add" OnClick="New" Class="settings-new-printer">
+            Nova Impressora
+        </MudButton>
+    </MudItem>
+    <MudItem xs="12" sm="6">
+        <h3 class="settings-heading">@(_form.Id is null ? "Adicionar Impressora" : "Editar Impressora")</h3>
+        <form novalidate @onsubmit="SubmitAsync" @key="_form">
+            <MudTextField T="string" @bind-Value="_form.Ip" @bind-Value:after="Revalidate" Immediate="true" Label="IP" InputId="printer-ip"
+                          FullWidth="true" Margin="Margin.Normal" Error="@(_errors.Ip is not null)" ErrorText="@_errors.Ip" />
+            <MudTextField T="string" @bind-Value="_form.Port" @bind-Value:after="Revalidate" Immediate="true" Label="Porta" InputId="printer-port"
+                          InputType="InputType.Number" FullWidth="true" Margin="Margin.Normal" Error="@(_errors.Port is not null)" ErrorText="@_errors.Port" />
+            <LabeledSelect TValue="string" Id="printer-template" Label="Template" Value="_form.TemplateName" ValueChanged="TemplateChanged"
+                           Options="PrinterForm.Templates" Placeholder="@string.IsNullOrEmpty(_form.TemplateName)" Error="@_errors.TemplateName" />
+            <div class="settings-form-actions">
+                <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary" FullWidth="true" Disabled="_saving">
+                    @(_form.Id is null ? "Guardar" : "Atualizar")
+                </MudButton>
+                @if (_form.Id is not null)
+                {
+                    <MudButton Variant="Variant.Text" Color="Color.Secondary" FullWidth="true" OnClick="New">Cancelar Edição</MudButton>
+                }
+            </div>
+        </form>
+    </MudItem>
+</MudGrid>
+
+@code {
+    private List<PrinterSettingsResponse> _printers = [];
+    private PrinterForm _form = PrinterForm.New();
+    private PrinterFormErrors _errors = PrinterFormErrors.None;
+    private bool _validateOnChange;
+    private bool _saving;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var result = await Printers.ListAsync();
+        if (result.IsSuccess)
+        {
+            _printers = [.. result.Value!];
+        }
+    }
+
+    private static string Show(double? value) => value is { } number ? JsNumber.ToString(number) : string.Empty;
+
+    private void New() => Reset(PrinterForm.New());
+
+    private void TemplateChanged(string? template)
+    {
+        _form.TemplateName = template;
+        Revalidate();
+    }
+
+    private void Edit(PrinterSettingsResponse printer) => Reset(PrinterForm.Edit(printer));
+
+    private void Reset(PrinterForm form)
+    {
+        _form = form;
+        _errors = PrinterFormErrors.None;
+        _validateOnChange = false;
+    }
+
+    private void Revalidate()
+    {
+        if (_validateOnChange)
+        {
+            _errors = _form.Validate();
+        }
+    }
+
+    private async Task SubmitAsync()
+    {
+        _validateOnChange = true;
+        _errors = _form.Validate();
+        if (_errors.Any || _saving)
+        {
+            return;
+        }
+
+        _saving = true;
+        try
+        {
+            var editing = _form.Id;
+            var result = editing is null
+                ? await Printers.CreateAsync(_form.ToRequest())
+                : await Printers.UpdateAsync(editing, _form.ToRequest());
+            if (result.IsSuccess)
+            {
+                var saved = result.Value!;
+                var index = _printers.FindIndex(p => p.Id == saved.Id);
+                if (index >= 0)
+                {
+                    _printers[index] = saved;
+                }
+                else
+                {
+                    _printers.Add(saved);
+                }
+
+                Snackbar.Add(editing is null ? "Impressora guardada com sucesso!" : "Impressora atualizada com sucesso!", Severity.Success);
+                New();
+            }
+            else if (!result.IsUnexpected)
+            {
+                Snackbar.Add(string.IsNullOrEmpty(result.ErrorText) ? "Erro ao guardar impressora" : result.ErrorText, Severity.Error);
+            }
+        }
+        finally
+        {
+            _saving = false;
+        }
+    }
+
+    private async Task DeleteAsync(PrinterSettingsResponse printer)
+    {
+        var result = await Printers.DeleteAsync(printer.Id);
+        if (result.IsSuccess)
+        {
+            _printers.RemoveAll(p => p.Id == printer.Id);
+            Snackbar.Add("Impressora eliminada com sucesso!", Severity.Success);
+            if (_form.Id == printer.Id)
+            {
+                New();
+            }
+        }
+        else if (!result.IsUnexpected)
+        {
+            Snackbar.Add(string.IsNullOrEmpty(result.ErrorText) ? "Erro ao eliminar impressora" : result.ErrorText, Severity.Error);
+        }
+    }
+}

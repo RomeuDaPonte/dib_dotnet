@@ -10,10 +10,16 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddApplication();
 builder.Services.AddInfrastructure(builder.Configuration);
+builder.Services.AddStartupSeeding();
 builder.Services.AddDib4tAuth(builder.Configuration);
 builder.AddDib4tLogging();
 builder.Services.AddExceptionHandler<LegacyExceptionHandler>();
-builder.Services.AddControllers();
+builder.Services.AddControllers().AddJsonOptions(json =>
+{
+    // Like Express's JSON.stringify: non-ASCII text as is (not \u escapes), numbers as JavaScript writes them.
+    json.JsonSerializerOptions.Encoder = System.Text.Encodings.Web.JavaScriptEncoder.UnsafeRelaxedJsonEscaping;
+    json.JsonSerializerOptions.Converters.Add(new JsNumberJsonConverter());
+});
 builder.Services.AddRazorComponents()
     .AddInteractiveWebAssemblyComponents();
 

@@ -1,5 +1,6 @@
 using Dib4t.Application.Account;
 using Dib4t.Application.Database;
+using Dib4t.Application.Settings;
 using Dib4t.Infrastructure.Auth;
 using Dib4t.Infrastructure.Backup;
 using Dib4t.Infrastructure.Logging;
@@ -21,7 +22,21 @@ public static class DependencyInjection
         services.AddMongo(configuration);
         services.AddScoped<IDatabaseBackupService, MongoDatabaseBackupService>();
         services.AddScoped<IUserRepository, MongoUserRepository>();
+        services.AddScoped<IPricesRepository, MongoPricesRepository>();
+        services.AddScoped<IPaymentMethodRepository, MongoPaymentMethodRepository>();
+        services.AddScoped<IPrinterSettingsRepository, MongoPrinterSettingsRepository>();
         services.AddAuthAdapters(configuration);
+        return services;
+    }
+
+    /// <summary>
+    /// The legacy startup seed (default prices, administrator; <see cref="StartupSeeding"/>). Separate from
+    /// <see cref="AddInfrastructure"/> because it runs a use case: the app's composition root adds it with
+    /// <c>AddApplication()</c>.
+    /// </summary>
+    public static IServiceCollection AddStartupSeeding(this IServiceCollection services)
+    {
+        services.AddHostedService<StartupSeeding>();
         return services;
     }
 

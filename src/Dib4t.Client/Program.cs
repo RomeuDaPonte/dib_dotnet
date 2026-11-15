@@ -30,6 +30,10 @@ builder.Services.AddScoped(provider => new HttpClient(new AuthHeaderHandler(prov
     BaseAddress = new Uri(builder.HostEnvironment.BaseAddress),
 });
 builder.Services.AddScoped<IAccountApi, AccountApi>();
+builder.Services.AddScoped<IUsersApi, UsersApi>();
+builder.Services.AddScoped<IPricesApi, PricesApi>();
+builder.Services.AddScoped<IPaymentMethodsApi, PaymentMethodsApi>();
+builder.Services.AddScoped<IPrinterSettingsApi, PrinterSettingsApi>();
 builder.Services.AddScoped<AuthSession>();
 builder.Services.AddScoped<AuthenticationStateProvider>(provider => provider.GetRequiredService<AuthSession>());
 builder.Services.AddScoped<ThemeState>();

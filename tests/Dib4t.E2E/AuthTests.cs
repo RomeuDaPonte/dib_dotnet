@@ -89,6 +89,9 @@ public sealed class AuthTests(E2EHarness harness) : E2ETest(harness)
         finally
         {
             profile.Delete(recursive: true);
+            // A start seeds the legacy administrator when it is missing (startup/seedBd.js, PLAN.md §7.2), as the
+            // seed backup's users lack it: back to the exact seed for the other tests.
+            await Harness.New.RestoreAsync(Harness.Options.SeedBackup, Cancellation);
         }
     }
 

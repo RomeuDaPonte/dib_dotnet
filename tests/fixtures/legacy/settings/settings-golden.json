@@ -1,0 +1,4435 @@
+{
+  "generatedBy": "tools/legacy/settings-golden.js",
+  "versions": {
+    "bson": "1.1.6",
+    "joi": "14.3.1",
+    "joi-objectid": "3.0.1",
+    "mongoose": "5.13.20",
+    "bcryptjs": "2.4.3",
+    "lodash": "4.17.21"
+  },
+  "roles": [
+    "canSeeOrcamentos",
+    "canSeeObras",
+    "canSeeHistorico",
+    "canSeeEntidades",
+    "canSeeDefinicoes",
+    "canSeeDashboard",
+    "canSeeLeituras"
+  ],
+  "ipPattern": "^(?:(?:(?:0?0?[0-9]|0?[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\\.){3}(?:0?0?[0-9]|0?[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])(?:\\/(?:[0-9]|[1-2][0-9]|3[0-2]))?|(?:(?:[0-9A-Fa-f]{1,4}:){6}(?:[0-9A-Fa-f]{1,4}:[0-9A-Fa-f]{1,4}|(?:(?:0?0?[0-9]|0?[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\\.){3}(?:0?0?[0-9]|0?[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5]))|::(?:[0-9A-Fa-f]{1,4}:){5}(?:[0-9A-Fa-f]{1,4}:[0-9A-Fa-f]{1,4}|(?:(?:0?0?[0-9]|0?[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\\.){3}(?:0?0?[0-9]|0?[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5]))|(?:[0-9A-Fa-f]{1,4})?::(?:[0-9A-Fa-f]{1,4}:){4}(?:[0-9A-Fa-f]{1,4}:[0-9A-Fa-f]{1,4}|(?:(?:0?0?[0-9]|0?[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\\.){3}(?:0?0?[0-9]|0?[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5]))|(?:(?:[0-9A-Fa-f]{1,4}:){0,1}[0-9A-Fa-f]{1,4})?::(?:[0-9A-Fa-f]{1,4}:){3}(?:[0-9A-Fa-f]{1,4}:[0-9A-Fa-f]{1,4}|(?:(?:0?0?[0-9]|0?[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\\.){3}(?:0?0?[0-9]|0?[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5]))|(?:(?:[0-9A-Fa-f]{1,4}:){0,2}[0-9A-Fa-f]{1,4})?::(?:[0-9A-Fa-f]{1,4}:){2}(?:[0-9A-Fa-f]{1,4}:[0-9A-Fa-f]{1,4}|(?:(?:0?0?[0-9]|0?[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\\.){3}(?:0?0?[0-9]|0?[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5]))|(?:(?:[0-9A-Fa-f]{1,4}:){0,3}[0-9A-Fa-f]{1,4})?::[0-9A-Fa-f]{1,4}:(?:[0-9A-Fa-f]{1,4}:[0-9A-Fa-f]{1,4}|(?:(?:0?0?[0-9]|0?[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\\.){3}(?:0?0?[0-9]|0?[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5]))|(?:(?:[0-9A-Fa-f]{1,4}:){0,4}[0-9A-Fa-f]{1,4})?::(?:[0-9A-Fa-f]{1,4}:[0-9A-Fa-f]{1,4}|(?:(?:0?0?[0-9]|0?[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\\.){3}(?:0?0?[0-9]|0?[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5]))|(?:(?:[0-9A-Fa-f]{1,4}:){0,5}[0-9A-Fa-f]{1,4})?::[0-9A-Fa-f]{1,4}|(?:(?:[0-9A-Fa-f]{1,4}:){0,6}[0-9A-Fa-f]{1,4})?::)(?:\\/(?:0?0?[0-9]|0?[1-9][0-9]|1[01][0-9]|12[0-8]))?|v[0-9A-Fa-f]+\\.[a-zA-Z0-9-\\._~!\\$&'\\(\\)\\*\\+,;=:]+(?:\\/(?:0?0?[0-9]|0?[1-9][0-9]|1[01][0-9]|12[0-8]))?)$",
+  "createUser": [
+    {
+      "body": "{\"name\":\"Ana Administradora\",\"email\":\"ana.admin@dib4t.local\",\"password\":\"char-test-1\",\"roles\":[\"canSeeOrcamentos\",\"canSeeObras\",\"canSeeHistorico\",\"canSeeEntidades\",\"canSeeDefinicoes\",\"canSeeDashboard\",\"canSeeLeituras\"],\"fieldOfCompetencies\":\"Desenvolvimento\"}",
+      "message": null,
+      "outcome": "200",
+      "stored": {
+        "_id": "{{oid}}",
+        "roles": [
+          "canSeeOrcamentos",
+          "canSeeObras",
+          "canSeeHistorico",
+          "canSeeEntidades",
+          "canSeeDefinicoes",
+          "canSeeDashboard",
+          "canSeeLeituras"
+        ],
+        "fieldOfCompetencies": "Desenvolvimento",
+        "name": "Ana Administradora",
+        "email": "ana.admin@dib4t.local",
+        "password": "{{bcrypt}}",
+        "__v": {
+          "$numberInt": "0"
+        }
+      },
+      "response": {
+        "_id": "5f1e9a2b3c4d5e6f70819299",
+        "name": "Ana Administradora",
+        "email": "ana.admin@dib4t.local",
+        "roles": [
+          "canSeeOrcamentos",
+          "canSeeObras",
+          "canSeeHistorico",
+          "canSeeEntidades",
+          "canSeeDefinicoes",
+          "canSeeDashboard",
+          "canSeeLeituras"
+        ]
+      }
+    },
+    {
+      "body": "{\"name\":\"Ana Administradora\",\"email\":\"ana.admin@dib4t.local\",\"password\":\"char-test-1\",\"roles\":[\"canSeeOrcamentos\",\"canSeeObras\",\"canSeeHistorico\",\"canSeeEntidades\",\"canSeeDefinicoes\",\"canSeeDashboard\",\"canSeeLeituras\"],\"fieldOfCompetencies\":\"Desenvolvimento\",\"passwordConfirmation\":\"char-test-1\"}",
+      "message": null,
+      "outcome": "200",
+      "stored": {
+        "_id": "{{oid}}",
+        "roles": [
+          "canSeeOrcamentos",
+          "canSeeObras",
+          "canSeeHistorico",
+          "canSeeEntidades",
+          "canSeeDefinicoes",
+          "canSeeDashboard",
+          "canSeeLeituras"
+        ],
+        "fieldOfCompetencies": "Desenvolvimento",
+        "name": "Ana Administradora",
+        "email": "ana.admin@dib4t.local",
+        "password": "{{bcrypt}}",
+        "__v": {
+          "$numberInt": "0"
+        }
+      },
+      "response": {
+        "_id": "5f1e9a2b3c4d5e6f70819299",
+        "name": "Ana Administradora",
+        "email": "ana.admin@dib4t.local",
+        "roles": [
+          "canSeeOrcamentos",
+          "canSeeObras",
+          "canSeeHistorico",
+          "canSeeEntidades",
+          "canSeeDefinicoes",
+          "canSeeDashboard",
+          "canSeeLeituras"
+        ]
+      }
+    },
+    {
+      "body": "{\"name\":\"Bruno Maquinação\",\"email\":\"bruno.limitado@dib4t.local\",\"password\":\"char-test-1\",\"roles\":[\"canSeeObras\",\"canSeeLeituras\"],\"fieldOfCompetencies\":\"Maquinação\"}",
+      "message": null,
+      "outcome": "200",
+      "stored": {
+        "_id": "{{oid}}",
+        "roles": [
+          "canSeeObras",
+          "canSeeLeituras"
+        ],
+        "fieldOfCompetencies": "Maquinação",
+        "name": "Bruno Maquinação",
+        "email": "bruno.limitado@dib4t.local",
+        "password": "{{bcrypt}}",
+        "__v": {
+          "$numberInt": "0"
+        }
+      },
+      "response": {
+        "_id": "5f1e9a2b3c4d5e6f70819299",
+        "name": "Bruno Maquinação",
+        "email": "bruno.limitado@dib4t.local",
+        "roles": [
+          "canSeeObras",
+          "canSeeLeituras"
+        ]
+      }
+    },
+    {
+      "body": "{\"name\":\"Carla Sem Área\",\"email\":\"carla.semarea@dib4t.local\",\"password\":\"char-test-1\",\"roles\":[\"canSeeDashboard\"]}",
+      "message": null,
+      "outcome": "200",
+      "stored": {
+        "_id": "{{oid}}",
+        "roles": [
+          "canSeeDashboard"
+        ],
+        "fieldOfCompetencies": "Desenvolvimento",
+        "name": "Carla Sem Área",
+        "email": "carla.semarea@dib4t.local",
+        "password": "{{bcrypt}}",
+        "__v": {
+          "$numberInt": "0"
+        }
+      },
+      "response": {
+        "_id": "5f1e9a2b3c4d5e6f70819299",
+        "name": "Carla Sem Área",
+        "email": "carla.semarea@dib4t.local",
+        "roles": [
+          "canSeeDashboard"
+        ]
+      }
+    },
+    {
+      "body": "{\"name\":\"Ana Administradora\",\"email\":\"ana.admin@dib4t.local\",\"password\":\"char-test-1\",\"roles\":[\"canSeeOrcamentos\",null,\"canSeeAdjudicacoes\",null,\"canSeeDefinicoes\",null,null],\"fieldOfCompetencies\":\"Desenvolvimento\"}",
+      "message": null,
+      "outcome": "200",
+      "stored": {
+        "_id": "{{oid}}",
+        "roles": [
+          "canSeeOrcamentos",
+          null,
+          "canSeeAdjudicacoes",
+          null,
+          "canSeeDefinicoes",
+          null,
+          null
+        ],
+        "fieldOfCompetencies": "Desenvolvimento",
+        "name": "Ana Administradora",
+        "email": "ana.admin@dib4t.local",
+        "password": "{{bcrypt}}",
+        "__v": {
+          "$numberInt": "0"
+        }
+      },
+      "response": {
+        "_id": "5f1e9a2b3c4d5e6f70819299",
+        "name": "Ana Administradora",
+        "email": "ana.admin@dib4t.local",
+        "roles": [
+          "canSeeOrcamentos",
+          null,
+          "canSeeAdjudicacoes",
+          null,
+          "canSeeDefinicoes",
+          null,
+          null
+        ]
+      }
+    },
+    {
+      "body": "{\"name\":\"Ana Administradora\",\"email\":\"ana.admin@dib4t.local\",\"password\":\"char-test-1\",\"roles\":[null,null,null,null,null,null,null],\"fieldOfCompetencies\":\"Desenvolvimento\"}",
+      "message": null,
+      "outcome": "200",
+      "stored": {
+        "_id": "{{oid}}",
+        "roles": [
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        "fieldOfCompetencies": "Desenvolvimento",
+        "name": "Ana Administradora",
+        "email": "ana.admin@dib4t.local",
+        "password": "{{bcrypt}}",
+        "__v": {
+          "$numberInt": "0"
+        }
+      },
+      "response": {
+        "_id": "5f1e9a2b3c4d5e6f70819299",
+        "name": "Ana Administradora",
+        "email": "ana.admin@dib4t.local",
+        "roles": [
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ]
+      }
+    },
+    {
+      "body": "{}",
+      "message": "\"name\" is required"
+    },
+    {
+      "body": "{\"email\":\"ana.admin@dib4t.local\",\"password\":\"char-test-1\",\"roles\":[\"canSeeOrcamentos\",\"canSeeObras\",\"canSeeHistorico\",\"canSeeEntidades\",\"canSeeDefinicoes\",\"canSeeDashboard\",\"canSeeLeituras\"],\"fieldOfCompetencies\":\"Desenvolvimento\"}",
+      "message": "\"name\" is required"
+    },
+    {
+      "body": "{\"name\":\"Ana Administradora\",\"password\":\"char-test-1\",\"roles\":[\"canSeeOrcamentos\",\"canSeeObras\",\"canSeeHistorico\",\"canSeeEntidades\",\"canSeeDefinicoes\",\"canSeeDashboard\",\"canSeeLeituras\"],\"fieldOfCompetencies\":\"Desenvolvimento\"}",
+      "message": "\"email\" is required"
+    },
+    {
+      "body": "{\"name\":\"Ana Administradora\",\"email\":\"ana.admin@dib4t.local\",\"roles\":[\"canSeeOrcamentos\",\"canSeeObras\",\"canSeeHistorico\",\"canSeeEntidades\",\"canSeeDefinicoes\",\"canSeeDashboard\",\"canSeeLeituras\"],\"fieldOfCompetencies\":\"Desenvolvimento\"}",
+      "message": "\"password\" is required"
+    },
+    {
+      "body": "{\"name\":\"Ana Administradora\",\"email\":\"ana.admin@dib4t.local\",\"password\":\"char-test-1\",\"fieldOfCompetencies\":\"Desenvolvimento\"}",
+      "message": null,
+      "outcome": "200",
+      "stored": {
+        "_id": "{{oid}}",
+        "roles": [],
+        "fieldOfCompetencies": "Desenvolvimento",
+        "name": "Ana Administradora",
+        "email": "ana.admin@dib4t.local",
+        "password": "{{bcrypt}}",
+        "__v": {
+          "$numberInt": "0"
+        }
+      },
+      "response": {
+        "_id": "5f1e9a2b3c4d5e6f70819299",
+        "name": "Ana Administradora",
+        "email": "ana.admin@dib4t.local",
+        "roles": []
+      }
+    },
+    {
+      "body": "{\"name\":\"Ana Administradora\",\"email\":\"ana.admin@dib4t.local\",\"password\":\"char-test-1\",\"roles\":[\"canSeeOrcamentos\",\"canSeeObras\",\"canSeeHistorico\",\"canSeeEntidades\",\"canSeeDefinicoes\",\"canSeeDashboard\",\"canSeeLeituras\"]}",
+      "message": null,
+      "outcome": "200",
+      "stored": {
+        "_id": "{{oid}}",
+        "roles": [
+          "canSeeOrcamentos",
+          "canSeeObras",
+          "canSeeHistorico",
+          "canSeeEntidades",
+          "canSeeDefinicoes",
+          "canSeeDashboard",
+          "canSeeLeituras"
+        ],
+        "fieldOfCompetencies": "Desenvolvimento",
+        "name": "Ana Administradora",
+        "email": "ana.admin@dib4t.local",
+        "password": "{{bcrypt}}",
+        "__v": {
+          "$numberInt": "0"
+        }
+      },
+      "response": {
+        "_id": "5f1e9a2b3c4d5e6f70819299",
+        "name": "Ana Administradora",
+        "email": "ana.admin@dib4t.local",
+        "roles": [
+          "canSeeOrcamentos",
+          "canSeeObras",
+          "canSeeHistorico",
+          "canSeeEntidades",
+          "canSeeDefinicoes",
+          "canSeeDashboard",
+          "canSeeLeituras"
+        ]
+      }
+    },
+    {
+      "body": "{\"name\":\"Al\",\"email\":\"ana.admin@dib4t.local\",\"password\":\"char-test-1\",\"roles\":[\"canSeeOrcamentos\",\"canSeeObras\",\"canSeeHistorico\",\"canSeeEntidades\",\"canSeeDefinicoes\",\"canSeeDashboard\",\"canSeeLeituras\"],\"fieldOfCompetencies\":\"Desenvolvimento\"}",
+      "message": "\"name\" length must be at least 3 characters long"
+    },
+    {
+      "body": "{\"name\":\"Ana\",\"email\":\"ana.admin@dib4t.local\",\"password\":\"char-test-1\",\"roles\":[\"canSeeOrcamentos\",\"canSeeObras\",\"canSeeHistorico\",\"canSeeEntidades\",\"canSeeDefinicoes\",\"canSeeDashboard\",\"canSeeLeituras\"],\"fieldOfCompetencies\":\"Desenvolvimento\"}",
+      "message": null,
+      "outcome": "200",
+      "stored": {
+        "_id": "{{oid}}",
+        "roles": [
+          "canSeeOrcamentos",
+          "canSeeObras",
+          "canSeeHistorico",
+          "canSeeEntidades",
+          "canSeeDefinicoes",
+          "canSeeDashboard",
+          "canSeeLeituras"
+        ],
+        "fieldOfCompetencies": "Desenvolvimento",
+        "name": "Ana",
+        "email": "ana.admin@dib4t.local",
+        "password": "{{bcrypt}}",
+        "__v": {
+          "$numberInt": "0"
+        }
+      },
+      "response": {
+        "_id": "5f1e9a2b3c4d5e6f70819299",
+        "name": "Ana",
+        "email": "ana.admin@dib4t.local",
+        "roles": [
+          "canSeeOrcamentos",
+          "canSeeObras",
+          "canSeeHistorico",
+          "canSeeEntidades",
+          "canSeeDefinicoes",
+          "canSeeDashboard",
+          "canSeeLeituras"
+        ]
+      }
+    },
+    {
+      "body": "{\"name\":\"\",\"email\":\"ana.admin@dib4t.local\",\"password\":\"char-test-1\",\"roles\":[\"canSeeOrcamentos\",\"canSeeObras\",\"canSeeHistorico\",\"canSeeEntidades\",\"canSeeDefinicoes\",\"canSeeDashboard\",\"canSeeLeituras\"],\"fieldOfCompetencies\":\"Desenvolvimento\"}",
+      "message": "\"name\" is not allowed to be empty"
+    },
+    {
+      "body": "{\"name\":null,\"email\":\"ana.admin@dib4t.local\",\"password\":\"char-test-1\",\"roles\":[\"canSeeOrcamentos\",\"canSeeObras\",\"canSeeHistorico\",\"canSeeEntidades\",\"canSeeDefinicoes\",\"canSeeDashboard\",\"canSeeLeituras\"],\"fieldOfCompetencies\":\"Desenvolvimento\"}",
+      "message": "\"name\" must be a string"
+    },
+    {
+      "body": "{\"name\":123,\"email\":\"ana.admin@dib4t.local\",\"password\":\"char-test-1\",\"roles\":[\"canSeeOrcamentos\",\"canSeeObras\",\"canSeeHistorico\",\"canSeeEntidades\",\"canSeeDefinicoes\",\"canSeeDashboard\",\"canSeeLeituras\"],\"fieldOfCompetencies\":\"Desenvolvimento\"}",
+      "message": "\"name\" must be a string"
+    },
+    {
+      "body": "{\"name\":\"   \",\"email\":\"ana.admin@dib4t.local\",\"password\":\"char-test-1\",\"roles\":[\"canSeeOrcamentos\",\"canSeeObras\",\"canSeeHistorico\",\"canSeeEntidades\",\"canSeeDefinicoes\",\"canSeeDashboard\",\"canSeeLeituras\"],\"fieldOfCompetencies\":\"Desenvolvimento\"}",
+      "message": null,
+      "outcome": "200",
+      "stored": {
+        "_id": "{{oid}}",
+        "roles": [
+          "canSeeOrcamentos",
+          "canSeeObras",
+          "canSeeHistorico",
+          "canSeeEntidades",
+          "canSeeDefinicoes",
+          "canSeeDashboard",
+          "canSeeLeituras"
+        ],
+        "fieldOfCompetencies": "Desenvolvimento",
+        "name": "   ",
+        "email": "ana.admin@dib4t.local",
+        "password": "{{bcrypt}}",
+        "__v": {
+          "$numberInt": "0"
+        }
+      },
+      "response": {
+        "_id": "5f1e9a2b3c4d5e6f70819299",
+        "name": "   ",
+        "email": "ana.admin@dib4t.local",
+        "roles": [
+          "canSeeOrcamentos",
+          "canSeeObras",
+          "canSeeHistorico",
+          "canSeeEntidades",
+          "canSeeDefinicoes",
+          "canSeeDashboard",
+          "canSeeLeituras"
+        ]
+      }
+    },
+    {
+      "body": "{\"name\":\"😀a\",\"email\":\"ana.admin@dib4t.local\",\"password\":\"char-test-1\",\"roles\":[\"canSeeOrcamentos\",\"canSeeObras\",\"canSeeHistorico\",\"canSeeEntidades\",\"canSeeDefinicoes\",\"canSeeDashboard\",\"canSeeLeituras\"],\"fieldOfCompetencies\":\"Desenvolvimento\"}",
+      "message": null,
+      "outcome": "200",
+      "stored": {
+        "_id": "{{oid}}",
+        "roles": [
+          "canSeeOrcamentos",
+          "canSeeObras",
+          "canSeeHistorico",
+          "canSeeEntidades",
+          "canSeeDefinicoes",
+          "canSeeDashboard",
+          "canSeeLeituras"
+        ],
+        "fieldOfCompetencies": "Desenvolvimento",
+        "name": "😀a",
+        "email": "ana.admin@dib4t.local",
+        "password": "{{bcrypt}}",
+        "__v": {
+          "$numberInt": "0"
+        }
+      },
+      "response": {
+        "_id": "5f1e9a2b3c4d5e6f70819299",
+        "name": "😀a",
+        "email": "ana.admin@dib4t.local",
+        "roles": [
+          "canSeeOrcamentos",
+          "canSeeObras",
+          "canSeeHistorico",
+          "canSeeEntidades",
+          "canSeeDefinicoes",
+          "canSeeDashboard",
+          "canSeeLeituras"
+        ]
+      }
+    },
+    {
+      "body": "{\"name\":\"Ana Administradora\",\"email\":\"a@b.pt\",\"password\":\"char-test-1\",\"roles\":[\"canSeeOrcamentos\",\"canSeeObras\",\"canSeeHistorico\",\"canSeeEntidades\",\"canSeeDefinicoes\",\"canSeeDashboard\",\"canSeeLeituras\"],\"fieldOfCompetencies\":\"Desenvolvimento\"}",
+      "message": "\"email\" length must be at least 10 characters long"
+    },
+    {
+      "body": "{\"name\":\"Ana Administradora\",\"email\":\"abc@d.ef.pt\",\"password\":\"char-test-1\",\"roles\":[\"canSeeOrcamentos\",\"canSeeObras\",\"canSeeHistorico\",\"canSeeEntidades\",\"canSeeDefinicoes\",\"canSeeDashboard\",\"canSeeLeituras\"],\"fieldOfCompetencies\":\"Desenvolvimento\"}",
+      "message": null,
+      "outcome": "200",
+      "stored": {
+        "_id": "{{oid}}",
+        "roles": [
+          "canSeeOrcamentos",
+          "canSeeObras",
+          "canSeeHistorico",
+          "canSeeEntidades",
+          "canSeeDefinicoes",
+          "canSeeDashboard",
+          "canSeeLeituras"
+        ],
+        "fieldOfCompetencies": "Desenvolvimento",
+        "name": "Ana Administradora",
+        "email": "abc@d.ef.pt",
+        "password": "{{bcrypt}}",
+        "__v": {
+          "$numberInt": "0"
+        }
+      },
+      "response": {
+        "_id": "5f1e9a2b3c4d5e6f70819299",
+        "name": "Ana Administradora",
+        "email": "abc@d.ef.pt",
+        "roles": [
+          "canSeeOrcamentos",
+          "canSeeObras",
+          "canSeeHistorico",
+          "canSeeEntidades",
+          "canSeeDefinicoes",
+          "canSeeDashboard",
+          "canSeeLeituras"
+        ]
+      }
+    },
+    {
+      "body": "{\"name\":\"Ana Administradora\",\"email\":\"not-an-email\",\"password\":\"char-test-1\",\"roles\":[\"canSeeOrcamentos\",\"canSeeObras\",\"canSeeHistorico\",\"canSeeEntidades\",\"canSeeDefinicoes\",\"canSeeDashboard\",\"canSeeLeituras\"],\"fieldOfCompetencies\":\"Desenvolvimento\"}",
+      "message": "\"email\" must be a valid email"
+    },
+    {
+      "body": "{\"name\":\"Ana Administradora\",\"email\":\"\",\"password\":\"char-test-1\",\"roles\":[\"canSeeOrcamentos\",\"canSeeObras\",\"canSeeHistorico\",\"canSeeEntidades\",\"canSeeDefinicoes\",\"canSeeDashboard\",\"canSeeLeituras\"],\"fieldOfCompetencies\":\"Desenvolvimento\"}",
+      "message": "\"email\" is not allowed to be empty"
+    },
+    {
+      "body": "{\"name\":\"Ana Administradora\",\"email\":1234567890,\"password\":\"char-test-1\",\"roles\":[\"canSeeOrcamentos\",\"canSeeObras\",\"canSeeHistorico\",\"canSeeEntidades\",\"canSeeDefinicoes\",\"canSeeDashboard\",\"canSeeLeituras\"],\"fieldOfCompetencies\":\"Desenvolvimento\"}",
+      "message": "\"email\" must be a string"
+    },
+    {
+      "body": "{\"name\":\"Ana Administradora\",\"email\":\"ana.admin@dib4t.local \",\"password\":\"char-test-1\",\"roles\":[\"canSeeOrcamentos\",\"canSeeObras\",\"canSeeHistorico\",\"canSeeEntidades\",\"canSeeDefinicoes\",\"canSeeDashboard\",\"canSeeLeituras\"],\"fieldOfCompetencies\":\"Desenvolvimento\"}",
+      "message": "\"email\" must be a valid email"
+    },
+    {
+      "body": "{\"name\":\"Ana Administradora\",\"email\":\"ana.admin@dib4t.local\",\"password\":\"1234\",\"roles\":[\"canSeeOrcamentos\",\"canSeeObras\",\"canSeeHistorico\",\"canSeeEntidades\",\"canSeeDefinicoes\",\"canSeeDashboard\",\"canSeeLeituras\"],\"fieldOfCompetencies\":\"Desenvolvimento\"}",
+      "message": "\"password\" length must be at least 5 characters long"
+    },
+    {
+      "body": "{\"name\":\"Ana Administradora\",\"email\":\"ana.admin@dib4t.local\",\"password\":\"12345\",\"roles\":[\"canSeeOrcamentos\",\"canSeeObras\",\"canSeeHistorico\",\"canSeeEntidades\",\"canSeeDefinicoes\",\"canSeeDashboard\",\"canSeeLeituras\"],\"fieldOfCompetencies\":\"Desenvolvimento\"}",
+      "message": null,
+      "outcome": "200",
+      "stored": {
+        "_id": "{{oid}}",
+        "roles": [
+          "canSeeOrcamentos",
+          "canSeeObras",
+          "canSeeHistorico",
+          "canSeeEntidades",
+          "canSeeDefinicoes",
+          "canSeeDashboard",
+          "canSeeLeituras"
+        ],
+        "fieldOfCompetencies": "Desenvolvimento",
+        "name": "Ana Administradora",
+        "email": "ana.admin@dib4t.local",
+        "password": "{{bcrypt}}",
+        "__v": {
+          "$numberInt": "0"
+        }
+      },
+      "response": {
+        "_id": "5f1e9a2b3c4d5e6f70819299",
+        "name": "Ana Administradora",
+        "email": "ana.admin@dib4t.local",
+        "roles": [
+          "canSeeOrcamentos",
+          "canSeeObras",
+          "canSeeHistorico",
+          "canSeeEntidades",
+          "canSeeDefinicoes",
+          "canSeeDashboard",
+          "canSeeLeituras"
+        ]
+      }
+    },
+    {
+      "body": "{\"name\":\"Ana Administradora\",\"email\":\"ana.admin@dib4t.local\",\"password\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\"roles\":[\"canSeeOrcamentos\",\"canSeeObras\",\"canSeeHistorico\",\"canSeeEntidades\",\"canSeeDefinicoes\",\"canSeeDashboard\",\"canSeeLeituras\"],\"fieldOfCompetencies\":\"Desenvolvimento\"}",
+      "message": null,
+      "outcome": "200",
+      "stored": {
+        "_id": "{{oid}}",
+        "roles": [
+          "canSeeOrcamentos",
+          "canSeeObras",
+          "canSeeHistorico",
+          "canSeeEntidades",
+          "canSeeDefinicoes",
+          "canSeeDashboard",
+          "canSeeLeituras"
+        ],
+        "fieldOfCompetencies": "Desenvolvimento",
+        "name": "Ana Administradora",
+        "email": "ana.admin@dib4t.local",
+        "password": "{{bcrypt}}",
+        "__v": {
+          "$numberInt": "0"
+        }
+      },
+      "response": {
+        "_id": "5f1e9a2b3c4d5e6f70819299",
+        "name": "Ana Administradora",
+        "email": "ana.admin@dib4t.local",
+        "roles": [
+          "canSeeOrcamentos",
+          "canSeeObras",
+          "canSeeHistorico",
+          "canSeeEntidades",
+          "canSeeDefinicoes",
+          "canSeeDashboard",
+          "canSeeLeituras"
+        ]
+      }
+    },
+    {
+      "body": "{\"name\":\"Ana Administradora\",\"email\":\"ana.admin@dib4t.local\",\"password\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\"roles\":[\"canSeeOrcamentos\",\"canSeeObras\",\"canSeeHistorico\",\"canSeeEntidades\",\"canSeeDefinicoes\",\"canSeeDashboard\",\"canSeeLeituras\"],\"fieldOfCompetencies\":\"Desenvolvimento\"}",
+      "message": "\"password\" length must be less than or equal to 255 characters long"
+    },
+    {
+      "body": "{\"name\":\"Ana Administradora\",\"email\":\"ana.admin@dib4t.local\",\"password\":12345,\"roles\":[\"canSeeOrcamentos\",\"canSeeObras\",\"canSeeHistorico\",\"canSeeEntidades\",\"canSeeDefinicoes\",\"canSeeDashboard\",\"canSeeLeituras\"],\"fieldOfCompetencies\":\"Desenvolvimento\"}",
+      "message": "\"password\" must be a string"
+    },
+    {
+      "body": "{\"name\":\"Ana Administradora\",\"email\":\"ana.admin@dib4t.local\",\"password\":\"\",\"roles\":[\"canSeeOrcamentos\",\"canSeeObras\",\"canSeeHistorico\",\"canSeeEntidades\",\"canSeeDefinicoes\",\"canSeeDashboard\",\"canSeeLeituras\"],\"fieldOfCompetencies\":\"Desenvolvimento\"}",
+      "message": "\"password\" is not allowed to be empty"
+    },
+    {
+      "body": "{\"name\":\"Ana Administradora\",\"email\":\"ana.admin@dib4t.local\",\"password\":\"char-test-1\",\"roles\":[\"canSeeOrcamentos\",\"canSeeObras\",\"canSeeHistorico\",\"canSeeEntidades\",\"canSeeDefinicoes\",\"canSeeDashboard\",\"canSeeLeituras\"],\"fieldOfCompetencies\":\"Desenvolvimento\",\"passwordConfirmation\":\"other-pass\"}",
+      "message": "\"passwordConfirmation\" must be one of [ref:password]"
+    },
+    {
+      "body": "{\"name\":\"Ana Administradora\",\"email\":\"ana.admin@dib4t.local\",\"password\":\"char-test-1\",\"roles\":[\"canSeeOrcamentos\",\"canSeeObras\",\"canSeeHistorico\",\"canSeeEntidades\",\"canSeeDefinicoes\",\"canSeeDashboard\",\"canSeeLeituras\"],\"fieldOfCompetencies\":\"Desenvolvimento\",\"passwordConfirmation\":\"\"}",
+      "message": "\"passwordConfirmation\" must be one of [ref:password]"
+    },
+    {
+      "body": "{\"name\":\"Ana Administradora\",\"email\":\"ana.admin@dib4t.local\",\"password\":\"char-test-1\",\"roles\":[\"canSeeOrcamentos\",\"canSeeObras\",\"canSeeHistorico\",\"canSeeEntidades\",\"canSeeDefinicoes\",\"canSeeDashboard\",\"canSeeLeituras\"],\"fieldOfCompetencies\":\"Desenvolvimento\",\"passwordConfirmation\":null}",
+      "message": "\"passwordConfirmation\" must be one of [ref:password]"
+    },
+    {
+      "body": "{\"name\":\"Ana Administradora\",\"email\":\"ana.admin@dib4t.local\",\"password\":\"char-test-1\",\"roles\":[\"canSeeOrcamentos\",\"canSeeObras\",\"canSeeHistorico\",\"canSeeEntidades\",\"canSeeDefinicoes\",\"canSeeDashboard\",\"canSeeLeituras\"],\"fieldOfCompetencies\":\"Desenvolvimento\",\"passwordConfirmation\":12345}",
+      "message": "\"passwordConfirmation\" must be one of [ref:password]"
+    },
+    {
+      "body": "{\"passwordConfirmation\":\"char-test-1\",\"name\":\"Ana Administradora\",\"email\":\"ana.admin@dib4t.local\",\"password\":\"char-test-1\",\"roles\":[\"canSeeOrcamentos\",\"canSeeObras\",\"canSeeHistorico\",\"canSeeEntidades\",\"canSeeDefinicoes\",\"canSeeDashboard\",\"canSeeLeituras\"],\"fieldOfCompetencies\":\"Desenvolvimento\"}",
+      "message": null,
+      "outcome": "200",
+      "stored": {
+        "_id": "{{oid}}",
+        "roles": [
+          "canSeeOrcamentos",
+          "canSeeObras",
+          "canSeeHistorico",
+          "canSeeEntidades",
+          "canSeeDefinicoes",
+          "canSeeDashboard",
+          "canSeeLeituras"
+        ],
+        "fieldOfCompetencies": "Desenvolvimento",
+        "name": "Ana Administradora",
+        "email": "ana.admin@dib4t.local",
+        "password": "{{bcrypt}}",
+        "__v": {
+          "$numberInt": "0"
+        }
+      },
+      "response": {
+        "_id": "5f1e9a2b3c4d5e6f70819299",
+        "name": "Ana Administradora",
+        "email": "ana.admin@dib4t.local",
+        "roles": [
+          "canSeeOrcamentos",
+          "canSeeObras",
+          "canSeeHistorico",
+          "canSeeEntidades",
+          "canSeeDefinicoes",
+          "canSeeDashboard",
+          "canSeeLeituras"
+        ]
+      }
+    },
+    {
+      "body": "{\"name\":\"Al\",\"passwordConfirmation\":\"x\",\"email\":\"x\",\"password\":\"char-test-1\"}",
+      "message": "\"name\" length must be at least 3 characters long"
+    },
+    {
+      "body": "{\"passwordConfirmation\":\"x\",\"name\":\"Ana Administradora\",\"email\":\"ana.admin@dib4t.local\",\"password\":\"1\"}",
+      "message": "\"password\" length must be at least 5 characters long"
+    },
+    {
+      "body": "{\"name\":\"Ana Administradora\",\"email\":\"ana.admin@dib4t.local\",\"password\":\"char-test-1\",\"roles\":[],\"fieldOfCompetencies\":\"Desenvolvimento\"}",
+      "message": "\"roles\" must contain at least 1 items"
+    },
+    {
+      "body": "{\"name\":\"Ana Administradora\",\"email\":\"ana.admin@dib4t.local\",\"password\":\"char-test-1\",\"roles\":\"canSeeObras\",\"fieldOfCompetencies\":\"Desenvolvimento\"}",
+      "message": "\"roles\" must be an array"
+    },
+    {
+      "body": "{\"name\":\"Ana Administradora\",\"email\":\"ana.admin@dib4t.local\",\"password\":\"char-test-1\",\"roles\":\"[\\\"canSeeObras\\\",\\\"canSeeLeituras\\\"]\",\"fieldOfCompetencies\":\"Desenvolvimento\"}",
+      "message": null,
+      "outcome": "200",
+      "stored": {
+        "_id": "{{oid}}",
+        "roles": [
+          "[\"canSeeObras\",\"canSeeLeituras\"]"
+        ],
+        "fieldOfCompetencies": "Desenvolvimento",
+        "name": "Ana Administradora",
+        "email": "ana.admin@dib4t.local",
+        "password": "{{bcrypt}}",
+        "__v": {
+          "$numberInt": "0"
+        }
+      },
+      "response": {
+        "_id": "5f1e9a2b3c4d5e6f70819299",
+        "name": "Ana Administradora",
+        "email": "ana.admin@dib4t.local",
+        "roles": [
+          "[\"canSeeObras\",\"canSeeLeituras\"]"
+        ]
+      }
+    },
+    {
+      "body": "{\"name\":\"Ana Administradora\",\"email\":\"ana.admin@dib4t.local\",\"password\":\"char-test-1\",\"roles\":\"[]\",\"fieldOfCompetencies\":\"Desenvolvimento\"}",
+      "message": "\"roles\" must contain at least 1 items"
+    },
+    {
+      "body": "{\"name\":\"Ana Administradora\",\"email\":\"ana.admin@dib4t.local\",\"password\":\"char-test-1\",\"roles\":null,\"fieldOfCompetencies\":\"Desenvolvimento\"}",
+      "message": "\"roles\" must be an array"
+    },
+    {
+      "body": "{\"name\":\"Ana Administradora\",\"email\":\"ana.admin@dib4t.local\",\"password\":\"char-test-1\",\"roles\":1,\"fieldOfCompetencies\":\"Desenvolvimento\"}",
+      "message": "\"roles\" must be an array"
+    },
+    {
+      "body": "{\"name\":\"Ana Administradora\",\"email\":\"ana.admin@dib4t.local\",\"password\":\"char-test-1\",\"roles\":{},\"fieldOfCompetencies\":\"Desenvolvimento\"}",
+      "message": "\"roles\" must be an array"
+    },
+    {
+      "body": "{\"name\":\"Ana Administradora\",\"email\":\"ana.admin@dib4t.local\",\"password\":\"char-test-1\",\"roles\":[\"x\"],\"fieldOfCompetencies\":\"Desenvolvimento\"}",
+      "message": null,
+      "outcome": "200",
+      "stored": {
+        "_id": "{{oid}}",
+        "roles": [
+          "x"
+        ],
+        "fieldOfCompetencies": "Desenvolvimento",
+        "name": "Ana Administradora",
+        "email": "ana.admin@dib4t.local",
+        "password": "{{bcrypt}}",
+        "__v": {
+          "$numberInt": "0"
+        }
+      },
+      "response": {
+        "_id": "5f1e9a2b3c4d5e6f70819299",
+        "name": "Ana Administradora",
+        "email": "ana.admin@dib4t.local",
+        "roles": [
+          "x"
+        ]
+      }
+    },
+    {
+      "body": "{\"name\":\"Ana Administradora\",\"email\":\"ana.admin@dib4t.local\",\"password\":\"char-test-1\",\"roles\":[1,2.5,0,1e+21,true,false],\"fieldOfCompetencies\":\"Desenvolvimento\"}",
+      "message": null,
+      "outcome": "200",
+      "stored": {
+        "_id": "{{oid}}",
+        "roles": [
+          "1",
+          "2.5",
+          "0",
+          "1e+21",
+          "true",
+          "false"
+        ],
+        "fieldOfCompetencies": "Desenvolvimento",
+        "name": "Ana Administradora",
+        "email": "ana.admin@dib4t.local",
+        "password": "{{bcrypt}}",
+        "__v": {
+          "$numberInt": "0"
+        }
+      },
+      "response": {
+        "_id": "5f1e9a2b3c4d5e6f70819299",
+        "name": "Ana Administradora",
+        "email": "ana.admin@dib4t.local",
+        "roles": [
+          "1",
+          "2.5",
+          "0",
+          "1e+21",
+          "true",
+          "false"
+        ]
+      }
+    },
+    {
+      "body": "{\"name\":\"Ana Administradora\",\"email\":\"ana.admin@dib4t.local\",\"password\":\"char-test-1\",\"roles\":[{\"a\":1}],\"fieldOfCompetencies\":\"Desenvolvimento\"}",
+      "message": null,
+      "outcome": "500",
+      "reason": "User validation failed: roles.0: Cast to [string] failed for value \"[{\"a\":1}]\" (type string) at path \"roles.0\""
+    },
+    {
+      "body": "{\"name\":\"Ana Administradora\",\"email\":\"ana.admin@dib4t.local\",\"password\":\"char-test-1\",\"roles\":[[\"canSeeObras\"]],\"fieldOfCompetencies\":\"Desenvolvimento\"}",
+      "message": null,
+      "outcome": "500",
+      "reason": "User validation failed: roles.0: Cast to [string] failed for value \"[[\"canSeeObras\"]]\" (type string) at path \"roles.0\""
+    },
+    {
+      "body": "{\"name\":\"Ana Administradora\",\"email\":\"ana.admin@dib4t.local\",\"password\":\"char-test-1\",\"roles\":[[]],\"fieldOfCompetencies\":\"Desenvolvimento\"}",
+      "message": null,
+      "outcome": "500",
+      "reason": "User validation failed: roles.0: Cast to [string] failed for value \"[[]]\" (type string) at path \"roles.0\""
+    },
+    {
+      "body": "{\"name\":\"Ana Administradora\",\"email\":\"ana.admin@dib4t.local\",\"password\":\"char-test-1\",\"roles\":[[\"a\",\"b\"]],\"fieldOfCompetencies\":\"Desenvolvimento\"}",
+      "message": null,
+      "outcome": "500",
+      "reason": "User validation failed: roles.0: Cast to [string] failed for value \"[[\"a\",\"b\"]]\" (type string) at path \"roles.0\""
+    },
+    {
+      "body": "{\"name\":\"Ana Administradora\",\"email\":\"ana.admin@dib4t.local\",\"password\":\"char-test-1\",\"roles\":[\"\"],\"fieldOfCompetencies\":\"Desenvolvimento\"}",
+      "message": null,
+      "outcome": "200",
+      "stored": {
+        "_id": "{{oid}}",
+        "roles": [
+          ""
+        ],
+        "fieldOfCompetencies": "Desenvolvimento",
+        "name": "Ana Administradora",
+        "email": "ana.admin@dib4t.local",
+        "password": "{{bcrypt}}",
+        "__v": {
+          "$numberInt": "0"
+        }
+      },
+      "response": {
+        "_id": "5f1e9a2b3c4d5e6f70819299",
+        "name": "Ana Administradora",
+        "email": "ana.admin@dib4t.local",
+        "roles": [
+          ""
+        ]
+      }
+    },
+    {
+      "body": "{\"name\":\"Ana Administradora\",\"email\":\"ana.admin@dib4t.local\",\"password\":\"char-test-1\",\"roles\":[\"canSeeOrcamentos\",\"canSeeObras\",\"canSeeHistorico\",\"canSeeEntidades\",\"canSeeDefinicoes\",\"canSeeDashboard\",\"canSeeLeituras\"],\"fieldOfCompetencies\":\"Montagem\"}",
+      "message": null,
+      "outcome": "200",
+      "stored": {
+        "_id": "{{oid}}",
+        "roles": [
+          "canSeeOrcamentos",
+          "canSeeObras",
+          "canSeeHistorico",
+          "canSeeEntidades",
+          "canSeeDefinicoes",
+          "canSeeDashboard",
+          "canSeeLeituras"
+        ],
+        "fieldOfCompetencies": "Montagem",
+        "name": "Ana Administradora",
+        "email": "ana.admin@dib4t.local",
+        "password": "{{bcrypt}}",
+        "__v": {
+          "$numberInt": "0"
+        }
+      },
+      "response": {
+        "_id": "5f1e9a2b3c4d5e6f70819299",
+        "name": "Ana Administradora",
+        "email": "ana.admin@dib4t.local",
+        "roles": [
+          "canSeeOrcamentos",
+          "canSeeObras",
+          "canSeeHistorico",
+          "canSeeEntidades",
+          "canSeeDefinicoes",
+          "canSeeDashboard",
+          "canSeeLeituras"
+        ]
+      }
+    },
+    {
+      "body": "{\"name\":\"Ana Administradora\",\"email\":\"ana.admin@dib4t.local\",\"password\":\"char-test-1\",\"roles\":[\"canSeeOrcamentos\",\"canSeeObras\",\"canSeeHistorico\",\"canSeeEntidades\",\"canSeeDefinicoes\",\"canSeeDashboard\",\"canSeeLeituras\"],\"fieldOfCompetencies\":\"Para faturação\"}",
+      "message": null,
+      "outcome": "200",
+      "stored": {
+        "_id": "{{oid}}",
+        "roles": [
+          "canSeeOrcamentos",
+          "canSeeObras",
+          "canSeeHistorico",
+          "canSeeEntidades",
+          "canSeeDefinicoes",
+          "canSeeDashboard",
+          "canSeeLeituras"
+        ],
+        "fieldOfCompetencies": "Para faturação",
+        "name": "Ana Administradora",
+        "email": "ana.admin@dib4t.local",
+        "password": "{{bcrypt}}",
+        "__v": {
+          "$numberInt": "0"
+        }
+      },
+      "response": {
+        "_id": "5f1e9a2b3c4d5e6f70819299",
+        "name": "Ana Administradora",
+        "email": "ana.admin@dib4t.local",
+        "roles": [
+          "canSeeOrcamentos",
+          "canSeeObras",
+          "canSeeHistorico",
+          "canSeeEntidades",
+          "canSeeDefinicoes",
+          "canSeeDashboard",
+          "canSeeLeituras"
+        ]
+      }
+    },
+    {
+      "body": "{\"name\":\"Ana Administradora\",\"email\":\"ana.admin@dib4t.local\",\"password\":\"char-test-1\",\"roles\":[\"canSeeOrcamentos\",\"canSeeObras\",\"canSeeHistorico\",\"canSeeEntidades\",\"canSeeDefinicoes\",\"canSeeDashboard\",\"canSeeLeituras\"],\"fieldOfCompetencies\":\"Faturada\"}",
+      "message": null,
+      "outcome": "500",
+      "reason": "User validation failed: fieldOfCompetencies: `Faturada` is not a valid enum value for path `fieldOfCompetencies`."
+    },
+    {
+      "body": "{\"name\":\"Ana Administradora\",\"email\":\"ana.admin@dib4t.local\",\"password\":\"char-test-1\",\"roles\":[\"canSeeOrcamentos\",\"canSeeObras\",\"canSeeHistorico\",\"canSeeEntidades\",\"canSeeDefinicoes\",\"canSeeDashboard\",\"canSeeLeituras\"],\"fieldOfCompetencies\":\"desenvolvimento\"}",
+      "message": null,
+      "outcome": "500",
+      "reason": "User validation failed: fieldOfCompetencies: `desenvolvimento` is not a valid enum value for path `fieldOfCompetencies`."
+    },
+    {
+      "body": "{\"name\":\"Ana Administradora\",\"email\":\"ana.admin@dib4t.local\",\"password\":\"char-test-1\",\"roles\":[\"canSeeOrcamentos\",\"canSeeObras\",\"canSeeHistorico\",\"canSeeEntidades\",\"canSeeDefinicoes\",\"canSeeDashboard\",\"canSeeLeituras\"],\"fieldOfCompetencies\":\"\"}",
+      "message": "\"fieldOfCompetencies\" is not allowed to be empty"
+    },
+    {
+      "body": "{\"name\":\"Ana Administradora\",\"email\":\"ana.admin@dib4t.local\",\"password\":\"char-test-1\",\"roles\":[\"canSeeOrcamentos\",\"canSeeObras\",\"canSeeHistorico\",\"canSeeEntidades\",\"canSeeDefinicoes\",\"canSeeDashboard\",\"canSeeLeituras\"],\"fieldOfCompetencies\":null}",
+      "message": "\"fieldOfCompetencies\" must be a string"
+    },
+    {
+      "body": "{\"name\":\"Ana Administradora\",\"email\":\"ana.admin@dib4t.local\",\"password\":\"char-test-1\",\"roles\":[\"canSeeOrcamentos\",\"canSeeObras\",\"canSeeHistorico\",\"canSeeEntidades\",\"canSeeDefinicoes\",\"canSeeDashboard\",\"canSeeLeituras\"],\"fieldOfCompetencies\":1}",
+      "message": "\"fieldOfCompetencies\" must be a string"
+    },
+    {
+      "body": "{\"name\":\"Ana Administradora\",\"email\":\"ana.admin@dib4t.local\",\"password\":\"char-test-1\",\"roles\":[\"canSeeOrcamentos\",\"canSeeObras\",\"canSeeHistorico\",\"canSeeEntidades\",\"canSeeDefinicoes\",\"canSeeDashboard\",\"canSeeLeituras\"],\"fieldOfCompetencies\":\"Desenvolvimento\",\"remember\":true}",
+      "message": "\"remember\" is not allowed"
+    },
+    {
+      "body": "{\"remember\":true,\"name\":\"Ana Administradora\",\"email\":\"ana.admin@dib4t.local\",\"password\":\"char-test-1\",\"roles\":[\"canSeeOrcamentos\",\"canSeeObras\",\"canSeeHistorico\",\"canSeeEntidades\",\"canSeeDefinicoes\",\"canSeeDashboard\",\"canSeeLeituras\"],\"fieldOfCompetencies\":\"Desenvolvimento\"}",
+      "message": "\"remember\" is not allowed"
+    },
+    {
+      "body": "{\"name\":\"Ana Administradora\",\"email\":\"ana.admin@dib4t.local\",\"password\":\"char-test-1\",\"roles\":[\"canSeeOrcamentos\",\"canSeeObras\",\"canSeeHistorico\",\"canSeeEntidades\",\"canSeeDefinicoes\",\"canSeeDashboard\",\"canSeeLeituras\"],\"fieldOfCompetencies\":\"Desenvolvimento\",\"_id\":\"5f1e9a2b3c4d5e6f70819299\"}",
+      "message": "\"_id\" is not allowed"
+    },
+    {
+      "body": "{\"name\":\"Ana Administradora\",\"email\":\"ana.admin@dib4t.local\",\"password\":\"char-test-1\",\"roles\":[\"canSeeOrcamentos\",\"canSeeObras\",\"canSeeHistorico\",\"canSeeEntidades\",\"canSeeDefinicoes\",\"canSeeDashboard\",\"canSeeLeituras\"],\"fieldOfCompetencies\":\"Desenvolvimento\",\"__v\":3}",
+      "message": "\"__v\" is not allowed"
+    },
+    {
+      "body": "{\"name\":\"Al\",\"email\":\"x\"}",
+      "message": "\"name\" length must be at least 3 characters long"
+    },
+    {
+      "body": "{\"email\":\"x\",\"name\":\"Al\"}",
+      "message": "\"name\" length must be at least 3 characters long"
+    },
+    {
+      "body": "{\"roles\":[],\"name\":\"Ana Administradora\",\"email\":\"ana.admin@dib4t.local\",\"password\":\"char-test-1\"}",
+      "message": "\"roles\" must contain at least 1 items"
+    },
+    {
+      "body": "[]",
+      "message": "\"value\" must be an object"
+    }
+  ],
+  "editUser": [
+    {
+      "existing": {
+        "_id": {
+          "$oid": "5f1e9a2b3c4d5e6f70819299"
+        },
+        "roles": [
+          "canSeeObras",
+          "canSeeLeituras"
+        ],
+        "fieldOfCompetencies": "Maquinação",
+        "name": "Bruno Maquinação",
+        "email": "bruno.limitado@dib4t.local",
+        "password": "$2a$04$abcdefghijklmnopqrstuuyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy",
+        "__v": {
+          "$numberInt": "0"
+        }
+      },
+      "body": "{\"name\":\"Bruno Maquinação\",\"email\":\"bruno.limitado@dib4t.local\",\"roles\":[\"canSeeObras\",\"canSeeLeituras\"],\"fieldOfCompetencies\":\"Maquinação\"}",
+      "message": null,
+      "outcome": "200",
+      "update": null,
+      "response": {
+        "_id": "5f1e9a2b3c4d5e6f70819299",
+        "name": "Bruno Maquinação",
+        "email": "bruno.limitado@dib4t.local",
+        "roles": [
+          "canSeeObras",
+          "canSeeLeituras"
+        ]
+      }
+    },
+    {
+      "existing": {
+        "_id": {
+          "$oid": "5f1e9a2b3c4d5e6f70819299"
+        },
+        "roles": [
+          "canSeeObras",
+          "canSeeLeituras"
+        ],
+        "fieldOfCompetencies": "Maquinação",
+        "name": "Bruno Maquinação",
+        "email": "bruno.limitado@dib4t.local",
+        "password": "$2a$04$abcdefghijklmnopqrstuuyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy",
+        "__v": {
+          "$numberInt": "0"
+        }
+      },
+      "body": "{\"name\":\"Bruno Maquinação\",\"email\":\"bruno.limitado@dib4t.local\",\"roles\":[\"canSeeObras\",\"canSeeLeituras\"],\"fieldOfCompetencies\":\"Maquinação\",\"password\":\"\"}",
+      "message": null,
+      "outcome": "200",
+      "update": null,
+      "response": {
+        "_id": "5f1e9a2b3c4d5e6f70819299",
+        "name": "Bruno Maquinação",
+        "email": "bruno.limitado@dib4t.local",
+        "roles": [
+          "canSeeObras",
+          "canSeeLeituras"
+        ]
+      }
+    },
+    {
+      "existing": {
+        "_id": {
+          "$oid": "5f1e9a2b3c4d5e6f70819299"
+        },
+        "roles": [
+          "canSeeObras",
+          "canSeeLeituras"
+        ],
+        "fieldOfCompetencies": "Maquinação",
+        "name": "Bruno Maquinação",
+        "email": "bruno.limitado@dib4t.local",
+        "password": "$2a$04$abcdefghijklmnopqrstuuyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy",
+        "__v": {
+          "$numberInt": "0"
+        }
+      },
+      "body": "{\"name\":\"Bruno Maquinação Silva\",\"email\":\"bruno.limitado@dib4t.local\",\"roles\":[\"canSeeObras\",\"canSeeLeituras\",\"canSeeHistorico\"],\"fieldOfCompetencies\":\"Montagem\"}",
+      "message": null,
+      "outcome": "200",
+      "update": {
+        "$inc": {
+          "__v": {
+            "$numberInt": "1"
+          }
+        },
+        "$set": {
+          "fieldOfCompetencies": "Montagem",
+          "name": "Bruno Maquinação Silva",
+          "roles": [
+            "canSeeObras",
+            "canSeeLeituras",
+            "canSeeHistorico"
+          ]
+        }
+      },
+      "response": {
+        "_id": "5f1e9a2b3c4d5e6f70819299",
+        "name": "Bruno Maquinação Silva",
+        "email": "bruno.limitado@dib4t.local",
+        "roles": [
+          "canSeeObras",
+          "canSeeLeituras",
+          "canSeeHistorico"
+        ]
+      }
+    },
+    {
+      "existing": {
+        "_id": {
+          "$oid": "5f1e9a2b3c4d5e6f70819299"
+        },
+        "roles": [
+          "canSeeObras",
+          "canSeeLeituras"
+        ],
+        "fieldOfCompetencies": "Maquinação",
+        "name": "Bruno Maquinação",
+        "email": "bruno.limitado@dib4t.local",
+        "password": "$2a$04$abcdefghijklmnopqrstuuyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy",
+        "__v": {
+          "$numberInt": "0"
+        }
+      },
+      "body": "{\"name\":\"Bruno Maquinação\",\"email\":\"bruno.limitado@dib4t.local\",\"roles\":[\"canSeeObras\",\"canSeeLeituras\"],\"fieldOfCompetencies\":\"Maquinação\",\"password\":\"char-test-2\"}",
+      "message": null,
+      "outcome": "200",
+      "update": {
+        "$set": {
+          "password": "{{bcrypt}}"
+        }
+      },
+      "response": {
+        "_id": "5f1e9a2b3c4d5e6f70819299",
+        "name": "Bruno Maquinação",
+        "email": "bruno.limitado@dib4t.local",
+        "roles": [
+          "canSeeObras",
+          "canSeeLeituras"
+        ]
+      }
+    },
+    {
+      "existing": {
+        "_id": {
+          "$oid": "5f1e9a2b3c4d5e6f70819299"
+        },
+        "roles": [
+          "canSeeObras",
+          "canSeeLeituras"
+        ],
+        "fieldOfCompetencies": "Maquinação",
+        "name": "Bruno Maquinação",
+        "email": "bruno.limitado@dib4t.local",
+        "password": "$2a$04$abcdefghijklmnopqrstuuyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy",
+        "__v": {
+          "$numberInt": "0"
+        }
+      },
+      "body": "{\"name\":\"Bruno Maquinação\",\"email\":\"bruno.limitado@dib4t.local\",\"roles\":[\"canSeeObras\",\"canSeeLeituras\"],\"fieldOfCompetencies\":\"Maquinação\",\"password\":\"x\"}",
+      "message": null,
+      "outcome": "200",
+      "update": {
+        "$set": {
+          "password": "{{bcrypt}}"
+        }
+      },
+      "response": {
+        "_id": "5f1e9a2b3c4d5e6f70819299",
+        "name": "Bruno Maquinação",
+        "email": "bruno.limitado@dib4t.local",
+        "roles": [
+          "canSeeObras",
+          "canSeeLeituras"
+        ]
+      }
+    },
+    {
+      "existing": {
+        "_id": {
+          "$oid": "5f1e9a2b3c4d5e6f70819299"
+        },
+        "roles": [
+          "canSeeObras",
+          "canSeeLeituras"
+        ],
+        "fieldOfCompetencies": "Maquinação",
+        "name": "Bruno Maquinação",
+        "email": "bruno.limitado@dib4t.local",
+        "password": "$2a$04$abcdefghijklmnopqrstuuyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy",
+        "__v": {
+          "$numberInt": "0"
+        }
+      },
+      "body": "{\"name\":\"Bruno Maquinação\",\"email\":\"bruno.limitado@dib4t.local\",\"roles\":[\"canSeeObras\",\"canSeeLeituras\"],\"fieldOfCompetencies\":\"Maquinação\",\"password\":\" \"}",
+      "message": null,
+      "outcome": "200",
+      "update": {
+        "$set": {
+          "password": "{{bcrypt}}"
+        }
+      },
+      "response": {
+        "_id": "5f1e9a2b3c4d5e6f70819299",
+        "name": "Bruno Maquinação",
+        "email": "bruno.limitado@dib4t.local",
+        "roles": [
+          "canSeeObras",
+          "canSeeLeituras"
+        ]
+      }
+    },
+    {
+      "existing": {
+        "_id": {
+          "$oid": "5f1e9a2b3c4d5e6f70819299"
+        },
+        "roles": [
+          "canSeeObras",
+          "canSeeLeituras"
+        ],
+        "fieldOfCompetencies": "Maquinação",
+        "name": "Bruno Maquinação",
+        "email": "bruno.limitado@dib4t.local",
+        "password": "$2a$04$abcdefghijklmnopqrstuuyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy",
+        "__v": {
+          "$numberInt": "0"
+        }
+      },
+      "body": "{\"name\":\"Bruno Maquinação\",\"email\":\"bruno.limitado@dib4t.local\",\"roles\":[\"canSeeObras\",\"canSeeLeituras\"],\"fieldOfCompetencies\":\"Maquinação\",\"password\":null}",
+      "message": null,
+      "outcome": "200",
+      "update": null,
+      "response": {
+        "_id": "5f1e9a2b3c4d5e6f70819299",
+        "name": "Bruno Maquinação",
+        "email": "bruno.limitado@dib4t.local",
+        "roles": [
+          "canSeeObras",
+          "canSeeLeituras"
+        ]
+      }
+    },
+    {
+      "existing": {
+        "_id": {
+          "$oid": "5f1e9a2b3c4d5e6f70819299"
+        },
+        "roles": [
+          "canSeeObras",
+          "canSeeLeituras"
+        ],
+        "fieldOfCompetencies": "Maquinação",
+        "name": "Bruno Maquinação",
+        "email": "bruno.limitado@dib4t.local",
+        "password": "$2a$04$abcdefghijklmnopqrstuuyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy",
+        "__v": {
+          "$numberInt": "0"
+        }
+      },
+      "body": "{\"name\":\"Bruno Maquinação\",\"email\":\"bruno.limitado@dib4t.local\",\"roles\":[\"canSeeObras\",\"canSeeLeituras\"],\"fieldOfCompetencies\":\"Maquinação\",\"password\":0}",
+      "message": null,
+      "outcome": "200",
+      "update": null,
+      "response": {
+        "_id": "5f1e9a2b3c4d5e6f70819299",
+        "name": "Bruno Maquinação",
+        "email": "bruno.limitado@dib4t.local",
+        "roles": [
+          "canSeeObras",
+          "canSeeLeituras"
+        ]
+      }
+    },
+    {
+      "existing": {
+        "_id": {
+          "$oid": "5f1e9a2b3c4d5e6f70819299"
+        },
+        "roles": [
+          "canSeeObras",
+          "canSeeLeituras"
+        ],
+        "fieldOfCompetencies": "Maquinação",
+        "name": "Bruno Maquinação",
+        "email": "bruno.limitado@dib4t.local",
+        "password": "$2a$04$abcdefghijklmnopqrstuuyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy",
+        "__v": {
+          "$numberInt": "0"
+        }
+      },
+      "body": "{\"name\":\"Bruno Maquinação\",\"email\":\"bruno.limitado@dib4t.local\",\"roles\":[\"canSeeObras\",\"canSeeLeituras\"],\"fieldOfCompetencies\":\"Maquinação\",\"password\":false}",
+      "message": null,
+      "outcome": "200",
+      "update": null,
+      "response": {
+        "_id": "5f1e9a2b3c4d5e6f70819299",
+        "name": "Bruno Maquinação",
+        "email": "bruno.limitado@dib4t.local",
+        "roles": [
+          "canSeeObras",
+          "canSeeLeituras"
+        ]
+      }
+    },
+    {
+      "existing": {
+        "_id": {
+          "$oid": "5f1e9a2b3c4d5e6f70819299"
+        },
+        "roles": [
+          "canSeeObras",
+          "canSeeLeituras"
+        ],
+        "fieldOfCompetencies": "Maquinação",
+        "name": "Bruno Maquinação",
+        "email": "bruno.limitado@dib4t.local",
+        "password": "$2a$04$abcdefghijklmnopqrstuuyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy",
+        "__v": {
+          "$numberInt": "0"
+        }
+      },
+      "body": "{\"name\":\"Bruno Maquinação\",\"email\":\"bruno.limitado@dib4t.local\",\"roles\":[\"canSeeObras\",\"canSeeLeituras\"],\"fieldOfCompetencies\":\"Maquinação\",\"password\":12345}",
+      "message": null,
+      "outcome": "500",
+      "reason": "Illegal arguments: number, string"
+    },
+    {
+      "existing": {
+        "_id": {
+          "$oid": "5f1e9a2b3c4d5e6f70819299"
+        },
+        "roles": [
+          "canSeeObras",
+          "canSeeLeituras"
+        ],
+        "fieldOfCompetencies": "Maquinação",
+        "name": "Bruno Maquinação",
+        "email": "bruno.limitado@dib4t.local",
+        "password": "$2a$04$abcdefghijklmnopqrstuuyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy",
+        "__v": {
+          "$numberInt": "0"
+        }
+      },
+      "body": "{\"name\":\"Bruno Maquinação\",\"email\":\"bruno.limitado@dib4t.local\",\"roles\":[\"canSeeObras\",\"canSeeLeituras\"],\"fieldOfCompetencies\":\"Maquinação\",\"password\":true}",
+      "message": null,
+      "outcome": "500",
+      "reason": "Illegal arguments: boolean, string"
+    },
+    {
+      "existing": {
+        "_id": {
+          "$oid": "5f1e9a2b3c4d5e6f70819299"
+        },
+        "roles": [
+          "canSeeObras",
+          "canSeeLeituras"
+        ],
+        "fieldOfCompetencies": "Maquinação",
+        "name": "Bruno Maquinação",
+        "email": "bruno.limitado@dib4t.local",
+        "password": "$2a$04$abcdefghijklmnopqrstuuyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy",
+        "__v": {
+          "$numberInt": "0"
+        }
+      },
+      "body": "{\"name\":\"Bruno Maquinação\",\"email\":\"bruno.limitado@dib4t.local\",\"roles\":[\"canSeeObras\",\"canSeeLeituras\"],\"fieldOfCompetencies\":\"Maquinação\",\"password\":{}}",
+      "message": null,
+      "outcome": "500",
+      "reason": "Illegal arguments: object, string"
+    },
+    {
+      "existing": {
+        "_id": {
+          "$oid": "5f1e9a2b3c4d5e6f70819299"
+        },
+        "roles": [
+          "canSeeObras",
+          "canSeeLeituras"
+        ],
+        "fieldOfCompetencies": "Maquinação",
+        "name": "Bruno Maquinação",
+        "email": "bruno.limitado@dib4t.local",
+        "password": "$2a$04$abcdefghijklmnopqrstuuyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy",
+        "__v": {
+          "$numberInt": "0"
+        }
+      },
+      "body": "{\"name\":\"Bruno Maquinação\",\"email\":\"bruno.limitado@dib4t.local\",\"roles\":[\"canSeeObras\",\"canSeeLeituras\"],\"fieldOfCompetencies\":\"Maquinação\",\"password\":[]}",
+      "message": null,
+      "outcome": "500",
+      "reason": "Illegal arguments: object, string"
+    },
+    {
+      "existing": {
+        "_id": {
+          "$oid": "5f1e9a2b3c4d5e6f70819299"
+        },
+        "roles": [
+          "canSeeObras",
+          "canSeeLeituras"
+        ],
+        "fieldOfCompetencies": "Maquinação",
+        "name": "Bruno Maquinação",
+        "email": "bruno.limitado@dib4t.local",
+        "password": "$2a$04$abcdefghijklmnopqrstuuyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy",
+        "__v": {
+          "$numberInt": "0"
+        }
+      },
+      "body": "{\"name\":\"Bruno Maquinação\",\"email\":\"bruno.limitado@dib4t.local\",\"roles\":[\"canSeeObras\",\"canSeeLeituras\"],\"fieldOfCompetencies\":\"Maquinação\",\"password\":[\"char-test-2\"]}",
+      "message": null,
+      "outcome": "500",
+      "reason": "Illegal arguments: object, string"
+    },
+    {
+      "existing": {
+        "_id": {
+          "$oid": "5f1e9a2b3c4d5e6f70819299"
+        },
+        "roles": [
+          "canSeeObras",
+          "canSeeLeituras"
+        ],
+        "fieldOfCompetencies": "Maquinação",
+        "name": "Bruno Maquinação",
+        "email": "bruno.limitado@dib4t.local",
+        "password": "$2a$04$abcdefghijklmnopqrstuuyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy",
+        "__v": {
+          "$numberInt": "0"
+        }
+      },
+      "body": "{\"name\":\"Bruno Maquinação\",\"email\":\"bruno.limitado@dib4t.local\",\"roles\":[\"canSeeOrcamentos\",null,null,null,\"canSeeDefinicoes\",null,null],\"fieldOfCompetencies\":\"Maquinação\"}",
+      "message": null,
+      "outcome": "200",
+      "update": {
+        "$inc": {
+          "__v": {
+            "$numberInt": "1"
+          }
+        },
+        "$set": {
+          "roles": [
+            "canSeeOrcamentos",
+            null,
+            null,
+            null,
+            "canSeeDefinicoes",
+            null,
+            null
+          ]
+        }
+      },
+      "response": {
+        "_id": "5f1e9a2b3c4d5e6f70819299",
+        "name": "Bruno Maquinação",
+        "email": "bruno.limitado@dib4t.local",
+        "roles": [
+          "canSeeOrcamentos",
+          null,
+          null,
+          null,
+          "canSeeDefinicoes",
+          null,
+          null
+        ]
+      }
+    },
+    {
+      "existing": {
+        "_id": {
+          "$oid": "5f1e9a2b3c4d5e6f70819299"
+        },
+        "roles": [
+          "canSeeObras",
+          "canSeeLeituras"
+        ],
+        "fieldOfCompetencies": "Maquinação",
+        "name": "Bruno Maquinação",
+        "email": "bruno.limitado@dib4t.local",
+        "password": "$2a$04$abcdefghijklmnopqrstuuyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy",
+        "__v": {
+          "$numberInt": "0"
+        }
+      },
+      "body": "{\"name\":\"Bruno Maquinação\",\"email\":\"bruno.limitado@dib4t.local\",\"roles\":[\"canSeeLeituras\",\"canSeeObras\"],\"fieldOfCompetencies\":\"Maquinação\"}",
+      "message": null,
+      "outcome": "200",
+      "update": {
+        "$inc": {
+          "__v": {
+            "$numberInt": "1"
+          }
+        },
+        "$set": {
+          "roles": [
+            "canSeeLeituras",
+            "canSeeObras"
+          ]
+        }
+      },
+      "response": {
+        "_id": "5f1e9a2b3c4d5e6f70819299",
+        "name": "Bruno Maquinação",
+        "email": "bruno.limitado@dib4t.local",
+        "roles": [
+          "canSeeLeituras",
+          "canSeeObras"
+        ]
+      }
+    },
+    {
+      "existing": {
+        "_id": {
+          "$oid": "5f1e9a2b3c4d5e6f70819299"
+        },
+        "roles": [
+          "canSeeObras",
+          "canSeeLeituras"
+        ],
+        "fieldOfCompetencies": "Maquinação",
+        "name": "Bruno Maquinação",
+        "email": "bruno.limitado@dib4t.local",
+        "password": "$2a$04$abcdefghijklmnopqrstuuyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy",
+        "__v": {
+          "$numberInt": "0"
+        }
+      },
+      "body": "{\"name\":\"Bruno Maquinação\",\"email\":\"bruno.limitado@dib4t.local\",\"roles\":[\"canSeeObras\",\"canSeeLeituras\",null],\"fieldOfCompetencies\":\"Maquinação\"}",
+      "message": null,
+      "outcome": "200",
+      "update": {
+        "$inc": {
+          "__v": {
+            "$numberInt": "1"
+          }
+        },
+        "$set": {
+          "roles": [
+            "canSeeObras",
+            "canSeeLeituras",
+            null
+          ]
+        }
+      },
+      "response": {
+        "_id": "5f1e9a2b3c4d5e6f70819299",
+        "name": "Bruno Maquinação",
+        "email": "bruno.limitado@dib4t.local",
+        "roles": [
+          "canSeeObras",
+          "canSeeLeituras",
+          null
+        ]
+      }
+    },
+    {
+      "existing": {
+        "_id": {
+          "$oid": "5f1e9a2b3c4d5e6f70819299"
+        },
+        "roles": [
+          "canSeeObras",
+          "canSeeLeituras"
+        ],
+        "fieldOfCompetencies": "Maquinação",
+        "name": "Bruno Maquinação",
+        "email": "bruno.limitado@dib4t.local",
+        "password": "$2a$04$abcdefghijklmnopqrstuuyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy",
+        "__v": {
+          "$numberInt": "0"
+        }
+      },
+      "body": "{\"name\":\"Bruno Maquinação\",\"email\":\"bruno.limitado@dib4t.local\",\"roles\":[],\"fieldOfCompetencies\":\"Maquinação\"}",
+      "message": "\"roles\" must contain at least 1 items"
+    },
+    {
+      "existing": {
+        "_id": {
+          "$oid": "5f1e9a2b3c4d5e6f70819299"
+        },
+        "roles": [
+          "canSeeObras",
+          "canSeeLeituras"
+        ],
+        "fieldOfCompetencies": "Maquinação",
+        "name": "Bruno Maquinação",
+        "email": "bruno.limitado@dib4t.local",
+        "password": "$2a$04$abcdefghijklmnopqrstuuyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy",
+        "__v": {
+          "$numberInt": "0"
+        }
+      },
+      "body": "{\"name\":\"Bruno Maquinação\",\"email\":\"bruno.limitado@dib4t.local\",\"roles\":\"canSeeObras\",\"fieldOfCompetencies\":\"Maquinação\"}",
+      "message": "\"roles\" must be an array"
+    },
+    {
+      "existing": {
+        "_id": {
+          "$oid": "5f1e9a2b3c4d5e6f70819299"
+        },
+        "roles": [
+          "canSeeObras",
+          "canSeeLeituras"
+        ],
+        "fieldOfCompetencies": "Maquinação",
+        "name": "Bruno Maquinação",
+        "email": "bruno.limitado@dib4t.local",
+        "password": "$2a$04$abcdefghijklmnopqrstuuyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy",
+        "__v": {
+          "$numberInt": "0"
+        }
+      },
+      "body": "{\"name\":\"Bruno Maquinação\",\"email\":\"bruno.limitado@dib4t.local\",\"roles\":\"[\\\"canSeeObras\\\"]\",\"fieldOfCompetencies\":\"Maquinação\"}",
+      "message": null,
+      "outcome": "200",
+      "update": {
+        "$inc": {
+          "__v": {
+            "$numberInt": "1"
+          }
+        },
+        "$set": {
+          "roles": [
+            "[\"canSeeObras\"]"
+          ]
+        }
+      },
+      "response": {
+        "_id": "5f1e9a2b3c4d5e6f70819299",
+        "name": "Bruno Maquinação",
+        "email": "bruno.limitado@dib4t.local",
+        "roles": [
+          "[\"canSeeObras\"]"
+        ]
+      }
+    },
+    {
+      "existing": {
+        "_id": {
+          "$oid": "5f1e9a2b3c4d5e6f70819299"
+        },
+        "roles": [
+          "canSeeObras",
+          "canSeeLeituras"
+        ],
+        "fieldOfCompetencies": "Maquinação",
+        "name": "Bruno Maquinação",
+        "email": "bruno.limitado@dib4t.local",
+        "password": "$2a$04$abcdefghijklmnopqrstuuyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy",
+        "__v": {
+          "$numberInt": "0"
+        }
+      },
+      "body": "{\"name\":\"Bruno Maquinação\",\"email\":\"bruno.limitado@dib4t.local\",\"roles\":[1,true],\"fieldOfCompetencies\":\"Maquinação\"}",
+      "message": null,
+      "outcome": "200",
+      "update": {
+        "$inc": {
+          "__v": {
+            "$numberInt": "1"
+          }
+        },
+        "$set": {
+          "roles": [
+            "1",
+            "true"
+          ]
+        }
+      },
+      "response": {
+        "_id": "5f1e9a2b3c4d5e6f70819299",
+        "name": "Bruno Maquinação",
+        "email": "bruno.limitado@dib4t.local",
+        "roles": [
+          "1",
+          "true"
+        ]
+      }
+    },
+    {
+      "existing": {
+        "_id": {
+          "$oid": "5f1e9a2b3c4d5e6f70819299"
+        },
+        "roles": [
+          "canSeeObras",
+          "canSeeLeituras"
+        ],
+        "fieldOfCompetencies": "Maquinação",
+        "name": "Bruno Maquinação",
+        "email": "bruno.limitado@dib4t.local",
+        "password": "$2a$04$abcdefghijklmnopqrstuuyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy",
+        "__v": {
+          "$numberInt": "0"
+        }
+      },
+      "body": "{\"name\":\"Bruno Maquinação\",\"email\":\"bruno.limitado@dib4t.local\",\"roles\":[{\"a\":1}],\"fieldOfCompetencies\":\"Maquinação\"}",
+      "message": null,
+      "outcome": "500",
+      "reason": "User validation failed: roles.0: Cast to [string] failed for value \"[{\"a\":1}]\" (type string) at path \"roles.0\""
+    },
+    {
+      "existing": {
+        "_id": {
+          "$oid": "5f1e9a2b3c4d5e6f70819299"
+        },
+        "roles": [
+          "canSeeObras",
+          "canSeeLeituras"
+        ],
+        "fieldOfCompetencies": "Maquinação",
+        "name": "Bruno Maquinação",
+        "email": "bruno.limitado@dib4t.local",
+        "password": "$2a$04$abcdefghijklmnopqrstuuyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy",
+        "__v": {
+          "$numberInt": "0"
+        }
+      },
+      "body": "{\"name\":\"Bruno Maquinação\",\"email\":\"bruno.limitado@dib4t.local\",\"fieldOfCompetencies\":\"Maquinação\"}",
+      "message": null,
+      "outcome": "200",
+      "update": {
+        "$unset": {
+          "roles": {
+            "$numberInt": "1"
+          }
+        }
+      },
+      "response": {
+        "_id": "5f1e9a2b3c4d5e6f70819299",
+        "name": "Bruno Maquinação",
+        "email": "bruno.limitado@dib4t.local"
+      }
+    },
+    {
+      "existing": {
+        "_id": {
+          "$oid": "5f1e9a2b3c4d5e6f70819299"
+        },
+        "roles": [
+          "canSeeObras",
+          "canSeeLeituras"
+        ],
+        "fieldOfCompetencies": "Maquinação",
+        "name": "Bruno Maquinação",
+        "email": "bruno.limitado@dib4t.local",
+        "password": "$2a$04$abcdefghijklmnopqrstuuyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy",
+        "__v": {
+          "$numberInt": "0"
+        }
+      },
+      "body": "{\"name\":\"Bruno Maquinação\",\"email\":\"bruno.limitado@dib4t.local\",\"roles\":[\"canSeeObras\",\"canSeeLeituras\"]}",
+      "message": null,
+      "outcome": "500",
+      "reason": "User validation failed: fieldOfCompetencies: Path `fieldOfCompetencies` is required."
+    },
+    {
+      "existing": {
+        "_id": {
+          "$oid": "5f1e9a2b3c4d5e6f70819299"
+        },
+        "roles": [
+          "canSeeObras",
+          "canSeeLeituras"
+        ],
+        "fieldOfCompetencies": "Maquinação",
+        "name": "Bruno Maquinação",
+        "email": "bruno.limitado@dib4t.local",
+        "password": "$2a$04$abcdefghijklmnopqrstuuyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy",
+        "__v": {
+          "$numberInt": "0"
+        }
+      },
+      "body": "{\"name\":\"Bruno Maquinação\",\"email\":\"bruno.limitado@dib4t.local\",\"roles\":[\"canSeeObras\",\"canSeeLeituras\"],\"fieldOfCompetencies\":\"Faturada\"}",
+      "message": null,
+      "outcome": "500",
+      "reason": "User validation failed: fieldOfCompetencies: `Faturada` is not a valid enum value for path `fieldOfCompetencies`."
+    },
+    {
+      "existing": {
+        "_id": {
+          "$oid": "5f1e9a2b3c4d5e6f70819299"
+        },
+        "roles": [
+          "canSeeObras",
+          "canSeeLeituras"
+        ],
+        "fieldOfCompetencies": "Maquinação",
+        "name": "Bruno Maquinação",
+        "email": "bruno.limitado@dib4t.local",
+        "password": "$2a$04$abcdefghijklmnopqrstuuyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy",
+        "__v": {
+          "$numberInt": "0"
+        }
+      },
+      "body": "{\"name\":\"Bruno Maquinação\",\"email\":\"bruno.limitado@dib4t.local\",\"roles\":[\"canSeeObras\",\"canSeeLeituras\"],\"fieldOfCompetencies\":\"\"}",
+      "message": "\"fieldOfCompetencies\" is not allowed to be empty"
+    },
+    {
+      "existing": {
+        "_id": {
+          "$oid": "5f1e9a2b3c4d5e6f70819299"
+        },
+        "roles": [
+          "canSeeObras",
+          "canSeeLeituras"
+        ],
+        "fieldOfCompetencies": "Maquinação",
+        "name": "Bruno Maquinação",
+        "email": "bruno.limitado@dib4t.local",
+        "password": "$2a$04$abcdefghijklmnopqrstuuyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy",
+        "__v": {
+          "$numberInt": "0"
+        }
+      },
+      "body": "{\"name\":\"Bruno Maquinação\",\"email\":\"bruno.limitado@dib4t.local\",\"roles\":[\"canSeeObras\",\"canSeeLeituras\"],\"fieldOfCompetencies\":\"Para faturação\"}",
+      "message": null,
+      "outcome": "200",
+      "update": {
+        "$set": {
+          "fieldOfCompetencies": "Para faturação"
+        }
+      },
+      "response": {
+        "_id": "5f1e9a2b3c4d5e6f70819299",
+        "name": "Bruno Maquinação",
+        "email": "bruno.limitado@dib4t.local",
+        "roles": [
+          "canSeeObras",
+          "canSeeLeituras"
+        ]
+      }
+    },
+    {
+      "existing": {
+        "_id": {
+          "$oid": "5f1e9a2b3c4d5e6f70819299"
+        },
+        "roles": [
+          "canSeeObras",
+          "canSeeLeituras"
+        ],
+        "fieldOfCompetencies": "Maquinação",
+        "name": "Bruno Maquinação",
+        "email": "bruno.limitado@dib4t.local",
+        "password": "$2a$04$abcdefghijklmnopqrstuuyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy",
+        "__v": {
+          "$numberInt": "0"
+        }
+      },
+      "body": "{\"name\":\"Al\",\"email\":\"bruno.limitado@dib4t.local\",\"roles\":[\"canSeeObras\",\"canSeeLeituras\"],\"fieldOfCompetencies\":\"Maquinação\"}",
+      "message": null,
+      "outcome": "500",
+      "reason": "User validation failed: name: Path `name` (`Al`) is shorter than the minimum allowed length (3)."
+    },
+    {
+      "existing": {
+        "_id": {
+          "$oid": "5f1e9a2b3c4d5e6f70819299"
+        },
+        "roles": [
+          "canSeeObras",
+          "canSeeLeituras"
+        ],
+        "fieldOfCompetencies": "Maquinação",
+        "name": "Bruno Maquinação",
+        "email": "bruno.limitado@dib4t.local",
+        "password": "$2a$04$abcdefghijklmnopqrstuuyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy",
+        "__v": {
+          "$numberInt": "0"
+        }
+      },
+      "body": "{\"name\":\"\",\"email\":\"bruno.limitado@dib4t.local\",\"roles\":[\"canSeeObras\",\"canSeeLeituras\"],\"fieldOfCompetencies\":\"Maquinação\"}",
+      "message": "\"name\" is not allowed to be empty"
+    },
+    {
+      "existing": {
+        "_id": {
+          "$oid": "5f1e9a2b3c4d5e6f70819299"
+        },
+        "roles": [
+          "canSeeObras",
+          "canSeeLeituras"
+        ],
+        "fieldOfCompetencies": "Maquinação",
+        "name": "Bruno Maquinação",
+        "email": "bruno.limitado@dib4t.local",
+        "password": "$2a$04$abcdefghijklmnopqrstuuyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy",
+        "__v": {
+          "$numberInt": "0"
+        }
+      },
+      "body": "{\"name\":1,\"email\":\"bruno.limitado@dib4t.local\",\"roles\":[\"canSeeObras\",\"canSeeLeituras\"],\"fieldOfCompetencies\":\"Maquinação\"}",
+      "message": "\"name\" must be a string"
+    },
+    {
+      "existing": {
+        "_id": {
+          "$oid": "5f1e9a2b3c4d5e6f70819299"
+        },
+        "roles": [
+          "canSeeObras",
+          "canSeeLeituras"
+        ],
+        "fieldOfCompetencies": "Maquinação",
+        "name": "Bruno Maquinação",
+        "email": "bruno.limitado@dib4t.local",
+        "password": "$2a$04$abcdefghijklmnopqrstuuyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy",
+        "__v": {
+          "$numberInt": "0"
+        }
+      },
+      "body": "{\"email\":\"bruno.limitado@dib4t.local\",\"roles\":[\"canSeeObras\",\"canSeeLeituras\"],\"fieldOfCompetencies\":\"Maquinação\"}",
+      "message": "\"name\" is required"
+    },
+    {
+      "existing": {
+        "_id": {
+          "$oid": "5f1e9a2b3c4d5e6f70819299"
+        },
+        "roles": [
+          "canSeeObras",
+          "canSeeLeituras"
+        ],
+        "fieldOfCompetencies": "Maquinação",
+        "name": "Bruno Maquinação",
+        "email": "bruno.limitado@dib4t.local",
+        "password": "$2a$04$abcdefghijklmnopqrstuuyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy",
+        "__v": {
+          "$numberInt": "0"
+        }
+      },
+      "body": "{\"name\":\"Bruno Maquinação\",\"email\":\"a@b.pt\",\"roles\":[\"canSeeObras\",\"canSeeLeituras\"],\"fieldOfCompetencies\":\"Maquinação\"}",
+      "message": null,
+      "outcome": "500",
+      "reason": "User validation failed: email: Path `email` (`a@b.pt`) is shorter than the minimum allowed length (10)."
+    },
+    {
+      "existing": {
+        "_id": {
+          "$oid": "5f1e9a2b3c4d5e6f70819299"
+        },
+        "roles": [
+          "canSeeObras",
+          "canSeeLeituras"
+        ],
+        "fieldOfCompetencies": "Maquinação",
+        "name": "Bruno Maquinação",
+        "email": "bruno.limitado@dib4t.local",
+        "password": "$2a$04$abcdefghijklmnopqrstuuyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy",
+        "__v": {
+          "$numberInt": "0"
+        }
+      },
+      "body": "{\"name\":\"Bruno Maquinação\",\"email\":\"abc@d.ef.pt\",\"roles\":[\"canSeeObras\",\"canSeeLeituras\"],\"fieldOfCompetencies\":\"Maquinação\"}",
+      "message": null,
+      "outcome": "200",
+      "update": {
+        "$set": {
+          "email": "abc@d.ef.pt"
+        }
+      },
+      "response": {
+        "_id": "5f1e9a2b3c4d5e6f70819299",
+        "name": "Bruno Maquinação",
+        "email": "abc@d.ef.pt",
+        "roles": [
+          "canSeeObras",
+          "canSeeLeituras"
+        ]
+      }
+    },
+    {
+      "existing": {
+        "_id": {
+          "$oid": "5f1e9a2b3c4d5e6f70819299"
+        },
+        "roles": [
+          "canSeeObras",
+          "canSeeLeituras"
+        ],
+        "fieldOfCompetencies": "Maquinação",
+        "name": "Bruno Maquinação",
+        "email": "bruno.limitado@dib4t.local",
+        "password": "$2a$04$abcdefghijklmnopqrstuuyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy",
+        "__v": {
+          "$numberInt": "0"
+        }
+      },
+      "body": "{\"name\":\"Bruno Maquinação\",\"email\":\"not-an-email\",\"roles\":[\"canSeeObras\",\"canSeeLeituras\"],\"fieldOfCompetencies\":\"Maquinação\"}",
+      "message": "\"email\" must be a valid email"
+    },
+    {
+      "existing": {
+        "_id": {
+          "$oid": "5f1e9a2b3c4d5e6f70819299"
+        },
+        "roles": [
+          "canSeeObras",
+          "canSeeLeituras"
+        ],
+        "fieldOfCompetencies": "Maquinação",
+        "name": "Bruno Maquinação",
+        "email": "bruno.limitado@dib4t.local",
+        "password": "$2a$04$abcdefghijklmnopqrstuuyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy",
+        "__v": {
+          "$numberInt": "0"
+        }
+      },
+      "body": "{\"name\":\"Bruno Maquinação\",\"email\":\"ana.admin@dib4t.local\",\"roles\":[\"canSeeObras\",\"canSeeLeituras\"],\"fieldOfCompetencies\":\"Maquinação\"}",
+      "message": null,
+      "outcome": "200",
+      "update": {
+        "$set": {
+          "email": "ana.admin@dib4t.local"
+        }
+      },
+      "response": {
+        "_id": "5f1e9a2b3c4d5e6f70819299",
+        "name": "Bruno Maquinação",
+        "email": "ana.admin@dib4t.local",
+        "roles": [
+          "canSeeObras",
+          "canSeeLeituras"
+        ]
+      }
+    },
+    {
+      "existing": {
+        "_id": {
+          "$oid": "5f1e9a2b3c4d5e6f70819299"
+        },
+        "roles": [
+          "canSeeObras",
+          "canSeeLeituras"
+        ],
+        "fieldOfCompetencies": "Maquinação",
+        "name": "Bruno Maquinação",
+        "email": "bruno.limitado@dib4t.local",
+        "password": "$2a$04$abcdefghijklmnopqrstuuyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy",
+        "__v": {
+          "$numberInt": "0"
+        }
+      },
+      "body": "{\"name\":\"Bruno Maquinação\",\"roles\":[\"canSeeObras\",\"canSeeLeituras\"],\"fieldOfCompetencies\":\"Maquinação\"}",
+      "message": "\"email\" is required"
+    },
+    {
+      "existing": {
+        "_id": {
+          "$oid": "5f1e9a2b3c4d5e6f70819299"
+        },
+        "roles": [
+          "canSeeObras",
+          "canSeeLeituras"
+        ],
+        "fieldOfCompetencies": "Maquinação",
+        "name": "Bruno Maquinação",
+        "email": "bruno.limitado@dib4t.local",
+        "password": "$2a$04$abcdefghijklmnopqrstuuyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy",
+        "__v": {
+          "$numberInt": "0"
+        }
+      },
+      "body": "{\"name\":\"Bruno Maquinação\",\"email\":\"bruno.limitado@dib4t.local\",\"roles\":[\"canSeeObras\",\"canSeeLeituras\"],\"fieldOfCompetencies\":\"Maquinação\",\"passwordConfirmation\":\"x\"}",
+      "message": "\"passwordConfirmation\" is not allowed"
+    },
+    {
+      "existing": {
+        "_id": {
+          "$oid": "5f1e9a2b3c4d5e6f70819299"
+        },
+        "roles": [
+          "canSeeObras",
+          "canSeeLeituras"
+        ],
+        "fieldOfCompetencies": "Maquinação",
+        "name": "Bruno Maquinação",
+        "email": "bruno.limitado@dib4t.local",
+        "password": "$2a$04$abcdefghijklmnopqrstuuyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy",
+        "__v": {
+          "$numberInt": "0"
+        }
+      },
+      "body": "{\"name\":\"Bruno Maquinação\",\"email\":\"bruno.limitado@dib4t.local\",\"roles\":[\"canSeeObras\",\"canSeeLeituras\"],\"fieldOfCompetencies\":\"Maquinação\",\"confirmPassword\":\"x\"}",
+      "message": "\"confirmPassword\" is not allowed"
+    },
+    {
+      "existing": {
+        "_id": {
+          "$oid": "5f1e9a2b3c4d5e6f70819299"
+        },
+        "roles": [
+          "canSeeObras",
+          "canSeeLeituras"
+        ],
+        "fieldOfCompetencies": "Maquinação",
+        "name": "Bruno Maquinação",
+        "email": "bruno.limitado@dib4t.local",
+        "password": "$2a$04$abcdefghijklmnopqrstuuyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy",
+        "__v": {
+          "$numberInt": "0"
+        }
+      },
+      "body": "{\"name\":\"Bruno Maquinação\",\"email\":\"bruno.limitado@dib4t.local\",\"roles\":[\"canSeeObras\",\"canSeeLeituras\"],\"fieldOfCompetencies\":\"Maquinação\",\"_id\":\"5f1e9a2b3c4d5e6f70819299\"}",
+      "message": "\"_id\" is not allowed"
+    },
+    {
+      "existing": {
+        "_id": {
+          "$oid": "5f1e9a2b3c4d5e6f70819299"
+        },
+        "roles": [
+          "canSeeObras",
+          "canSeeLeituras"
+        ],
+        "name": "Bruno Maquinação",
+        "email": "bruno.limitado@dib4t.local",
+        "password": "$2a$04$abcdefghijklmnopqrstuuyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy",
+        "__v": {
+          "$numberInt": "0"
+        }
+      },
+      "body": "{\"name\":\"Bruno Maquinação\",\"email\":\"bruno.limitado@dib4t.local\",\"roles\":[\"canSeeObras\",\"canSeeLeituras\"],\"fieldOfCompetencies\":\"Maquinação\"}",
+      "message": null,
+      "outcome": "200",
+      "update": {
+        "$set": {
+          "fieldOfCompetencies": "Maquinação"
+        }
+      },
+      "response": {
+        "_id": "5f1e9a2b3c4d5e6f70819299",
+        "name": "Bruno Maquinação",
+        "email": "bruno.limitado@dib4t.local",
+        "roles": [
+          "canSeeObras",
+          "canSeeLeituras"
+        ]
+      }
+    },
+    {
+      "existing": {
+        "_id": {
+          "$oid": "5f1e9a2b3c4d5e6f70819299"
+        },
+        "roles": [
+          "canSeeObras",
+          "canSeeLeituras"
+        ],
+        "name": "Bruno Maquinação",
+        "email": "bruno.limitado@dib4t.local",
+        "password": "$2a$04$abcdefghijklmnopqrstuuyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy",
+        "__v": {
+          "$numberInt": "0"
+        }
+      },
+      "body": "{\"name\":\"Bruno Maquinação\",\"email\":\"bruno.limitado@dib4t.local\",\"roles\":[\"canSeeObras\",\"canSeeLeituras\"],\"fieldOfCompetencies\":\"Desenvolvimento\"}",
+      "message": null,
+      "outcome": "200",
+      "update": {
+        "$set": {
+          "fieldOfCompetencies": "Desenvolvimento"
+        }
+      },
+      "response": {
+        "_id": "5f1e9a2b3c4d5e6f70819299",
+        "name": "Bruno Maquinação",
+        "email": "bruno.limitado@dib4t.local",
+        "roles": [
+          "canSeeObras",
+          "canSeeLeituras"
+        ]
+      }
+    },
+    {
+      "existing": {
+        "_id": {
+          "$oid": "5f1e9a2b3c4d5e6f70819299"
+        },
+        "roles": [
+          "canSeeObras",
+          "canSeeLeituras"
+        ],
+        "fieldOfCompetencies": "Maquinação",
+        "name": "Bruno Maquinação",
+        "email": "bruno.limitado@dib4t.local",
+        "password": "$2a$04$abcdefghijklmnopqrstuuyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy"
+      },
+      "body": "{\"name\":\"Bruno Maquinação\",\"email\":\"bruno.limitado@dib4t.local\",\"roles\":[\"canSeeObras\"],\"fieldOfCompetencies\":\"Maquinação\"}",
+      "message": null,
+      "outcome": "200",
+      "update": {
+        "$inc": {
+          "__v": {
+            "$numberInt": "1"
+          }
+        },
+        "$set": {
+          "roles": [
+            "canSeeObras"
+          ]
+        }
+      },
+      "response": {
+        "_id": "5f1e9a2b3c4d5e6f70819299",
+        "name": "Bruno Maquinação",
+        "email": "bruno.limitado@dib4t.local",
+        "roles": [
+          "canSeeObras"
+        ]
+      }
+    },
+    {
+      "existing": {
+        "_id": {
+          "$oid": "5f1e9a2b3c4d5e6f70819299"
+        },
+        "roles": [
+          "canSeeObras",
+          "canSeeLeituras"
+        ],
+        "fieldOfCompetencies": "Maquinação",
+        "name": "Bruno Maquinação",
+        "email": "bruno.limitado@dib4t.local",
+        "password": "$2a$04$abcdefghijklmnopqrstuuyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy"
+      },
+      "body": "{\"name\":\"Bruno Maquinação\",\"email\":\"bruno.limitado@dib4t.local\",\"roles\":[\"canSeeObras\",\"canSeeLeituras\"],\"fieldOfCompetencies\":\"Maquinação\"}",
+      "message": null,
+      "outcome": "200",
+      "update": null,
+      "response": {
+        "_id": "5f1e9a2b3c4d5e6f70819299",
+        "name": "Bruno Maquinação",
+        "email": "bruno.limitado@dib4t.local",
+        "roles": [
+          "canSeeObras",
+          "canSeeLeituras"
+        ]
+      }
+    },
+    {
+      "existing": {
+        "_id": {
+          "$oid": "5f1e9a2b3c4d5e6f70819299"
+        },
+        "roles": [
+          "canSeeObras",
+          "canSeeLeituras",
+          null
+        ],
+        "fieldOfCompetencies": "Maquinação",
+        "name": "Bruno Maquinação",
+        "email": "bruno.limitado@dib4t.local",
+        "password": "$2a$04$abcdefghijklmnopqrstuuyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy",
+        "__v": {
+          "$numberInt": "0"
+        }
+      },
+      "body": "{\"name\":\"Bruno Maquinação\",\"email\":\"bruno.limitado@dib4t.local\",\"roles\":[\"canSeeObras\",\"canSeeLeituras\"],\"fieldOfCompetencies\":\"Maquinação\"}",
+      "message": null,
+      "outcome": "200",
+      "update": {
+        "$inc": {
+          "__v": {
+            "$numberInt": "1"
+          }
+        },
+        "$set": {
+          "roles": [
+            "canSeeObras",
+            "canSeeLeituras"
+          ]
+        }
+      },
+      "response": {
+        "_id": "5f1e9a2b3c4d5e6f70819299",
+        "name": "Bruno Maquinação",
+        "email": "bruno.limitado@dib4t.local",
+        "roles": [
+          "canSeeObras",
+          "canSeeLeituras"
+        ]
+      }
+    },
+    {
+      "existing": {
+        "_id": {
+          "$oid": "5f1e9a2b3c4d5e6f70819299"
+        },
+        "roles": [
+          "canSeeObras",
+          "canSeeLeituras",
+          null
+        ],
+        "fieldOfCompetencies": "Maquinação",
+        "name": "Bruno Maquinação",
+        "email": "bruno.limitado@dib4t.local",
+        "password": "$2a$04$abcdefghijklmnopqrstuuyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy",
+        "__v": {
+          "$numberInt": "0"
+        }
+      },
+      "body": "{\"name\":\"Bruno Maquinação\",\"email\":\"bruno.limitado@dib4t.local\",\"roles\":[\"canSeeObras\",\"canSeeLeituras\",null],\"fieldOfCompetencies\":\"Maquinação\"}",
+      "message": null,
+      "outcome": "200",
+      "update": null,
+      "response": {
+        "_id": "5f1e9a2b3c4d5e6f70819299",
+        "name": "Bruno Maquinação",
+        "email": "bruno.limitado@dib4t.local",
+        "roles": [
+          "canSeeObras",
+          "canSeeLeituras",
+          null
+        ]
+      }
+    },
+    {
+      "existing": {
+        "_id": {
+          "$oid": "5f1e9a2b3c4d5e6f70819299"
+        },
+        "roles": [
+          "canSeeObras",
+          "canSeeLeituras"
+        ],
+        "fieldOfCompetencies": "Maquinação",
+        "name": "Bruno Maquinação",
+        "email": "bruno.limitado@dib4t.local",
+        "password": "$2a$04$abcdefghijklmnopqrstuuyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy",
+        "__v": {
+          "$numberInt": "7"
+        }
+      },
+      "body": "{\"name\":\"Bruno Maquinação\",\"email\":\"bruno.limitado@dib4t.local\",\"roles\":[\"canSeeObras\"],\"fieldOfCompetencies\":\"Maquinação\"}",
+      "message": null,
+      "outcome": "200",
+      "update": {
+        "$inc": {
+          "__v": {
+            "$numberInt": "1"
+          }
+        },
+        "$set": {
+          "roles": [
+            "canSeeObras"
+          ]
+        }
+      },
+      "response": {
+        "_id": "5f1e9a2b3c4d5e6f70819299",
+        "name": "Bruno Maquinação",
+        "email": "bruno.limitado@dib4t.local",
+        "roles": [
+          "canSeeObras"
+        ]
+      }
+    },
+    {
+      "existing": {
+        "_id": {
+          "$oid": "5f1e9a2b3c4d5e6f70819299"
+        },
+        "roles": [
+          "canSeeObras",
+          "canSeeLeituras"
+        ],
+        "fieldOfCompetencies": "Maquinação",
+        "name": "Bruno Maquinação",
+        "email": "bruno.limitado@dib4t.local",
+        "password": "$2a$04$abcdefghijklmnopqrstuuyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy",
+        "__v": {
+          "$numberInt": "0"
+        }
+      },
+      "body": "[]",
+      "message": "\"value\" must be an object"
+    },
+    {
+      "existing": {
+        "_id": {
+          "$oid": "5f1e9a2b3c4d5e6f70819299"
+        },
+        "roles": [
+          "canSeeObras",
+          "canSeeLeituras"
+        ],
+        "fieldOfCompetencies": "Maquinação",
+        "name": "Bruno Maquinação",
+        "email": "bruno.limitado@dib4t.local",
+        "password": "$2a$04$abcdefghijklmnopqrstuuyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy",
+        "__v": {
+          "$numberInt": "0"
+        }
+      },
+      "body": "{}",
+      "message": "\"name\" is required"
+    }
+  ],
+  "prices": {
+    "existing": {
+      "_id": {
+        "$oid": "5f1e9a2b3c4d5e6f70819299"
+      },
+      "automation": {
+        "$numberInt": "10"
+      },
+      "consultancy": {
+        "$numberInt": "10"
+      },
+      "development": {
+        "$numberInt": "10"
+      },
+      "margin": {
+        "$numberInt": "35"
+      },
+      "machining": {
+        "$numberInt": "10"
+      },
+      "assembly": {
+        "$numberInt": "10"
+      },
+      "__v": {
+        "$numberInt": "0"
+      }
+    },
+    "cases": [
+      {
+        "body": "{\"automation\":32.5,\"consultancy\":45,\"development\":30,\"machining\":38,\"assembly\":28,\"margin\":35}",
+        "message": null,
+        "outcome": "200",
+        "update": {
+          "$set": {
+            "assembly": {
+              "$numberInt": "28"
+            },
+            "automation": {
+              "$numberDouble": "32.5"
+            },
+            "consultancy": {
+              "$numberInt": "45"
+            },
+            "development": {
+              "$numberInt": "30"
+            },
+            "machining": {
+              "$numberInt": "38"
+            }
+          }
+        },
+        "response": {
+          "automation": 32.5,
+          "consultancy": 45,
+          "development": 30,
+          "machining": 38,
+          "assembly": 28,
+          "margin": 35
+        }
+      },
+      {
+        "body": "{\"automation\":10,\"consultancy\":10,\"development\":10,\"machining\":10,\"assembly\":10,\"margin\":35}",
+        "message": null,
+        "outcome": "200",
+        "update": null,
+        "response": {
+          "automation": 10,
+          "consultancy": 10,
+          "development": 10,
+          "machining": 10,
+          "assembly": 10,
+          "margin": 35
+        }
+      },
+      {
+        "body": "{\"margin\":35,\"automation\":10,\"consultancy\":10,\"development\":10,\"machining\":10,\"assembly\":10}",
+        "message": null,
+        "outcome": "200",
+        "update": null,
+        "response": {
+          "automation": 10,
+          "consultancy": 10,
+          "development": 10,
+          "machining": 10,
+          "assembly": 10,
+          "margin": 35
+        }
+      },
+      {
+        "body": "{\"automation\":\"32.5\",\"consultancy\":\"45\",\"development\":30,\"machining\":38,\"assembly\":28,\"margin\":35}",
+        "message": null,
+        "outcome": "200",
+        "update": {
+          "$set": {
+            "assembly": {
+              "$numberInt": "28"
+            },
+            "automation": {
+              "$numberDouble": "32.5"
+            },
+            "consultancy": {
+              "$numberInt": "45"
+            },
+            "development": {
+              "$numberInt": "30"
+            },
+            "machining": {
+              "$numberInt": "38"
+            }
+          }
+        },
+        "response": {
+          "automation": 32.5,
+          "consultancy": 45,
+          "development": 30,
+          "machining": 38,
+          "assembly": 28,
+          "margin": 35
+        }
+      },
+      {
+        "body": "{\"automation\":\" 12 \",\"consultancy\":45,\"development\":30,\"machining\":38,\"assembly\":28,\"margin\":35}",
+        "message": null,
+        "outcome": "200",
+        "update": {
+          "$set": {
+            "assembly": {
+              "$numberInt": "28"
+            },
+            "automation": {
+              "$numberInt": "12"
+            },
+            "consultancy": {
+              "$numberInt": "45"
+            },
+            "development": {
+              "$numberInt": "30"
+            },
+            "machining": {
+              "$numberInt": "38"
+            }
+          }
+        },
+        "response": {
+          "automation": 12,
+          "consultancy": 45,
+          "development": 30,
+          "machining": 38,
+          "assembly": 28,
+          "margin": 35
+        }
+      },
+      {
+        "body": "{\"automation\":\"+12\",\"consultancy\":45,\"development\":30,\"machining\":38,\"assembly\":28,\"margin\":35}",
+        "message": null,
+        "outcome": "200",
+        "update": {
+          "$set": {
+            "assembly": {
+              "$numberInt": "28"
+            },
+            "automation": {
+              "$numberInt": "12"
+            },
+            "consultancy": {
+              "$numberInt": "45"
+            },
+            "development": {
+              "$numberInt": "30"
+            },
+            "machining": {
+              "$numberInt": "38"
+            }
+          }
+        },
+        "response": {
+          "automation": 12,
+          "consultancy": 45,
+          "development": 30,
+          "machining": 38,
+          "assembly": 28,
+          "margin": 35
+        }
+      },
+      {
+        "body": "{\"automation\":\"-12\",\"consultancy\":45,\"development\":30,\"machining\":38,\"assembly\":28,\"margin\":35}",
+        "message": null,
+        "outcome": "200",
+        "update": {
+          "$set": {
+            "assembly": {
+              "$numberInt": "28"
+            },
+            "automation": {
+              "$numberInt": "-12"
+            },
+            "consultancy": {
+              "$numberInt": "45"
+            },
+            "development": {
+              "$numberInt": "30"
+            },
+            "machining": {
+              "$numberInt": "38"
+            }
+          }
+        },
+        "response": {
+          "automation": -12,
+          "consultancy": 45,
+          "development": 30,
+          "machining": 38,
+          "assembly": 28,
+          "margin": 35
+        }
+      },
+      {
+        "body": "{\"automation\":\"1e2\",\"consultancy\":45,\"development\":30,\"machining\":38,\"assembly\":28,\"margin\":35}",
+        "message": null,
+        "outcome": "200",
+        "update": {
+          "$set": {
+            "assembly": {
+              "$numberInt": "28"
+            },
+            "automation": {
+              "$numberInt": "100"
+            },
+            "consultancy": {
+              "$numberInt": "45"
+            },
+            "development": {
+              "$numberInt": "30"
+            },
+            "machining": {
+              "$numberInt": "38"
+            }
+          }
+        },
+        "response": {
+          "automation": 100,
+          "consultancy": 45,
+          "development": 30,
+          "machining": 38,
+          "assembly": 28,
+          "margin": 35
+        }
+      },
+      {
+        "body": "{\"automation\":\"1E2\",\"consultancy\":45,\"development\":30,\"machining\":38,\"assembly\":28,\"margin\":35}",
+        "message": "\"automation\" must be a safe number"
+      },
+      {
+        "body": "{\"automation\":\"1.5e-3\",\"consultancy\":45,\"development\":30,\"machining\":38,\"assembly\":28,\"margin\":35}",
+        "message": null,
+        "outcome": "200",
+        "update": {
+          "$set": {
+            "assembly": {
+              "$numberInt": "28"
+            },
+            "automation": {
+              "$numberDouble": "0.0015"
+            },
+            "consultancy": {
+              "$numberInt": "45"
+            },
+            "development": {
+              "$numberInt": "30"
+            },
+            "machining": {
+              "$numberInt": "38"
+            }
+          }
+        },
+        "response": {
+          "automation": 0.0015,
+          "consultancy": 45,
+          "development": 30,
+          "machining": 38,
+          "assembly": 28,
+          "margin": 35
+        }
+      },
+      {
+        "body": "{\"automation\":\"12.\",\"consultancy\":45,\"development\":30,\"machining\":38,\"assembly\":28,\"margin\":35}",
+        "message": "\"automation\" must be a number"
+      },
+      {
+        "body": "{\"automation\":\".5\",\"consultancy\":45,\"development\":30,\"machining\":38,\"assembly\":28,\"margin\":35}",
+        "message": "\"automation\" must be a number"
+      },
+      {
+        "body": "{\"automation\":\"0x10\",\"consultancy\":45,\"development\":30,\"machining\":38,\"assembly\":28,\"margin\":35}",
+        "message": "\"automation\" must be a number"
+      },
+      {
+        "body": "{\"automation\":\"12abc\",\"consultancy\":45,\"development\":30,\"machining\":38,\"assembly\":28,\"margin\":35}",
+        "message": "\"automation\" must be a number"
+      },
+      {
+        "body": "{\"automation\":\"32,5\",\"consultancy\":45,\"development\":30,\"machining\":38,\"assembly\":28,\"margin\":35}",
+        "message": "\"automation\" must be a number"
+      },
+      {
+        "body": "{\"automation\":\"\",\"consultancy\":45,\"development\":30,\"machining\":38,\"assembly\":28,\"margin\":35}",
+        "message": "\"automation\" must be a number"
+      },
+      {
+        "body": "{\"automation\":\" \",\"consultancy\":45,\"development\":30,\"machining\":38,\"assembly\":28,\"margin\":35}",
+        "message": "\"automation\" must be a number"
+      },
+      {
+        "body": "{\"automation\":\"Infinity\",\"consultancy\":45,\"development\":30,\"machining\":38,\"assembly\":28,\"margin\":35}",
+        "message": "\"automation\" must be a number"
+      },
+      {
+        "body": "{\"automation\":\"NaN\",\"consultancy\":45,\"development\":30,\"machining\":38,\"assembly\":28,\"margin\":35}",
+        "message": "\"automation\" must be a number"
+      },
+      {
+        "body": "{\"automation\":\"007\",\"consultancy\":45,\"development\":30,\"machining\":38,\"assembly\":28,\"margin\":35}",
+        "message": null,
+        "outcome": "200",
+        "update": {
+          "$set": {
+            "assembly": {
+              "$numberInt": "28"
+            },
+            "automation": {
+              "$numberInt": "7"
+            },
+            "consultancy": {
+              "$numberInt": "45"
+            },
+            "development": {
+              "$numberInt": "30"
+            },
+            "machining": {
+              "$numberInt": "38"
+            }
+          }
+        },
+        "response": {
+          "automation": 7,
+          "consultancy": 45,
+          "development": 30,
+          "machining": 38,
+          "assembly": 28,
+          "margin": 35
+        }
+      },
+      {
+        "body": "{\"automation\":\"1.50\",\"consultancy\":45,\"development\":30,\"machining\":38,\"assembly\":28,\"margin\":35}",
+        "message": null,
+        "outcome": "200",
+        "update": {
+          "$set": {
+            "assembly": {
+              "$numberInt": "28"
+            },
+            "automation": {
+              "$numberDouble": "1.5"
+            },
+            "consultancy": {
+              "$numberInt": "45"
+            },
+            "development": {
+              "$numberInt": "30"
+            },
+            "machining": {
+              "$numberInt": "38"
+            }
+          }
+        },
+        "response": {
+          "automation": 1.5,
+          "consultancy": 45,
+          "development": 30,
+          "machining": 38,
+          "assembly": 28,
+          "margin": 35
+        }
+      },
+      {
+        "body": "{\"automation\":\"1.0\",\"consultancy\":45,\"development\":30,\"machining\":38,\"assembly\":28,\"margin\":35}",
+        "message": null,
+        "outcome": "200",
+        "update": {
+          "$set": {
+            "assembly": {
+              "$numberInt": "28"
+            },
+            "automation": {
+              "$numberInt": "1"
+            },
+            "consultancy": {
+              "$numberInt": "45"
+            },
+            "development": {
+              "$numberInt": "30"
+            },
+            "machining": {
+              "$numberInt": "38"
+            }
+          }
+        },
+        "response": {
+          "automation": 1,
+          "consultancy": 45,
+          "development": 30,
+          "machining": 38,
+          "assembly": 28,
+          "margin": 35
+        }
+      },
+      {
+        "body": "{\"automation\":\"9007199254740993\",\"consultancy\":45,\"development\":30,\"machining\":38,\"assembly\":28,\"margin\":35}",
+        "message": "\"automation\" must be a safe number"
+      },
+      {
+        "body": "{\"automation\":\"0.1000000000000000055511151231257827\",\"consultancy\":45,\"development\":30,\"machining\":38,\"assembly\":28,\"margin\":35}",
+        "message": "\"automation\" must be a safe number"
+      },
+      {
+        "body": "{\"automation\":\"1e400\",\"consultancy\":45,\"development\":30,\"machining\":38,\"assembly\":28,\"margin\":35}",
+        "message": "\"automation\" must be a safe number"
+      },
+      {
+        "body": "{\"automation\":\"1.5e+2\",\"consultancy\":45,\"development\":30,\"machining\":38,\"assembly\":28,\"margin\":35}",
+        "message": null,
+        "outcome": "200",
+        "update": {
+          "$set": {
+            "assembly": {
+              "$numberInt": "28"
+            },
+            "automation": {
+              "$numberInt": "150"
+            },
+            "consultancy": {
+              "$numberInt": "45"
+            },
+            "development": {
+              "$numberInt": "30"
+            },
+            "machining": {
+              "$numberInt": "38"
+            }
+          }
+        },
+        "response": {
+          "automation": 150,
+          "consultancy": 45,
+          "development": 30,
+          "machining": 38,
+          "assembly": 28,
+          "margin": 35
+        }
+      },
+      {
+        "body": "{\"automation\":\"15e-1\",\"consultancy\":45,\"development\":30,\"machining\":38,\"assembly\":28,\"margin\":35}",
+        "message": null,
+        "outcome": "200",
+        "update": {
+          "$set": {
+            "assembly": {
+              "$numberInt": "28"
+            },
+            "automation": {
+              "$numberDouble": "1.5"
+            },
+            "consultancy": {
+              "$numberInt": "45"
+            },
+            "development": {
+              "$numberInt": "30"
+            },
+            "machining": {
+              "$numberInt": "38"
+            }
+          }
+        },
+        "response": {
+          "automation": 1.5,
+          "consultancy": 45,
+          "development": 30,
+          "machining": 38,
+          "assembly": 28,
+          "margin": 35
+        }
+      },
+      {
+        "body": "{\"automation\":\"1000000000000000000000\",\"consultancy\":45,\"development\":30,\"machining\":38,\"assembly\":28,\"margin\":35}",
+        "message": "\"automation\" must be a safe number"
+      },
+      {
+        "body": "{\"automation\":\"1e21\",\"consultancy\":45,\"development\":30,\"machining\":38,\"assembly\":28,\"margin\":35}",
+        "message": "\"automation\" must be a safe number"
+      },
+      {
+        "body": "{\"automation\":\"0.0000001\",\"consultancy\":45,\"development\":30,\"machining\":38,\"assembly\":28,\"margin\":35}",
+        "message": "\"automation\" must be a safe number"
+      },
+      {
+        "body": "{\"automation\":\"1e-7\",\"consultancy\":45,\"development\":30,\"machining\":38,\"assembly\":28,\"margin\":35}",
+        "message": null,
+        "outcome": "200",
+        "update": {
+          "$set": {
+            "assembly": {
+              "$numberInt": "28"
+            },
+            "automation": {
+              "$numberDouble": "1e-7"
+            },
+            "consultancy": {
+              "$numberInt": "45"
+            },
+            "development": {
+              "$numberInt": "30"
+            },
+            "machining": {
+              "$numberInt": "38"
+            }
+          }
+        },
+        "response": {
+          "automation": 1e-7,
+          "consultancy": 45,
+          "development": 30,
+          "machining": 38,
+          "assembly": 28,
+          "margin": 35
+        }
+      },
+      {
+        "body": "{\"automation\":\"123456789012345680000\",\"consultancy\":45,\"development\":30,\"machining\":38,\"assembly\":28,\"margin\":35}",
+        "message": "\"automation\" must be a safe number"
+      },
+      {
+        "body": "{\"automation\":0,\"consultancy\":45,\"development\":30,\"machining\":38,\"assembly\":28,\"margin\":35}",
+        "message": null,
+        "outcome": "200",
+        "update": {
+          "$set": {
+            "assembly": {
+              "$numberInt": "28"
+            },
+            "automation": {
+              "$numberInt": "0"
+            },
+            "consultancy": {
+              "$numberInt": "45"
+            },
+            "development": {
+              "$numberInt": "30"
+            },
+            "machining": {
+              "$numberInt": "38"
+            }
+          }
+        },
+        "response": {
+          "automation": 0,
+          "consultancy": 45,
+          "development": 30,
+          "machining": 38,
+          "assembly": 28,
+          "margin": 35
+        }
+      },
+      {
+        "body": "{\"automation\":-5,\"consultancy\":45,\"development\":30,\"machining\":38,\"assembly\":28,\"margin\":35}",
+        "message": null,
+        "outcome": "200",
+        "update": {
+          "$set": {
+            "assembly": {
+              "$numberInt": "28"
+            },
+            "automation": {
+              "$numberInt": "-5"
+            },
+            "consultancy": {
+              "$numberInt": "45"
+            },
+            "development": {
+              "$numberInt": "30"
+            },
+            "machining": {
+              "$numberInt": "38"
+            }
+          }
+        },
+        "response": {
+          "automation": -5,
+          "consultancy": 45,
+          "development": 30,
+          "machining": 38,
+          "assembly": 28,
+          "margin": 35
+        }
+      },
+      {
+        "body": "{\"automation\":1.1,\"consultancy\":45,\"development\":30,\"machining\":38,\"assembly\":28,\"margin\":35}",
+        "message": null,
+        "outcome": "200",
+        "update": {
+          "$set": {
+            "assembly": {
+              "$numberInt": "28"
+            },
+            "automation": {
+              "$numberDouble": "1.1"
+            },
+            "consultancy": {
+              "$numberInt": "45"
+            },
+            "development": {
+              "$numberInt": "30"
+            },
+            "machining": {
+              "$numberInt": "38"
+            }
+          }
+        },
+        "response": {
+          "automation": 1.1,
+          "consultancy": 45,
+          "development": 30,
+          "machining": 38,
+          "assembly": 28,
+          "margin": 35
+        }
+      },
+      {
+        "body": "{\"automation\":2147483648,\"consultancy\":45,\"development\":30,\"machining\":38,\"assembly\":28,\"margin\":35}",
+        "message": null,
+        "outcome": "200",
+        "update": {
+          "$set": {
+            "assembly": {
+              "$numberInt": "28"
+            },
+            "automation": {
+              "$numberDouble": "2147483648"
+            },
+            "consultancy": {
+              "$numberInt": "45"
+            },
+            "development": {
+              "$numberInt": "30"
+            },
+            "machining": {
+              "$numberInt": "38"
+            }
+          }
+        },
+        "response": {
+          "automation": 2147483648,
+          "consultancy": 45,
+          "development": 30,
+          "machining": 38,
+          "assembly": 28,
+          "margin": 35
+        }
+      },
+      {
+        "body": "{\"automation\":9007199254740992,\"consultancy\":45,\"development\":30,\"machining\":38,\"assembly\":28,\"margin\":35}",
+        "message": "\"automation\" must be a safe number"
+      },
+      {
+        "body": "{\"automation\":1e+300,\"consultancy\":45,\"development\":30,\"machining\":38,\"assembly\":28,\"margin\":35}",
+        "message": "\"automation\" must be a safe number"
+      },
+      {
+        "body": "{\"automation\":null,\"consultancy\":45,\"development\":30,\"machining\":38,\"assembly\":28,\"margin\":35}",
+        "message": "\"automation\" must be a number"
+      },
+      {
+        "body": "{\"automation\":true,\"consultancy\":45,\"development\":30,\"machining\":38,\"assembly\":28,\"margin\":35}",
+        "message": "\"automation\" must be a number"
+      },
+      {
+        "body": "{\"automation\":[1],\"consultancy\":45,\"development\":30,\"machining\":38,\"assembly\":28,\"margin\":35}",
+        "message": "\"automation\" must be a number"
+      },
+      {
+        "body": "{\"automation\":{},\"consultancy\":45,\"development\":30,\"machining\":38,\"assembly\":28,\"margin\":35}",
+        "message": "\"automation\" must be a number"
+      },
+      {
+        "body": "{\"automation\":32.5,\"consultancy\":45,\"development\":30,\"machining\":38,\"assembly\":28,\"margin\":0}",
+        "message": "\"margin\" must be larger than or equal to 1"
+      },
+      {
+        "body": "{\"automation\":32.5,\"consultancy\":45,\"development\":30,\"machining\":38,\"assembly\":28,\"margin\":0.99}",
+        "message": "\"margin\" must be larger than or equal to 1"
+      },
+      {
+        "body": "{\"automation\":32.5,\"consultancy\":45,\"development\":30,\"machining\":38,\"assembly\":28,\"margin\":1}",
+        "message": null,
+        "outcome": "200",
+        "update": {
+          "$set": {
+            "assembly": {
+              "$numberInt": "28"
+            },
+            "automation": {
+              "$numberDouble": "32.5"
+            },
+            "consultancy": {
+              "$numberInt": "45"
+            },
+            "development": {
+              "$numberInt": "30"
+            },
+            "machining": {
+              "$numberInt": "38"
+            },
+            "margin": {
+              "$numberInt": "1"
+            }
+          }
+        },
+        "response": {
+          "automation": 32.5,
+          "consultancy": 45,
+          "development": 30,
+          "machining": 38,
+          "assembly": 28,
+          "margin": 1
+        }
+      },
+      {
+        "body": "{\"automation\":32.5,\"consultancy\":45,\"development\":30,\"machining\":38,\"assembly\":28,\"margin\":100}",
+        "message": null,
+        "outcome": "200",
+        "update": {
+          "$set": {
+            "assembly": {
+              "$numberInt": "28"
+            },
+            "automation": {
+              "$numberDouble": "32.5"
+            },
+            "consultancy": {
+              "$numberInt": "45"
+            },
+            "development": {
+              "$numberInt": "30"
+            },
+            "machining": {
+              "$numberInt": "38"
+            },
+            "margin": {
+              "$numberInt": "100"
+            }
+          }
+        },
+        "response": {
+          "automation": 32.5,
+          "consultancy": 45,
+          "development": 30,
+          "machining": 38,
+          "assembly": 28,
+          "margin": 100
+        }
+      },
+      {
+        "body": "{\"automation\":32.5,\"consultancy\":45,\"development\":30,\"machining\":38,\"assembly\":28,\"margin\":100.01}",
+        "message": "\"margin\" must be less than or equal to 100"
+      },
+      {
+        "body": "{\"automation\":32.5,\"consultancy\":45,\"development\":30,\"machining\":38,\"assembly\":28,\"margin\":101}",
+        "message": "\"margin\" must be less than or equal to 100"
+      },
+      {
+        "body": "{\"automation\":32.5,\"consultancy\":45,\"development\":30,\"machining\":38,\"assembly\":28,\"margin\":\"50\"}",
+        "message": null,
+        "outcome": "200",
+        "update": {
+          "$set": {
+            "assembly": {
+              "$numberInt": "28"
+            },
+            "automation": {
+              "$numberDouble": "32.5"
+            },
+            "consultancy": {
+              "$numberInt": "45"
+            },
+            "development": {
+              "$numberInt": "30"
+            },
+            "machining": {
+              "$numberInt": "38"
+            },
+            "margin": {
+              "$numberInt": "50"
+            }
+          }
+        },
+        "response": {
+          "automation": 32.5,
+          "consultancy": 45,
+          "development": 30,
+          "machining": 38,
+          "assembly": 28,
+          "margin": 50
+        }
+      },
+      {
+        "body": "{\"automation\":32.5,\"consultancy\":45,\"development\":30,\"machining\":38,\"assembly\":28,\"margin\":\"0\"}",
+        "message": "\"margin\" must be larger than or equal to 1"
+      },
+      {
+        "body": "{\"automation\":32.5,\"consultancy\":45,\"development\":30,\"machining\":38,\"assembly\":28,\"margin\":35.5}",
+        "message": null,
+        "outcome": "200",
+        "update": {
+          "$set": {
+            "assembly": {
+              "$numberInt": "28"
+            },
+            "automation": {
+              "$numberDouble": "32.5"
+            },
+            "consultancy": {
+              "$numberInt": "45"
+            },
+            "development": {
+              "$numberInt": "30"
+            },
+            "machining": {
+              "$numberInt": "38"
+            },
+            "margin": {
+              "$numberDouble": "35.5"
+            }
+          }
+        },
+        "response": {
+          "automation": 32.5,
+          "consultancy": 45,
+          "development": 30,
+          "machining": 38,
+          "assembly": 28,
+          "margin": 35.5
+        }
+      },
+      {
+        "body": "{}",
+        "message": "\"automation\" is required"
+      },
+      {
+        "body": "{\"consultancy\":45,\"development\":30,\"machining\":38,\"assembly\":28,\"margin\":35}",
+        "message": "\"automation\" is required"
+      },
+      {
+        "body": "{\"automation\":32.5,\"consultancy\":45,\"development\":30,\"machining\":38,\"assembly\":28}",
+        "message": "\"margin\" is required"
+      },
+      {
+        "body": "{\"automation\":32.5,\"consultancy\":45,\"development\":30,\"machining\":38,\"margin\":35}",
+        "message": "\"assembly\" is required"
+      },
+      {
+        "body": "{\"automation\":32.5,\"consultancy\":45,\"development\":30,\"machining\":38,\"assembly\":28,\"margin\":35,\"others\":1}",
+        "message": "\"others\" is not allowed"
+      },
+      {
+        "body": "{\"automation\":32.5,\"consultancy\":45,\"development\":30,\"machining\":38,\"assembly\":28,\"margin\":35,\"_id\":\"5f1e9a2b3c4d5e6f70819299\"}",
+        "message": "\"_id\" is not allowed"
+      },
+      {
+        "body": "{\"consultancy\":\"x\",\"automation\":\"y\"}",
+        "message": "\"automation\" must be a number"
+      },
+      {
+        "body": "{\"automation\":1e400,\"consultancy\":45,\"development\":30,\"machining\":38,\"assembly\":28,\"margin\":35}",
+        "message": "\"automation\" contains an invalid value"
+      },
+      {
+        "body": "{\"automation\":-0,\"consultancy\":45,\"development\":30,\"machining\":38,\"assembly\":28,\"margin\":35}",
+        "message": null,
+        "outcome": "200",
+        "update": {
+          "$set": {
+            "assembly": {
+              "$numberInt": "28"
+            },
+            "automation": {
+              "$numberInt": "0"
+            },
+            "consultancy": {
+              "$numberInt": "45"
+            },
+            "development": {
+              "$numberInt": "30"
+            },
+            "machining": {
+              "$numberInt": "38"
+            }
+          }
+        },
+        "response": {
+          "automation": 0,
+          "consultancy": 45,
+          "development": 30,
+          "machining": 38,
+          "assembly": 28,
+          "margin": 35
+        }
+      },
+      {
+        "body": "{\"automation\":10.0,\"consultancy\":45,\"development\":30,\"machining\":38,\"assembly\":28,\"margin\":35}",
+        "message": null,
+        "outcome": "200",
+        "update": {
+          "$set": {
+            "assembly": {
+              "$numberInt": "28"
+            },
+            "consultancy": {
+              "$numberInt": "45"
+            },
+            "development": {
+              "$numberInt": "30"
+            },
+            "machining": {
+              "$numberInt": "38"
+            }
+          }
+        },
+        "response": {
+          "automation": 10,
+          "consultancy": 45,
+          "development": 30,
+          "machining": 38,
+          "assembly": 28,
+          "margin": 35
+        }
+      },
+      {
+        "body": "{\"automation\":1E2,\"consultancy\":45,\"development\":30,\"machining\":38,\"assembly\":28,\"margin\":35}",
+        "message": null,
+        "outcome": "200",
+        "update": {
+          "$set": {
+            "assembly": {
+              "$numberInt": "28"
+            },
+            "automation": {
+              "$numberInt": "100"
+            },
+            "consultancy": {
+              "$numberInt": "45"
+            },
+            "development": {
+              "$numberInt": "30"
+            },
+            "machining": {
+              "$numberInt": "38"
+            }
+          }
+        },
+        "response": {
+          "automation": 100,
+          "consultancy": 45,
+          "development": 30,
+          "machining": 38,
+          "assembly": 28,
+          "margin": 35
+        }
+      },
+      {
+        "body": "[]",
+        "message": "\"value\" must be an object"
+      }
+    ]
+  },
+  "createPrinter": [
+    {
+      "body": "{\"ip\":\"127.0.0.1\",\"port\":9100,\"templateName\":\"producao\"}",
+      "message": null,
+      "outcome": "200",
+      "stored": {
+        "_id": "{{oid}}",
+        "ip": "127.0.0.1",
+        "port": {
+          "$numberInt": "9100"
+        },
+        "templateName": "producao",
+        "__v": {
+          "$numberInt": "0"
+        }
+      },
+      "response": {
+        "_id": "5f1e9a2b3c4d5e6f70819299",
+        "ip": "127.0.0.1",
+        "port": 9100,
+        "templateName": "producao",
+        "__v": 0
+      }
+    },
+    {
+      "body": "{\"ip\":\"127.0.0.2\",\"port\":9100,\"templateName\":\"maquinacao\"}",
+      "message": null,
+      "outcome": "200",
+      "stored": {
+        "_id": "{{oid}}",
+        "ip": "127.0.0.2",
+        "port": {
+          "$numberInt": "9100"
+        },
+        "templateName": "maquinacao",
+        "__v": {
+          "$numberInt": "0"
+        }
+      },
+      "response": {
+        "_id": "5f1e9a2b3c4d5e6f70819299",
+        "ip": "127.0.0.2",
+        "port": 9100,
+        "templateName": "maquinacao",
+        "__v": 0
+      }
+    },
+    {
+      "body": "{\"templateName\":\"producao\",\"port\":9100,\"ip\":\"127.0.0.1\"}",
+      "message": null,
+      "outcome": "200",
+      "stored": {
+        "_id": "{{oid}}",
+        "templateName": "producao",
+        "port": {
+          "$numberInt": "9100"
+        },
+        "ip": "127.0.0.1",
+        "__v": {
+          "$numberInt": "0"
+        }
+      },
+      "response": {
+        "_id": "5f1e9a2b3c4d5e6f70819299",
+        "templateName": "producao",
+        "port": 9100,
+        "ip": "127.0.0.1",
+        "__v": 0
+      }
+    },
+    {
+      "body": "{\"ip\":\"999.1.1.1\",\"port\":9100,\"templateName\":\"producao\"}",
+      "message": "\"ip\" must be a valid ip address with a optional CIDR"
+    },
+    {
+      "body": "{\"ip\":\"255.255.255.255\",\"port\":9100,\"templateName\":\"producao\"}",
+      "message": null,
+      "outcome": "200",
+      "stored": {
+        "_id": "{{oid}}",
+        "ip": "255.255.255.255",
+        "port": {
+          "$numberInt": "9100"
+        },
+        "templateName": "producao",
+        "__v": {
+          "$numberInt": "0"
+        }
+      },
+      "response": {
+        "_id": "5f1e9a2b3c4d5e6f70819299",
+        "ip": "255.255.255.255",
+        "port": 9100,
+        "templateName": "producao",
+        "__v": 0
+      }
+    },
+    {
+      "body": "{\"ip\":\"256.1.1.1\",\"port\":9100,\"templateName\":\"producao\"}",
+      "message": "\"ip\" must be a valid ip address with a optional CIDR"
+    },
+    {
+      "body": "{\"ip\":\"1.2.3\",\"port\":9100,\"templateName\":\"producao\"}",
+      "message": "\"ip\" must be a valid ip address with a optional CIDR"
+    },
+    {
+      "body": "{\"ip\":\"1.2.3.4.5\",\"port\":9100,\"templateName\":\"producao\"}",
+      "message": "\"ip\" must be a valid ip address with a optional CIDR"
+    },
+    {
+      "body": "{\"ip\":\"01.02.03.004\",\"port\":9100,\"templateName\":\"producao\"}",
+      "message": null,
+      "outcome": "200",
+      "stored": {
+        "_id": "{{oid}}",
+        "ip": "01.02.03.004",
+        "port": {
+          "$numberInt": "9100"
+        },
+        "templateName": "producao",
+        "__v": {
+          "$numberInt": "0"
+        }
+      },
+      "response": {
+        "_id": "5f1e9a2b3c4d5e6f70819299",
+        "ip": "01.02.03.004",
+        "port": 9100,
+        "templateName": "producao",
+        "__v": 0
+      }
+    },
+    {
+      "body": "{\"ip\":\"001.002.003.004\",\"port\":9100,\"templateName\":\"producao\"}",
+      "message": null,
+      "outcome": "200",
+      "stored": {
+        "_id": "{{oid}}",
+        "ip": "001.002.003.004",
+        "port": {
+          "$numberInt": "9100"
+        },
+        "templateName": "producao",
+        "__v": {
+          "$numberInt": "0"
+        }
+      },
+      "response": {
+        "_id": "5f1e9a2b3c4d5e6f70819299",
+        "ip": "001.002.003.004",
+        "port": 9100,
+        "templateName": "producao",
+        "__v": 0
+      }
+    },
+    {
+      "body": "{\"ip\":\"0001.2.3.4\",\"port\":9100,\"templateName\":\"producao\"}",
+      "message": "\"ip\" must be a valid ip address with a optional CIDR"
+    },
+    {
+      "body": "{\"ip\":\"10.0.0.0/8\",\"port\":9100,\"templateName\":\"producao\"}",
+      "message": null,
+      "outcome": "200",
+      "stored": {
+        "_id": "{{oid}}",
+        "ip": "10.0.0.0/8",
+        "port": {
+          "$numberInt": "9100"
+        },
+        "templateName": "producao",
+        "__v": {
+          "$numberInt": "0"
+        }
+      },
+      "response": {
+        "_id": "5f1e9a2b3c4d5e6f70819299",
+        "ip": "10.0.0.0/8",
+        "port": 9100,
+        "templateName": "producao",
+        "__v": 0
+      }
+    },
+    {
+      "body": "{\"ip\":\"10.0.0.0/32\",\"port\":9100,\"templateName\":\"producao\"}",
+      "message": null,
+      "outcome": "200",
+      "stored": {
+        "_id": "{{oid}}",
+        "ip": "10.0.0.0/32",
+        "port": {
+          "$numberInt": "9100"
+        },
+        "templateName": "producao",
+        "__v": {
+          "$numberInt": "0"
+        }
+      },
+      "response": {
+        "_id": "5f1e9a2b3c4d5e6f70819299",
+        "ip": "10.0.0.0/32",
+        "port": 9100,
+        "templateName": "producao",
+        "__v": 0
+      }
+    },
+    {
+      "body": "{\"ip\":\"10.0.0.0/33\",\"port\":9100,\"templateName\":\"producao\"}",
+      "message": "\"ip\" must be a valid ip address with a optional CIDR"
+    },
+    {
+      "body": "{\"ip\":\"10.0.0.0/\",\"port\":9100,\"templateName\":\"producao\"}",
+      "message": "\"ip\" must be a valid ip address with a optional CIDR"
+    },
+    {
+      "body": "{\"ip\":\" 1.2.3.4\",\"port\":9100,\"templateName\":\"producao\"}",
+      "message": "\"ip\" must be a valid ip address with a optional CIDR"
+    },
+    {
+      "body": "{\"ip\":\"1.2.3.4 \",\"port\":9100,\"templateName\":\"producao\"}",
+      "message": "\"ip\" must be a valid ip address with a optional CIDR"
+    },
+    {
+      "body": "{\"ip\":\"1.2.3.4\\n\",\"port\":9100,\"templateName\":\"producao\"}",
+      "message": "\"ip\" must be a valid ip address with a optional CIDR"
+    },
+    {
+      "body": "{\"ip\":\"localhost\",\"port\":9100,\"templateName\":\"producao\"}",
+      "message": "\"ip\" must be a valid ip address with a optional CIDR"
+    },
+    {
+      "body": "{\"ip\":\"::1\",\"port\":9100,\"templateName\":\"producao\"}",
+      "message": null,
+      "outcome": "200",
+      "stored": {
+        "_id": "{{oid}}",
+        "ip": "::1",
+        "port": {
+          "$numberInt": "9100"
+        },
+        "templateName": "producao",
+        "__v": {
+          "$numberInt": "0"
+        }
+      },
+      "response": {
+        "_id": "5f1e9a2b3c4d5e6f70819299",
+        "ip": "::1",
+        "port": 9100,
+        "templateName": "producao",
+        "__v": 0
+      }
+    },
+    {
+      "body": "{\"ip\":\"::\",\"port\":9100,\"templateName\":\"producao\"}",
+      "message": null,
+      "outcome": "200",
+      "stored": {
+        "_id": "{{oid}}",
+        "ip": "::",
+        "port": {
+          "$numberInt": "9100"
+        },
+        "templateName": "producao",
+        "__v": {
+          "$numberInt": "0"
+        }
+      },
+      "response": {
+        "_id": "5f1e9a2b3c4d5e6f70819299",
+        "ip": "::",
+        "port": 9100,
+        "templateName": "producao",
+        "__v": 0
+      }
+    },
+    {
+      "body": "{\"ip\":\"fe80::1\",\"port\":9100,\"templateName\":\"producao\"}",
+      "message": null,
+      "outcome": "200",
+      "stored": {
+        "_id": "{{oid}}",
+        "ip": "fe80::1",
+        "port": {
+          "$numberInt": "9100"
+        },
+        "templateName": "producao",
+        "__v": {
+          "$numberInt": "0"
+        }
+      },
+      "response": {
+        "_id": "5f1e9a2b3c4d5e6f70819299",
+        "ip": "fe80::1",
+        "port": 9100,
+        "templateName": "producao",
+        "__v": 0
+      }
+    },
+    {
+      "body": "{\"ip\":\"FE80::A:b:C\",\"port\":9100,\"templateName\":\"producao\"}",
+      "message": null,
+      "outcome": "200",
+      "stored": {
+        "_id": "{{oid}}",
+        "ip": "FE80::A:b:C",
+        "port": {
+          "$numberInt": "9100"
+        },
+        "templateName": "producao",
+        "__v": {
+          "$numberInt": "0"
+        }
+      },
+      "response": {
+        "_id": "5f1e9a2b3c4d5e6f70819299",
+        "ip": "FE80::A:b:C",
+        "port": 9100,
+        "templateName": "producao",
+        "__v": 0
+      }
+    },
+    {
+      "body": "{\"ip\":\"fe80::1%eth0\",\"port\":9100,\"templateName\":\"producao\"}",
+      "message": "\"ip\" must be a valid ip address with a optional CIDR"
+    },
+    {
+      "body": "{\"ip\":\"2001:db8::/32\",\"port\":9100,\"templateName\":\"producao\"}",
+      "message": null,
+      "outcome": "200",
+      "stored": {
+        "_id": "{{oid}}",
+        "ip": "2001:db8::/32",
+        "port": {
+          "$numberInt": "9100"
+        },
+        "templateName": "producao",
+        "__v": {
+          "$numberInt": "0"
+        }
+      },
+      "response": {
+        "_id": "5f1e9a2b3c4d5e6f70819299",
+        "ip": "2001:db8::/32",
+        "port": 9100,
+        "templateName": "producao",
+        "__v": 0
+      }
+    },
+    {
+      "body": "{\"ip\":\"2001:db8::/129\",\"port\":9100,\"templateName\":\"producao\"}",
+      "message": "\"ip\" must be a valid ip address with a optional CIDR"
+    },
+    {
+      "body": "{\"ip\":\"::ffff:192.168.1.1\",\"port\":9100,\"templateName\":\"producao\"}",
+      "message": null,
+      "outcome": "200",
+      "stored": {
+        "_id": "{{oid}}",
+        "ip": "::ffff:192.168.1.1",
+        "port": {
+          "$numberInt": "9100"
+        },
+        "templateName": "producao",
+        "__v": {
+          "$numberInt": "0"
+        }
+      },
+      "response": {
+        "_id": "5f1e9a2b3c4d5e6f70819299",
+        "ip": "::ffff:192.168.1.1",
+        "port": 9100,
+        "templateName": "producao",
+        "__v": 0
+      }
+    },
+    {
+      "body": "{\"ip\":\"1:2:3:4:5:6:7:8\",\"port\":9100,\"templateName\":\"producao\"}",
+      "message": null,
+      "outcome": "200",
+      "stored": {
+        "_id": "{{oid}}",
+        "ip": "1:2:3:4:5:6:7:8",
+        "port": {
+          "$numberInt": "9100"
+        },
+        "templateName": "producao",
+        "__v": {
+          "$numberInt": "0"
+        }
+      },
+      "response": {
+        "_id": "5f1e9a2b3c4d5e6f70819299",
+        "ip": "1:2:3:4:5:6:7:8",
+        "port": 9100,
+        "templateName": "producao",
+        "__v": 0
+      }
+    },
+    {
+      "body": "{\"ip\":\"1:2:3:4:5:6:7:8:9\",\"port\":9100,\"templateName\":\"producao\"}",
+      "message": "\"ip\" must be a valid ip address with a optional CIDR"
+    },
+    {
+      "body": "{\"ip\":\"1::2::3\",\"port\":9100,\"templateName\":\"producao\"}",
+      "message": "\"ip\" must be a valid ip address with a optional CIDR"
+    },
+    {
+      "body": "{\"ip\":\"v1.abc\",\"port\":9100,\"templateName\":\"producao\"}",
+      "message": null,
+      "outcome": "200",
+      "stored": {
+        "_id": "{{oid}}",
+        "ip": "v1.abc",
+        "port": {
+          "$numberInt": "9100"
+        },
+        "templateName": "producao",
+        "__v": {
+          "$numberInt": "0"
+        }
+      },
+      "response": {
+        "_id": "5f1e9a2b3c4d5e6f70819299",
+        "ip": "v1.abc",
+        "port": 9100,
+        "templateName": "producao",
+        "__v": 0
+      }
+    },
+    {
+      "body": "{\"ip\":\"v1.abc/64\",\"port\":9100,\"templateName\":\"producao\"}",
+      "message": null,
+      "outcome": "200",
+      "stored": {
+        "_id": "{{oid}}",
+        "ip": "v1.abc/64",
+        "port": {
+          "$numberInt": "9100"
+        },
+        "templateName": "producao",
+        "__v": {
+          "$numberInt": "0"
+        }
+      },
+      "response": {
+        "_id": "5f1e9a2b3c4d5e6f70819299",
+        "ip": "v1.abc/64",
+        "port": 9100,
+        "templateName": "producao",
+        "__v": 0
+      }
+    },
+    {
+      "body": "{\"ip\":\"[::1]\",\"port\":9100,\"templateName\":\"producao\"}",
+      "message": "\"ip\" must be a valid ip address with a optional CIDR"
+    },
+    {
+      "body": "{\"ip\":\"\",\"port\":9100,\"templateName\":\"producao\"}",
+      "message": "\"ip\" is not allowed to be empty"
+    },
+    {
+      "body": "{\"ip\":null,\"port\":9100,\"templateName\":\"producao\"}",
+      "message": "\"ip\" must be a string"
+    },
+    {
+      "body": "{\"ip\":2130706433,\"port\":9100,\"templateName\":\"producao\"}",
+      "message": "\"ip\" must be a string"
+    },
+    {
+      "body": "{\"ip\":\"１.2.3.4\",\"port\":9100,\"templateName\":\"producao\"}",
+      "message": "\"ip\" must be a valid ip address with a optional CIDR"
+    },
+    {
+      "body": "{\"ip\":\"1.2.3.٤\",\"port\":9100,\"templateName\":\"producao\"}",
+      "message": "\"ip\" must be a valid ip address with a optional CIDR"
+    },
+    {
+      "body": "{\"ip\":\"127.0.0.1\",\"port\":\"9100\",\"templateName\":\"producao\"}",
+      "message": null,
+      "outcome": "200",
+      "stored": {
+        "_id": "{{oid}}",
+        "ip": "127.0.0.1",
+        "port": {
+          "$numberInt": "9100"
+        },
+        "templateName": "producao",
+        "__v": {
+          "$numberInt": "0"
+        }
+      },
+      "response": {
+        "_id": "5f1e9a2b3c4d5e6f70819299",
+        "ip": "127.0.0.1",
+        "port": 9100,
+        "templateName": "producao",
+        "__v": 0
+      }
+    },
+    {
+      "body": "{\"ip\":\"127.0.0.1\",\"port\":\" 9100 \",\"templateName\":\"producao\"}",
+      "message": null,
+      "outcome": "200",
+      "stored": {
+        "_id": "{{oid}}",
+        "ip": "127.0.0.1",
+        "port": {
+          "$numberInt": "9100"
+        },
+        "templateName": "producao",
+        "__v": {
+          "$numberInt": "0"
+        }
+      },
+      "response": {
+        "_id": "5f1e9a2b3c4d5e6f70819299",
+        "ip": "127.0.0.1",
+        "port": 9100,
+        "templateName": "producao",
+        "__v": 0
+      }
+    },
+    {
+      "body": "{\"ip\":\"127.0.0.1\",\"port\":9100.5,\"templateName\":\"producao\"}",
+      "message": null,
+      "outcome": "200",
+      "stored": {
+        "_id": "{{oid}}",
+        "ip": "127.0.0.1",
+        "port": {
+          "$numberDouble": "9100.5"
+        },
+        "templateName": "producao",
+        "__v": {
+          "$numberInt": "0"
+        }
+      },
+      "response": {
+        "_id": "5f1e9a2b3c4d5e6f70819299",
+        "ip": "127.0.0.1",
+        "port": 9100.5,
+        "templateName": "producao",
+        "__v": 0
+      }
+    },
+    {
+      "body": "{\"ip\":\"127.0.0.1\",\"port\":-1,\"templateName\":\"producao\"}",
+      "message": null,
+      "outcome": "200",
+      "stored": {
+        "_id": "{{oid}}",
+        "ip": "127.0.0.1",
+        "port": {
+          "$numberInt": "-1"
+        },
+        "templateName": "producao",
+        "__v": {
+          "$numberInt": "0"
+        }
+      },
+      "response": {
+        "_id": "5f1e9a2b3c4d5e6f70819299",
+        "ip": "127.0.0.1",
+        "port": -1,
+        "templateName": "producao",
+        "__v": 0
+      }
+    },
+    {
+      "body": "{\"ip\":\"127.0.0.1\",\"port\":0,\"templateName\":\"producao\"}",
+      "message": null,
+      "outcome": "200",
+      "stored": {
+        "_id": "{{oid}}",
+        "ip": "127.0.0.1",
+        "port": {
+          "$numberInt": "0"
+        },
+        "templateName": "producao",
+        "__v": {
+          "$numberInt": "0"
+        }
+      },
+      "response": {
+        "_id": "5f1e9a2b3c4d5e6f70819299",
+        "ip": "127.0.0.1",
+        "port": 0,
+        "templateName": "producao",
+        "__v": 0
+      }
+    },
+    {
+      "body": "{\"ip\":\"127.0.0.1\",\"port\":70000,\"templateName\":\"producao\"}",
+      "message": null,
+      "outcome": "200",
+      "stored": {
+        "_id": "{{oid}}",
+        "ip": "127.0.0.1",
+        "port": {
+          "$numberInt": "70000"
+        },
+        "templateName": "producao",
+        "__v": {
+          "$numberInt": "0"
+        }
+      },
+      "response": {
+        "_id": "5f1e9a2b3c4d5e6f70819299",
+        "ip": "127.0.0.1",
+        "port": 70000,
+        "templateName": "producao",
+        "__v": 0
+      }
+    },
+    {
+      "body": "{\"ip\":\"127.0.0.1\",\"port\":3000000000,\"templateName\":\"producao\"}",
+      "message": null,
+      "outcome": "200",
+      "stored": {
+        "_id": "{{oid}}",
+        "ip": "127.0.0.1",
+        "port": {
+          "$numberDouble": "3000000000"
+        },
+        "templateName": "producao",
+        "__v": {
+          "$numberInt": "0"
+        }
+      },
+      "response": {
+        "_id": "5f1e9a2b3c4d5e6f70819299",
+        "ip": "127.0.0.1",
+        "port": 3000000000,
+        "templateName": "producao",
+        "__v": 0
+      }
+    },
+    {
+      "body": "{\"ip\":\"127.0.0.1\",\"port\":\"abc\",\"templateName\":\"producao\"}",
+      "message": "\"port\" must be a number"
+    },
+    {
+      "body": "{\"ip\":\"127.0.0.1\",\"port\":null,\"templateName\":\"producao\"}",
+      "message": "\"port\" must be a number"
+    },
+    {
+      "body": "{\"ip\":\"127.0.0.1\",\"port\":true,\"templateName\":\"producao\"}",
+      "message": "\"port\" must be a number"
+    },
+    {
+      "body": "{\"ip\":\"127.0.0.1\",\"port\":\"\",\"templateName\":\"producao\"}",
+      "message": "\"port\" must be a number"
+    },
+    {
+      "body": "{\"ip\":\"127.0.0.1\",\"port\":9100,\"templateName\":\"outro\"}",
+      "message": "\"templateName\" must be one of [producao, maquinacao]"
+    },
+    {
+      "body": "{\"ip\":\"127.0.0.1\",\"port\":9100,\"templateName\":\"Producao\"}",
+      "message": "\"templateName\" must be one of [producao, maquinacao]"
+    },
+    {
+      "body": "{\"ip\":\"127.0.0.1\",\"port\":9100,\"templateName\":\"\"}",
+      "message": "\"templateName\" is not allowed to be empty"
+    },
+    {
+      "body": "{\"ip\":\"127.0.0.1\",\"port\":9100,\"templateName\":null}",
+      "message": "\"templateName\" must be a string"
+    },
+    {
+      "body": "{\"ip\":\"127.0.0.1\",\"port\":9100,\"templateName\":1}",
+      "message": "\"templateName\" must be a string"
+    },
+    {
+      "body": "{}",
+      "message": "\"ip\" is required"
+    },
+    {
+      "body": "{\"port\":9100,\"templateName\":\"producao\"}",
+      "message": "\"ip\" is required"
+    },
+    {
+      "body": "{\"ip\":\"127.0.0.1\",\"templateName\":\"producao\"}",
+      "message": "\"port\" is required"
+    },
+    {
+      "body": "{\"ip\":\"127.0.0.1\",\"port\":9100}",
+      "message": "\"templateName\" is required"
+    },
+    {
+      "body": "{\"ip\":\"127.0.0.1\",\"port\":9100,\"templateName\":\"producao\",\"name\":\"x\"}",
+      "message": "\"name\" is not allowed"
+    },
+    {
+      "body": "{\"ip\":\"127.0.0.1\",\"port\":9100,\"templateName\":\"producao\",\"_id\":\"5f1e9a2b3c4d5e6f70819299\"}",
+      "message": "\"_id\" is not allowed"
+    },
+    {
+      "body": "{\"ip\":\"127.0.0.1\",\"port\":9100,\"templateName\":\"producao\",\"__v\":0}",
+      "message": "\"__v\" is not allowed"
+    },
+    {
+      "body": "{\"ip\":\"x\",\"port\":\"x\",\"templateName\":\"x\"}",
+      "message": "\"ip\" must be a valid ip address with a optional CIDR"
+    },
+    {
+      "body": "[]",
+      "message": "\"value\" must be an object"
+    }
+  ],
+  "editPrinter": {
+    "existing": {
+      "_id": {
+        "$oid": "5f1e9a2b3c4d5e6f70819299"
+      },
+      "ip": "127.0.0.1",
+      "port": {
+        "$numberInt": "9100"
+      },
+      "templateName": "producao",
+      "__v": {
+        "$numberInt": "0"
+      }
+    },
+    "cases": [
+      {
+        "id": "5f1e9a2b3c4d5e6f70819299",
+        "body": "{\"ip\":\"127.0.0.11\",\"port\":9101,\"templateName\":\"producao\"}",
+        "message": null,
+        "outcome": "200",
+        "update": {
+          "$set": {
+            "ip": "127.0.0.11",
+            "port": {
+              "$numberInt": "9101"
+            }
+          }
+        },
+        "response": {
+          "_id": "5f1e9a2b3c4d5e6f70819299",
+          "ip": "127.0.0.11",
+          "port": 9101,
+          "templateName": "producao",
+          "__v": 0
+        }
+      },
+      {
+        "id": "5f1e9a2b3c4d5e6f70819299",
+        "body": "{\"ip\":\"127.0.0.1\",\"port\":9100,\"templateName\":\"producao\"}",
+        "message": null,
+        "outcome": "200",
+        "update": null,
+        "response": {
+          "_id": "5f1e9a2b3c4d5e6f70819299",
+          "ip": "127.0.0.1",
+          "port": 9100,
+          "templateName": "producao",
+          "__v": 0
+        }
+      },
+      {
+        "id": "5f1e9a2b3c4d5e6f70819299",
+        "body": "{\"ip\":\"127.0.0.1\",\"port\":\"9100\",\"templateName\":\"producao\"}",
+        "message": null,
+        "outcome": "200",
+        "update": null,
+        "response": {
+          "_id": "5f1e9a2b3c4d5e6f70819299",
+          "ip": "127.0.0.1",
+          "port": 9100,
+          "templateName": "producao",
+          "__v": 0
+        }
+      },
+      {
+        "id": "5f1e9a2b3c4d5e6f70819299",
+        "body": "{\"ip\":\"127.0.0.1\",\"port\":\"9101\",\"templateName\":\"producao\"}",
+        "message": null,
+        "outcome": "200",
+        "update": {
+          "$set": {
+            "port": {
+              "$numberInt": "9101"
+            }
+          }
+        },
+        "response": {
+          "_id": "5f1e9a2b3c4d5e6f70819299",
+          "ip": "127.0.0.1",
+          "port": 9101,
+          "templateName": "producao",
+          "__v": 0
+        }
+      },
+      {
+        "id": "5f1e9a2b3c4d5e6f70819299",
+        "body": "{\"ip\":\"127.0.0.1\",\"port\":9100.5,\"templateName\":\"producao\"}",
+        "message": null,
+        "outcome": "200",
+        "update": {
+          "$set": {
+            "port": {
+              "$numberDouble": "9100.5"
+            }
+          }
+        },
+        "response": {
+          "_id": "5f1e9a2b3c4d5e6f70819299",
+          "ip": "127.0.0.1",
+          "port": 9100.5,
+          "templateName": "producao",
+          "__v": 0
+        }
+      },
+      {
+        "id": "5f1e9a2b3c4d5e6f70819299",
+        "body": "{\"ip\":\"127.0.0.1\",\"port\":9100,\"templateName\":\"maquinacao\"}",
+        "message": null,
+        "outcome": "200",
+        "update": {
+          "$set": {
+            "templateName": "maquinacao"
+          }
+        },
+        "response": {
+          "_id": "5f1e9a2b3c4d5e6f70819299",
+          "ip": "127.0.0.1",
+          "port": 9100,
+          "templateName": "maquinacao",
+          "__v": 0
+        }
+      },
+      {
+        "id": "5f1e9a2b3c4d5e6f70819299",
+        "body": "{\"ip\":\"::1\",\"port\":9100,\"templateName\":\"producao\"}",
+        "message": null,
+        "outcome": "200",
+        "update": {
+          "$set": {
+            "ip": "::1"
+          }
+        },
+        "response": {
+          "_id": "5f1e9a2b3c4d5e6f70819299",
+          "ip": "::1",
+          "port": 9100,
+          "templateName": "producao",
+          "__v": 0
+        }
+      },
+      {
+        "id": "5F1E9A2B3C4D5E6F70819299",
+        "body": "{\"ip\":\"127.0.0.1\",\"port\":9100,\"templateName\":\"producao\"}",
+        "message": null,
+        "outcome": "200",
+        "update": null,
+        "response": {
+          "_id": "5f1e9a2b3c4d5e6f70819299",
+          "ip": "127.0.0.1",
+          "port": 9100,
+          "templateName": "producao",
+          "__v": 0
+        }
+      },
+      {
+        "id": "abc",
+        "body": "{\"ip\":\"127.0.0.1\",\"port\":9100,\"templateName\":\"producao\"}",
+        "message": "\"id\" with value \"abc\" fails to match the valid mongo id pattern"
+      },
+      {
+        "id": "abc",
+        "body": "{}",
+        "message": "\"id\" with value \"abc\" fails to match the valid mongo id pattern"
+      },
+      {
+        "id": "abcdefghijkl",
+        "body": "{\"ip\":\"127.0.0.1\",\"port\":9100,\"templateName\":\"producao\"}",
+        "message": "\"id\" with value \"abcdefghijkl\" fails to match the valid mongo id pattern"
+      },
+      {
+        "id": "5f1e9a2b3c4d5e6f708192990",
+        "body": "{\"ip\":\"127.0.0.1\",\"port\":9100,\"templateName\":\"producao\"}",
+        "message": "\"id\" with value \"5f1e9a2b3c4d5e6f708192990\" fails to match the valid mongo id pattern"
+      },
+      {
+        "id": "5f1e9a2b3c4d5e6f7081929g",
+        "body": "{\"ip\":\"127.0.0.1\",\"port\":9100,\"templateName\":\"producao\"}",
+        "message": "\"id\" with value \"5f1e9a2b3c4d5e6f7081929g\" fails to match the valid mongo id pattern"
+      },
+      {
+        "id": "5f1e9a2b3c4d5e6f70819299",
+        "body": "{}",
+        "message": "\"ip\" is required"
+      },
+      {
+        "id": "5f1e9a2b3c4d5e6f70819299",
+        "body": "{\"ip\":\"999.1.1.1\",\"port\":9100,\"templateName\":\"producao\"}",
+        "message": "\"ip\" must be a valid ip address with a optional CIDR"
+      }
+    ]
+  },
+  "createPaymentMethod": [
+    {
+      "body": "{\"name\":\"Pronto pagamento\"}",
+      "message": null,
+      "outcome": "200",
+      "stored": {
+        "_id": "{{oid}}",
+        "name": "Pronto pagamento",
+        "__v": {
+          "$numberInt": "0"
+        }
+      },
+      "response": {
+        "_id": "5f1e9a2b3c4d5e6f70819299",
+        "name": "Pronto pagamento",
+        "__v": 0
+      }
+    },
+    {
+      "body": "{\"name\":\"Transferência a 30 dias\"}",
+      "message": null,
+      "outcome": "200",
+      "stored": {
+        "_id": "{{oid}}",
+        "name": "Transferência a 30 dias",
+        "__v": {
+          "$numberInt": "0"
+        }
+      },
+      "response": {
+        "_id": "5f1e9a2b3c4d5e6f70819299",
+        "name": "Transferência a 30 dias",
+        "__v": 0
+      }
+    },
+    {
+      "body": "{\"name\":\" 30 dias \"}",
+      "message": null,
+      "outcome": "200",
+      "stored": {
+        "_id": "{{oid}}",
+        "name": " 30 dias ",
+        "__v": {
+          "$numberInt": "0"
+        }
+      },
+      "response": {
+        "_id": "5f1e9a2b3c4d5e6f70819299",
+        "name": " 30 dias ",
+        "__v": 0
+      }
+    },
+    {
+      "body": "{\"name\":\"a\"}",
+      "message": null,
+      "outcome": "200",
+      "stored": {
+        "_id": "{{oid}}",
+        "name": "a",
+        "__v": {
+          "$numberInt": "0"
+        }
+      },
+      "response": {
+        "_id": "5f1e9a2b3c4d5e6f70819299",
+        "name": "a",
+        "__v": 0
+      }
+    },
+    {
+      "body": "{\"name\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\"}",
+      "message": null,
+      "outcome": "200",
+      "stored": {
+        "_id": "{{oid}}",
+        "name": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "__v": {
+          "$numberInt": "0"
+        }
+      },
+      "response": {
+        "_id": "5f1e9a2b3c4d5e6f70819299",
+        "name": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "__v": 0
+      }
+    },
+    {
+      "body": "{}",
+      "message": "\"name\" is required"
+    },
+    {
+      "body": "{\"name\":\"\"}",
+      "message": "\"name\" is not allowed to be empty"
+    },
+    {
+      "body": "{\"name\":\" \"}",
+      "message": null,
+      "outcome": "200",
+      "stored": {
+        "_id": "{{oid}}",
+        "name": " ",
+        "__v": {
+          "$numberInt": "0"
+        }
+      },
+      "response": {
+        "_id": "5f1e9a2b3c4d5e6f70819299",
+        "name": " ",
+        "__v": 0
+      }
+    },
+    {
+      "body": "{\"name\":null}",
+      "message": "\"name\" must be a string"
+    },
+    {
+      "body": "{\"name\":30}",
+      "message": "\"name\" must be a string"
+    },
+    {
+      "body": "{\"name\":[\"a\"]}",
+      "message": "\"name\" must be a string"
+    },
+    {
+      "body": "{\"name\":\"x\",\"extra\":1}",
+      "message": "\"extra\" is not allowed"
+    },
+    {
+      "body": "{\"extra\":1,\"name\":\"x\"}",
+      "message": "\"extra\" is not allowed"
+    },
+    {
+      "body": "{\"name\":\"x\",\"_id\":\"5f1e9a2b3c4d5e6f70819299\"}",
+      "message": "\"_id\" is not allowed"
+    },
+    {
+      "body": "{\"name\":\"x\",\"__v\":5}",
+      "message": "\"__v\" is not allowed"
+    },
+    {
+      "body": "[]",
+      "message": "\"value\" must be an object"
+    }
+  ],
+  "pathIds": [
+    {
+      "id": "5f1e9a2b3c4d5e6f70819299",
+      "cast": "ok",
+      "objectId": "5f1e9a2b3c4d5e6f70819299"
+    },
+    {
+      "id": "5F1E9A2B3C4D5E6F70819299",
+      "cast": "ok",
+      "objectId": "5f1e9a2b3c4d5e6f70819299"
+    },
+    {
+      "id": "0123456789abcdef01234567",
+      "cast": "ok",
+      "objectId": "0123456789abcdef01234567"
+    },
+    {
+      "id": "abc",
+      "cast": "500",
+      "reason": "Error"
+    },
+    {
+      "id": "me",
+      "cast": "500",
+      "reason": "Error"
+    },
+    {
+      "id": "roles",
+      "cast": "500",
+      "reason": "Error"
+    },
+    {
+      "id": "users",
+      "cast": "500",
+      "reason": "Error"
+    },
+    {
+      "id": "abcdefghijkl",
+      "cast": "ok",
+      "objectId": "6162636465666768696a6b6c"
+    },
+    {
+      "id": "123456789012",
+      "cast": "ok",
+      "objectId": "313233343536373839303132"
+    },
+    {
+      "id": "5f1e9a2b3c4d5e6f708192990",
+      "cast": "500",
+      "reason": "Error"
+    },
+    {
+      "id": "5f1e9a2b3c4d5e6f7081929g",
+      "cast": "500",
+      "reason": "Error"
+    },
+    {
+      "id": " 5f1e9a2b3c4d5e6f70819299",
+      "cast": "500",
+      "reason": "Error"
+    }
+  ]
+}

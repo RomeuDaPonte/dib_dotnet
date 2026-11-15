@@ -1,0 +1,75 @@
+@inject IPaymentMethodsApi PaymentMethods
+@inject ISnackbar Snackbar
+
+@* Legacy settings/paymentMethods.jsx: "Adicinar" (legacy label kept) adds on Enter; the list deletes per item. Long
+   names wrap (up to 109 characters in the real data, §4.5 item 7). *@
+<MudGrid Justify="Justify.SpaceAround" Class="settings-grid">
+    <MudItem xs="12" sm="5">
+        <MudTextField T="string" @bind-Value="_name" Immediate="true" OnKeyDown="AddOnEnterAsync" Label="Adicinar" InputId="payment-method-new"
+                      Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Add" />
+    </MudItem>
+    <MudItem xs="12" sm="5">
+        <ul class="settings-list" aria-label="Modos de pagamento">
+            @foreach (var method in _methods)
+            {
+                <li class="settings-list-item">
+                    <div class="settings-list-row">
+                        <MudAvatar Size="Size.Medium"><MudIcon Icon="@Icons.Material.Filled.Payment" /></MudAvatar>
+                        <span class="settings-list-text">@method.Name</span>
+                        <MudIconButton Icon="@Icons.Material.TwoTone.DeleteOutline" aria-label="@($"Apagar {method.Name}")" OnClick="() => DeleteAsync(method)" />
+                    </div>
+                </li>
+            }
+        </ul>
+    </MudItem>
+</MudGrid>
+
+@code {
+    private List<PaymentMethodResponse> _methods = [];
+    private string? _name = string.Empty;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var result = await PaymentMethods.ListAsync();
+        if (result.IsSuccess)
+        {
+            _methods = [.. result.Value!];
+        }
+        else if (!result.IsUnexpected)
+        {
+            Snackbar.Add(result.ErrorText!, Severity.Error);
+        }
+    }
+
+    private async Task AddOnEnterAsync(KeyboardEventArgs e)
+    {
+        if (e.Key != "Enter")
+        {
+            return;
+        }
+
+        var result = await PaymentMethods.AddAsync(_name ?? string.Empty);
+        if (result.IsSuccess)
+        {
+            _methods.Add(result.Value!);
+            _name = string.Empty;
+        }
+        else if (!result.IsUnexpected)
+        {
+            Snackbar.Add(result.ErrorText!, Severity.Error);
+        }
+    }
+
+    private async Task DeleteAsync(PaymentMethodResponse method)
+    {
+        var result = await PaymentMethods.DeleteAsync(method.Id);
+        if (result.IsSuccess)
+        {
+            _methods.RemoveAll(m => m.Id == result.Value!.Id);
+        }
+        else if (!result.IsUnexpected)
+        {
+            Snackbar.Add(result.ErrorText!, Severity.Error);
+        }
+    }
+}

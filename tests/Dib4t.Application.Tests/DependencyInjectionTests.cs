@@ -1,5 +1,6 @@
 using Dib4t.Application.Account;
 using Dib4t.Application.Database;
+using Dib4t.Application.Settings;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using NSubstitute;
@@ -16,6 +17,9 @@ public sealed class DependencyInjectionTests
         services.AddSingleton(Substitute.For<IUserRepository>());
         services.AddSingleton(Substitute.For<IPasswordHasher>());
         services.AddSingleton(Substitute.For<ITokenService>());
+        services.AddSingleton(Substitute.For<IPricesRepository>());
+        services.AddSingleton(Substitute.For<IPaymentMethodRepository>());
+        services.AddSingleton(Substitute.For<IPrinterSettingsRepository>());
         services.AddSingleton(typeof(ILogger<>), typeof(RecordingLogger<>));
         using var provider = services.BuildServiceProvider(new ServiceProviderOptions { ValidateScopes = true, ValidateOnBuild = true });
 
@@ -23,6 +27,11 @@ public sealed class DependencyInjectionTests
         {
             scope.ServiceProvider.GetRequiredService<DatabaseRestoreService>().Should().NotBeNull();
             scope.ServiceProvider.GetRequiredService<AccountService>().Should().NotBeNull();
+            scope.ServiceProvider.GetRequiredService<UserAdministrationService>().Should().NotBeNull();
+            scope.ServiceProvider.GetRequiredService<PricesService>().Should().NotBeNull();
+            scope.ServiceProvider.GetRequiredService<PaymentMethodsService>().Should().NotBeNull();
+            scope.ServiceProvider.GetRequiredService<PrinterSettingsService>().Should().NotBeNull();
+            scope.ServiceProvider.GetRequiredService<DefaultDataSeeder>().Should().NotBeNull();
         }
 
         provider.GetRequiredService<DatabaseOperationLock>().Should().BeSameAs(provider.GetRequiredService<DatabaseOperationLock>());
