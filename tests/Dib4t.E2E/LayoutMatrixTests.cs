@@ -89,6 +89,22 @@ public sealed class LayoutMatrixTests(E2EHarness harness) : E2ETest(harness)
         [
             ("Utilizadores", Tab(page, "Utilizadores")),
         ], Open: page => OpenTabAsync(page, "Info", ".settings-info")),
+        new("entities", "/landing/entity", SignedIn: true, Ready: ".entities-table tbody tr td", page =>
+        [
+            ("filtrar", page.Locator("#entities-filter")),
+            ("Add Entidade", page.GetByRole(AriaRole.Button, new() { Name = "Add Entidade" })),
+            ("Editar", page.Locator(".entities-table tbody tr").First.GetByRole(AriaRole.Button)),
+        ]),
+        new("entities-dialog", "/landing/entity", SignedIn: true, Ready: ".entities-table tbody tr td", page =>
+        [
+            ("Entidade", page.Locator("#entity-name")),
+            ("Modo de pagamento", page.Locator("#entity-payment-condition")),
+            ("Concluir", page.GetByRole(AriaRole.Button, new() { Name = "Concluir" })),
+        ], Open: async page =>
+        {
+            await page.Locator(".entities-table tbody tr").First.GetByRole(AriaRole.Button).ClickAsync();
+            await page.Locator("#entity-name").WaitForAsync();
+        }, Scope: ".mud-dialog"),
     ];
 
     private static ILocator Tab(IPage page, string name) => page.GetByRole(AriaRole.Tab, new() { Name = name });

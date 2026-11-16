@@ -1,0 +1,16 @@
+@page "/landing/entity"
+@layout LandingLayout
+@inject AuthSession Session
+
+<PageTitle>Dib4t</PageTitle>
+
+@* Legacy components/entities/entity.jsx. Only for canSeeEntidades, like the menu entry (the API is open to every
+   signed-in user, as legacy). *@
+@if (Session.User?.HasRole(RoleNames.CanSeeEntidades) == true)
+{
+    <EntitiesTable />
+}
+else
+{
+    <p class="settings-denied">@AuthTexts.NoPermission</p>
+}

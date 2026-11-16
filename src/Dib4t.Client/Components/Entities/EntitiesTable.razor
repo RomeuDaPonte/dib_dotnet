@@ -1,0 +1,118 @@
+@inject IEntityApi EntityApi
+@inject ISnackbar Snackbar
+
+@* Legacy components/entities/entitiesTable.jsx + entityTableHead.jsx: filter ("filtrar"), "Add Entidade", table
+   sorted by name (sortable Nome, Localidade, Tipo), edit per row, pagination 5/10/25 (25), dense switch (on). The
+   table scrolls inside its own container instead of widening the page (§8.4 rule 5). *@
+<MudPaper Elevation="1" Class="settings entities">
+    <div class="settings-toolbar">
+        <MudTextField T="string" Value="_filter" ValueChanged="ApplyFilter" Immediate="true" Label="filtrar" InputId="entities-filter"
+                      Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" Margin="Margin.Normal" Class="settings-filter" />
+        <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="OpenNew" Class="settings-add">Add Entidade</MudButton>
+    </div>
+    <MudTable @ref="_table" T="EntityResponse" Items="Visible" Dense="_dense" Hover="true" HorizontalScrollbar="true" Elevation="1"
+              RowsPerPage="_rowsPerPage" @bind-CurrentPage="_page" Breakpoint="Breakpoint.None" Class="settings-table entities-table"
+              aria-label="Entidades" Loading="_loading">
+        <HeaderContent>
+            <MudTh><MudTableSortLabel T="EntityResponse" SortBy="e => EntityList.SortKey(e.Name)" InitialDirection="SortDirection.Ascending">Nome</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel T="EntityResponse" SortBy="e => EntityList.SortKey(e.Location)">Localidade</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel T="EntityResponse" SortBy="e => EntityList.SortKey(e.Type)">Tipo</MudTableSortLabel></MudTh>
+            <MudTh>Opções</MudTh>
+        </HeaderContent>
+        <RowTemplate>
+            <MudTd DataLabel="Nome" Class="settings-wrap">@context.Name</MudTd>
+            <MudTd DataLabel="Localidade" Class="settings-wrap">@context.Location</MudTd>
+            <MudTd DataLabel="Tipo">@context.Type</MudTd>
+            <MudTd DataLabel="Opções">
+                <MudTooltip Text="Editar">
+                    <MudIconButton Icon="@Icons.Material.TwoTone.Edit" aria-label="@($"Editar {context.Name}")" OnClick="() => OpenEdit(context)" />
+                </MudTooltip>
+            </MudTd>
+        </RowTemplate>
+        <PagerContent>
+            @* Legacy TablePagination (5/10/25, "Rows per page:", "1-25 of 235"); a labeled native select (axe). *@
+            <div class="settings-pager">
+                <LabeledSelect TValue="int" Id="entities-rows-per-page" Label="Rows per page:" Value="_rowsPerPage" ValueChanged="RowsPerPageChanged"
+                               Options="RowsPerPageOptions" Class="settings-pager-size" />
+                <span class="settings-pager-info">@PageInfo</span>
+                <MudIconButton Icon="@Icons.Material.Filled.NavigateBefore" aria-label="Previous page" Disabled="_page == 0" OnClick="() => _page--" />
+                <MudIconButton Icon="@Icons.Material.Filled.NavigateNext" aria-label="Next page" Disabled="(_page + 1) * _rowsPerPage >= Count" OnClick="() => _page++" />
+            </div>
+        </PagerContent>
+    </MudTable>
+    <MudSwitch T="bool" @bind-Value="_dense" Label="Tabela densa" Color="Color.Primary" Class="settings-dense" />
+</MudPaper>
+
+@* Always rendered: an inline MudDialog closes through Visible (removing it from the tree leaves it open). *@
+<EntityDialog Form="_form" OnSaved="Saved" OnClosed="() => _form = null" />
+@code {
+    private static readonly IReadOnlyList<(int Value, string Text)> RowsPerPageOptions = [(5, "5"), (10, "10"), (25, "25")];
+
+    private List<EntityResponse> _all = [];
+    private string? _filter;
+    private bool _dense = true;
+    private bool _loading = true;
+
+    private MudTable<EntityResponse>? _table;
+    private int _page;
+    private int _rowsPerPage = 25;
+    private EntityForm? _form;
+
+    private IEnumerable<EntityResponse> Visible => EntityList.Filter(_all, _filter);
+
+    private int Count => Visible.Count();
+
+    /// <summary>MUI v4's <c>labelDisplayedRows</c>: <c>{from}-{to} of {count}</c>.</summary>
+    private string PageInfo => Count == 0 ? "0-0 of 0" : $"{(_page * _rowsPerPage) + 1}-{Math.Min((_page + 1) * _rowsPerPage, Count)} of {Count}";
+
+    protected override async Task OnInitializedAsync()
+    {
+        var result = await EntityApi.ListAsync();
+        if (result.IsSuccess)
+        {
+            _all = [.. result.Value!];
+        }
+        else if (!result.IsUnexpected)
+        {
+            Snackbar.Add(result.ErrorText!, Severity.Error);
+        }
+
+        _loading = false;
+    }
+
+    private void RowsPerPageChanged(int rows)
+    {
+        _rowsPerPage = rows;
+        _page = 0;
+        _table?.SetRowsPerPage(rows);
+    }
+
+    private void ApplyFilter(string? text)
+    {
+        _filter = text;
+        _page = 0;
+    }
+
+    private void OpenNew() => _form = EntityForm.New();
+
+    private void OpenEdit(EntityResponse entity) => _form = EntityForm.Edit(entity);
+
+    /// <summary>
+    /// Legacy <c>updateList</c> / <c>addEntity</c>: the answer replaces the row, or a new row is added. Unlike legacy,
+    /// to the whole list (legacy keeps only the filtered rows plus the new one until the page is reloaded).
+    /// </summary>
+    private void Saved(EntityResponse saved)
+    {
+        var index = _all.FindIndex(e => e.Id == saved.Id);
+        if (index >= 0)
+        {
+            _all[index] = saved;
+        }
+        else
+        {
+            _all.Insert(0, saved);
+        }
+
+        _form = null;
+    }
+}

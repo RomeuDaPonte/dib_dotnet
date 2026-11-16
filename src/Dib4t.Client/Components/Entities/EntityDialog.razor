@@ -1,0 +1,147 @@
+@inject IEntityApi EntityApi
+@inject IPaymentMethodsApi PaymentMethods
+@inject ISnackbar Snackbar
+
+@* Legacy entities/entityModal.jsx: Entidade, Contribuinte, Morada, Código postal, Localidade, Tipo, Modo de
+   pagamento (the payment methods of Settings → M/Pagamento), Cancel / Concluir; validated on submit, then on every
+   change (validateOnChange after the first submit). Full screen below sm (§8.4 rule 6). *@
+<MudDialog Visible="@(Form is not null)" VisibleChanged="VisibleChanged" Options="Options" Class="settings-dialog" AriaLabel="@Form?.Title">
+    <TitleContent><h2 class="settings-dialog-title">@Form?.Title</h2></TitleContent>
+    <DialogContent>
+        @if (Form is not null)
+        {
+        <form id="entity-form" novalidate @onsubmit="SubmitAsync">
+            <MudTextField T="string" @bind-Value="Form.Name" @bind-Value:after="Revalidate" Immediate="true" Label="Entidade"
+                          InputId="entity-name" AutoFocus="true" Margin="Margin.Normal" Error="@(_errors.Name is not null)" ErrorText="@_errors.Name" />
+            <MudTextField T="string" @bind-Value="Form.FiscalNumber" Immediate="true" Label="Contribuinte" InputId="entity-fiscal-number" Margin="Margin.Normal" />
+            <MudTextField T="string" @bind-Value="Form.Address" Immediate="true" Label="Morada" InputId="entity-address" Margin="Margin.Normal" />
+            <MudTextField T="string" @bind-Value="Form.ZipCode" Immediate="true" Label="Código postal" InputId="entity-zip-code" Margin="Margin.Normal" />
+            <MudTextField T="string" @bind-Value="Form.Location" Immediate="true" Label="Localidade" InputId="entity-location" Margin="Margin.Normal" />
+            <LabeledSelect TValue="string" Id="entity-type" Label="Tipo" Value="Form.Type" ValueChanged="TypeChanged"
+                           Options="TypeOptions" Placeholder="@string.IsNullOrEmpty(Form.Type)" Error="@_errors.Type" />
+            <LabeledSelect TValue="string" Id="entity-payment-condition" Label="Modo de pagamento" Value="Form.PaymentCondition"
+                           ValueChanged="PaymentConditionChanged" Options="PaymentOptions" Placeholder="@string.IsNullOrEmpty(Form.PaymentCondition)"
+                           Error="@_errors.PaymentCondition" />
+        </form>
+        }
+    </DialogContent>
+    <DialogActions>
+        <MudButton Color="Color.Primary" OnClick="CloseAsync">Cancel</MudButton>
+        <MudButton Color="Color.Primary" ButtonType="ButtonType.Submit" form="entity-form" Disabled="_saving">Concluir</MudButton>
+    </DialogActions>
+</MudDialog>
+
+@code {
+    private static readonly IReadOnlyList<(string Value, string Text)> TypeOptions = [.. EntityTypes.All.Select(t => (t, t))];
+
+    private static readonly DialogOptions Options = new() { MaxWidth = MaxWidth.ExtraSmall, FullWidth = true, CloseOnEscapeKey = true };
+
+    private IReadOnlyList<string> _paymentMethods = [];
+    private EntityForm? _shown;
+    private EntityFormErrors _errors = EntityFormErrors.None;
+    private bool _validateOnChange;
+    private bool _saving;
+
+    /// <summary>The form to edit; <c>null</c> = the dialog is closed.</summary>
+    [Parameter]
+    public EntityForm? Form { get; set; }
+
+    /// <summary>The API's answer after a successful save.</summary>
+    [Parameter]
+    public EventCallback<EntityResponse> OnSaved { get; set; }
+
+    [Parameter]
+    public EventCallback OnClosed { get; set; }
+
+    /// <summary>
+    /// The payment methods by name; an entity's current value that is not (or no longer) in the list is offered
+    /// too, so the select shows it and a save keeps it (legacy MUI shows an empty select and also keeps it).
+    /// </summary>
+    private IReadOnlyList<(string Value, string Text)> PaymentOptions
+    {
+        get
+        {
+            var names = _paymentMethods.ToList();
+            if (!string.IsNullOrEmpty(Form?.PaymentCondition) && !names.Contains(Form.PaymentCondition, StringComparer.Ordinal))
+            {
+                names.Insert(0, Form.PaymentCondition);
+            }
+
+            return [.. names.Select(n => (n, n))];
+        }
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        var result = await PaymentMethods.ListAsync();
+        if (result.IsSuccess)
+        {
+            _paymentMethods = [.. result.Value!.Select(m => m.Name).OfType<string>()];
+        }
+    }
+
+    protected override void OnParametersSet()
+    {
+        if (!ReferenceEquals(Form, _shown))
+        {
+            _shown = Form; // a new dialog: no messages until its first submit
+            _errors = EntityFormErrors.None;
+            _validateOnChange = false;
+        }
+    }
+
+    private void TypeChanged(string? type)
+    {
+        Form!.Type = type;
+        Revalidate();
+    }
+
+    private void PaymentConditionChanged(string? condition)
+    {
+        Form!.PaymentCondition = condition;
+        Revalidate();
+    }
+
+    private void Revalidate()
+    {
+        if (_validateOnChange)
+        {
+            _errors = Form!.Validate();
+        }
+    }
+
+    private async Task SubmitAsync()
+    {
+        var form = Form!;
+        _validateOnChange = true;
+        _errors = form.Validate();
+        if (_errors.Any || _saving)
+        {
+            return;
+        }
+
+        _saving = true;
+        try
+        {
+            var request = form.ToRequest();
+            var result = form.IsNew ? await EntityApi.CreateAsync(request) : await EntityApi.UpdateAsync(form.Id!, request);
+            if (result.IsSuccess)
+            {
+                Snackbar.Add(form.IsNew ? "Entidade guardada com sucesso!" : "Update bem sucedido!", Severity.Success);
+                await OnSaved.InvokeAsync(result.Value!);
+            }
+            else if (!result.IsUnexpected)
+            {
+                Snackbar.Add(result.ErrorText!, Severity.Error);
+            }
+        }
+        finally
+        {
+            _saving = false;
+        }
+    }
+
+    private Task VisibleChanged(bool visible) => visible ? Task.CompletedTask : CloseAsync();
+
+    private Task CloseAsync() => OnClosed.InvokeAsync();
+}

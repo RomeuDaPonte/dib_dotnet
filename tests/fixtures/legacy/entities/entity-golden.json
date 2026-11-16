@@ -1,0 +1,3169 @@
+{
+  "generatedBy": "tools/legacy/entity-golden.js",
+  "versions": {
+    "bson": "1.1.6",
+    "joi": "14.3.1",
+    "mongoose": "5.13.20",
+    "lodash": "4.17.21",
+    "node": "v16.20.2"
+  },
+  "entityTypes": [
+    {
+      "_id": 1,
+      "name": "Cliente"
+    },
+    {
+      "_id": 2,
+      "name": "Fornecedor"
+    },
+    {
+      "_id": 3,
+      "name": "Cliente e Fornecedor"
+    }
+  ],
+  "createEntity": [
+    {
+      "body": "{\"name\":\"Metalúrgica Exemplo, Lda.\",\"fiscalNumber\":\"509999990\",\"address\":\"Rua das Flores, 12\",\"zipCode\":\"4000-123\",\"location\":\"Porto\",\"paymentCondition\":\"30 dias\",\"type\":\"Cliente\"}",
+      "message": null,
+      "outcome": "200",
+      "stored": {
+        "_id": "{{oid}}",
+        "name": "Metalúrgica Exemplo, Lda.",
+        "fiscalNumber": "509999990",
+        "address": "Rua das Flores, 12",
+        "zipCode": "4000-123",
+        "location": "Porto",
+        "paymentCondition": "30 dias",
+        "type": "Cliente",
+        "__v": {
+          "$numberInt": "0"
+        }
+      },
+      "response": {
+        "_id": "5f1e9a2b3c4d5e6f70819299",
+        "name": "Metalúrgica Exemplo, Lda.",
+        "fiscalNumber": "509999990",
+        "address": "Rua das Flores, 12",
+        "zipCode": "4000-123",
+        "location": "Porto",
+        "paymentCondition": "30 dias",
+        "type": "Cliente",
+        "__v": 0
+      }
+    },
+    {
+      "body": "{\"name\":\"Metalúrgica Exemplo, Lda.\",\"fiscalNumber\":\"509999990\",\"address\":\"Rua das Flores, 12\",\"zipCode\":\"4000-123\",\"location\":\"Porto\",\"paymentCondition\":\"30 dias\",\"type\":\"Fornecedor\"}",
+      "message": null,
+      "outcome": "200",
+      "stored": {
+        "_id": "{{oid}}",
+        "name": "Metalúrgica Exemplo, Lda.",
+        "fiscalNumber": "509999990",
+        "address": "Rua das Flores, 12",
+        "zipCode": "4000-123",
+        "location": "Porto",
+        "paymentCondition": "30 dias",
+        "type": "Fornecedor",
+        "__v": {
+          "$numberInt": "0"
+        }
+      },
+      "response": {
+        "_id": "5f1e9a2b3c4d5e6f70819299",
+        "name": "Metalúrgica Exemplo, Lda.",
+        "fiscalNumber": "509999990",
+        "address": "Rua das Flores, 12",
+        "zipCode": "4000-123",
+        "location": "Porto",
+        "paymentCondition": "30 dias",
+        "type": "Fornecedor",
+        "__v": 0
+      }
+    },
+    {
+      "body": "{\"name\":\"Metalúrgica Exemplo, Lda.\",\"fiscalNumber\":\"509999990\",\"address\":\"Rua das Flores, 12\",\"zipCode\":\"4000-123\",\"location\":\"Porto\",\"paymentCondition\":\"30 dias\",\"type\":\"Cliente e Fornecedor\"}",
+      "message": null,
+      "outcome": "200",
+      "stored": {
+        "_id": "{{oid}}",
+        "name": "Metalúrgica Exemplo, Lda.",
+        "fiscalNumber": "509999990",
+        "address": "Rua das Flores, 12",
+        "zipCode": "4000-123",
+        "location": "Porto",
+        "paymentCondition": "30 dias",
+        "type": "Cliente e Fornecedor",
+        "__v": {
+          "$numberInt": "0"
+        }
+      },
+      "response": {
+        "_id": "5f1e9a2b3c4d5e6f70819299",
+        "name": "Metalúrgica Exemplo, Lda.",
+        "fiscalNumber": "509999990",
+        "address": "Rua das Flores, 12",
+        "zipCode": "4000-123",
+        "location": "Porto",
+        "paymentCondition": "30 dias",
+        "type": "Cliente e Fornecedor",
+        "__v": 0
+      }
+    },
+    {
+      "body": "{\"name\":\"Metalúrgica Exemplo, Lda.\",\"fiscalNumber\":\"\",\"address\":\"\",\"zipCode\":\"\",\"location\":\"\",\"paymentCondition\":\"30 dias\",\"type\":\"Cliente\"}",
+      "message": null,
+      "outcome": "200",
+      "stored": {
+        "_id": "{{oid}}",
+        "name": "Metalúrgica Exemplo, Lda.",
+        "fiscalNumber": "",
+        "address": "",
+        "zipCode": "",
+        "location": "",
+        "paymentCondition": "30 dias",
+        "type": "Cliente",
+        "__v": {
+          "$numberInt": "0"
+        }
+      },
+      "response": {
+        "_id": "5f1e9a2b3c4d5e6f70819299",
+        "name": "Metalúrgica Exemplo, Lda.",
+        "fiscalNumber": "",
+        "address": "",
+        "zipCode": "",
+        "location": "",
+        "paymentCondition": "30 dias",
+        "type": "Cliente",
+        "__v": 0
+      }
+    },
+    {
+      "body": "{\"type\":\"Cliente\",\"paymentCondition\":\"30 dias\",\"location\":\"Porto\",\"zipCode\":\"4000-123\",\"address\":\"Rua\",\"fiscalNumber\":\"1\",\"name\":\"Ordem Inversa\"}",
+      "message": null,
+      "outcome": "200",
+      "stored": {
+        "_id": "{{oid}}",
+        "type": "Cliente",
+        "paymentCondition": "30 dias",
+        "location": "Porto",
+        "zipCode": "4000-123",
+        "address": "Rua",
+        "fiscalNumber": "1",
+        "name": "Ordem Inversa",
+        "__v": {
+          "$numberInt": "0"
+        }
+      },
+      "response": {
+        "_id": "5f1e9a2b3c4d5e6f70819299",
+        "type": "Cliente",
+        "paymentCondition": "30 dias",
+        "location": "Porto",
+        "zipCode": "4000-123",
+        "address": "Rua",
+        "fiscalNumber": "1",
+        "name": "Ordem Inversa",
+        "__v": 0
+      }
+    },
+    {
+      "body": "{\"name\":\"Só obrigatórios\",\"paymentCondition\":\"Pronto pagamento\",\"type\":\"Cliente\"}",
+      "message": null,
+      "outcome": "200",
+      "stored": {
+        "_id": "{{oid}}",
+        "name": "Só obrigatórios",
+        "paymentCondition": "Pronto pagamento",
+        "type": "Cliente",
+        "__v": {
+          "$numberInt": "0"
+        }
+      },
+      "response": {
+        "_id": "5f1e9a2b3c4d5e6f70819299",
+        "name": "Só obrigatórios",
+        "paymentCondition": "Pronto pagamento",
+        "type": "Cliente",
+        "__v": 0
+      }
+    },
+    {
+      "body": "{\"name\":\"  Espaços  \",\"fiscalNumber\":\"509999990\",\"address\":\"Rua das Flores, 12\",\"zipCode\":\"4000-123\",\"location\":\" Porto \",\"paymentCondition\":\"30 dias\",\"type\":\"Cliente\"}",
+      "message": null,
+      "outcome": "200",
+      "stored": {
+        "_id": "{{oid}}",
+        "name": "  Espaços  ",
+        "fiscalNumber": "509999990",
+        "address": "Rua das Flores, 12",
+        "zipCode": "4000-123",
+        "location": " Porto ",
+        "paymentCondition": "30 dias",
+        "type": "Cliente",
+        "__v": {
+          "$numberInt": "0"
+        }
+      },
+      "response": {
+        "_id": "5f1e9a2b3c4d5e6f70819299",
+        "name": "  Espaços  ",
+        "fiscalNumber": "509999990",
+        "address": "Rua das Flores, 12",
+        "zipCode": "4000-123",
+        "location": " Porto ",
+        "paymentCondition": "30 dias",
+        "type": "Cliente",
+        "__v": 0
+      }
+    },
+    {
+      "body": "{\"name\":\"Café Decomposto\",\"fiscalNumber\":\"509999990\",\"address\":\"Rua das Flores, 12\",\"zipCode\":\"4000-123\",\"location\":\"Porto\",\"paymentCondition\":\"30 dias\",\"type\":\"Cliente\"}",
+      "message": null,
+      "outcome": "200",
+      "stored": {
+        "_id": "{{oid}}",
+        "name": "Café Decomposto",
+        "fiscalNumber": "509999990",
+        "address": "Rua das Flores, 12",
+        "zipCode": "4000-123",
+        "location": "Porto",
+        "paymentCondition": "30 dias",
+        "type": "Cliente",
+        "__v": {
+          "$numberInt": "0"
+        }
+      },
+      "response": {
+        "_id": "5f1e9a2b3c4d5e6f70819299",
+        "name": "Café Decomposto",
+        "fiscalNumber": "509999990",
+        "address": "Rua das Flores, 12",
+        "zipCode": "4000-123",
+        "location": "Porto",
+        "paymentCondition": "30 dias",
+        "type": "Cliente",
+        "__v": 0
+      }
+    },
+    {
+      "body": "{\"name\":\"Metalúrgica Exemplo, Lda.\",\"fiscalNumber\":\"509\\t999990\",\"address\":\"Rua das Flores, 12\",\"zipCode\":\"4000-123\",\"location\":\"Porto\",\"paymentCondition\":\"30 dias\",\"type\":\"Cliente\"}",
+      "message": null,
+      "outcome": "200",
+      "stored": {
+        "_id": "{{oid}}",
+        "name": "Metalúrgica Exemplo, Lda.",
+        "fiscalNumber": "509\t999990",
+        "address": "Rua das Flores, 12",
+        "zipCode": "4000-123",
+        "location": "Porto",
+        "paymentCondition": "30 dias",
+        "type": "Cliente",
+        "__v": {
+          "$numberInt": "0"
+        }
+      },
+      "response": {
+        "_id": "5f1e9a2b3c4d5e6f70819299",
+        "name": "Metalúrgica Exemplo, Lda.",
+        "fiscalNumber": "509\t999990",
+        "address": "Rua das Flores, 12",
+        "zipCode": "4000-123",
+        "location": "Porto",
+        "paymentCondition": "30 dias",
+        "type": "Cliente",
+        "__v": 0
+      }
+    },
+    {
+      "body": "{}",
+      "message": "\"name\" is required"
+    },
+    {
+      "body": "{\"fiscalNumber\":\"509999990\",\"address\":\"Rua das Flores, 12\",\"zipCode\":\"4000-123\",\"location\":\"Porto\",\"paymentCondition\":\"30 dias\",\"type\":\"Cliente\"}",
+      "message": "\"name\" is required"
+    },
+    {
+      "body": "{\"name\":\"Metalúrgica Exemplo, Lda.\",\"fiscalNumber\":\"509999990\",\"address\":\"Rua das Flores, 12\",\"zipCode\":\"4000-123\",\"location\":\"Porto\",\"type\":\"Cliente\"}",
+      "message": "\"paymentCondition\" is required"
+    },
+    {
+      "body": "{\"name\":\"Metalúrgica Exemplo, Lda.\",\"fiscalNumber\":\"509999990\",\"address\":\"Rua das Flores, 12\",\"zipCode\":\"4000-123\",\"location\":\"Porto\",\"paymentCondition\":\"30 dias\"}",
+      "message": "\"type\" is required"
+    },
+    {
+      "body": "{\"name\":\"Metalúrgica Exemplo, Lda.\",\"address\":\"Rua das Flores, 12\",\"zipCode\":\"4000-123\",\"location\":\"Porto\",\"paymentCondition\":\"30 dias\",\"type\":\"Cliente\"}",
+      "message": null,
+      "outcome": "200",
+      "stored": {
+        "_id": "{{oid}}",
+        "name": "Metalúrgica Exemplo, Lda.",
+        "address": "Rua das Flores, 12",
+        "zipCode": "4000-123",
+        "location": "Porto",
+        "paymentCondition": "30 dias",
+        "type": "Cliente",
+        "__v": {
+          "$numberInt": "0"
+        }
+      },
+      "response": {
+        "_id": "5f1e9a2b3c4d5e6f70819299",
+        "name": "Metalúrgica Exemplo, Lda.",
+        "address": "Rua das Flores, 12",
+        "zipCode": "4000-123",
+        "location": "Porto",
+        "paymentCondition": "30 dias",
+        "type": "Cliente",
+        "__v": 0
+      }
+    },
+    {
+      "body": "{\"name\":\"Metalúrgica Exemplo, Lda.\",\"fiscalNumber\":\"509999990\",\"zipCode\":\"4000-123\",\"location\":\"Porto\",\"paymentCondition\":\"30 dias\",\"type\":\"Cliente\"}",
+      "message": null,
+      "outcome": "200",
+      "stored": {
+        "_id": "{{oid}}",
+        "name": "Metalúrgica Exemplo, Lda.",
+        "fiscalNumber": "509999990",
+        "zipCode": "4000-123",
+        "location": "Porto",
+        "paymentCondition": "30 dias",
+        "type": "Cliente",
+        "__v": {
+          "$numberInt": "0"
+        }
+      },
+      "response": {
+        "_id": "5f1e9a2b3c4d5e6f70819299",
+        "name": "Metalúrgica Exemplo, Lda.",
+        "fiscalNumber": "509999990",
+        "zipCode": "4000-123",
+        "location": "Porto",
+        "paymentCondition": "30 dias",
+        "type": "Cliente",
+        "__v": 0
+      }
+    },
+    {
+      "body": "{\"name\":\"Metalúrgica Exemplo, Lda.\",\"fiscalNumber\":\"509999990\",\"address\":\"Rua das Flores, 12\",\"location\":\"Porto\",\"paymentCondition\":\"30 dias\",\"type\":\"Cliente\"}",
+      "message": null,
+      "outcome": "200",
+      "stored": {
+        "_id": "{{oid}}",
+        "name": "Metalúrgica Exemplo, Lda.",
+        "fiscalNumber": "509999990",
+        "address": "Rua das Flores, 12",
+        "location": "Porto",
+        "paymentCondition": "30 dias",
+        "type": "Cliente",
+        "__v": {
+          "$numberInt": "0"
+        }
+      },
+      "response": {
+        "_id": "5f1e9a2b3c4d5e6f70819299",
+        "name": "Metalúrgica Exemplo, Lda.",
+        "fiscalNumber": "509999990",
+        "address": "Rua das Flores, 12",
+        "location": "Porto",
+        "paymentCondition": "30 dias",
+        "type": "Cliente",
+        "__v": 0
+      }
+    },
+    {
+      "body": "{\"name\":\"Metalúrgica Exemplo, Lda.\",\"fiscalNumber\":\"509999990\",\"address\":\"Rua das Flores, 12\",\"zipCode\":\"4000-123\",\"paymentCondition\":\"30 dias\",\"type\":\"Cliente\"}",
+      "message": null,
+      "outcome": "200",
+      "stored": {
+        "_id": "{{oid}}",
+        "name": "Metalúrgica Exemplo, Lda.",
+        "fiscalNumber": "509999990",
+        "address": "Rua das Flores, 12",
+        "zipCode": "4000-123",
+        "paymentCondition": "30 dias",
+        "type": "Cliente",
+        "__v": {
+          "$numberInt": "0"
+        }
+      },
+      "response": {
+        "_id": "5f1e9a2b3c4d5e6f70819299",
+        "name": "Metalúrgica Exemplo, Lda.",
+        "fiscalNumber": "509999990",
+        "address": "Rua das Flores, 12",
+        "zipCode": "4000-123",
+        "paymentCondition": "30 dias",
+        "type": "Cliente",
+        "__v": 0
+      }
+    },
+    {
+      "body": "{\"name\":\"\",\"fiscalNumber\":\"509999990\",\"address\":\"Rua das Flores, 12\",\"zipCode\":\"4000-123\",\"location\":\"Porto\",\"paymentCondition\":\"30 dias\",\"type\":\"Cliente\"}",
+      "message": "\"name\" is not allowed to be empty"
+    },
+    {
+      "body": "{\"name\":\" \",\"fiscalNumber\":\"509999990\",\"address\":\"Rua das Flores, 12\",\"zipCode\":\"4000-123\",\"location\":\"Porto\",\"paymentCondition\":\"30 dias\",\"type\":\"Cliente\"}",
+      "message": null,
+      "outcome": "200",
+      "stored": {
+        "_id": "{{oid}}",
+        "name": " ",
+        "fiscalNumber": "509999990",
+        "address": "Rua das Flores, 12",
+        "zipCode": "4000-123",
+        "location": "Porto",
+        "paymentCondition": "30 dias",
+        "type": "Cliente",
+        "__v": {
+          "$numberInt": "0"
+        }
+      },
+      "response": {
+        "_id": "5f1e9a2b3c4d5e6f70819299",
+        "name": " ",
+        "fiscalNumber": "509999990",
+        "address": "Rua das Flores, 12",
+        "zipCode": "4000-123",
+        "location": "Porto",
+        "paymentCondition": "30 dias",
+        "type": "Cliente",
+        "__v": 0
+      }
+    },
+    {
+      "body": "{\"name\":null,\"fiscalNumber\":\"509999990\",\"address\":\"Rua das Flores, 12\",\"zipCode\":\"4000-123\",\"location\":\"Porto\",\"paymentCondition\":\"30 dias\",\"type\":\"Cliente\"}",
+      "message": "\"name\" must be a string"
+    },
+    {
+      "body": "{\"name\":1,\"fiscalNumber\":\"509999990\",\"address\":\"Rua das Flores, 12\",\"zipCode\":\"4000-123\",\"location\":\"Porto\",\"paymentCondition\":\"30 dias\",\"type\":\"Cliente\"}",
+      "message": "\"name\" must be a string"
+    },
+    {
+      "body": "{\"name\":true,\"fiscalNumber\":\"509999990\",\"address\":\"Rua das Flores, 12\",\"zipCode\":\"4000-123\",\"location\":\"Porto\",\"paymentCondition\":\"30 dias\",\"type\":\"Cliente\"}",
+      "message": "\"name\" must be a string"
+    },
+    {
+      "body": "{\"name\":[\"a\"],\"fiscalNumber\":\"509999990\",\"address\":\"Rua das Flores, 12\",\"zipCode\":\"4000-123\",\"location\":\"Porto\",\"paymentCondition\":\"30 dias\",\"type\":\"Cliente\"}",
+      "message": "\"name\" must be a string"
+    },
+    {
+      "body": "{\"name\":{\"a\":1},\"fiscalNumber\":\"509999990\",\"address\":\"Rua das Flores, 12\",\"zipCode\":\"4000-123\",\"location\":\"Porto\",\"paymentCondition\":\"30 dias\",\"type\":\"Cliente\"}",
+      "message": "\"name\" must be a string"
+    },
+    {
+      "body": "{\"name\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\"fiscalNumber\":\"509999990\",\"address\":\"Rua das Flores, 12\",\"zipCode\":\"4000-123\",\"location\":\"Porto\",\"paymentCondition\":\"30 dias\",\"type\":\"Cliente\"}",
+      "message": null,
+      "outcome": "200",
+      "stored": {
+        "_id": "{{oid}}",
+        "name": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "fiscalNumber": "509999990",
+        "address": "Rua das Flores, 12",
+        "zipCode": "4000-123",
+        "location": "Porto",
+        "paymentCondition": "30 dias",
+        "type": "Cliente",
+        "__v": {
+          "$numberInt": "0"
+        }
+      },
+      "response": {
+        "_id": "5f1e9a2b3c4d5e6f70819299",
+        "name": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "fiscalNumber": "509999990",
+        "address": "Rua das Flores, 12",
+        "zipCode": "4000-123",
+        "location": "Porto",
+        "paymentCondition": "30 dias",
+        "type": "Cliente",
+        "__v": 0
+      }
+    },
+    {
+      "body": "{\"name\":\"Metalúrgica Exemplo, Lda.\",\"fiscalNumber\":\"509999990\",\"address\":\"Rua das Flores, 12\",\"zipCode\":\"4000-123\",\"location\":\"Porto\",\"paymentCondition\":\"\",\"type\":\"Cliente\"}",
+      "message": "\"paymentCondition\" is not allowed to be empty"
+    },
+    {
+      "body": "{\"name\":\"Metalúrgica Exemplo, Lda.\",\"fiscalNumber\":\"509999990\",\"address\":\"Rua das Flores, 12\",\"zipCode\":\"4000-123\",\"location\":\"Porto\",\"paymentCondition\":null,\"type\":\"Cliente\"}",
+      "message": "\"paymentCondition\" must be a string"
+    },
+    {
+      "body": "{\"name\":\"Metalúrgica Exemplo, Lda.\",\"fiscalNumber\":\"509999990\",\"address\":\"Rua das Flores, 12\",\"zipCode\":\"4000-123\",\"location\":\"Porto\",\"paymentCondition\":30,\"type\":\"Cliente\"}",
+      "message": "\"paymentCondition\" must be a string"
+    },
+    {
+      "body": "{\"name\":\"Metalúrgica Exemplo, Lda.\",\"fiscalNumber\":\"509999990\",\"address\":\"Rua das Flores, 12\",\"zipCode\":\"4000-123\",\"location\":\"Porto\",\"paymentCondition\":\"Não existe\",\"type\":\"Cliente\"}",
+      "message": null,
+      "outcome": "200",
+      "stored": {
+        "_id": "{{oid}}",
+        "name": "Metalúrgica Exemplo, Lda.",
+        "fiscalNumber": "509999990",
+        "address": "Rua das Flores, 12",
+        "zipCode": "4000-123",
+        "location": "Porto",
+        "paymentCondition": "Não existe",
+        "type": "Cliente",
+        "__v": {
+          "$numberInt": "0"
+        }
+      },
+      "response": {
+        "_id": "5f1e9a2b3c4d5e6f70819299",
+        "name": "Metalúrgica Exemplo, Lda.",
+        "fiscalNumber": "509999990",
+        "address": "Rua das Flores, 12",
+        "zipCode": "4000-123",
+        "location": "Porto",
+        "paymentCondition": "Não existe",
+        "type": "Cliente",
+        "__v": 0
+      }
+    },
+    {
+      "body": "{\"name\":\"Metalúrgica Exemplo, Lda.\",\"fiscalNumber\":\"509999990\",\"address\":\"Rua das Flores, 12\",\"zipCode\":\"4000-123\",\"location\":\"Porto\",\"paymentCondition\":\"30 dias\",\"type\":\"cliente\"}",
+      "message": "\"type\" must be one of [Cliente, Fornecedor, Cliente e Fornecedor]"
+    },
+    {
+      "body": "{\"name\":\"Metalúrgica Exemplo, Lda.\",\"fiscalNumber\":\"509999990\",\"address\":\"Rua das Flores, 12\",\"zipCode\":\"4000-123\",\"location\":\"Porto\",\"paymentCondition\":\"30 dias\",\"type\":\"Cliente \"}",
+      "message": "\"type\" must be one of [Cliente, Fornecedor, Cliente e Fornecedor]"
+    },
+    {
+      "body": "{\"name\":\"Metalúrgica Exemplo, Lda.\",\"fiscalNumber\":\"509999990\",\"address\":\"Rua das Flores, 12\",\"zipCode\":\"4000-123\",\"location\":\"Porto\",\"paymentCondition\":\"30 dias\",\"type\":\"\"}",
+      "message": "\"type\" is not allowed to be empty"
+    },
+    {
+      "body": "{\"name\":\"Metalúrgica Exemplo, Lda.\",\"fiscalNumber\":\"509999990\",\"address\":\"Rua das Flores, 12\",\"zipCode\":\"4000-123\",\"location\":\"Porto\",\"paymentCondition\":\"30 dias\",\"type\":null}",
+      "message": "\"type\" must be a string"
+    },
+    {
+      "body": "{\"name\":\"Metalúrgica Exemplo, Lda.\",\"fiscalNumber\":\"509999990\",\"address\":\"Rua das Flores, 12\",\"zipCode\":\"4000-123\",\"location\":\"Porto\",\"paymentCondition\":\"30 dias\",\"type\":1}",
+      "message": "\"type\" must be a string"
+    },
+    {
+      "body": "{\"name\":\"Metalúrgica Exemplo, Lda.\",\"fiscalNumber\":\"509999990\",\"address\":\"Rua das Flores, 12\",\"zipCode\":\"4000-123\",\"location\":\"Porto\",\"paymentCondition\":\"30 dias\",\"type\":[\"Cliente\"]}",
+      "message": "\"type\" must be a string"
+    },
+    {
+      "body": "{\"name\":\"Metalúrgica Exemplo, Lda.\",\"fiscalNumber\":null,\"address\":\"Rua das Flores, 12\",\"zipCode\":\"4000-123\",\"location\":\"Porto\",\"paymentCondition\":\"30 dias\",\"type\":\"Cliente\"}",
+      "message": null,
+      "outcome": "200",
+      "stored": {
+        "_id": "{{oid}}",
+        "name": "Metalúrgica Exemplo, Lda.",
+        "fiscalNumber": null,
+        "address": "Rua das Flores, 12",
+        "zipCode": "4000-123",
+        "location": "Porto",
+        "paymentCondition": "30 dias",
+        "type": "Cliente",
+        "__v": {
+          "$numberInt": "0"
+        }
+      },
+      "response": {
+        "_id": "5f1e9a2b3c4d5e6f70819299",
+        "name": "Metalúrgica Exemplo, Lda.",
+        "fiscalNumber": null,
+        "address": "Rua das Flores, 12",
+        "zipCode": "4000-123",
+        "location": "Porto",
+        "paymentCondition": "30 dias",
+        "type": "Cliente",
+        "__v": 0
+      }
+    },
+    {
+      "body": "{\"name\":\"Metalúrgica Exemplo, Lda.\",\"fiscalNumber\":509999990,\"address\":\"Rua das Flores, 12\",\"zipCode\":\"4000-123\",\"location\":\"Porto\",\"paymentCondition\":\"30 dias\",\"type\":\"Cliente\"}",
+      "message": null,
+      "outcome": "200",
+      "stored": {
+        "_id": "{{oid}}",
+        "name": "Metalúrgica Exemplo, Lda.",
+        "fiscalNumber": "509999990",
+        "address": "Rua das Flores, 12",
+        "zipCode": "4000-123",
+        "location": "Porto",
+        "paymentCondition": "30 dias",
+        "type": "Cliente",
+        "__v": {
+          "$numberInt": "0"
+        }
+      },
+      "response": {
+        "_id": "5f1e9a2b3c4d5e6f70819299",
+        "name": "Metalúrgica Exemplo, Lda.",
+        "fiscalNumber": "509999990",
+        "address": "Rua das Flores, 12",
+        "zipCode": "4000-123",
+        "location": "Porto",
+        "paymentCondition": "30 dias",
+        "type": "Cliente",
+        "__v": 0
+      }
+    },
+    {
+      "body": "{\"name\":\"Metalúrgica Exemplo, Lda.\",\"fiscalNumber\":1.5,\"address\":\"Rua das Flores, 12\",\"zipCode\":\"4000-123\",\"location\":\"Porto\",\"paymentCondition\":\"30 dias\",\"type\":\"Cliente\"}",
+      "message": null,
+      "outcome": "200",
+      "stored": {
+        "_id": "{{oid}}",
+        "name": "Metalúrgica Exemplo, Lda.",
+        "fiscalNumber": "1.5",
+        "address": "Rua das Flores, 12",
+        "zipCode": "4000-123",
+        "location": "Porto",
+        "paymentCondition": "30 dias",
+        "type": "Cliente",
+        "__v": {
+          "$numberInt": "0"
+        }
+      },
+      "response": {
+        "_id": "5f1e9a2b3c4d5e6f70819299",
+        "name": "Metalúrgica Exemplo, Lda.",
+        "fiscalNumber": "1.5",
+        "address": "Rua das Flores, 12",
+        "zipCode": "4000-123",
+        "location": "Porto",
+        "paymentCondition": "30 dias",
+        "type": "Cliente",
+        "__v": 0
+      }
+    },
+    {
+      "body": "{\"name\":\"Metalúrgica Exemplo, Lda.\",\"fiscalNumber\":0,\"address\":\"Rua das Flores, 12\",\"zipCode\":\"4000-123\",\"location\":\"Porto\",\"paymentCondition\":\"30 dias\",\"type\":\"Cliente\"}",
+      "message": null,
+      "outcome": "200",
+      "stored": {
+        "_id": "{{oid}}",
+        "name": "Metalúrgica Exemplo, Lda.",
+        "fiscalNumber": "0",
+        "address": "Rua das Flores, 12",
+        "zipCode": "4000-123",
+        "location": "Porto",
+        "paymentCondition": "30 dias",
+        "type": "Cliente",
+        "__v": {
+          "$numberInt": "0"
+        }
+      },
+      "response": {
+        "_id": "5f1e9a2b3c4d5e6f70819299",
+        "name": "Metalúrgica Exemplo, Lda.",
+        "fiscalNumber": "0",
+        "address": "Rua das Flores, 12",
+        "zipCode": "4000-123",
+        "location": "Porto",
+        "paymentCondition": "30 dias",
+        "type": "Cliente",
+        "__v": 0
+      }
+    },
+    {
+      "body": "{\"name\":\"Metalúrgica Exemplo, Lda.\",\"fiscalNumber\":1e+21,\"address\":\"Rua das Flores, 12\",\"zipCode\":\"4000-123\",\"location\":\"Porto\",\"paymentCondition\":\"30 dias\",\"type\":\"Cliente\"}",
+      "message": null,
+      "outcome": "200",
+      "stored": {
+        "_id": "{{oid}}",
+        "name": "Metalúrgica Exemplo, Lda.",
+        "fiscalNumber": "1e+21",
+        "address": "Rua das Flores, 12",
+        "zipCode": "4000-123",
+        "location": "Porto",
+        "paymentCondition": "30 dias",
+        "type": "Cliente",
+        "__v": {
+          "$numberInt": "0"
+        }
+      },
+      "response": {
+        "_id": "5f1e9a2b3c4d5e6f70819299",
+        "name": "Metalúrgica Exemplo, Lda.",
+        "fiscalNumber": "1e+21",
+        "address": "Rua das Flores, 12",
+        "zipCode": "4000-123",
+        "location": "Porto",
+        "paymentCondition": "30 dias",
+        "type": "Cliente",
+        "__v": 0
+      }
+    },
+    {
+      "body": "{\"name\":\"Metalúrgica Exemplo, Lda.\",\"fiscalNumber\":1e-7,\"address\":\"Rua das Flores, 12\",\"zipCode\":\"4000-123\",\"location\":\"Porto\",\"paymentCondition\":\"30 dias\",\"type\":\"Cliente\"}",
+      "message": null,
+      "outcome": "200",
+      "stored": {
+        "_id": "{{oid}}",
+        "name": "Metalúrgica Exemplo, Lda.",
+        "fiscalNumber": "1e-7",
+        "address": "Rua das Flores, 12",
+        "zipCode": "4000-123",
+        "location": "Porto",
+        "paymentCondition": "30 dias",
+        "type": "Cliente",
+        "__v": {
+          "$numberInt": "0"
+        }
+      },
+      "response": {
+        "_id": "5f1e9a2b3c4d5e6f70819299",
+        "name": "Metalúrgica Exemplo, Lda.",
+        "fiscalNumber": "1e-7",
+        "address": "Rua das Flores, 12",
+        "zipCode": "4000-123",
+        "location": "Porto",
+        "paymentCondition": "30 dias",
+        "type": "Cliente",
+        "__v": 0
+      }
+    },
+    {
+      "body": "{\"name\":\"Metalúrgica Exemplo, Lda.\",\"fiscalNumber\":true,\"address\":\"Rua das Flores, 12\",\"zipCode\":\"4000-123\",\"location\":\"Porto\",\"paymentCondition\":\"30 dias\",\"type\":\"Cliente\"}",
+      "message": null,
+      "outcome": "200",
+      "stored": {
+        "_id": "{{oid}}",
+        "name": "Metalúrgica Exemplo, Lda.",
+        "fiscalNumber": "true",
+        "address": "Rua das Flores, 12",
+        "zipCode": "4000-123",
+        "location": "Porto",
+        "paymentCondition": "30 dias",
+        "type": "Cliente",
+        "__v": {
+          "$numberInt": "0"
+        }
+      },
+      "response": {
+        "_id": "5f1e9a2b3c4d5e6f70819299",
+        "name": "Metalúrgica Exemplo, Lda.",
+        "fiscalNumber": "true",
+        "address": "Rua das Flores, 12",
+        "zipCode": "4000-123",
+        "location": "Porto",
+        "paymentCondition": "30 dias",
+        "type": "Cliente",
+        "__v": 0
+      }
+    },
+    {
+      "body": "{\"name\":\"Metalúrgica Exemplo, Lda.\",\"fiscalNumber\":false,\"address\":\"Rua das Flores, 12\",\"zipCode\":\"4000-123\",\"location\":\"Porto\",\"paymentCondition\":\"30 dias\",\"type\":\"Cliente\"}",
+      "message": null,
+      "outcome": "200",
+      "stored": {
+        "_id": "{{oid}}",
+        "name": "Metalúrgica Exemplo, Lda.",
+        "fiscalNumber": "false",
+        "address": "Rua das Flores, 12",
+        "zipCode": "4000-123",
+        "location": "Porto",
+        "paymentCondition": "30 dias",
+        "type": "Cliente",
+        "__v": {
+          "$numberInt": "0"
+        }
+      },
+      "response": {
+        "_id": "5f1e9a2b3c4d5e6f70819299",
+        "name": "Metalúrgica Exemplo, Lda.",
+        "fiscalNumber": "false",
+        "address": "Rua das Flores, 12",
+        "zipCode": "4000-123",
+        "location": "Porto",
+        "paymentCondition": "30 dias",
+        "type": "Cliente",
+        "__v": 0
+      }
+    },
+    {
+      "body": "{\"name\":\"Metalúrgica Exemplo, Lda.\",\"fiscalNumber\":{},\"address\":\"Rua das Flores, 12\",\"zipCode\":\"4000-123\",\"location\":\"Porto\",\"paymentCondition\":\"30 dias\",\"type\":\"Cliente\"}",
+      "message": null,
+      "outcome": "500",
+      "reason": "Entity validation failed: fiscalNumber: Cast to string failed for value \"{}\" (type Object) at path \"fiscalNumber\""
+    },
+    {
+      "body": "{\"name\":\"Metalúrgica Exemplo, Lda.\",\"fiscalNumber\":[],\"address\":\"Rua das Flores, 12\",\"zipCode\":\"4000-123\",\"location\":\"Porto\",\"paymentCondition\":\"30 dias\",\"type\":\"Cliente\"}",
+      "message": null,
+      "outcome": "500",
+      "reason": "Entity validation failed: fiscalNumber: Cast to string failed for value \"[]\" (type Array) at path \"fiscalNumber\""
+    },
+    {
+      "body": "{\"name\":\"Metalúrgica Exemplo, Lda.\",\"fiscalNumber\":[\"509\"],\"address\":\"Rua das Flores, 12\",\"zipCode\":\"4000-123\",\"location\":\"Porto\",\"paymentCondition\":\"30 dias\",\"type\":\"Cliente\"}",
+      "message": null,
+      "outcome": "500",
+      "reason": "Entity validation failed: fiscalNumber: Cast to string failed for value \"[ '509' ]\" (type Array) at path \"fiscalNumber\""
+    },
+    {
+      "body": "{\"name\":\"Metalúrgica Exemplo, Lda.\",\"fiscalNumber\":{\"_id\":\"abc\"},\"address\":\"Rua das Flores, 12\",\"zipCode\":\"4000-123\",\"location\":\"Porto\",\"paymentCondition\":\"30 dias\",\"type\":\"Cliente\"}",
+      "message": null,
+      "outcome": "200",
+      "stored": {
+        "_id": "{{oid}}",
+        "name": "Metalúrgica Exemplo, Lda.",
+        "fiscalNumber": "abc",
+        "address": "Rua das Flores, 12",
+        "zipCode": "4000-123",
+        "location": "Porto",
+        "paymentCondition": "30 dias",
+        "type": "Cliente",
+        "__v": {
+          "$numberInt": "0"
+        }
+      },
+      "response": {
+        "_id": "5f1e9a2b3c4d5e6f70819299",
+        "name": "Metalúrgica Exemplo, Lda.",
+        "fiscalNumber": "abc",
+        "address": "Rua das Flores, 12",
+        "zipCode": "4000-123",
+        "location": "Porto",
+        "paymentCondition": "30 dias",
+        "type": "Cliente",
+        "__v": 0
+      }
+    },
+    {
+      "body": "{\"name\":\"Metalúrgica Exemplo, Lda.\",\"fiscalNumber\":{\"_id\":1},\"address\":\"Rua das Flores, 12\",\"zipCode\":\"4000-123\",\"location\":\"Porto\",\"paymentCondition\":\"30 dias\",\"type\":\"Cliente\"}",
+      "message": null,
+      "outcome": "500",
+      "reason": "Entity validation failed: fiscalNumber: Cast to string failed for value \"{ _id: 1 }\" (type Object) at path \"fiscalNumber\""
+    },
+    {
+      "body": "{\"name\":\"Metalúrgica Exemplo, Lda.\",\"fiscalNumber\":{\"_id\":\"\"},\"address\":\"Rua das Flores, 12\",\"zipCode\":\"4000-123\",\"location\":\"Porto\",\"paymentCondition\":\"30 dias\",\"type\":\"Cliente\"}",
+      "message": null,
+      "outcome": "500",
+      "reason": "Entity validation failed: fiscalNumber: Cast to string failed for value \"{ _id: '' }\" (type Object) at path \"fiscalNumber\""
+    },
+    {
+      "body": "{\"name\":\"Metalúrgica Exemplo, Lda.\",\"fiscalNumber\":{\"toString\":1},\"address\":\"Rua das Flores, 12\",\"zipCode\":\"4000-123\",\"location\":\"Porto\",\"paymentCondition\":\"30 dias\",\"type\":\"Cliente\"}",
+      "message": null,
+      "outcome": "500",
+      "reason": "Entity validation failed: fiscalNumber: Cast to string failed for value \"{ toString: 1 }\" (type Object) at path \"fiscalNumber\""
+    },
+    {
+      "body": "{\"name\":\"Metalúrgica Exemplo, Lda.\",\"fiscalNumber\":\"509999990\",\"address\":12,\"zipCode\":4000,\"location\":null,\"paymentCondition\":\"30 dias\",\"type\":\"Cliente\"}",
+      "message": null,
+      "outcome": "200",
+      "stored": {
+        "_id": "{{oid}}",
+        "name": "Metalúrgica Exemplo, Lda.",
+        "fiscalNumber": "509999990",
+        "address": "12",
+        "zipCode": "4000",
+        "location": null,
+        "paymentCondition": "30 dias",
+        "type": "Cliente",
+        "__v": {
+          "$numberInt": "0"
+        }
+      },
+      "response": {
+        "_id": "5f1e9a2b3c4d5e6f70819299",
+        "name": "Metalúrgica Exemplo, Lda.",
+        "fiscalNumber": "509999990",
+        "address": "12",
+        "zipCode": "4000",
+        "location": null,
+        "paymentCondition": "30 dias",
+        "type": "Cliente",
+        "__v": 0
+      }
+    },
+    {
+      "body": "{\"name\":\"Metalúrgica Exemplo, Lda.\",\"fiscalNumber\":\"509999990\",\"address\":{\"a\":1},\"zipCode\":\"4000-123\",\"location\":\"Porto\",\"paymentCondition\":\"30 dias\",\"type\":\"Cliente\"}",
+      "message": null,
+      "outcome": "500",
+      "reason": "Entity validation failed: address: Cast to string failed for value \"{ a: 1 }\" (type Object) at path \"address\""
+    },
+    {
+      "body": "{\"name\":\"Metalúrgica Exemplo, Lda.\",\"fiscalNumber\":\"509999990\",\"address\":\"Rua das Flores, 12\",\"zipCode\":[4000],\"location\":\"Porto\",\"paymentCondition\":\"30 dias\",\"type\":\"Cliente\"}",
+      "message": null,
+      "outcome": "500",
+      "reason": "Entity validation failed: zipCode: Cast to string failed for value \"[ 4000 ]\" (type Array) at path \"zipCode\""
+    },
+    {
+      "body": "{\"name\":\"Metalúrgica Exemplo, Lda.\",\"fiscalNumber\":\"509999990\",\"address\":\"Rua das Flores, 12\",\"zipCode\":\"4000-123\",\"location\":{\"_id\":\"Porto\",\"x\":1},\"paymentCondition\":\"30 dias\",\"type\":\"Cliente\"}",
+      "message": null,
+      "outcome": "200",
+      "stored": {
+        "_id": "{{oid}}",
+        "name": "Metalúrgica Exemplo, Lda.",
+        "fiscalNumber": "509999990",
+        "address": "Rua das Flores, 12",
+        "zipCode": "4000-123",
+        "location": "Porto",
+        "paymentCondition": "30 dias",
+        "type": "Cliente",
+        "__v": {
+          "$numberInt": "0"
+        }
+      },
+      "response": {
+        "_id": "5f1e9a2b3c4d5e6f70819299",
+        "name": "Metalúrgica Exemplo, Lda.",
+        "fiscalNumber": "509999990",
+        "address": "Rua das Flores, 12",
+        "zipCode": "4000-123",
+        "location": "Porto",
+        "paymentCondition": "30 dias",
+        "type": "Cliente",
+        "__v": 0
+      }
+    },
+    {
+      "body": "{\"name\":\"Metalúrgica Exemplo, Lda.\",\"fiscalNumber\":\"509999990\",\"address\":\"Rua das Flores, 12\",\"zipCode\":\"4000-123\",\"location\":\"Porto\",\"paymentCondition\":\"30 dias\",\"type\":\"Cliente\",\"extra\":1}",
+      "message": "\"extra\" is not allowed"
+    },
+    {
+      "body": "{\"extra\":1,\"name\":\"Metalúrgica Exemplo, Lda.\",\"fiscalNumber\":\"509999990\",\"address\":\"Rua das Flores, 12\",\"zipCode\":\"4000-123\",\"location\":\"Porto\",\"paymentCondition\":\"30 dias\",\"type\":\"Cliente\"}",
+      "message": "\"extra\" is not allowed"
+    },
+    {
+      "body": "{\"name\":\"Metalúrgica Exemplo, Lda.\",\"fiscalNumber\":\"509999990\",\"address\":\"Rua das Flores, 12\",\"zipCode\":\"4000-123\",\"location\":\"Porto\",\"paymentCondition\":\"30 dias\",\"type\":\"Cliente\",\"_id\":\"5f1e9a2b3c4d5e6f70819299\"}",
+      "message": "\"_id\" is not allowed"
+    },
+    {
+      "body": "{\"name\":\"Metalúrgica Exemplo, Lda.\",\"fiscalNumber\":\"509999990\",\"address\":\"Rua das Flores, 12\",\"zipCode\":\"4000-123\",\"location\":\"Porto\",\"paymentCondition\":\"30 dias\",\"type\":\"Cliente\",\"__v\":3}",
+      "message": "\"__v\" is not allowed"
+    },
+    {
+      "body": "{\"type\":\"x\",\"name\":\"\"}",
+      "message": "\"name\" is not allowed to be empty"
+    },
+    {
+      "body": "{\"paymentCondition\":\"\",\"type\":\"x\"}",
+      "message": "\"name\" is required"
+    },
+    {
+      "body": "[]",
+      "message": "\"value\" must be an object"
+    },
+    {
+      "body": "{\"name\":\"Duplicada\",\"name\":\"Última\",\"paymentCondition\":\"30 dias\",\"type\":\"Cliente\"}",
+      "message": null,
+      "outcome": "200",
+      "stored": {
+        "_id": "{{oid}}",
+        "name": "Última",
+        "paymentCondition": "30 dias",
+        "type": "Cliente",
+        "__v": {
+          "$numberInt": "0"
+        }
+      },
+      "response": {
+        "_id": "5f1e9a2b3c4d5e6f70819299",
+        "name": "Última",
+        "paymentCondition": "30 dias",
+        "type": "Cliente",
+        "__v": 0
+      }
+    }
+  ],
+  "editEntity": [
+    {
+      "existing": {
+        "_id": {
+          "$oid": "5f1e9a2b3c4d5e6f70819299"
+        },
+        "name": "Metalúrgica Exemplo, Lda.",
+        "fiscalNumber": "509999990",
+        "address": "Rua das Flores, 12",
+        "zipCode": "4000-123",
+        "location": "Porto",
+        "paymentCondition": "30 dias",
+        "type": "Cliente",
+        "__v": {
+          "$numberInt": "0"
+        }
+      },
+      "body": "{\"name\":\"Metalúrgica Exemplo, Lda.\",\"fiscalNumber\":\"509999990\",\"address\":\"Rua das Flores, 12\",\"zipCode\":\"4000-123\",\"location\":\"Porto\",\"paymentCondition\":\"30 dias\",\"type\":\"Cliente\"}",
+      "message": null,
+      "outcome": "200",
+      "update": null,
+      "response": {
+        "_id": "5f1e9a2b3c4d5e6f70819299",
+        "name": "Metalúrgica Exemplo, Lda.",
+        "fiscalNumber": "509999990",
+        "address": "Rua das Flores, 12",
+        "zipCode": "4000-123",
+        "location": "Porto",
+        "paymentCondition": "30 dias",
+        "type": "Cliente"
+      }
+    },
+    {
+      "existing": {
+        "_id": {
+          "$oid": "5f1e9a2b3c4d5e6f70819299"
+        },
+        "name": "Metalúrgica Exemplo, Lda.",
+        "fiscalNumber": "509999990",
+        "address": "Rua das Flores, 12",
+        "zipCode": "4000-123",
+        "location": "Porto",
+        "paymentCondition": "30 dias",
+        "type": "Cliente",
+        "__v": {
+          "$numberInt": "0"
+        }
+      },
+      "body": "{\"name\":\"Metalúrgica Exemplo, S.A.\",\"fiscalNumber\":\"509999990\",\"address\":\"Rua das Flores, 12\",\"zipCode\":\"4000-123\",\"location\":\"Maia\",\"paymentCondition\":\"30 dias\",\"type\":\"Cliente\"}",
+      "message": null,
+      "outcome": "200",
+      "update": {
+        "$set": {
+          "location": "Maia",
+          "name": "Metalúrgica Exemplo, S.A."
+        }
+      },
+      "response": {
+        "_id": "5f1e9a2b3c4d5e6f70819299",
+        "name": "Metalúrgica Exemplo, S.A.",
+        "fiscalNumber": "509999990",
+        "address": "Rua das Flores, 12",
+        "zipCode": "4000-123",
+        "location": "Maia",
+        "paymentCondition": "30 dias",
+        "type": "Cliente"
+      }
+    },
+    {
+      "existing": {
+        "_id": {
+          "$oid": "5f1e9a2b3c4d5e6f70819299"
+        },
+        "name": "Metalúrgica Exemplo, Lda.",
+        "fiscalNumber": "509999990",
+        "address": "Rua das Flores, 12",
+        "zipCode": "4000-123",
+        "location": "Porto",
+        "paymentCondition": "30 dias",
+        "type": "Cliente",
+        "__v": {
+          "$numberInt": "0"
+        }
+      },
+      "body": "{\"name\":\"Metalúrgica Exemplo, Lda.\",\"fiscalNumber\":\"509999990\",\"address\":\"Rua das Flores, 12\",\"zipCode\":\"4000-123\",\"location\":\"Porto\",\"paymentCondition\":\"60 dias\",\"type\":\"Cliente e Fornecedor\"}",
+      "message": null,
+      "outcome": "200",
+      "update": {
+        "$set": {
+          "paymentCondition": "60 dias",
+          "type": "Cliente e Fornecedor"
+        }
+      },
+      "response": {
+        "_id": "5f1e9a2b3c4d5e6f70819299",
+        "name": "Metalúrgica Exemplo, Lda.",
+        "fiscalNumber": "509999990",
+        "address": "Rua das Flores, 12",
+        "zipCode": "4000-123",
+        "location": "Porto",
+        "paymentCondition": "60 dias",
+        "type": "Cliente e Fornecedor"
+      }
+    },
+    {
+      "existing": {
+        "_id": {
+          "$oid": "5f1e9a2b3c4d5e6f70819299"
+        },
+        "name": "Metalúrgica Exemplo, Lda.",
+        "fiscalNumber": "509999990",
+        "address": "Rua das Flores, 12",
+        "zipCode": "4000-123",
+        "location": "Porto",
+        "paymentCondition": "30 dias",
+        "type": "Cliente",
+        "__v": {
+          "$numberInt": "0"
+        }
+      },
+      "body": "{\"name\":\"Metalúrgica Exemplo, Lda.\",\"fiscalNumber\":\"\",\"address\":\"\",\"zipCode\":\"\",\"location\":\"\",\"paymentCondition\":\"30 dias\",\"type\":\"Cliente\"}",
+      "message": null,
+      "outcome": "200",
+      "update": {
+        "$set": {
+          "address": "",
+          "fiscalNumber": "",
+          "location": "",
+          "zipCode": ""
+        }
+      },
+      "response": {
+        "_id": "5f1e9a2b3c4d5e6f70819299",
+        "name": "Metalúrgica Exemplo, Lda.",
+        "fiscalNumber": "",
+        "address": "",
+        "zipCode": "",
+        "location": "",
+        "paymentCondition": "30 dias",
+        "type": "Cliente"
+      }
+    },
+    {
+      "existing": {
+        "_id": {
+          "$oid": "5f1e9a2b3c4d5e6f70819299"
+        },
+        "name": "Metalúrgica Exemplo, Lda.",
+        "fiscalNumber": "509999990",
+        "address": "Rua das Flores, 12",
+        "zipCode": "4000-123",
+        "location": "Porto",
+        "paymentCondition": "30 dias",
+        "type": "Cliente",
+        "__v": {
+          "$numberInt": "0"
+        }
+      },
+      "body": "{\"name\":\"Café\",\"fiscalNumber\":\"509999990\",\"address\":\"Rua das Flores, 12\",\"zipCode\":\"4000-123\",\"location\":\"Porto\",\"paymentCondition\":\"30 dias\",\"type\":\"Cliente\"}",
+      "message": null,
+      "outcome": "200",
+      "update": {
+        "$set": {
+          "name": "Café"
+        }
+      },
+      "response": {
+        "_id": "5f1e9a2b3c4d5e6f70819299",
+        "name": "Café",
+        "fiscalNumber": "509999990",
+        "address": "Rua das Flores, 12",
+        "zipCode": "4000-123",
+        "location": "Porto",
+        "paymentCondition": "30 dias",
+        "type": "Cliente"
+      }
+    },
+    {
+      "existing": {
+        "_id": {
+          "$oid": "5f1e9a2b3c4d5e6f70819299"
+        },
+        "name": "Metalúrgica Exemplo, Lda.",
+        "fiscalNumber": "509999990",
+        "address": "Rua das Flores, 12",
+        "zipCode": "4000-123",
+        "location": "Porto",
+        "paymentCondition": "30 dias",
+        "type": "Cliente",
+        "__v": {
+          "$numberInt": "0"
+        }
+      },
+      "body": "{\"name\":\"Metalúrgica Exemplo, Lda.\",\"address\":\"Rua das Flores, 12\",\"zipCode\":\"4000-123\",\"location\":\"Porto\",\"paymentCondition\":\"30 dias\",\"type\":\"Cliente\"}",
+      "message": null,
+      "outcome": "200",
+      "update": {
+        "$unset": {
+          "fiscalNumber": {
+            "$numberInt": "1"
+          }
+        }
+      },
+      "response": {
+        "_id": "5f1e9a2b3c4d5e6f70819299",
+        "name": "Metalúrgica Exemplo, Lda.",
+        "address": "Rua das Flores, 12",
+        "zipCode": "4000-123",
+        "location": "Porto",
+        "paymentCondition": "30 dias",
+        "type": "Cliente"
+      }
+    },
+    {
+      "existing": {
+        "_id": {
+          "$oid": "5f1e9a2b3c4d5e6f70819299"
+        },
+        "name": "Metalúrgica Exemplo, Lda.",
+        "fiscalNumber": "509999990",
+        "address": "Rua das Flores, 12",
+        "zipCode": "4000-123",
+        "location": "Porto",
+        "paymentCondition": "30 dias",
+        "type": "Cliente",
+        "__v": {
+          "$numberInt": "0"
+        }
+      },
+      "body": "{\"name\":\"Metalúrgica Exemplo, Lda.\",\"paymentCondition\":\"30 dias\",\"type\":\"Cliente\"}",
+      "message": null,
+      "outcome": "200",
+      "update": {
+        "$unset": {
+          "address": {
+            "$numberInt": "1"
+          },
+          "fiscalNumber": {
+            "$numberInt": "1"
+          },
+          "location": {
+            "$numberInt": "1"
+          },
+          "zipCode": {
+            "$numberInt": "1"
+          }
+        }
+      },
+      "response": {
+        "_id": "5f1e9a2b3c4d5e6f70819299",
+        "name": "Metalúrgica Exemplo, Lda.",
+        "paymentCondition": "30 dias",
+        "type": "Cliente"
+      }
+    },
+    {
+      "existing": {
+        "_id": {
+          "$oid": "5f1e9a2b3c4d5e6f70819299"
+        },
+        "name": "Metalúrgica Exemplo, Lda.",
+        "fiscalNumber": "509999990",
+        "address": "Rua das Flores, 12",
+        "zipCode": "4000-123",
+        "paymentCondition": "30 dias",
+        "type": "Cliente",
+        "__v": {
+          "$numberInt": "0"
+        }
+      },
+      "body": "{\"name\":\"Metalúrgica Exemplo, Lda.\",\"fiscalNumber\":\"509999990\",\"address\":\"Rua das Flores, 12\",\"zipCode\":\"4000-123\",\"paymentCondition\":\"30 dias\",\"type\":\"Cliente\"}",
+      "message": null,
+      "outcome": "200",
+      "update": null,
+      "response": {
+        "_id": "5f1e9a2b3c4d5e6f70819299",
+        "name": "Metalúrgica Exemplo, Lda.",
+        "fiscalNumber": "509999990",
+        "address": "Rua das Flores, 12",
+        "zipCode": "4000-123",
+        "paymentCondition": "30 dias",
+        "type": "Cliente"
+      }
+    },
+    {
+      "existing": {
+        "_id": {
+          "$oid": "5f1e9a2b3c4d5e6f70819299"
+        },
+        "name": "Metalúrgica Exemplo, Lda.",
+        "fiscalNumber": "509999990",
+        "address": "Rua das Flores, 12",
+        "zipCode": "4000-123",
+        "location": "Porto",
+        "paymentCondition": "30 dias",
+        "type": "Cliente",
+        "__v": {
+          "$numberInt": "0"
+        }
+      },
+      "body": "{\"name\":\"Metalúrgica Exemplo, Lda.\",\"fiscalNumber\":null,\"address\":\"Rua das Flores, 12\",\"zipCode\":\"4000-123\",\"location\":\"Porto\",\"paymentCondition\":\"30 dias\",\"type\":\"Cliente\"}",
+      "message": null,
+      "outcome": "200",
+      "update": {
+        "$set": {
+          "fiscalNumber": null
+        }
+      },
+      "response": {
+        "_id": "5f1e9a2b3c4d5e6f70819299",
+        "name": "Metalúrgica Exemplo, Lda.",
+        "fiscalNumber": null,
+        "address": "Rua das Flores, 12",
+        "zipCode": "4000-123",
+        "location": "Porto",
+        "paymentCondition": "30 dias",
+        "type": "Cliente"
+      }
+    },
+    {
+      "existing": {
+        "_id": {
+          "$oid": "5f1e9a2b3c4d5e6f70819299"
+        },
+        "name": "Metalúrgica Exemplo, Lda.",
+        "fiscalNumber": null,
+        "address": "Rua das Flores, 12",
+        "zipCode": "4000-123",
+        "location": "Porto",
+        "paymentCondition": "30 dias",
+        "type": "Cliente",
+        "__v": {
+          "$numberInt": "0"
+        }
+      },
+      "body": "{\"name\":\"Metalúrgica Exemplo, Lda.\",\"fiscalNumber\":null,\"address\":\"Rua das Flores, 12\",\"zipCode\":\"4000-123\",\"location\":\"Porto\",\"paymentCondition\":\"30 dias\",\"type\":\"Cliente\"}",
+      "message": null,
+      "outcome": "200",
+      "update": null,
+      "response": {
+        "_id": "5f1e9a2b3c4d5e6f70819299",
+        "name": "Metalúrgica Exemplo, Lda.",
+        "fiscalNumber": null,
+        "address": "Rua das Flores, 12",
+        "zipCode": "4000-123",
+        "location": "Porto",
+        "paymentCondition": "30 dias",
+        "type": "Cliente"
+      }
+    },
+    {
+      "existing": {
+        "_id": {
+          "$oid": "5f1e9a2b3c4d5e6f70819299"
+        },
+        "name": "Metalúrgica Exemplo, Lda.",
+        "fiscalNumber": "509999990",
+        "address": "Rua das Flores, 12",
+        "zipCode": "4000-123",
+        "location": "Porto",
+        "paymentCondition": "30 dias",
+        "type": "Cliente",
+        "__v": {
+          "$numberInt": "0"
+        }
+      },
+      "body": "{\"name\":\"Metalúrgica Exemplo, Lda.\",\"fiscalNumber\":509999990,\"address\":\"Rua das Flores, 12\",\"zipCode\":\"4000-123\",\"location\":\"Porto\",\"paymentCondition\":\"30 dias\",\"type\":\"Cliente\"}",
+      "message": null,
+      "outcome": "200",
+      "update": null,
+      "response": {
+        "_id": "5f1e9a2b3c4d5e6f70819299",
+        "name": "Metalúrgica Exemplo, Lda.",
+        "fiscalNumber": "509999990",
+        "address": "Rua das Flores, 12",
+        "zipCode": "4000-123",
+        "location": "Porto",
+        "paymentCondition": "30 dias",
+        "type": "Cliente"
+      }
+    },
+    {
+      "existing": {
+        "_id": {
+          "$oid": "5f1e9a2b3c4d5e6f70819299"
+        },
+        "name": "Metalúrgica Exemplo, Lda.",
+        "fiscalNumber": "509999990",
+        "address": "Rua das Flores, 12",
+        "zipCode": "4000-123",
+        "location": "Porto",
+        "paymentCondition": "30 dias",
+        "type": "Cliente",
+        "__v": {
+          "$numberInt": "0"
+        }
+      },
+      "body": "{\"name\":\"Metalúrgica Exemplo, Lda.\",\"fiscalNumber\":1.5,\"address\":\"Rua das Flores, 12\",\"zipCode\":\"4000-123\",\"location\":\"Porto\",\"paymentCondition\":\"30 dias\",\"type\":\"Cliente\"}",
+      "message": null,
+      "outcome": "200",
+      "update": {
+        "$set": {
+          "fiscalNumber": "1.5"
+        }
+      },
+      "response": {
+        "_id": "5f1e9a2b3c4d5e6f70819299",
+        "name": "Metalúrgica Exemplo, Lda.",
+        "fiscalNumber": "1.5",
+        "address": "Rua das Flores, 12",
+        "zipCode": "4000-123",
+        "location": "Porto",
+        "paymentCondition": "30 dias",
+        "type": "Cliente"
+      }
+    },
+    {
+      "existing": {
+        "_id": {
+          "$oid": "5f1e9a2b3c4d5e6f70819299"
+        },
+        "name": "Metalúrgica Exemplo, Lda.",
+        "fiscalNumber": "509999990",
+        "address": "Rua das Flores, 12",
+        "zipCode": "4000-123",
+        "location": "Porto",
+        "paymentCondition": "30 dias",
+        "type": "Cliente",
+        "__v": {
+          "$numberInt": "0"
+        }
+      },
+      "body": "{\"name\":\"Metalúrgica Exemplo, Lda.\",\"fiscalNumber\":true,\"address\":\"Rua das Flores, 12\",\"zipCode\":\"4000-123\",\"location\":\"Porto\",\"paymentCondition\":\"30 dias\",\"type\":\"Cliente\"}",
+      "message": null,
+      "outcome": "200",
+      "update": {
+        "$set": {
+          "fiscalNumber": "true"
+        }
+      },
+      "response": {
+        "_id": "5f1e9a2b3c4d5e6f70819299",
+        "name": "Metalúrgica Exemplo, Lda.",
+        "fiscalNumber": "true",
+        "address": "Rua das Flores, 12",
+        "zipCode": "4000-123",
+        "location": "Porto",
+        "paymentCondition": "30 dias",
+        "type": "Cliente"
+      }
+    },
+    {
+      "existing": {
+        "_id": {
+          "$oid": "5f1e9a2b3c4d5e6f70819299"
+        },
+        "name": "Metalúrgica Exemplo, Lda.",
+        "fiscalNumber": "509999990",
+        "address": "Rua das Flores, 12",
+        "zipCode": "4000-123",
+        "location": "Porto",
+        "paymentCondition": "30 dias",
+        "type": "Cliente",
+        "__v": {
+          "$numberInt": "0"
+        }
+      },
+      "body": "{\"name\":\"Metalúrgica Exemplo, Lda.\",\"fiscalNumber\":{},\"address\":\"Rua das Flores, 12\",\"zipCode\":\"4000-123\",\"location\":\"Porto\",\"paymentCondition\":\"30 dias\",\"type\":\"Cliente\"}",
+      "message": null,
+      "outcome": "500",
+      "reason": "Entity validation failed: fiscalNumber: Cast to string failed for value \"{}\" (type Object) at path \"fiscalNumber\""
+    },
+    {
+      "existing": {
+        "_id": {
+          "$oid": "5f1e9a2b3c4d5e6f70819299"
+        },
+        "name": "Metalúrgica Exemplo, Lda.",
+        "fiscalNumber": "509999990",
+        "address": "Rua das Flores, 12",
+        "zipCode": "4000-123",
+        "location": "Porto",
+        "paymentCondition": "30 dias",
+        "type": "Cliente",
+        "__v": {
+          "$numberInt": "0"
+        }
+      },
+      "body": "{\"name\":\"Metalúrgica Exemplo, Lda.\",\"fiscalNumber\":[\"509999990\"],\"address\":\"Rua das Flores, 12\",\"zipCode\":\"4000-123\",\"location\":\"Porto\",\"paymentCondition\":\"30 dias\",\"type\":\"Cliente\"}",
+      "message": null,
+      "outcome": "500",
+      "reason": "Entity validation failed: fiscalNumber: Cast to string failed for value \"[ '509999990' ]\" (type Array) at path \"fiscalNumber\""
+    },
+    {
+      "existing": {
+        "_id": {
+          "$oid": "5f1e9a2b3c4d5e6f70819299"
+        },
+        "name": "Metalúrgica Exemplo, Lda.",
+        "fiscalNumber": "509999990",
+        "address": "Rua das Flores, 12",
+        "zipCode": "4000-123",
+        "location": "Porto",
+        "paymentCondition": "30 dias",
+        "type": "Cliente",
+        "__v": {
+          "$numberInt": "0"
+        }
+      },
+      "body": "{\"name\":\"Metalúrgica Exemplo, Lda.\",\"fiscalNumber\":{\"_id\":\"509999990\"},\"address\":\"Rua das Flores, 12\",\"zipCode\":\"4000-123\",\"location\":\"Porto\",\"paymentCondition\":\"30 dias\",\"type\":\"Cliente\"}",
+      "message": null,
+      "outcome": "200",
+      "update": null,
+      "response": {
+        "_id": "5f1e9a2b3c4d5e6f70819299",
+        "name": "Metalúrgica Exemplo, Lda.",
+        "fiscalNumber": "509999990",
+        "address": "Rua das Flores, 12",
+        "zipCode": "4000-123",
+        "location": "Porto",
+        "paymentCondition": "30 dias",
+        "type": "Cliente"
+      }
+    },
+    {
+      "existing": {
+        "_id": {
+          "$oid": "5f1e9a2b3c4d5e6f70819299"
+        },
+        "name": "Metalúrgica Exemplo, Lda.",
+        "fiscalNumber": "509999990",
+        "address": "Rua das Flores, 12",
+        "zipCode": "4000-123",
+        "location": "Porto",
+        "paymentCondition": "30 dias",
+        "type": "Cliente",
+        "__v": {
+          "$numberInt": "0"
+        }
+      },
+      "body": "{\"name\":\"Metalúrgica Exemplo, Lda.\",\"fiscalNumber\":{\"_id\":\"x\"},\"address\":\"Rua das Flores, 12\",\"zipCode\":\"4000-123\",\"location\":\"Porto\",\"paymentCondition\":\"30 dias\",\"type\":\"Cliente\"}",
+      "message": null,
+      "outcome": "200",
+      "update": {
+        "$set": {
+          "fiscalNumber": "x"
+        }
+      },
+      "response": {
+        "_id": "5f1e9a2b3c4d5e6f70819299",
+        "name": "Metalúrgica Exemplo, Lda.",
+        "fiscalNumber": "x",
+        "address": "Rua das Flores, 12",
+        "zipCode": "4000-123",
+        "location": "Porto",
+        "paymentCondition": "30 dias",
+        "type": "Cliente"
+      }
+    },
+    {
+      "existing": {
+        "_id": {
+          "$oid": "5f1e9a2b3c4d5e6f70819299"
+        },
+        "name": "Metalúrgica Exemplo, Lda.",
+        "fiscalNumber": "509999990",
+        "address": "Rua das Flores, 12",
+        "zipCode": "4000-123",
+        "location": "Porto",
+        "paymentCondition": "30 dias",
+        "type": "Cliente",
+        "__v": {
+          "$numberInt": "0"
+        }
+      },
+      "body": "{\"name\":\"\",\"fiscalNumber\":\"509999990\",\"address\":\"Rua das Flores, 12\",\"zipCode\":\"4000-123\",\"location\":\"Porto\",\"paymentCondition\":\"30 dias\",\"type\":\"Cliente\"}",
+      "message": "\"name\" is not allowed to be empty"
+    },
+    {
+      "existing": {
+        "_id": {
+          "$oid": "5f1e9a2b3c4d5e6f70819299"
+        },
+        "name": "Metalúrgica Exemplo, Lda.",
+        "fiscalNumber": "509999990",
+        "address": "Rua das Flores, 12",
+        "zipCode": "4000-123",
+        "location": "Porto",
+        "paymentCondition": "30 dias",
+        "type": "Cliente",
+        "__v": {
+          "$numberInt": "0"
+        }
+      },
+      "body": "{\"name\":\"Metalúrgica Exemplo, Lda.\",\"fiscalNumber\":\"509999990\",\"address\":\"Rua das Flores, 12\",\"zipCode\":\"4000-123\",\"location\":\"Porto\",\"paymentCondition\":\"30 dias\",\"type\":\"Outro\"}",
+      "message": "\"type\" must be one of [Cliente, Fornecedor, Cliente e Fornecedor]"
+    },
+    {
+      "existing": {
+        "_id": {
+          "$oid": "5f1e9a2b3c4d5e6f70819299"
+        },
+        "name": "Metalúrgica Exemplo, Lda.",
+        "fiscalNumber": "509999990",
+        "address": "Rua das Flores, 12",
+        "zipCode": "4000-123",
+        "location": "Porto",
+        "paymentCondition": "30 dias",
+        "type": "Cliente",
+        "__v": {
+          "$numberInt": "0"
+        }
+      },
+      "body": "{\"name\":\"Metalúrgica Exemplo, Lda.\",\"fiscalNumber\":\"509999990\",\"address\":\"Rua das Flores, 12\",\"zipCode\":\"4000-123\",\"location\":\"Porto\",\"paymentCondition\":null,\"type\":\"Cliente\"}",
+      "message": "\"paymentCondition\" must be a string"
+    },
+    {
+      "existing": {
+        "_id": {
+          "$oid": "5f1e9a2b3c4d5e6f70819299"
+        },
+        "name": "Metalúrgica Exemplo, Lda.",
+        "fiscalNumber": "509999990",
+        "address": "Rua das Flores, 12",
+        "zipCode": "4000-123",
+        "location": "Porto",
+        "paymentCondition": "30 dias",
+        "type": "Cliente",
+        "__v": {
+          "$numberInt": "0"
+        }
+      },
+      "body": "{\"fiscalNumber\":\"509999990\",\"address\":\"Rua das Flores, 12\",\"zipCode\":\"4000-123\",\"location\":\"Porto\",\"paymentCondition\":\"30 dias\",\"type\":\"Cliente\"}",
+      "message": "\"name\" is required"
+    },
+    {
+      "existing": {
+        "_id": {
+          "$oid": "5f1e9a2b3c4d5e6f70819299"
+        },
+        "name": "Metalúrgica Exemplo, Lda.",
+        "fiscalNumber": "509999990",
+        "address": "Rua das Flores, 12",
+        "zipCode": "4000-123",
+        "location": "Porto",
+        "paymentCondition": "30 dias",
+        "type": "Cliente",
+        "__v": {
+          "$numberInt": "0"
+        }
+      },
+      "body": "{\"name\":\"Metalúrgica Exemplo, Lda.\",\"fiscalNumber\":\"509999990\",\"address\":\"Rua das Flores, 12\",\"zipCode\":\"4000-123\",\"location\":\"Porto\",\"paymentCondition\":\"30 dias\",\"type\":\"Cliente\",\"_id\":\"5f1e9a2b3c4d5e6f70819299\"}",
+      "message": "\"_id\" is not allowed"
+    },
+    {
+      "existing": {
+        "_id": {
+          "$oid": "5f1e9a2b3c4d5e6f70819299"
+        },
+        "name": "Metalúrgica Exemplo, Lda.",
+        "fiscalNumber": "509999990",
+        "address": "Rua das Flores, 12",
+        "zipCode": "4000-123",
+        "location": "Porto",
+        "paymentCondition": "30 dias",
+        "type": "Cliente",
+        "__v": {
+          "$numberInt": "0"
+        }
+      },
+      "body": "{\"name\":\"Metalúrgica Exemplo, Lda.\",\"fiscalNumber\":\"509999990\",\"address\":\"Rua das Flores, 12\",\"zipCode\":\"4000-123\",\"location\":\"Porto\",\"paymentCondition\":\"30 dias\",\"type\":\"Cliente\",\"__v\":0}",
+      "message": "\"__v\" is not allowed"
+    },
+    {
+      "existing": {
+        "_id": {
+          "$oid": "5f1e9a2b3c4d5e6f70819299"
+        },
+        "name": "Metalúrgica Exemplo, Lda.",
+        "fiscalNumber": "509999990",
+        "address": "Rua das Flores, 12",
+        "zipCode": "4000-123",
+        "location": "Porto",
+        "paymentCondition": "30 dias",
+        "type": "Cliente",
+        "__v": {
+          "$numberInt": "0"
+        }
+      },
+      "body": "{}",
+      "message": "\"name\" is required"
+    },
+    {
+      "existing": {
+        "_id": {
+          "$oid": "5f1e9a2b3c4d5e6f70819299"
+        },
+        "name": "Metalúrgica Exemplo, Lda.",
+        "fiscalNumber": "509999990",
+        "address": "Rua das Flores, 12",
+        "zipCode": "4000-123",
+        "location": "Porto",
+        "paymentCondition": "30 dias",
+        "type": "Cliente",
+        "__v": {
+          "$numberInt": "0"
+        }
+      },
+      "body": "[]",
+      "message": "\"value\" must be an object"
+    },
+    {
+      "existing": {
+        "_id": {
+          "$oid": "5f1e9a2b3c4d5e6f70819299"
+        },
+        "name": "Metalúrgica Exemplo, Lda.",
+        "paymentCondition": "30 dias",
+        "type": "Cliente",
+        "__v": {
+          "$numberInt": "0"
+        }
+      },
+      "body": "{\"name\":\"Metalúrgica Exemplo, Lda.\",\"fiscalNumber\":\"509999990\",\"address\":\"Rua das Flores, 12\",\"zipCode\":\"4000-123\",\"location\":\"Porto\",\"paymentCondition\":\"30 dias\",\"type\":\"Cliente\"}",
+      "message": null,
+      "outcome": "200",
+      "update": {
+        "$set": {
+          "address": "Rua das Flores, 12",
+          "fiscalNumber": "509999990",
+          "location": "Porto",
+          "zipCode": "4000-123"
+        }
+      },
+      "response": {
+        "_id": "5f1e9a2b3c4d5e6f70819299",
+        "name": "Metalúrgica Exemplo, Lda.",
+        "fiscalNumber": "509999990",
+        "address": "Rua das Flores, 12",
+        "zipCode": "4000-123",
+        "location": "Porto",
+        "paymentCondition": "30 dias",
+        "type": "Cliente"
+      }
+    },
+    {
+      "existing": {
+        "_id": {
+          "$oid": "5f1e9a2b3c4d5e6f70819299"
+        },
+        "name": "Metalúrgica Exemplo, Lda.",
+        "paymentCondition": "30 dias",
+        "type": "Cliente",
+        "__v": {
+          "$numberInt": "0"
+        }
+      },
+      "body": "{\"name\":\"Metalúrgica Exemplo, Lda.\",\"paymentCondition\":\"30 dias\",\"type\":\"Cliente\"}",
+      "message": null,
+      "outcome": "200",
+      "update": null,
+      "response": {
+        "_id": "5f1e9a2b3c4d5e6f70819299",
+        "name": "Metalúrgica Exemplo, Lda.",
+        "paymentCondition": "30 dias",
+        "type": "Cliente"
+      }
+    },
+    {
+      "existing": {
+        "_id": {
+          "$oid": "5f1e9a2b3c4d5e6f70819299"
+        },
+        "name": "Metalúrgica Exemplo, Lda.",
+        "fiscalNumber": "509999990",
+        "address": "Rua das Flores, 12",
+        "zipCode": "4000-123",
+        "location": "Porto",
+        "paymentCondition": "30 dias",
+        "type": "Cliente"
+      },
+      "body": "{\"name\":\"Metalúrgica Exemplo, Lda.\",\"fiscalNumber\":\"509999990\",\"address\":\"Rua das Flores, 12\",\"zipCode\":\"4000-123\",\"location\":\"Porto\",\"paymentCondition\":\"30 dias\",\"type\":\"Cliente\"}",
+      "message": null,
+      "outcome": "200",
+      "update": null,
+      "response": {
+        "_id": "5f1e9a2b3c4d5e6f70819299",
+        "name": "Metalúrgica Exemplo, Lda.",
+        "fiscalNumber": "509999990",
+        "address": "Rua das Flores, 12",
+        "zipCode": "4000-123",
+        "location": "Porto",
+        "paymentCondition": "30 dias",
+        "type": "Cliente"
+      }
+    },
+    {
+      "existing": {
+        "_id": {
+          "$oid": "5f1e9a2b3c4d5e6f70819299"
+        },
+        "name": "Metalúrgica Exemplo, Lda.",
+        "fiscalNumber": "509999990",
+        "address": "Rua das Flores, 12",
+        "zipCode": "4000-123",
+        "location": "Porto",
+        "paymentCondition": "30 dias",
+        "type": "Cliente"
+      },
+      "body": "{\"name\":\"Metalúrgica Exemplo, Lda.\",\"fiscalNumber\":\"509999990\",\"address\":\"Rua das Flores, 12\",\"zipCode\":\"4000-123\",\"location\":\"Maia\",\"paymentCondition\":\"30 dias\",\"type\":\"Cliente\"}",
+      "message": null,
+      "outcome": "200",
+      "update": {
+        "$set": {
+          "location": "Maia"
+        }
+      },
+      "response": {
+        "_id": "5f1e9a2b3c4d5e6f70819299",
+        "name": "Metalúrgica Exemplo, Lda.",
+        "fiscalNumber": "509999990",
+        "address": "Rua das Flores, 12",
+        "zipCode": "4000-123",
+        "location": "Maia",
+        "paymentCondition": "30 dias",
+        "type": "Cliente"
+      }
+    },
+    {
+      "existing": {
+        "_id": {
+          "$oid": "5f1e9a2b3c4d5e6f70819299"
+        },
+        "name": "Metalúrgica Exemplo, Lda.",
+        "fiscalNumber": "509999990",
+        "address": "Rua das Flores, 12",
+        "zipCode": null,
+        "location": "Porto",
+        "paymentCondition": "30 dias",
+        "type": "Cliente",
+        "__v": {
+          "$numberInt": "0"
+        }
+      },
+      "body": "{\"name\":\"Metalúrgica Exemplo, Lda.\",\"fiscalNumber\":\"509999990\",\"address\":\"Rua das Flores, 12\",\"zipCode\":\"4000-123\",\"location\":\"Porto\",\"paymentCondition\":\"30 dias\",\"type\":\"Cliente\"}",
+      "message": null,
+      "outcome": "200",
+      "update": {
+        "$set": {
+          "zipCode": "4000-123"
+        }
+      },
+      "response": {
+        "_id": "5f1e9a2b3c4d5e6f70819299",
+        "name": "Metalúrgica Exemplo, Lda.",
+        "fiscalNumber": "509999990",
+        "address": "Rua das Flores, 12",
+        "zipCode": "4000-123",
+        "location": "Porto",
+        "paymentCondition": "30 dias",
+        "type": "Cliente"
+      }
+    },
+    {
+      "existing": {
+        "_id": {
+          "$oid": "5f1e9a2b3c4d5e6f70819299"
+        },
+        "name": "Metalúrgica Exemplo, Lda.",
+        "fiscalNumber": {
+          "$numberInt": "509999990"
+        },
+        "address": "Rua das Flores, 12",
+        "zipCode": "4000-123",
+        "location": "Porto",
+        "paymentCondition": "30 dias",
+        "type": "Cliente",
+        "__v": {
+          "$numberInt": "0"
+        }
+      },
+      "body": "{\"name\":\"Metalúrgica Exemplo, Lda.\",\"fiscalNumber\":\"509999990\",\"address\":\"Rua das Flores, 12\",\"zipCode\":\"4000-123\",\"location\":\"Porto\",\"paymentCondition\":\"30 dias\",\"type\":\"Cliente\"}",
+      "message": null,
+      "outcome": "200",
+      "update": null,
+      "response": {
+        "_id": "5f1e9a2b3c4d5e6f70819299",
+        "name": "Metalúrgica Exemplo, Lda.",
+        "fiscalNumber": "509999990",
+        "address": "Rua das Flores, 12",
+        "zipCode": "4000-123",
+        "location": "Porto",
+        "paymentCondition": "30 dias",
+        "type": "Cliente"
+      }
+    },
+    {
+      "existing": {
+        "_id": {
+          "$oid": "5f1e9a2b3c4d5e6f70819299"
+        },
+        "name": "Metalúrgica Exemplo, Lda.",
+        "fiscalNumber": {
+          "$numberInt": "509999990"
+        },
+        "address": "Rua das Flores, 12",
+        "zipCode": "4000-123",
+        "location": "Porto",
+        "paymentCondition": "30 dias",
+        "type": "Cliente",
+        "__v": {
+          "$numberInt": "0"
+        }
+      },
+      "body": "{\"name\":\"Metalúrgica Exemplo, Lda.\",\"fiscalNumber\":509999990,\"address\":\"Rua das Flores, 12\",\"zipCode\":\"4000-123\",\"location\":\"Porto\",\"paymentCondition\":\"30 dias\",\"type\":\"Cliente\"}",
+      "message": null,
+      "outcome": "200",
+      "update": null,
+      "response": {
+        "_id": "5f1e9a2b3c4d5e6f70819299",
+        "name": "Metalúrgica Exemplo, Lda.",
+        "fiscalNumber": "509999990",
+        "address": "Rua das Flores, 12",
+        "zipCode": "4000-123",
+        "location": "Porto",
+        "paymentCondition": "30 dias",
+        "type": "Cliente"
+      }
+    },
+    {
+      "existing": {
+        "_id": {
+          "$oid": "5f1e9a2b3c4d5e6f70819299"
+        },
+        "name": "Metalúrgica Exemplo, Lda.",
+        "fiscalNumber": "509999990",
+        "address": "Rua das Flores, 12",
+        "zipCode": "4000-123",
+        "location": "Porto",
+        "paymentCondition": "30 dias",
+        "type": "Desconhecido",
+        "__v": {
+          "$numberInt": "0"
+        }
+      },
+      "body": "{\"name\":\"Metalúrgica Exemplo, Lda.\",\"fiscalNumber\":\"509999990\",\"address\":\"Rua das Flores, 12\",\"zipCode\":\"4000-123\",\"location\":\"Porto\",\"paymentCondition\":\"30 dias\",\"type\":\"Cliente\"}",
+      "message": null,
+      "outcome": "200",
+      "update": {
+        "$set": {
+          "type": "Cliente"
+        }
+      },
+      "response": {
+        "_id": "5f1e9a2b3c4d5e6f70819299",
+        "name": "Metalúrgica Exemplo, Lda.",
+        "fiscalNumber": "509999990",
+        "address": "Rua das Flores, 12",
+        "zipCode": "4000-123",
+        "location": "Porto",
+        "paymentCondition": "30 dias",
+        "type": "Cliente"
+      }
+    },
+    {
+      "existing": {
+        "_id": {
+          "$oid": "5f1e9a2b3c4d5e6f70819299"
+        },
+        "fiscalNumber": "509999990",
+        "address": "Rua das Flores, 12",
+        "zipCode": "4000-123",
+        "location": "Porto",
+        "paymentCondition": "30 dias",
+        "type": "Cliente",
+        "__v": {
+          "$numberInt": "0"
+        }
+      },
+      "body": "{\"name\":\"Metalúrgica Exemplo, Lda.\",\"fiscalNumber\":\"509999990\",\"address\":\"Rua das Flores, 12\",\"zipCode\":\"4000-123\",\"location\":\"Porto\",\"paymentCondition\":\"30 dias\",\"type\":\"Cliente\"}",
+      "message": null,
+      "outcome": "200",
+      "update": {
+        "$set": {
+          "name": "Metalúrgica Exemplo, Lda."
+        }
+      },
+      "response": {
+        "_id": "5f1e9a2b3c4d5e6f70819299",
+        "name": "Metalúrgica Exemplo, Lda.",
+        "fiscalNumber": "509999990",
+        "address": "Rua das Flores, 12",
+        "zipCode": "4000-123",
+        "location": "Porto",
+        "paymentCondition": "30 dias",
+        "type": "Cliente"
+      }
+    },
+    {
+      "existing": {
+        "_id": {
+          "$oid": "5f1e9a2b3c4d5e6f70819299"
+        },
+        "name": "Metalúrgica Exemplo, Lda.",
+        "fiscalNumber": "509999990",
+        "address": "Rua das Flores, 12",
+        "zipCode": "4000-123",
+        "location": "Porto",
+        "paymentCondition": "30 dias",
+        "type": "Cliente",
+        "__v": {
+          "$numberInt": "0"
+        },
+        "extra": "kept"
+      },
+      "body": "{\"name\":\"Metalúrgica Exemplo, Lda.\",\"fiscalNumber\":\"509999990\",\"address\":\"Rua das Flores, 12\",\"zipCode\":\"4000-123\",\"location\":\"Porto\",\"paymentCondition\":\"30 dias\",\"type\":\"Cliente\"}",
+      "message": null,
+      "outcome": "200",
+      "update": null,
+      "response": {
+        "_id": "5f1e9a2b3c4d5e6f70819299",
+        "name": "Metalúrgica Exemplo, Lda.",
+        "fiscalNumber": "509999990",
+        "address": "Rua das Flores, 12",
+        "zipCode": "4000-123",
+        "location": "Porto",
+        "paymentCondition": "30 dias",
+        "type": "Cliente"
+      }
+    },
+    {
+      "existing": {
+        "_id": {
+          "$oid": "5f1e9a2b3c4d5e6f70819299"
+        },
+        "name": "Metalúrgica Exemplo, Lda.",
+        "fiscalNumber": "509999990",
+        "address": "Rua das Flores, 12",
+        "zipCode": "4000-123",
+        "location": "Porto",
+        "paymentCondition": "30 dias",
+        "type": "Cliente",
+        "__v": {
+          "$numberInt": "7"
+        }
+      },
+      "body": "{\"name\":\"Metalúrgica Exemplo, Lda.\",\"fiscalNumber\":\"509999990\",\"address\":\"Rua das Flores, 12\",\"zipCode\":\"4000-123\",\"location\":\"Porto\",\"paymentCondition\":\"30 dias\",\"type\":\"Cliente\"}",
+      "message": null,
+      "outcome": "200",
+      "update": null,
+      "response": {
+        "_id": "5f1e9a2b3c4d5e6f70819299",
+        "name": "Metalúrgica Exemplo, Lda.",
+        "fiscalNumber": "509999990",
+        "address": "Rua das Flores, 12",
+        "zipCode": "4000-123",
+        "location": "Porto",
+        "paymentCondition": "30 dias",
+        "type": "Cliente"
+      }
+    }
+  ],
+  "search": [
+    {
+      "body": "{\"name\":\"Met\",\"nif\":\"509\",\"localidade\":\"Por\",\"morada\":\"Rua\",\"codigoPostal\":\"4000\"}",
+      "outcome": "200",
+      "regexes": [
+        {
+          "field": "name",
+          "source": "^Met",
+          "flags": "i"
+        },
+        {
+          "field": "fiscalNumber",
+          "source": "^509",
+          "flags": "i"
+        },
+        {
+          "field": "location",
+          "source": "^Por",
+          "flags": "i"
+        },
+        {
+          "field": "address",
+          "source": "^Rua",
+          "flags": "i"
+        },
+        {
+          "field": "zipCode",
+          "source": "^4000",
+          "flags": "i"
+        }
+      ]
+    },
+    {
+      "body": "{\"name\":\"\",\"nif\":\"\",\"localidade\":\"\",\"morada\":\"\",\"codigoPostal\":\"\"}",
+      "outcome": "200",
+      "regexes": [
+        {
+          "field": "name",
+          "source": "^",
+          "flags": "i"
+        },
+        {
+          "field": "fiscalNumber",
+          "source": "^",
+          "flags": "i"
+        },
+        {
+          "field": "location",
+          "source": "^",
+          "flags": "i"
+        },
+        {
+          "field": "address",
+          "source": "^",
+          "flags": "i"
+        },
+        {
+          "field": "zipCode",
+          "source": "^",
+          "flags": "i"
+        }
+      ]
+    },
+    {
+      "body": "{\"name\":\"met\",\"nif\":\"\",\"localidade\":\"\",\"morada\":\"\",\"codigoPostal\":\"\"}",
+      "outcome": "200",
+      "regexes": [
+        {
+          "field": "name",
+          "source": "^met",
+          "flags": "i"
+        },
+        {
+          "field": "fiscalNumber",
+          "source": "^",
+          "flags": "i"
+        },
+        {
+          "field": "location",
+          "source": "^",
+          "flags": "i"
+        },
+        {
+          "field": "address",
+          "source": "^",
+          "flags": "i"
+        },
+        {
+          "field": "zipCode",
+          "source": "^",
+          "flags": "i"
+        }
+      ]
+    },
+    {
+      "body": "{}",
+      "outcome": "200",
+      "regexes": [
+        {
+          "field": "name",
+          "source": "^undefined",
+          "flags": "i"
+        },
+        {
+          "field": "fiscalNumber",
+          "source": "^undefined",
+          "flags": "i"
+        },
+        {
+          "field": "location",
+          "source": "^undefined",
+          "flags": "i"
+        },
+        {
+          "field": "address",
+          "source": "^undefined",
+          "flags": "i"
+        },
+        {
+          "field": "zipCode",
+          "source": "^undefined",
+          "flags": "i"
+        }
+      ]
+    },
+    {
+      "body": "{\"name\":\"Met\"}",
+      "outcome": "200",
+      "regexes": [
+        {
+          "field": "name",
+          "source": "^Met",
+          "flags": "i"
+        },
+        {
+          "field": "fiscalNumber",
+          "source": "^undefined",
+          "flags": "i"
+        },
+        {
+          "field": "location",
+          "source": "^undefined",
+          "flags": "i"
+        },
+        {
+          "field": "address",
+          "source": "^undefined",
+          "flags": "i"
+        },
+        {
+          "field": "zipCode",
+          "source": "^undefined",
+          "flags": "i"
+        }
+      ]
+    },
+    {
+      "body": "[]",
+      "outcome": "200",
+      "regexes": [
+        {
+          "field": "name",
+          "source": "^undefined",
+          "flags": "i"
+        },
+        {
+          "field": "fiscalNumber",
+          "source": "^undefined",
+          "flags": "i"
+        },
+        {
+          "field": "location",
+          "source": "^undefined",
+          "flags": "i"
+        },
+        {
+          "field": "address",
+          "source": "^undefined",
+          "flags": "i"
+        },
+        {
+          "field": "zipCode",
+          "source": "^undefined",
+          "flags": "i"
+        }
+      ]
+    },
+    {
+      "body": "{\"name\":null,\"nif\":\"\",\"localidade\":\"\",\"morada\":\"\",\"codigoPostal\":\"\"}",
+      "outcome": "200",
+      "regexes": [
+        {
+          "field": "name",
+          "source": "^null",
+          "flags": "i"
+        },
+        {
+          "field": "fiscalNumber",
+          "source": "^",
+          "flags": "i"
+        },
+        {
+          "field": "location",
+          "source": "^",
+          "flags": "i"
+        },
+        {
+          "field": "address",
+          "source": "^",
+          "flags": "i"
+        },
+        {
+          "field": "zipCode",
+          "source": "^",
+          "flags": "i"
+        }
+      ]
+    },
+    {
+      "body": "{\"name\":5,\"nif\":\"\",\"localidade\":\"\",\"morada\":\"\",\"codigoPostal\":\"\"}",
+      "outcome": "200",
+      "regexes": [
+        {
+          "field": "name",
+          "source": "^5",
+          "flags": "i"
+        },
+        {
+          "field": "fiscalNumber",
+          "source": "^",
+          "flags": "i"
+        },
+        {
+          "field": "location",
+          "source": "^",
+          "flags": "i"
+        },
+        {
+          "field": "address",
+          "source": "^",
+          "flags": "i"
+        },
+        {
+          "field": "zipCode",
+          "source": "^",
+          "flags": "i"
+        }
+      ]
+    },
+    {
+      "body": "{\"name\":1.5,\"nif\":\"\",\"localidade\":\"\",\"morada\":\"\",\"codigoPostal\":\"\"}",
+      "outcome": "200",
+      "regexes": [
+        {
+          "field": "name",
+          "source": "^1.5",
+          "flags": "i"
+        },
+        {
+          "field": "fiscalNumber",
+          "source": "^",
+          "flags": "i"
+        },
+        {
+          "field": "location",
+          "source": "^",
+          "flags": "i"
+        },
+        {
+          "field": "address",
+          "source": "^",
+          "flags": "i"
+        },
+        {
+          "field": "zipCode",
+          "source": "^",
+          "flags": "i"
+        }
+      ]
+    },
+    {
+      "body": "{\"name\":1e+21,\"nif\":\"\",\"localidade\":\"\",\"morada\":\"\",\"codigoPostal\":\"\"}",
+      "outcome": "200",
+      "regexes": [
+        {
+          "field": "name",
+          "source": "^1e+21",
+          "flags": "i"
+        },
+        {
+          "field": "fiscalNumber",
+          "source": "^",
+          "flags": "i"
+        },
+        {
+          "field": "location",
+          "source": "^",
+          "flags": "i"
+        },
+        {
+          "field": "address",
+          "source": "^",
+          "flags": "i"
+        },
+        {
+          "field": "zipCode",
+          "source": "^",
+          "flags": "i"
+        }
+      ]
+    },
+    {
+      "body": "{\"name\":0,\"nif\":\"\",\"localidade\":\"\",\"morada\":\"\",\"codigoPostal\":\"\"}",
+      "outcome": "200",
+      "regexes": [
+        {
+          "field": "name",
+          "source": "^0",
+          "flags": "i"
+        },
+        {
+          "field": "fiscalNumber",
+          "source": "^",
+          "flags": "i"
+        },
+        {
+          "field": "location",
+          "source": "^",
+          "flags": "i"
+        },
+        {
+          "field": "address",
+          "source": "^",
+          "flags": "i"
+        },
+        {
+          "field": "zipCode",
+          "source": "^",
+          "flags": "i"
+        }
+      ]
+    },
+    {
+      "body": "{\"name\":true,\"nif\":\"\",\"localidade\":\"\",\"morada\":\"\",\"codigoPostal\":\"\"}",
+      "outcome": "200",
+      "regexes": [
+        {
+          "field": "name",
+          "source": "^true",
+          "flags": "i"
+        },
+        {
+          "field": "fiscalNumber",
+          "source": "^",
+          "flags": "i"
+        },
+        {
+          "field": "location",
+          "source": "^",
+          "flags": "i"
+        },
+        {
+          "field": "address",
+          "source": "^",
+          "flags": "i"
+        },
+        {
+          "field": "zipCode",
+          "source": "^",
+          "flags": "i"
+        }
+      ]
+    },
+    {
+      "body": "{\"name\":{},\"nif\":\"\",\"localidade\":\"\",\"morada\":\"\",\"codigoPostal\":\"\"}",
+      "outcome": "200",
+      "regexes": [
+        {
+          "field": "name",
+          "source": "^[object Object]",
+          "flags": "i"
+        },
+        {
+          "field": "fiscalNumber",
+          "source": "^",
+          "flags": "i"
+        },
+        {
+          "field": "location",
+          "source": "^",
+          "flags": "i"
+        },
+        {
+          "field": "address",
+          "source": "^",
+          "flags": "i"
+        },
+        {
+          "field": "zipCode",
+          "source": "^",
+          "flags": "i"
+        }
+      ]
+    },
+    {
+      "body": "{\"name\":[],\"nif\":\"\",\"localidade\":\"\",\"morada\":\"\",\"codigoPostal\":\"\"}",
+      "outcome": "200",
+      "regexes": [
+        {
+          "field": "name",
+          "source": "^",
+          "flags": "i"
+        },
+        {
+          "field": "fiscalNumber",
+          "source": "^",
+          "flags": "i"
+        },
+        {
+          "field": "location",
+          "source": "^",
+          "flags": "i"
+        },
+        {
+          "field": "address",
+          "source": "^",
+          "flags": "i"
+        },
+        {
+          "field": "zipCode",
+          "source": "^",
+          "flags": "i"
+        }
+      ]
+    },
+    {
+      "body": "{\"name\":[\"a\",\"b\"],\"nif\":\"\",\"localidade\":\"\",\"morada\":\"\",\"codigoPostal\":\"\"}",
+      "outcome": "200",
+      "regexes": [
+        {
+          "field": "name",
+          "source": "^a,b",
+          "flags": "i"
+        },
+        {
+          "field": "fiscalNumber",
+          "source": "^",
+          "flags": "i"
+        },
+        {
+          "field": "location",
+          "source": "^",
+          "flags": "i"
+        },
+        {
+          "field": "address",
+          "source": "^",
+          "flags": "i"
+        },
+        {
+          "field": "zipCode",
+          "source": "^",
+          "flags": "i"
+        }
+      ]
+    },
+    {
+      "body": "{\"name\":[\"a\",[\"b\",\"c\"],null,1,{}],\"nif\":\"\",\"localidade\":\"\",\"morada\":\"\",\"codigoPostal\":\"\"}",
+      "outcome": "200",
+      "regexes": [
+        {
+          "field": "name",
+          "source": "^a,b,c,,1,[object Object]",
+          "flags": "i"
+        },
+        {
+          "field": "fiscalNumber",
+          "source": "^",
+          "flags": "i"
+        },
+        {
+          "field": "location",
+          "source": "^",
+          "flags": "i"
+        },
+        {
+          "field": "address",
+          "source": "^",
+          "flags": "i"
+        },
+        {
+          "field": "zipCode",
+          "source": "^",
+          "flags": "i"
+        }
+      ]
+    },
+    {
+      "body": "{\"name\":{\"toString\":1},\"nif\":\"\",\"localidade\":\"\",\"morada\":\"\",\"codigoPostal\":\"\"}",
+      "outcome": "500",
+      "reason": "TypeError: Cannot convert object to primitive value"
+    },
+    {
+      "body": "{\"name\":[{\"toString\":1}],\"nif\":\"\",\"localidade\":\"\",\"morada\":\"\",\"codigoPostal\":\"\"}",
+      "outcome": "500",
+      "reason": "TypeError: Cannot convert object to primitive value"
+    },
+    {
+      "body": "{\"name\":\"M.t\",\"nif\":\"\",\"localidade\":\"\",\"morada\":\"\",\"codigoPostal\":\"\"}",
+      "outcome": "200",
+      "regexes": [
+        {
+          "field": "name",
+          "source": "^M.t",
+          "flags": "i"
+        },
+        {
+          "field": "fiscalNumber",
+          "source": "^",
+          "flags": "i"
+        },
+        {
+          "field": "location",
+          "source": "^",
+          "flags": "i"
+        },
+        {
+          "field": "address",
+          "source": "^",
+          "flags": "i"
+        },
+        {
+          "field": "zipCode",
+          "source": "^",
+          "flags": "i"
+        }
+      ]
+    },
+    {
+      "body": "{\"name\":\"Met|Por\",\"nif\":\"\",\"localidade\":\"\",\"morada\":\"\",\"codigoPostal\":\"\"}",
+      "outcome": "200",
+      "regexes": [
+        {
+          "field": "name",
+          "source": "^Met|Por",
+          "flags": "i"
+        },
+        {
+          "field": "fiscalNumber",
+          "source": "^",
+          "flags": "i"
+        },
+        {
+          "field": "location",
+          "source": "^",
+          "flags": "i"
+        },
+        {
+          "field": "address",
+          "source": "^",
+          "flags": "i"
+        },
+        {
+          "field": "zipCode",
+          "source": "^",
+          "flags": "i"
+        }
+      ]
+    },
+    {
+      "body": "{\"name\":\"(\",\"nif\":\"\",\"localidade\":\"\",\"morada\":\"\",\"codigoPostal\":\"\"}",
+      "outcome": "500",
+      "reason": "SyntaxError: Invalid regular expression: /^(/: Unterminated group"
+    },
+    {
+      "body": "{\"name\":\"[\",\"nif\":\"\",\"localidade\":\"\",\"morada\":\"\",\"codigoPostal\":\"\"}",
+      "outcome": "500",
+      "reason": "SyntaxError: Invalid regular expression: /^[/: Unterminated character class"
+    },
+    {
+      "body": "{\"name\":\"*\",\"nif\":\"\",\"localidade\":\"\",\"morada\":\"\",\"codigoPostal\":\"\"}",
+      "outcome": "500",
+      "reason": "SyntaxError: Invalid regular expression: /^*/: Nothing to repeat"
+    },
+    {
+      "body": "{\"name\":\"a{2,1}\",\"nif\":\"\",\"localidade\":\"\",\"morada\":\"\",\"codigoPostal\":\"\"}",
+      "outcome": "500",
+      "reason": "SyntaxError: Invalid regular expression: /^a{2,1}/: numbers out of order in {} quantifier"
+    },
+    {
+      "body": "{\"name\":\"\\\\\",\"nif\":\"\",\"localidade\":\"\",\"morada\":\"\",\"codigoPostal\":\"\"}",
+      "outcome": "500",
+      "reason": "SyntaxError: Invalid regular expression: /^\\/: \\ at end of pattern"
+    },
+    {
+      "body": "{\"name\":\"a/b\",\"nif\":\"\",\"localidade\":\"\",\"morada\":\"\",\"codigoPostal\":\"\"}",
+      "outcome": "200",
+      "regexes": [
+        {
+          "field": "name",
+          "source": "^a\\/b",
+          "flags": "i"
+        },
+        {
+          "field": "fiscalNumber",
+          "source": "^",
+          "flags": "i"
+        },
+        {
+          "field": "location",
+          "source": "^",
+          "flags": "i"
+        },
+        {
+          "field": "address",
+          "source": "^",
+          "flags": "i"
+        },
+        {
+          "field": "zipCode",
+          "source": "^",
+          "flags": "i"
+        }
+      ]
+    },
+    {
+      "body": "{\"name\":\"a\\nb\",\"nif\":\"\",\"localidade\":\"\",\"morada\":\"\",\"codigoPostal\":\"\"}",
+      "outcome": "200",
+      "regexes": [
+        {
+          "field": "name",
+          "source": "^a\\nb",
+          "flags": "i"
+        },
+        {
+          "field": "fiscalNumber",
+          "source": "^",
+          "flags": "i"
+        },
+        {
+          "field": "location",
+          "source": "^",
+          "flags": "i"
+        },
+        {
+          "field": "address",
+          "source": "^",
+          "flags": "i"
+        },
+        {
+          "field": "zipCode",
+          "source": "^",
+          "flags": "i"
+        }
+      ]
+    },
+    {
+      "body": "{\"name\":\"a b\",\"nif\":\"\",\"localidade\":\"\",\"morada\":\"\",\"codigoPostal\":\"\"}",
+      "outcome": "200",
+      "regexes": [
+        {
+          "field": "name",
+          "source": "^a\\u2028b",
+          "flags": "i"
+        },
+        {
+          "field": "fiscalNumber",
+          "source": "^",
+          "flags": "i"
+        },
+        {
+          "field": "location",
+          "source": "^",
+          "flags": "i"
+        },
+        {
+          "field": "address",
+          "source": "^",
+          "flags": "i"
+        },
+        {
+          "field": "zipCode",
+          "source": "^",
+          "flags": "i"
+        }
+      ]
+    },
+    {
+      "body": "{\"name\":\"a\\u0000b\",\"nif\":\"\",\"localidade\":\"\",\"morada\":\"\",\"codigoPostal\":\"\"}",
+      "outcome": "500",
+      "reason": "Error: value ^a\u0000b must not contain null bytes"
+    },
+    {
+      "body": "{\"name\":\"(?<x>a)\",\"nif\":\"\",\"localidade\":\"\",\"morada\":\"\",\"codigoPostal\":\"\"}",
+      "outcome": "200",
+      "regexes": [
+        {
+          "field": "name",
+          "source": "^(?<x>a)",
+          "flags": "i"
+        },
+        {
+          "field": "fiscalNumber",
+          "source": "^",
+          "flags": "i"
+        },
+        {
+          "field": "location",
+          "source": "^",
+          "flags": "i"
+        },
+        {
+          "field": "address",
+          "source": "^",
+          "flags": "i"
+        },
+        {
+          "field": "zipCode",
+          "source": "^",
+          "flags": "i"
+        }
+      ]
+    },
+    {
+      "body": "{\"name\":\"(?<=a)b\",\"nif\":\"\",\"localidade\":\"\",\"morada\":\"\",\"codigoPostal\":\"\"}",
+      "outcome": "200",
+      "regexes": [
+        {
+          "field": "name",
+          "source": "^(?<=a)b",
+          "flags": "i"
+        },
+        {
+          "field": "fiscalNumber",
+          "source": "^",
+          "flags": "i"
+        },
+        {
+          "field": "location",
+          "source": "^",
+          "flags": "i"
+        },
+        {
+          "field": "address",
+          "source": "^",
+          "flags": "i"
+        },
+        {
+          "field": "zipCode",
+          "source": "^",
+          "flags": "i"
+        }
+      ]
+    },
+    {
+      "body": "{\"name\":\"\\\\p{L}\",\"nif\":\"\",\"localidade\":\"\",\"morada\":\"\",\"codigoPostal\":\"\"}",
+      "outcome": "200",
+      "regexes": [
+        {
+          "field": "name",
+          "source": "^\\p{L}",
+          "flags": "i"
+        },
+        {
+          "field": "fiscalNumber",
+          "source": "^",
+          "flags": "i"
+        },
+        {
+          "field": "location",
+          "source": "^",
+          "flags": "i"
+        },
+        {
+          "field": "address",
+          "source": "^",
+          "flags": "i"
+        },
+        {
+          "field": "zipCode",
+          "source": "^",
+          "flags": "i"
+        }
+      ]
+    },
+    {
+      "body": "{\"name\":\"\\\\k\",\"nif\":\"\",\"localidade\":\"\",\"morada\":\"\",\"codigoPostal\":\"\"}",
+      "outcome": "200",
+      "regexes": [
+        {
+          "field": "name",
+          "source": "^\\k",
+          "flags": "i"
+        },
+        {
+          "field": "fiscalNumber",
+          "source": "^",
+          "flags": "i"
+        },
+        {
+          "field": "location",
+          "source": "^",
+          "flags": "i"
+        },
+        {
+          "field": "address",
+          "source": "^",
+          "flags": "i"
+        },
+        {
+          "field": "zipCode",
+          "source": "^",
+          "flags": "i"
+        }
+      ]
+    },
+    {
+      "body": "{\"name\":\"a**\",\"nif\":\"\",\"localidade\":\"\",\"morada\":\"\",\"codigoPostal\":\"\"}",
+      "outcome": "500",
+      "reason": "SyntaxError: Invalid regular expression: /^a**/: Nothing to repeat"
+    },
+    {
+      "body": "{\"name\":\"Ç\",\"nif\":\"\",\"localidade\":\"\",\"morada\":\"\",\"codigoPostal\":\"\"}",
+      "outcome": "200",
+      "regexes": [
+        {
+          "field": "name",
+          "source": "^Ç",
+          "flags": "i"
+        },
+        {
+          "field": "fiscalNumber",
+          "source": "^",
+          "flags": "i"
+        },
+        {
+          "field": "location",
+          "source": "^",
+          "flags": "i"
+        },
+        {
+          "field": "address",
+          "source": "^",
+          "flags": "i"
+        },
+        {
+          "field": "zipCode",
+          "source": "^",
+          "flags": "i"
+        }
+      ]
+    },
+    {
+      "body": "{\"name\":\"\",\"nif\":\"(\",\"localidade\":\"\",\"morada\":\"\",\"codigoPostal\":\"\"}",
+      "outcome": "500",
+      "reason": "SyntaxError: Invalid regular expression: /^(/: Unterminated group"
+    },
+    {
+      "body": "{\"name\":\"\",\"nif\":\"\",\"localidade\":\"\",\"morada\":\"\",\"codigoPostal\":\"[\"}",
+      "outcome": "500",
+      "reason": "SyntaxError: Invalid regular expression: /^[/: Unterminated character class"
+    },
+    {
+      "body": "{\"name\":\"\",\"nif\":\"\",\"localidade\":\"\",\"morada\":\"\",\"codigoPostal\":\"\",\"extra\":\"(\"}",
+      "outcome": "200",
+      "regexes": [
+        {
+          "field": "name",
+          "source": "^",
+          "flags": "i"
+        },
+        {
+          "field": "fiscalNumber",
+          "source": "^",
+          "flags": "i"
+        },
+        {
+          "field": "location",
+          "source": "^",
+          "flags": "i"
+        },
+        {
+          "field": "address",
+          "source": "^",
+          "flags": "i"
+        },
+        {
+          "field": "zipCode",
+          "source": "^",
+          "flags": "i"
+        }
+      ]
+    }
+  ],
+  "read": [
+    {
+      "stored": {
+        "_id": {
+          "$oid": "5f1e9a2b3c4d5e6f70819299"
+        },
+        "name": "Metalúrgica Exemplo, Lda.",
+        "fiscalNumber": "509999990",
+        "address": "Rua das Flores, 12",
+        "zipCode": "4000-123",
+        "location": "Porto",
+        "paymentCondition": "30 dias",
+        "type": "Cliente",
+        "__v": {
+          "$numberInt": "0"
+        }
+      },
+      "response": {
+        "_id": "5f1e9a2b3c4d5e6f70819299",
+        "name": "Metalúrgica Exemplo, Lda.",
+        "fiscalNumber": "509999990",
+        "address": "Rua das Flores, 12",
+        "zipCode": "4000-123",
+        "location": "Porto",
+        "paymentCondition": "30 dias",
+        "type": "Cliente",
+        "__v": 0
+      }
+    },
+    {
+      "stored": {
+        "_id": {
+          "$oid": "5f1e9a2b3c4d5e6f70819299"
+        },
+        "name": "Metalúrgica Exemplo, Lda.",
+        "paymentCondition": "30 dias",
+        "type": "Cliente",
+        "__v": {
+          "$numberInt": "0"
+        }
+      },
+      "response": {
+        "_id": "5f1e9a2b3c4d5e6f70819299",
+        "name": "Metalúrgica Exemplo, Lda.",
+        "paymentCondition": "30 dias",
+        "type": "Cliente",
+        "__v": 0
+      }
+    },
+    {
+      "stored": {
+        "_id": {
+          "$oid": "5f1e9a2b3c4d5e6f70819299"
+        },
+        "name": "Metalúrgica Exemplo, Lda.",
+        "fiscalNumber": "509999990",
+        "address": "Rua das Flores, 12",
+        "zipCode": null,
+        "location": "Porto",
+        "paymentCondition": "30 dias",
+        "type": "Cliente",
+        "__v": {
+          "$numberInt": "0"
+        }
+      },
+      "response": {
+        "_id": "5f1e9a2b3c4d5e6f70819299",
+        "name": "Metalúrgica Exemplo, Lda.",
+        "fiscalNumber": "509999990",
+        "address": "Rua das Flores, 12",
+        "zipCode": null,
+        "location": "Porto",
+        "paymentCondition": "30 dias",
+        "type": "Cliente",
+        "__v": 0
+      }
+    },
+    {
+      "stored": {
+        "_id": {
+          "$oid": "5f1e9a2b3c4d5e6f70819299"
+        },
+        "name": "Metalúrgica Exemplo, Lda.",
+        "fiscalNumber": {
+          "$numberInt": "509999990"
+        },
+        "address": "Rua das Flores, 12",
+        "zipCode": "4000-123",
+        "location": "Porto",
+        "paymentCondition": "30 dias",
+        "type": "Cliente",
+        "__v": {
+          "$numberInt": "0"
+        }
+      },
+      "response": {
+        "_id": "5f1e9a2b3c4d5e6f70819299",
+        "name": "Metalúrgica Exemplo, Lda.",
+        "fiscalNumber": "509999990",
+        "address": "Rua das Flores, 12",
+        "zipCode": "4000-123",
+        "location": "Porto",
+        "paymentCondition": "30 dias",
+        "type": "Cliente",
+        "__v": 0
+      }
+    },
+    {
+      "stored": {
+        "_id": {
+          "$oid": "5f1e9a2b3c4d5e6f70819299"
+        },
+        "name": "Metalúrgica Exemplo, Lda.",
+        "fiscalNumber": "509999990",
+        "address": "Rua das Flores, 12",
+        "zipCode": "4000-123",
+        "location": "Porto",
+        "paymentCondition": "30 dias",
+        "type": "Cliente"
+      },
+      "response": {
+        "_id": "5f1e9a2b3c4d5e6f70819299",
+        "name": "Metalúrgica Exemplo, Lda.",
+        "fiscalNumber": "509999990",
+        "address": "Rua das Flores, 12",
+        "zipCode": "4000-123",
+        "location": "Porto",
+        "paymentCondition": "30 dias",
+        "type": "Cliente"
+      }
+    },
+    {
+      "stored": {
+        "type": "Cliente",
+        "_id": {
+          "$oid": "5f1e9a2b3c4d5e6f70819299"
+        },
+        "__v": {
+          "$numberInt": "0"
+        },
+        "name": "Ordem",
+        "location": "Porto"
+      },
+      "response": {
+        "type": "Cliente",
+        "_id": "5f1e9a2b3c4d5e6f70819299",
+        "__v": 0,
+        "name": "Ordem",
+        "location": "Porto"
+      }
+    },
+    {
+      "stored": {
+        "_id": {
+          "$oid": "5f1e9a2b3c4d5e6f70819299"
+        },
+        "name": "Metalúrgica Exemplo, Lda.",
+        "fiscalNumber": "509999990",
+        "address": "Rua das Flores, 12",
+        "zipCode": "4000-123",
+        "location": "Porto",
+        "paymentCondition": "30 dias",
+        "type": "Cliente",
+        "__v": {
+          "$numberInt": "0"
+        },
+        "extra": "x"
+      },
+      "response": {
+        "_id": "5f1e9a2b3c4d5e6f70819299",
+        "name": "Metalúrgica Exemplo, Lda.",
+        "fiscalNumber": "509999990",
+        "address": "Rua das Flores, 12",
+        "zipCode": "4000-123",
+        "location": "Porto",
+        "paymentCondition": "30 dias",
+        "type": "Cliente",
+        "__v": 0,
+        "extra": "x"
+      }
+    },
+    {
+      "stored": {
+        "_id": {
+          "$oid": "5f1e9a2b3c4d5e6f70819299"
+        },
+        "name": "Metalúrgica Exemplo, Lda.",
+        "fiscalNumber": "509999990",
+        "address": "Rua das Flores, 12",
+        "zipCode": "4000-123",
+        "location": "Porto",
+        "paymentCondition": "30 dias",
+        "type": "Desconhecido",
+        "__v": {
+          "$numberInt": "0"
+        }
+      },
+      "response": {
+        "_id": "5f1e9a2b3c4d5e6f70819299",
+        "name": "Metalúrgica Exemplo, Lda.",
+        "fiscalNumber": "509999990",
+        "address": "Rua das Flores, 12",
+        "zipCode": "4000-123",
+        "location": "Porto",
+        "paymentCondition": "30 dias",
+        "type": "Desconhecido",
+        "__v": 0
+      }
+    }
+  ],
+  "pathIds": [
+    {
+      "id": "5f1e9a2b3c4d5e6f70819299",
+      "cast": "ok",
+      "objectId": "5f1e9a2b3c4d5e6f70819299"
+    },
+    {
+      "id": "5F1E9A2B3C4D5E6F70819299",
+      "cast": "ok",
+      "objectId": "5f1e9a2b3c4d5e6f70819299"
+    },
+    {
+      "id": "abc",
+      "cast": "500",
+      "reason": "Error"
+    },
+    {
+      "id": "getAll",
+      "cast": "500",
+      "reason": "Error"
+    },
+    {
+      "id": "abcdefghijkl",
+      "cast": "ok",
+      "objectId": "6162636465666768696a6b6c"
+    },
+    {
+      "id": "5f1e9a2b3c4d5e6f708192990",
+      "cast": "500",
+      "reason": "Error"
+    },
+    {
+      "id": "5f1e9a2b3c4d5e6f7081929g",
+      "cast": "500",
+      "reason": "Error"
+    }
+  ]
+}

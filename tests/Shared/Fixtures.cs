@@ -19,6 +19,9 @@ public static class Fixtures
     /// </summary>
     public static string SettingsGolden => Path.Combine(Root, "legacy", "settings", "settings-golden.json");
 
+    /// <summary>Entity contract answers of the legacy code (Joi, Mongoose casts and saves, search patterns; tools/legacy/entity-golden.js).</summary>
+    public static string EntityGolden => Path.Combine(Root, "legacy", "entities", "entity-golden.json");
+
     private static string FindRoot()
     {
         for (var directory = new DirectoryInfo(AppContext.BaseDirectory); directory is not null; directory = directory.Parent)

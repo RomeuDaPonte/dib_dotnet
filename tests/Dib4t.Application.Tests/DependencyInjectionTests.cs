@@ -1,5 +1,6 @@
 using Dib4t.Application.Account;
 using Dib4t.Application.Database;
+using Dib4t.Application.Entities;
 using Dib4t.Application.Logs;
 using Dib4t.Application.Settings;
 using Microsoft.Extensions.DependencyInjection;
@@ -22,6 +23,7 @@ public sealed class DependencyInjectionTests
         services.AddSingleton(Substitute.For<IPaymentMethodRepository>());
         services.AddSingleton(Substitute.For<IPrinterSettingsRepository>());
         services.AddSingleton(Substitute.For<ILogQueryService>());
+        services.AddSingleton(Substitute.For<IEntityRepository>());
         services.AddSingleton(typeof(ILogger<>), typeof(RecordingLogger<>));
         using var provider = services.BuildServiceProvider(new ServiceProviderOptions { ValidateScopes = true, ValidateOnBuild = true });
 
@@ -35,6 +37,7 @@ public sealed class DependencyInjectionTests
             scope.ServiceProvider.GetRequiredService<PrinterSettingsService>().Should().NotBeNull();
             scope.ServiceProvider.GetRequiredService<DefaultDataSeeder>().Should().NotBeNull();
             scope.ServiceProvider.GetRequiredService<LogsService>().Should().NotBeNull();
+            scope.ServiceProvider.GetRequiredService<EntitiesService>().Should().NotBeNull();
         }
 
         provider.GetRequiredService<DatabaseOperationLock>().Should().BeSameAs(provider.GetRequiredService<DatabaseOperationLock>());

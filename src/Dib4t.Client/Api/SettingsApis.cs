@@ -21,7 +21,7 @@ public interface IPricesApi
     Task<ApiResult<PricesResponse>> UpdateAsync(PricesRequest prices);
 }
 
-/// <summary>The payment methods of <c>/api/entity</c> (the rest of <c>IEntityApi</c> comes with the entities slice).</summary>
+/// <summary>The payment methods of <c>/api/entity</c> (Settings → M/Pagamento and the entity dialog's "Modo de pagamento").</summary>
 public interface IPaymentMethodsApi
 {
     Task<ApiResult<IReadOnlyList<PaymentMethodResponse>>> ListAsync();

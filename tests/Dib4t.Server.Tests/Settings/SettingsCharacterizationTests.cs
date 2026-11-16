@@ -12,7 +12,7 @@ using MongoDB.Driver;
 namespace Dib4t.Server.Tests.Settings;
 
 /// <summary>
-/// The recorded legacy run (<c>characterization/01-account.json</c>, <c>02-settings.json</c>,
+/// The recorded legacy run (<c>characterization/01-account.json</c>, <c>02-settings.json</c>, <c>03-entities.json</c>,
 /// <c>07-account-delete.json</c>) replayed in order on a fresh new app (seeded like legacy at startup): every step
 /// gives the same status, content type and text or JSON (key order and number text included), and leaves the same
 /// documents (inserted, updated after the step, deleted), BSON types and field order included. Ids and hashes of the
@@ -38,11 +38,11 @@ public sealed partial class SettingsCharacterizationTests(AppWithMongo app) : IC
     private static CancellationToken Cancellation => TestContext.Current.CancellationToken;
 
     [Fact]
-    public async Task The_recorded_account_and_settings_steps_replay_with_the_same_answers_and_documents()
+    public async Task The_recorded_account_settings_and_entity_steps_replay_with_the_same_answers_and_documents()
     {
         await BindSeedAsync();
         var replayed = new List<string>();
-        foreach (var file in new[] { "01-account.json", "02-settings.json", "07-account-delete.json" })
+        foreach (var file in new[] { "01-account.json", "02-settings.json", "03-entities.json", "07-account-delete.json" })
         {
             var steps = JsonElement.Parse(await File.ReadAllTextAsync(Fixtures.Characterization(file), Cancellation)).GetProperty("steps");
             foreach (var step in steps.EnumerateArray())
@@ -58,7 +58,7 @@ public sealed partial class SettingsCharacterizationTests(AppWithMongo app) : IC
             }
         }
 
-        replayed.Should().HaveCount(52, "every recorded step of the three files but the four allow-listed ones");
+        replayed.Should().HaveCount(68, "every recorded step of the four files but the four allow-listed ones");
     }
 
     private async Task ReplayAsync(JsonElement step)

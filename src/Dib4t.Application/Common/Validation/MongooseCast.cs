@@ -38,7 +38,12 @@ internal static class MongooseCast
         return (values, null);
     }
 
-    /// <summary>Mongoose <c>SchemaString.cast</c> for JSON values.</summary>
+    /// <summary>
+    /// Mongoose 5.13 <c>castString</c> for JSON values: a string as is, <c>null</c> kept, a number its JavaScript
+    /// text, a boolean <c>"true"</c>/<c>"false"</c>; an object whose <c>_id</c> is a non-empty string is that string
+    /// ("documents being passed": <c>{ "_id": "abc" }</c> → <c>"abc"</c>, checked in <c>entity-golden.json</c>);
+    /// any other object or array is a cast error.
+    /// </summary>
     public static (string? Value, string? Failure) String(JsonElement value) => value.ValueKind switch
     {
         JsonValueKind.String => (value.GetString(), null),
@@ -46,6 +51,8 @@ internal static class MongooseCast
         JsonValueKind.Number => (JsNumber.ToString(value.GetDouble()), null),
         JsonValueKind.True => ("true", null),
         JsonValueKind.False => ("false", null),
+        JsonValueKind.Object when JsObject.Properties(value).TryGetValue("_id", out var id)
+                                  && id.ValueKind == JsonValueKind.String && id.GetString()!.Length > 0 => (id.GetString(), null),
         _ => (null, $"Cast to string failed for value {value.GetRawText()}"),
     };
 
