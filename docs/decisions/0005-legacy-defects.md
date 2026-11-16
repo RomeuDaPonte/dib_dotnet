@@ -34,6 +34,7 @@ stays readable by the legacy model (§4.3).
 | **D22** | **Fix** (owner): PDF blocks grow downward, see below |
 | **D23** | **Fix** (owner): PDF date in Europe/Lisbon, see below |
 | **D24** | **Fix** (owner, 2026-11-16): the import never deletes tasks, see below |
+| **D25** | **Open** (found 2026-11-16, kept as legacy until decided): PDF description runs under the footer, see below |
 
 ## D10: dashboard counts the whole year
 
@@ -70,9 +71,10 @@ address, payment condition over the VAT line; samples `02`, `10` in `tests/fixtu
 generator keeps the legacy positions as the **starting** positions and lets a block push what is under it:
 
 - **Client block** (grey box): if a line wraps, every following line of the block (address, location/zip, NIF,
-  ATT.) moves down by the extra height, and the grey box grows by the same amount. If the box would then reach the
-  separator line (legacy y = 280 + 40), the separator, "Descritivo", "Designação técnica" and the description move
-  down by the overflow.
+  ATT.) moves down by the extra height, and the grey box grows by the same amount. If the box (or the company block)
+  would then pass y = 280, 10 pt above "Descritivo" (clarified 2026-11-16: "Descritivo" sits at y = 290, above the
+  separator at 280 + 40, so the box reaches it first), "Descritivo", the separator, "Designação técnica" and the
+  description move down by the overflow.
 - **Company block** and **"Descritivo"** line: same rule (a wrapped line pushes the lines below it).
 - **Footer**: if the payment condition (or any footer line) wraps, the lines below it move down. If the footer would
   then pass the bottom margin, the **whole footer moves up** by the overflow, so it stays on one page. "Total" keeps its legacy
@@ -80,7 +82,7 @@ generator keeps the legacy positions as the **starting** positions and lets a bl
 - Texts that fit are drawn **exactly** where legacy draws them, so budgets without long values stay pixel-identical.
 
 Acceptance: the visual diff of PLAN.md §7.1 stays pixel-identical (within tolerance) for every reference PDF
-**except `02` and `10`**, whose new expected images are reviewed and approved once by the owner and then kept as
+**except `02`, `05` and `10`** (`05` found in Phase 3 step 3: same client as `10`), whose new expected images are reviewed and approved once by the owner and then kept as
 fixtures. Unit tests: wrapped client name, wrapped payment condition, footer that would pass the bottom margin.
 
 ## D23: document date in Europe/Lisbon
@@ -113,3 +115,12 @@ that this is a bug. In the new app, "Importar" on budget A's page with number N:
   job ("Orçamento gerou obra!").
 
 The legacy app is not changed.
+
+## D25: description under the PDF footer (open, legacy kept)
+
+Found while porting the PDF (Phase 3 step 3). The description starts at y = 355 and flows to the bottom margin; the
+footer is drawn at a fixed y = 710 on page 1 (one-page PDF) or page 2 (longer PDF). A description that reaches
+below y = 710 on the footer's page is printed **under** the dotted line, delivery, validity, payment and VAT lines.
+Real data (production backup 2026-11-11): **27 of 3,397** budgets (26 one-page, 1 on page 2). The new app keeps the
+legacy layout until the owner decides; a possible fix: when the description reaches the footer's area, put the
+footer on the next page (or after the description), and approve the changed reference images.

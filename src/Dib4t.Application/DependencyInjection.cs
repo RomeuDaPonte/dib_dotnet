@@ -28,6 +28,7 @@ public static class DependencyInjection
         services.AddSingleton<BudgetNumbering>();
         services.AddScoped<BudgetsService>();
         services.AddScoped<BudgetTasksService>();
+        services.AddScoped<BudgetPdfService>();
         services.AddScoped<DefaultDataSeeder>();
         services.AddSingleton<DatabaseOperationLock>();
         services.AddScoped<DatabaseRestoreService>();

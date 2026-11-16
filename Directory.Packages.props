@@ -19,6 +19,8 @@
   <ItemGroup Label="BCL packages (11.0.x)">
     <!-- Infrastructure: CRC32 of the gzip trailer (truncated .dibbak detection, PLAN.md §7.6). -->
     <PackageVersion Include="System.IO.Hashing" Version="11.0.0" />
+    <!-- Transitive pin: PDFsharp 6.2.4 asks for 8.0.1, which has known vulnerabilities (NU1902/NU1903). -->
+    <PackageVersion Include="System.Security.Cryptography.Pkcs" Version="11.0.0" />
   </ItemGroup>
 
   <ItemGroup Label="Libraries">
@@ -28,7 +30,8 @@
     <PackageVersion Include="FluentValidation.DependencyInjectionExtensions" Version="12.2.0" />
     <PackageVersion Include="BCrypt.Net-Next" Version="4.2.1" />
     <PackageVersion Include="SSH.NET" Version="2026.0.0" />
-    <PackageVersion Include="PDFsharp" Version="6.5.0" />
+    <!-- 6.2.4 is the last MIT release; 6.5.0 is AGPL-3.0-only with a license-key check (found 2026-11-16, PLAN.md §2.1). -->
+    <PackageVersion Include="PDFsharp" Version="6.2.4" />
     <PackageVersion Include="Serilog.AspNetCore" Version="10.0.0" />
     <!-- Infrastructure (log store sink, enrichers): the same Serilog core that Serilog.AspNetCore 10.0.0 brings. -->
     <PackageVersion Include="Serilog" Version="4.3.0" />
@@ -48,5 +51,7 @@
     <PackageVersion Include="coverlet.MTP" Version="10.1.0" />
     <PackageVersion Include="Microsoft.AspNetCore.Mvc.Testing" Version="11.0.0" />
     <PackageVersion Include="Microsoft.Extensions.TimeProvider.Testing" Version="11.0.0" />
+    <!-- Budget PDF visual diff (PLAN.md §7.1): renders PDFs with PDFium to compare pixels. Tests only. -->
+    <PackageVersion Include="PDFtoImage" Version="5.4.0" />
   </ItemGroup>
 </Project>

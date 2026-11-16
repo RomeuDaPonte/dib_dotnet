@@ -62,6 +62,12 @@ public interface IBudgetRepository
     /// </summary>
     Task<Budget?> PatchAsync(string id, BudgetPatch patch, CancellationToken cancellationToken);
 
+    /// <summary>
+    /// Legacy <c>budget.pdfDownloaded()</c> + <c>save()</c> (<c>GET /getPdf/:id</c>): <c>wasPdfDownloaded = true</c>, written only
+    /// when it changes. The budget as saved, or <c>null</c> when it does not exist (any more).
+    /// </summary>
+    Task<Budget?> SetPdfDownloadedAsync(string id, CancellationToken cancellationToken);
+
     /// <summary>Legacy <c>budget.setIncomplete()</c> + <c>save()</c> (the task routes): both flags <c>false</c>, written only when they change.</summary>
     Task SetIncompleteAsync(string id, CancellationToken cancellationToken);
 

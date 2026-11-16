@@ -1,5 +1,6 @@
 @inject IBudgetApi BudgetApi
 @inject IClipboard Clipboard
+@inject IFileDownload Downloads
 @inject AuthSession Session
 @inject ISnackbar Snackbar
 @inject NavigationManager Navigation
@@ -237,6 +238,9 @@
     {
         switch (item)
         {
+            case BudgetMenuItem.Pdf:
+                await DownloadPdfAsync(row);
+                break;
             case BudgetMenuItem.Clone:
                 _form = BudgetForm.Clone(row.Source, Session.User?.Id ?? string.Empty);
                 break;
@@ -253,6 +257,33 @@
 
                 break;
         }
+    }
+
+    /// <summary>
+    /// "Obter pdf" (legacy <c>downloadPdf</c>): the file "Prop - {number}[ R{revision}].pdf", and the row shows the PDF as
+    /// downloaded (legacy marks it before the answer, even when the PDF fails; here after the server set it).
+    /// </summary>
+    private async Task DownloadPdfAsync(BudgetActions row)
+    {
+        var pdf = await BudgetApi.GetPdfAsync(row.Id);
+        if (!pdf.IsSuccess)
+        {
+            if (!pdf.IsUnexpected)
+            {
+                Snackbar.Add(pdf.ErrorText!, Severity.Error);
+            }
+
+            return;
+        }
+
+        _rows = BudgetList.WithPdfDownloaded(_rows, row.Id);
+        _persisted = BudgetList.WithPdfDownloaded(_persisted, row.Id);
+        foreach (var (number, revisions) in _revisions.ToList())
+        {
+            _revisions[number] = [.. revisions.Select(r => r.Id == row.Id ? r with { WasPdfDownloaded = true } : r)];
+        }
+
+        await Downloads.SaveBase64Async(BudgetList.PdfFileName(row.BudgetNumber, row.Revision), pdf.Value!, "application/pdf");
     }
 
     /// <summary>Legacy <c>updateTable</c>; an open revisions list of that number is read again when reopened.</summary>

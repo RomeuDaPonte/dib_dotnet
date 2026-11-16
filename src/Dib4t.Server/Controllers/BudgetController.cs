@@ -12,12 +12,14 @@ namespace Dib4t.Server.Controllers;
 /// <summary>
 /// <c>/api/budget</c> (legacy <c>routes/budget.js</c>, PLAN.md §6), every route T (any signed-in user; legacy checks
 /// no role here): the list, search, one budget, its revisions, create, clone, new revision, edit, and the details
-/// routes <c>patchProperty</c> and <c>import</c> (<c>getPdf</c> comes with the PDF step).
+/// routes <c>patchProperty</c> and <c>import</c>, and <c>getPdf</c>.
 /// </summary>
 [Route("api/budget")]
 [Authorize]
-public sealed class BudgetController(BudgetsService budgets) : LegacyControllerBase
+public sealed class BudgetController(BudgetsService budgets, BudgetPdfService pdfs) : LegacyControllerBase
 {
+    /// <summary>The legacy download headers: the body is the PDF as base64 text (the legacy UI decodes it).</summary>
+    private const string PdfContentDisposition = "attachment;filename=\"filename.pdf\"";
     [HttpGet("")]
     public async Task<IActionResult> List(CancellationToken cancellationToken) =>
         Ok((await budgets.ListAsync(cancellationToken)).Select(ToResponse));
@@ -74,6 +76,23 @@ public sealed class BudgetController(BudgetsService budgets) : LegacyControllerB
     {
         var (body, error) = await ReadJsonBodyAsync();
         return error ?? Answer(await budgets.ImportAsync(budgetId, body, cancellationToken), ToResponse);
+    }
+
+    /// <summary>
+    /// <c>GET /getPdf/:id</c>: the PDF as a base64 string with <c>Content-Type: application/pdf</c> (legacy contract,
+    /// <c>pdfDoc.getBase64</c>), and <c>wasPdfDownloaded</c> set.
+    /// </summary>
+    [HttpGet("getPdf/{budgetId}")]
+    public async Task<IActionResult> GetPdf(string budgetId, CancellationToken cancellationToken)
+    {
+        var result = await pdfs.GetAsync(budgetId, cancellationToken);
+        if (!result.IsSuccess)
+        {
+            return result.Error.ToLegacyResult();
+        }
+
+        Response.Headers.ContentDisposition = PdfContentDisposition;
+        return new ContentResult { StatusCode = StatusCodes.Status200OK, ContentType = "application/pdf", Content = Convert.ToBase64String(result.Value.Pdf) };
     }
 
     /// <summary>The new budget, or the legacy 200 text when nothing was created (a supplier).</summary>

@@ -73,9 +73,10 @@ Two of them are **changed on purpose** in the new app (owner decisions 2026-11-1
 - Info: `Producer`/`Creator` = `pdfmake`, PDF 1.3. Fonts: `Roboto-Regular` (description) and `Roboto-Medium`
   (bold), subset-embedded.
 
-## Comparing in Phase 3
+## Comparing (Phase 3 step 3, done 2026-11-16)
 
-Render both PDFs with the **same** renderer at the same DPI and pixel-compare per page (page counts must match).
-Samples `02`, `10` (D22) and `09` (D23) are compared against approved new-app images, not against these files.
-`CreationDate`, font subset tags and object order are not compared. A quick visual check on macOS:
-`sips -s format png 01-typical.pdf --out /tmp/01.png` (page 1 only).
+`PdfVisualDiffTests` renders the new generator's PDF in the legacy layout (no D22, UTC date) and each file here with
+the same renderer (PDFium via PDFtoImage) at 100 DPI and compares every pixel: **16 of 16 pages identical, zero
+tolerance**. `BudgetPdfNewAppTests` does the same with the new app's PDF: the 7 samples D22/D23 do not touch are still
+identical; `02`, `05`, `09`, `10` are compared against approved images (`tests/fixtures/pdf-approved`). Note: `05` has
+the same client as `10`, so its client name also overlaps the address (D22 applies there too).

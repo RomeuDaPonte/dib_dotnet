@@ -47,6 +47,10 @@
 #   pdf-samples          write reference budget PDFs (pdf-samples.js) by running the unchanged legacy
 #                        PDF route on the anonymized production fixture, in a throwaway DB
 #                        "dib4t_pdf_samples" → tests/fixtures/legacy/pdf/ (PLAN.md §7.1)
+#   pdf-golden           write the budget PDF golden files (pdf-golden.js): the unchanged generatePdf laid out
+#                        by the legacy pdfmake bundle, offline, for the samples, synthetic budgets and every
+#                        budget of the anonymized fixture → tests/fixtures/legacy/pdf-layout/ and the embedded
+#                        assets (fonts, logo, Unicode tables) → src/Dib4t.Infrastructure/Pdf/Assets/ (PLAN.md §7.1)
 #   layout [options]     run the §8.4 layout matrix against the legacy UI (layout-matrix.cs)
 #   logs [backend|frontend|mongo]
 #
@@ -317,6 +321,12 @@ cmd_budget_details_golden() {
   (cd "$REPO_ROOT" && DIB4T_LEGACY_ROOT="$LEGACY_ROOT" node "$SCRIPT_DIR/budget-details-golden.js")
 }
 
+cmd_pdf_golden() {
+  ensure_node_modules "$BACKEND_DIR"
+  log "writing the budget PDF golden files and assets from the legacy pdfmake (offline, about 90 s)"
+  (cd "$REPO_ROOT" && DIB4T_LEGACY_ROOT="$LEGACY_ROOT" node "$SCRIPT_DIR/pdf-golden.js")
+}
+
 cmd_entity_golden() {
   ensure_node_modules "$BACKEND_DIR"
   log "writing the entity contract golden file from the legacy code (offline)"
@@ -382,9 +392,10 @@ case "${1:-}" in
   entity-golden) cmd_entity_golden ;;
   budget-golden) cmd_budget_golden ;;
   budget-details-golden) cmd_budget_details_golden ;;
+  pdf-golden) cmd_pdf_golden ;;
   pdf-samples) cmd_pdf_samples ;;
   layout)  shift; cmd_layout "$@" ;;
   token)   legacy_token; echo ;;
   logs)    shift; cmd_logs "$@" ;;
-  *) sed -n '2,57p' "$0"; exit 1 ;;
+  *) sed -n '2,61p' "$0"; exit 1 ;;
 esac

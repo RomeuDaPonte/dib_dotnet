@@ -33,6 +33,9 @@ public interface IBudgetApi
 
     /// <summary><c>PUT /api/budget/import/:id</c>: tasks and/or description from another budget number.</summary>
     Task<ApiResult<BudgetResponse>> ImportAsync(string id, ImportBudgetRequest import);
+
+    /// <summary><c>GET /api/budget/getPdf/:id</c>: the PDF as base64 text (the server sets <c>wasPdfDownloaded</c>).</summary>
+    Task<ApiResult<string>> GetPdfAsync(string id);
 }
 
 /// <summary>A create or clone answer: the budget, or the legacy 200 notice (the chosen entity is a supplier).</summary>
@@ -73,6 +76,9 @@ public sealed class BudgetApi(HttpClient http) : IBudgetApi
 
     public Task<ApiResult<BudgetResponse>> ImportAsync(string id, ImportBudgetRequest import) =>
         ApiCalls.SendAsync<BudgetResponse>(http, HttpMethod.Put, Root + "/import/" + Uri.EscapeDataString(id), import);
+
+    public Task<ApiResult<string>> GetPdfAsync(string id) =>
+        ApiCalls.SendAsync<string>(http, HttpMethod.Get, Root + "/getPdf/" + Uri.EscapeDataString(id), null, raw: true);
 
     /// <summary>A 200 answer is JSON (the budget) or plain text (the supplier notice).</summary>
     private async Task<ApiResult<BudgetSaveResult>> SaveAsync(string path, NewBudgetRequest budget)

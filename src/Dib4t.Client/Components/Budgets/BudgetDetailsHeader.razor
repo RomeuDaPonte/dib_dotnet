@@ -1,6 +1,6 @@
 @* Legacy budgetDetails/budgetGeneralDetails.jsx: the budget (number, client, descriptive, person in charge, author,
-   date; edit dialog), the actions (Alternar, Bloquear/Desbloquear, Importar while editable; the PDF comes with its
-   step), margin and total, the live totals with the effective margin in its color, delivery days, validity and
+   date; edit dialog), the actions (Alternar, the PDF while complete, Bloquear/Desbloquear, Importar while editable),
+   margin and total, the live totals with the effective margin in its color, delivery days, validity and
    payment method. The boxes wrap onto more rows when space runs out (PLAN.md §8.4 rule 3); sizes in rem, not the
    legacy fontSize 30 px. *@
 <MudPaper Elevation="1" Class="budget-header">
@@ -26,6 +26,12 @@
             <MudIconButton Icon="@Icons.Material.Filled.DesignServices" Size="Size.Large" aria-label="Alternar" aria-pressed="@(State.ShowTasks ? "false" : "true")"
                            OnClick="State.ToggleView" />
         </MudTooltip>
+        @if (Budget.Complete)
+        {
+            <MudTooltip Text="Download pdf">
+                <MudIconButton Icon="@Icons.Material.TwoTone.PictureAsPdf" Size="Size.Large" aria-label="Download pdf" OnClick="State.DownloadPdfAsync" />
+            </MudTooltip>
+        }
         @if (State.CanEdit)
         {
             <MudTooltip Text="Bloquear">

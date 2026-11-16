@@ -27,7 +27,8 @@ namespace Dib4t.Client.Budgets;
 /// saves are sent one after the other (legacy sends them concurrently, so an older answer can win); a budget without
 /// tasks offers "Adicionar" (legacy renders nothing, so such a budget cannot get a task back).
 /// </summary>
-public sealed class BudgetDetailsState(IBudgetApi budgets, ITaskApi tasks, IPricesApi prices, IPaymentMethodsApi paymentMethods, ISnackbar snackbar)
+public sealed class BudgetDetailsState(
+    IBudgetApi budgets, ITaskApi tasks, IPricesApi prices, IPaymentMethodsApi paymentMethods, ISnackbar snackbar, IFileDownload downloads)
 {
     public const string LockedWarning = "Oçamento bloqueado";
     public const string PaymentLockedWarning = "Não pode editar o orçamento";
@@ -221,6 +222,25 @@ public sealed class BudgetDetailsState(IBudgetApi budgets, ITaskApi tasks, IPric
             snackbar.Add(CompletedMessage, Severity.Success);
         });
     }
+
+    /// <summary>
+    /// The PDF icon (legacy <c>downloadPdf</c>, shown while complete): saves "Prop - {number}[ R{revision}].pdf"; the
+    /// server sets <c>wasPdfDownloaded</c>, so a complete budget locks (legacy <c>setBudget({ ...budget, wasPdfDownloaded: true })</c>).
+    /// Not refused while locked, as legacy.
+    /// </summary>
+    public Task DownloadPdfAsync() => WriteAsync(async () =>
+    {
+        var pdf = await budgets.GetPdfAsync(Budget!.Id);
+        if (!pdf.IsSuccess)
+        {
+            ShowError(pdf);
+            return;
+        }
+
+        await downloads.SaveBase64Async(BudgetList.PdfFileName(Budget.BudgetNumber, Budget.Revision), pdf.Value!, "application/pdf");
+        SetFlags(Budget.Complete, true);
+        Notify();
+    });
 
     // ---------------------------------------------------------------- tasks
     /// <summary>A new type sets the type's price (prices of <c>others</c> and <c>components</c>: 1, as legacy <c>usePrices</c>).</summary>

@@ -195,6 +195,9 @@ internal sealed class MongoBudgetRepository(IMongoDatabase database) : IBudgetRe
         return SaveAsync(id, [("complete", false), ("wasPdfDownloaded", false), (patch.Field, value)], cancellationToken);
     }
 
+    public Task<Budget?> SetPdfDownloadedAsync(string id, CancellationToken cancellationToken) =>
+        SaveAsync(id, [("wasPdfDownloaded", true)], cancellationToken);
+
     public Task SetIncompleteAsync(string id, CancellationToken cancellationToken) =>
         SaveAsync(id, [("complete", false), ("wasPdfDownloaded", false)], cancellationToken);
 

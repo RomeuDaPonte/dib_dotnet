@@ -10,6 +10,13 @@
     <PackageReference Include="Microsoft.Data.Sqlite" />
     <PackageReference Include="Serilog" />
     <PackageReference Include="System.IO.Hashing" />
+    <!-- Budget PDF (PLAN.md §7.1): the document writer; layout, shaping and fonts are the legacy pdfmake's, ported. -->
+    <PackageReference Include="PDFsharp" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- Legacy inputs of the budget PDF, written by tools/legacy/pdf-golden.js (see Pdf/Assets/README.md). -->
+    <EmbeddedResource Include="Pdf/Assets/*.ttf;Pdf/Assets/*.jpg;Pdf/Assets/*.txt" LogicalName="Dib4t.Infrastructure.Pdf.Assets.%(Filename)%(Extension)" />
   </ItemGroup>
 
   <ItemGroup>

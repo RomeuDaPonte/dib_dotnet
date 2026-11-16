@@ -45,6 +45,11 @@ public sealed class NewBudgetDetailsPage(IPage page) : IBudgetDetailsPage
         return [.. lines.Select(l => l.Trim()), color];
     }
 
+    public ILocator Unlock => page.GetByRole(AriaRole.Button, new() { Name = "Desbloquear" });
+
+    public Task<IDownload> DownloadPdfAsync() =>
+        page.RunAndWaitForDownloadAsync(() => page.GetByRole(AriaRole.Button, new() { Name = "Download pdf" }).ClickAsync());
+
     public async Task ImportAsync(string budgetNumber)
     {
         await page.GetByRole(AriaRole.Button, new() { Name = "Importar" }).ClickAsync();
@@ -95,4 +100,10 @@ public interface IBudgetDetailsPage
 
     /// <summary>"Importar", the number typed (tasks and description ticked, as the dialog opens), "Importar".</summary>
     Task ImportAsync(string budgetNumber);
+
+    /// <summary>The "Desbloquear" action, shown while the page is locked.</summary>
+    ILocator Unlock { get; }
+
+    /// <summary>The PDF icon ("Download pdf", only for a complete budget): the file the browser saves.</summary>
+    Task<IDownload> DownloadPdfAsync();
 }

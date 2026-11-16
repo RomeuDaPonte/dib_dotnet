@@ -44,12 +44,6 @@ public sealed partial class LegacyRunReplayTests(AppWithMongo app) : IClassFixtu
     };
 
     /// <summary>
-    /// Steps of routes that come with a later Phase 3 step (the PDF): their recorded document changes are written
-    /// directly, so the replay continues on exactly the legacy state.
-    /// </summary>
-    private static readonly Regex NotYetImplemented = new("^budget-pdf", RegexOptions.CultureInvariant);
-
-    /// <summary>
     /// D24 (owner 2026-11-16): the new app's import copies the open budget's tasks/description into the typed number
     /// instead of replacing the open budget's. The two successful legacy imports are not replayed (their own tests:
     /// <c>BudgetDetailsGoldenTests</c>); their recorded document changes are written, so the later steps (list,
@@ -81,7 +75,7 @@ public sealed partial class LegacyRunReplayTests(AppWithMongo app) : IClassFixtu
                     continue;
                 }
 
-                if (NotYetImplemented.IsMatch(id) || LegacyStateOnly.Contains(id))
+                if (LegacyStateOnly.Contains(id))
                 {
                     await ApplyRecordedChangesAsync(step.GetProperty("db"));
                     applied.Add(id);
@@ -93,8 +87,8 @@ public sealed partial class LegacyRunReplayTests(AppWithMongo app) : IClassFixtu
             }
         }
 
-        replayed.Should().HaveCount(120, "every recorded step of the five files but the allow-listed, the not yet implemented and the D24 ones");
-        applied.Should().HaveCount(4, "the PDF steps (Phase 3 step 3) and the two D24 imports");
+        replayed.Should().HaveCount(122, "every recorded step of the five files but the allow-listed and the D24 ones");
+        applied.Should().HaveCount(2, "the two D24 imports");
     }
 
     private async Task ReplayAsync(JsonElement step, bool ordered)
@@ -118,6 +112,17 @@ public sealed partial class LegacyRunReplayTests(AppWithMongo app) : IClassFixtu
             {
                 LegacyHttp.Normalize(claims.GetProperty(claim.Name)).Should().Be(LegacyHttp.Normalize(Resolve(claim.Value.GetRawText())), $"{id} {claim.Name}");
             }
+        }
+        else if (expected.TryGetProperty("body", out var file))
+        {
+            // The PDF (legacy pdfDoc.getBase64): a base64 PDF file; its pages are compared in the PDF visual diff.
+            var pdf = System.Text.Encoding.Latin1.GetString(Convert.FromBase64String(answer.Text));
+            pdf.Should().StartWith(file.GetProperty("decodedStartsWith").GetString(), id);
+            pdf.TrimEnd().EndsWith("%%EOF", StringComparison.Ordinal).Should().Be(file.GetProperty("decodedEndsWithEof").GetBoolean(), id);
+        }
+        else if (expected.TryGetProperty("expressErrorPage", out _))
+        {
+            answer.Text.Should().Be("Something failed.", $"{id}: D16, the plain text instead of Express's error page");
         }
         else if (expected.TryGetProperty("text", out var text))
         {

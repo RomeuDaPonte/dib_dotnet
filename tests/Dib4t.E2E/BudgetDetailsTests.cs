@@ -111,6 +111,50 @@ public sealed class BudgetDetailsTests(E2EHarness harness) : E2ETest(harness)
         messages.Should().Equal("Oçamento bloqueado", "Oçamento bloqueado");
     }
 
+    [Fact]
+    public async Task The_PDF_in_both_uis_saves_the_same_file_name_locks_the_page_and_sets_the_same_flag()
+    {
+        await Harness.LoadSeedAsync(Cancellation);
+        var seeded = Harness.Seed.ToSnapshot();
+        var tasks = seeded.Collections["tasks"];
+        // A complete budget without a job whose PDF was not downloaded yet, with tasks (the page waits for them).
+        var budget = seeded.Collections["budgets"]
+            .Where(b => b.GetValue("complete", false).AsBoolean && !b.GetValue("wasPdfDownloaded", false).AsBoolean
+                        && !b.GetValue("hasGenerateJob", false).AsBoolean && tasks.Any(t => t["budgetId"] == b["_id"]))
+            .OrderByDescending(b => b.GetValue("revision", 0).ToDouble()).ThenByDescending(b => b["budgetNumber"].AsString, StringComparer.Ordinal).First();
+        var id = budget["_id"].ToString()!;
+        var revision = budget.GetValue("revision", 0).ToDouble();
+        var expectedName = revision != 0 ? $"Prop - {budget["budgetNumber"]} R{revision}.pdf" : $"Prop - {budget["budgetNumber"]}.pdf";
+        try
+        {
+            var results = new List<(string Name, string File, DbSnapshot Snapshot)>();
+            foreach (var app in Harness.Apps)
+            {
+                var page = await SignInAsync(app);
+                await page.GotoAsync(id);
+                var download = await page.DownloadPdfAsync();
+                var path = Path.Combine(Path.GetTempPath(), $"dib4t-e2e-{app.Name}-{Guid.NewGuid():N}.pdf");
+                await download.SaveAsAsync(path);
+                var bytes = await File.ReadAllBytesAsync(path, Cancellation);
+                File.Delete(path);
+                System.Text.Encoding.Latin1.GetString(bytes).Should().StartWith("%PDF-1.3", app.Name);
+                await page.Unlock.WaitForAsync(new() { Timeout = 15_000 }); // complete + PDF downloaded: locked
+                await page.Page.WaitForTimeoutAsync(300);
+                results.Add((download.SuggestedFilename, System.Text.Encoding.Latin1.GetString(bytes, 0, 8), await app.SnapshotAsync(Cancellation)));
+            }
+
+            var (legacy, ours) = (results[0], results[1]);
+            ours.Name.Should().Be(legacy.Name).And.Be(expectedName);
+            Budget(ours.Snapshot, id).Should().Be(Budget(legacy.Snapshot, id), "the flag set, BSON-for-BSON");
+            ours.Snapshot.Collections["budgets"].Single(b => b["_id"].ToString() == id)["wasPdfDownloaded"].AsBoolean.Should().BeTrue();
+            ours.Snapshot.DiffFrom(seeded).Should().HaveCount(legacy.Snapshot.DiffFrom(seeded).Count, "nothing else is written");
+        }
+        finally
+        {
+            await Harness.LoadSeedAsync(Cancellation);
+        }
+    }
+
     /// <summary>
     /// D24, new app only: "Importar" on the edited budget with <paramref name="target"/>'s number adds copies of its
     /// tasks to that (highest) revision and replaces its description; no task anywhere is deleted, the edited budget

@@ -32,6 +32,7 @@ public sealed class BudgetDetailsPageTests : IAsyncDisposable
     private readonly ITaskApi _tasks = Substitute.For<ITaskApi>();
     private readonly IPricesApi _prices = Substitute.For<IPricesApi>();
     private readonly IPaymentMethodsApi _paymentMethods = Substitute.For<IPaymentMethodsApi>();
+    private readonly IFileDownload _downloads = Substitute.For<IFileDownload>();
     private IRenderedComponent<MudDialogProvider> _dialogs = null!;
 
     public BudgetDetailsPageTests()
@@ -40,6 +41,7 @@ public sealed class BudgetDetailsPageTests : IAsyncDisposable
         _context.Services.AddSingleton(_tasks);
         _context.Services.AddSingleton(_prices);
         _context.Services.AddSingleton(_paymentMethods);
+        _context.Services.AddSingleton(_downloads);
         var users = Substitute.For<IUsersApi>();
         users.ListAsync().Returns(ApiResult.Failure<IReadOnlyList<Dib4t.Contracts.Account.UserListItemResponse>>(HttpStatusCode.Unauthorized, "Não tem permissão para concluir esta acção."));
         _context.Services.AddSingleton(users);
@@ -282,6 +284,41 @@ public sealed class BudgetDetailsPageTests : IAsyncDisposable
 
         page.WaitForAssertion(() => page.FindAll(".budget-task").Should().HaveCount(1));
         await _tasks.Received(1).CreateDefaultAsync(BudgetId);
+    }
+
+    [Fact]
+    public async Task An_incomplete_budget_has_no_PDF_icon()
+    {
+        var page = await RenderAsync();
+        page.FindAll("button[aria-label='Download pdf']").Should().BeEmpty("legacy shows the PDF icon only for a complete budget");
+    }
+
+    [Fact]
+    public async Task The_PDF_icon_of_a_complete_budget_saves_the_file_and_locks_the_page()
+    {
+        _budgets.GetAsync(BudgetId).Returns(ApiResult.Success(Budget() with { Complete = true, Revision = 1 }));
+        _budgets.GetPdfAsync(BudgetId).Returns(ApiResult.Success("JVBERi0xLjM="));
+        var page = await RenderAsync();
+        page.Find("button[aria-label='Bloquear']").Should().NotBeNull("complete but no PDF yet: editable");
+
+        await page.Find("button[aria-label='Download pdf']").ClickAsync(new MouseEventArgs());
+
+        page.WaitForAssertion(() => page.Find("button[aria-label='Desbloquear']").Should().NotBeNull("complete and PDF downloaded: locked"));
+        await _downloads.Received(1).SaveBase64Async("Prop - 26-0001 R1.pdf", "JVBERi0xLjM=", "application/pdf");
+    }
+
+    [Fact]
+    public async Task A_refused_PDF_shows_the_server_text_and_keeps_the_page_as_it_was()
+    {
+        _budgets.GetAsync(BudgetId).Returns(ApiResult.Success(Budget() with { Complete = true }));
+        _budgets.GetPdfAsync(BudgetId).Returns(ApiResult.Failure<string>(HttpStatusCode.BadRequest, "Orçamento não existe"));
+        var page = await RenderAsync();
+
+        await page.Find("button[aria-label='Download pdf']").ClickAsync(new MouseEventArgs());
+
+        page.WaitForAssertion(() => Snackbar.ShownSnackbars.Should().Contain(s => s.Message == "Orçamento não existe"));
+        page.Find("button[aria-label='Bloquear']").Should().NotBeNull();
+        await _downloads.DidNotReceiveWithAnyArgs().SaveBase64Async(default!, default!, default!);
     }
 
     private async Task<IRenderedComponent<Dib4t.Client.Pages.Landing.BudgetDetails>> RenderAsync()

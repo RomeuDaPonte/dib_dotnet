@@ -34,6 +34,20 @@ public static class Fixtures
     /// </summary>
     public static string BudgetDetailsGolden => Path.Combine(Root, "legacy", "budget-details", "budget-details-golden.json");
 
+    /// <summary>
+    /// The legacy pdfmake's breaks, shaping and laid-out pages of the budget PDF (tools/legacy/pdf-golden.js): line-breaks,
+    /// shaping, layouts (11 reference samples + synthetic budgets), digests (every budget of the anonymized backup).
+    /// </summary>
+    public static string PdfLayout(string file) => Path.Combine(Root, "legacy", "pdf-layout", file);
+
+    /// <summary>The reference PDFs made by the legacy app (tools/legacy/pdf-samples.js) and their manifest.</summary>
+    public static string PdfSample(string file) => Path.Combine(Root, "legacy", "pdf", file);
+
+    /// <summary>
+    /// Approved page images of the new app's PDF for the reference budgets D22/D23 change (ADR-0005); see the README there.
+    /// </summary>
+    public static string PdfApproved => Path.Combine(Root, "pdf-approved");
+
     private static string FindRoot()
     {
         for (var directory = new DirectoryInfo(AppContext.BaseDirectory); directory is not null; directory = directory.Parent)

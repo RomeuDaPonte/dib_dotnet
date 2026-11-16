@@ -52,6 +52,12 @@ public sealed class LegacyBudgetDetailsPage(IPage page) : IBudgetDetailsPage
         return [tasks, withMargin, (await effective.InnerTextAsync()).Trim() + " %", color];
     }
 
+    public ILocator Unlock => Header.Locator("button:has(svg[data-testid=LockIcon])");
+
+    /// <summary>Legacy names this button "Alternar" (aria-label copied from the toggle); found by its icon.</summary>
+    public Task<IDownload> DownloadPdfAsync() =>
+        page.RunAndWaitForDownloadAsync(() => Header.Locator("button:has(svg[data-testid=PictureAsPdfTwoToneIcon])").ClickAsync());
+
     public async Task ImportAsync(string budgetNumber)
     {
         await Header.Locator("button:has(svg[data-testid=AssignmentReturnedIcon])").ClickAsync();

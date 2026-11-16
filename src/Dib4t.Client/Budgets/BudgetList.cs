@@ -1,5 +1,6 @@
 using System.Globalization;
 using Dib4t.Contracts.Budgets;
+using Dib4t.SharedKernel;
 using Dib4t.SharedKernel.Vocabulary;
 
 namespace Dib4t.Client.Budgets;
@@ -76,8 +77,8 @@ public static class BudgetList
     /// <summary>
     /// The row menu (legacy <c>budgetOptions.jsx</c>), in its order: "Obter pdf" (complete), "Detalhes obra" and
     /// "Imprimir" (has a job), "Clonar" (always), "Nova revisão" (complete, no job), "Criar obra" (complete, PDF
-    /// downloaded, no job). <paramref name="available"/> leaves out the actions of later steps (PDF: Phase 3; job
-    /// actions: Phase 4) until they exist.
+    /// downloaded, no job). <paramref name="available"/> leaves out the actions of later steps (job actions: Phase 4)
+    /// until they exist.
     /// </summary>
     public static IReadOnlyList<BudgetMenuItem> Menu(bool complete, bool wasPdfDownloaded, bool hasJob, ISet<BudgetMenuItem>? available = null)
     {
@@ -109,7 +110,18 @@ public static class BudgetList
     }
 
     /// <summary>The menu actions this version of the app has.</summary>
-    public static ISet<BudgetMenuItem> Available { get; } = new HashSet<BudgetMenuItem> { BudgetMenuItem.Clone, BudgetMenuItem.NewRevision };
+    public static ISet<BudgetMenuItem> Available { get; } = new HashSet<BudgetMenuItem> { BudgetMenuItem.Pdf, BudgetMenuItem.Clone, BudgetMenuItem.NewRevision };
+
+    /// <summary>Legacy <c>generatePdff</c>: <c>Prop - {number}.pdf</c>, <c>Prop - {number} R{revision}.pdf</c> for a revision.</summary>
+    public static string PdfFileName(string? budgetNumber, double revision) =>
+        revision != 0 ? $"Prop - {budgetNumber} R{JsNumber.ToString(revision)}.pdf" : $"Prop - {budgetNumber}.pdf";
+
+    /// <summary>Legacy <c>updatedRowAfterPdfDownload</c>: the row of that budget shows the PDF as downloaded.</summary>
+    public static List<BudgetListItemResponse> WithPdfDownloaded(IReadOnlyList<BudgetListItemResponse> rows, string id)
+    {
+        ArgumentNullException.ThrowIfNull(rows);
+        return [.. rows.Select(r => r.Id == id ? r with { WasPdfDownloaded = true } : r)];
+    }
 
     /// <summary>The legacy label of a menu item.</summary>
     public static string Label(BudgetMenuItem item) => item switch

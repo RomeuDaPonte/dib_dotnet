@@ -6,6 +6,8 @@
     <PackageReference Include="Microsoft.Extensions.TimeProvider.Testing" />
     <!-- Reads the log store file independently of the app (PLAN.md §11.9). -->
     <PackageReference Include="Microsoft.Data.Sqlite" />
+    <!-- Budget PDF visual diff against the legacy reference PDFs (PLAN.md §7.1). -->
+    <PackageReference Include="PDFtoImage" />
   </ItemGroup>
 
   <ItemGroup>

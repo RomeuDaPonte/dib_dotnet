@@ -28,6 +28,7 @@ public sealed class BudgetsPageTests : IAsyncDisposable
     private readonly IBudgetApi _budgets = Substitute.For<IBudgetApi>();
     private readonly IUsersApi _users = Substitute.For<IUsersApi>();
     private readonly IClipboard _clipboard = Substitute.For<IClipboard>();
+    private readonly IFileDownload _downloads = Substitute.For<IFileDownload>();
     private readonly ITaskApi _tasks = Substitute.For<ITaskApi>();
     private readonly IPricesApi _prices = Substitute.For<IPricesApi>();
     private readonly IPaymentMethodsApi _paymentMethods = Substitute.For<IPaymentMethodsApi>();
@@ -39,6 +40,7 @@ public sealed class BudgetsPageTests : IAsyncDisposable
         _context.Services.AddSingleton(_budgets);
         _context.Services.AddSingleton(_users);
         _context.Services.AddSingleton(_clipboard);
+        _context.Services.AddSingleton(_downloads);
         _context.Services.AddSingleton(_tasks);
         _context.Services.AddSingleton(_prices);
         _context.Services.AddSingleton(_paymentMethods);
@@ -184,6 +186,39 @@ public sealed class BudgetsPageTests : IAsyncDisposable
     }
 
     [Fact]
+    public async Task Obter_pdf_saves_the_legacy_file_name_and_the_row_shows_the_PDF_as_downloaded()
+    {
+        _budgets.ListAsync().Returns(ApiResult.Success<IReadOnlyList<BudgetListItemResponse>>(
+            [Row("b3", "26-0003", "Metalúrgica do Ave", revision: 2, complete: true), Row("b1", "26-0001", "Metalúrgica do Ave", complete: true)]));
+        _budgets.GetPdfAsync("b3").Returns(ApiResult.Success("JVBERi0xLjM="));
+        _budgets.GetPdfAsync("b1").Returns(ApiResult.Success("JVBERi0xLjM="));
+        var table = await RenderTableAsync();
+
+        await MenuAsync(table, "Opções de 26-0003 R2", "Obter pdf");
+        await MenuAsync(table, "Opções de 26-0001 R0", "Obter pdf");
+
+        await _downloads.Received(1).SaveBase64Async("Prop - 26-0003 R2.pdf", "JVBERi0xLjM=", "application/pdf");
+        await _downloads.Received(1).SaveBase64Async("Prop - 26-0001.pdf", "JVBERi0xLjM=", "application/pdf");
+        BudgetList.WithPdfDownloaded([Row("b3", "26-0003", "M", complete: true), Row("b1", "26-0001", "M")], "b3")
+            .Select(r => r.WasPdfDownloaded).Should().Equal(true, false);
+    }
+
+    [Fact]
+    public async Task Obter_pdf_is_offered_only_for_a_complete_budget_and_a_refused_PDF_saves_nothing()
+    {
+        _budgets.GetPdfAsync("b3").Returns(ApiResult.Failure<string>(HttpStatusCode.BadRequest, "Orçamento não existe"));
+        var table = await RenderTableAsync();
+
+        await table.Find("button[aria-label='Opções de 26-0001 R0']").ClickAsync(new MouseEventArgs());
+        _popovers.WaitForAssertion(() => _popovers.FindAll(".mud-menu-item").Should().Contain(i => i.TextContent.Contains("Clonar", StringComparison.Ordinal)));
+        _popovers.FindAll(".mud-menu-item").Should().NotContain(i => i.TextContent.Contains("Obter pdf", StringComparison.Ordinal), "26-0001 is not complete");
+
+        await MenuAsync(table, "Opções de 26-0003 R2", "Obter pdf");
+        Snackbar.ShownSnackbars.Should().Contain(s => s.Message == "Orçamento não existe");
+        await _downloads.DidNotReceiveWithAnyArgs().SaveBase64Async(default!, default!, default!);
+    }
+
+    [Fact]
     public async Task The_copy_path_is_the_legacy_one()
     {
         var table = await RenderTableAsync();
@@ -211,7 +246,7 @@ public sealed class BudgetsPageTests : IAsyncDisposable
         BudgetList.Menu(true, false, false, all).Should().Equal(BudgetMenuItem.Pdf, BudgetMenuItem.Clone, BudgetMenuItem.NewRevision);
         BudgetList.Menu(true, true, false, all).Should().Equal(BudgetMenuItem.Pdf, BudgetMenuItem.Clone, BudgetMenuItem.NewRevision, BudgetMenuItem.CreateJob);
         BudgetList.Menu(true, true, true, all).Should().Equal(BudgetMenuItem.Pdf, BudgetMenuItem.JobDetails, BudgetMenuItem.Print, BudgetMenuItem.Clone);
-        BudgetList.Menu(true, true, false).Should().Equal(BudgetMenuItem.Clone, BudgetMenuItem.NewRevision);
+        BudgetList.Menu(true, true, false).Should().Equal(BudgetMenuItem.Pdf, BudgetMenuItem.Clone, BudgetMenuItem.NewRevision);
 
         BudgetList.Date(new DateTime(2026, 5, 24, 23, 30, 0, DateTimeKind.Utc), Lisbon).Should().Be("25/05/2026");
         BudgetForm.FilterClients([Metal, Cortica], "cortica").Should().Equal(Cortica);
