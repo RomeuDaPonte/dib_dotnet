@@ -55,12 +55,6 @@ public interface IBudgetRepository
     Task<Budget?> UpdateAsync(string id, BudgetEdit edit, CancellationToken cancellationToken);
 
     /// <summary>
-    /// Legacy <c>getBudgetByNumber</c>: <c>findOne({ budgetNumber })</c> without a sort, i.e. the first document with
-    /// this number in natural order (usually revision 0), or <c>null</c>.
-    /// </summary>
-    Task<Budget?> FindFirstByNumberAsync(string budgetNumber, CancellationToken cancellationToken);
-
-    /// <summary>
     /// Legacy <c>budget.patch(propertyName, value)</c> + <c>save()</c>: <c>complete = false</c>,
     /// <c>wasPdfDownloaded = false</c>, then the property, each written only when the final value differs from the
     /// stored one (a missing field counts as its schema default). The budget as saved, or <c>null</c> when it does
@@ -72,9 +66,9 @@ public interface IBudgetRepository
     Task SetIncompleteAsync(string id, CancellationToken cancellationToken);
 
     /// <summary>
-    /// The save of <c>PUT /import/:id</c>: <c>total</c> and <c>margin</c> (when tasks are imported) and
-    /// <c>description</c> (when it is imported) set to the source's values, a missing value removed (<c>$unset</c>);
-    /// the flags are not touched (legacy). The budget as saved, or <c>null</c>.
+    /// The save of <c>PUT /import/:id</c> on the receiving budget (D24): <c>complete</c> and <c>wasPdfDownloaded</c>
+    /// reset, then <c>total</c> and <c>description</c> when given; nothing is removed. Written only where it differs.
+    /// The budget as saved, or <c>null</c>.
     /// </summary>
     Task<Budget?> ImportAsync(string id, BudgetImport import, CancellationToken cancellationToken);
 }
@@ -151,16 +145,10 @@ public sealed record NewBudget(
     string? Description,
     DateTime Date);
 
-/// <summary>
-/// The values <c>PUT /import/:id</c> copies from the source budget; <c>null</c> = the source has no such value
-/// (removed from the budget, like Mongoose saving <c>undefined</c>).
-/// </summary>
-/// <param name="Tasks">Tasks are imported: <see cref="Total"/> and <see cref="Margin"/> are set.</param>
-/// <param name="Total">The source's total.</param>
-/// <param name="Margin">The source's margin (its schema default when the source lacks it).</param>
-/// <param name="Description">The description is imported: <see cref="DescriptionText"/> is set.</param>
-/// <param name="DescriptionText">The source's description.</param>
-public sealed record BudgetImport(bool Tasks, double? Total, double Margin, bool Description, string? DescriptionText);
+/// <summary>What <c>PUT /import/:id</c> writes on the receiving budget (D24); <c>null</c> = left as it is.</summary>
+/// <param name="Total">The total recomputed from all its tasks (tasks were added).</param>
+/// <param name="Description">The open budget's description (ticked and present).</param>
+public sealed record BudgetImport(double? Total, string? Description);
 
 /// <summary>The values of an edit (legacy <c>budget.update</c>).</summary>
 public sealed record BudgetEdit(string MadeById, string Descriptive, string PersonInCharge);

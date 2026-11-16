@@ -10,9 +10,11 @@ namespace Dib4t.E2E;
 /// <summary>
 /// Budget details (PLAN.md §7.1, §10 Phase 3 step 2): the same edits made in both UIs (each app on its own database
 /// loaded from the same seed backup) — a quantity and a unit price changed, a task added, margin, days and
-/// validity changed, the description written, "Concluir", an import — show the same totals, effective margin and
-/// color, and messages, and leave the same documents (BSON types and field order included; only the new tasks' ids
-/// differ). A locked budget refuses a change with the same warning in both and writes nothing.
+/// validity changed, the description written, "Concluir" — show the same totals, effective margin and color, and
+/// messages, and leave the same documents (BSON types and field order included; only the new task's id differs).
+/// Then the import, which the new app does differently by decision (D24), in the new app only: the edited budget's
+/// tasks and description go into the highest revision of another number, nothing is deleted. A locked budget refuses
+/// a change with the same warning in both and writes nothing.
 /// </summary>
 public sealed class BudgetDetailsTests(E2EHarness harness) : E2ETest(harness)
 {
@@ -36,9 +38,10 @@ public sealed class BudgetDetailsTests(E2EHarness harness) : E2ETest(harness)
             .Where(b => !b.GetValue("complete", false).AsBoolean && !b.GetValue("hasGenerateJob", false).AsBoolean
                         && b.Contains("total") && b.Contains("description") && TaskCount(b) >= 2)
             .OrderByDescending(b => b["budgetNumber"].AsString, StringComparer.Ordinal).First();
-        // Import source: a number with one revision (findOne without a sort is then the same document in both apps).
-        var source = budgets.Where(b => b["budgetNumber"] != edited["budgetNumber"] && revisions[b["budgetNumber"].AsString] == 1
-                                        && b.Contains("description") && TaskCount(b) >= 2)
+        // D24 import target: the highest revision of another number, without a job.
+        var target = budgets.GroupBy(b => b["budgetNumber"].AsString)
+            .Select(g => g.OrderByDescending(b => b.GetValue("revision", 0).ToDouble()).First())
+            .Where(b => b["budgetNumber"] != edited["budgetNumber"] && !b.GetValue("hasGenerateJob", false).AsBoolean && revisions[b["budgetNumber"].AsString] > 1)
             .OrderByDescending(b => b["budgetNumber"].AsString, StringComparer.Ordinal).First();
         var id = edited["_id"].ToString()!;
         try
@@ -65,16 +68,19 @@ public sealed class BudgetDetailsTests(E2EHarness harness) : E2ETest(harness)
                 await WritesAsync(page.Page, 1, async () => { await page.Description.FillAsync("Texto E2E\nsegunda linha"); await page.Description.PressAsync("Tab"); });
                 messages.Add(await NextNotificationAsync(page, () => WritesAsync(page.Page, 1, page.CompleteAsync)));
                 await page.ToggleViewAsync();
-                messages.Add(await NextNotificationAsync(page, () => WritesAsync(page.Page, 1, () => page.ImportAsync(source["budgetNumber"].AsString))));
 
                 results.Add((app.Name, totals, messages, await app.SnapshotAsync(Cancellation)));
+                if (app != Harness.Legacy)
+                {
+                    await ImportIntoAsync(app, page, id, target);
+                }
             }
 
             var (legacy, ours) = (results[0], results[1]);
             ours.Totals.Should().BeEquivalentTo(legacy.Totals, o => o.WithStrictOrdering());
-            ours.Messages.Should().Equal(legacy.Messages).And.Equal("Orçamento completo", "Importado com sucesso");
+            ours.Messages.Should().Equal(legacy.Messages).And.Equal("Orçamento completo");
             Budget(ours.Snapshot, id).Should().Be(Budget(legacy.Snapshot, id), "the edited budget, BSON-for-BSON");
-            TasksOf(ours.Snapshot, id).Should().Equal(TasksOf(legacy.Snapshot, id), "the imported copies (ids aside)");
+            TasksOf(ours.Snapshot, id).Should().Equal(TasksOf(legacy.Snapshot, id), "the added task (id aside)");
             Others(ours.Snapshot, id).DiffFrom(Others(legacy.Snapshot, id)).Should().BeEmpty("every other document is the same in both apps");
         }
         finally
@@ -103,6 +109,29 @@ public sealed class BudgetDetailsTests(E2EHarness harness) : E2ETest(harness)
         }
 
         messages.Should().Equal("Oçamento bloqueado", "Oçamento bloqueado");
+    }
+
+    /// <summary>
+    /// D24, new app only: "Importar" on the edited budget with <paramref name="target"/>'s number adds copies of its
+    /// tasks to that (highest) revision and replaces its description; no task anywhere is deleted, the edited budget
+    /// does not change, the page shows "Importado com sucesso".
+    /// </summary>
+    private static async Task ImportIntoAsync(IAppUnderTest app, IBudgetDetailsPage page, string id, BsonDocument target)
+    {
+        var before = await app.SnapshotAsync(Cancellation);
+        var message = await NextNotificationAsync(page, () => WritesAsync(page.Page, 1, () => page.ImportAsync(target["budgetNumber"].AsString)));
+        var after = await app.SnapshotAsync(Cancellation);
+
+        message.Should().Be("Importado com sucesso");
+        var own = before.Collections["tasks"].Count(t => t["budgetId"].ToString() == id);
+        after.Collections["tasks"].Should().HaveCount(before.Collections["tasks"].Count + own, "copies added, nothing deleted");
+        after.Collections["tasks"].Count(t => t["budgetId"] == target["_id"])
+            .Should().Be(before.Collections["tasks"].Count(t => t["budgetId"] == target["_id"]) + own);
+        Budget(after, id).Should().Be(Budget(before, id), "the open budget does not change");
+        var receiving = after.Collections["budgets"].Single(b => b["_id"] == target["_id"]);
+        receiving["description"].AsString.Should().Be("Texto E2E\nsegunda linha");
+        (receiving["complete"].AsBoolean, receiving["wasPdfDownloaded"].AsBoolean).Should().Be((false, false));
+        (await page.Tasks.CountAsync()).Should().Be(own, "the page still shows the open budget's own tasks");
     }
 
     /// <summary>Signed in, on a desktop screen: at 1366×768 the legacy header's margin input is not visible (a §8.4 layout bug).</summary>

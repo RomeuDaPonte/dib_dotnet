@@ -15,8 +15,9 @@ namespace Dib4t.Server.Tests.Budgets;
 /// or the same JSON (without key order and without the password hash legacy sends in a populated author); and the
 /// same documents afterwards, BSON-for-BSON (types and field order), against the legacy save's own
 /// <c>$set</c>/<c>$unset</c>, inserts and deletes applied to a copy of the documents on the same server. A legacy 500
-/// (Express's error page) is the D16 text. Decided difference: D8 (POST /api/task creates) has its own test below. D24
-/// (importing from the budget's own number deletes its tasks) is kept as legacy: a golden case like the others.
+/// (Express's error page) is the D16 text. Decided differences with their own tests below: D8 (POST /api/task creates) and
+/// D24 (the import adds the open budget's tasks/description into the highest revision of the typed number and never
+/// deletes; of the legacy import cases only the refusals that D24 leaves as they are replay here).
 /// </summary>
 public sealed partial class BudgetDetailsGoldenTests(AppWithMongo app) : IClassFixture<AppWithMongo>
 {
@@ -44,7 +45,10 @@ public sealed partial class BudgetDetailsGoldenTests(AppWithMongo app) : IClassF
             {
                 for (var i = 0; i < Golden.GetProperty(section).GetArrayLength(); i++)
                 {
-                    data.Add(section, i);
+                    if (section != "import" || IsUnchangedImportRefusal(Golden.GetProperty(section)[i]))
+                    {
+                        data.Add(section, i);
+                    }
                 }
             }
 
@@ -71,6 +75,95 @@ public sealed partial class BudgetDetailsGoldenTests(AppWithMongo app) : IClassF
         var because = $"{section} #{index}: {method} {path} {body}";
         AnswerShouldMatch(item, answer, because);
         await DocumentsShouldMatchAsync(because);
+    }
+
+    [Fact]
+    public async Task D24_import_adds_copies_of_the_open_budgets_tasks_to_the_highest_revision_and_replaces_its_description()
+    {
+        await ResetAsync();
+        var target = ObjectId.Parse(Ids["{{source-r1}}"]); // 26-0003 R1: the highest revision; it has no tasks
+        var copies = await OwnTasksAsync("{{budget}}", target);
+        await Expected("tasks").InsertManyAsync(copies, cancellationToken: Cancellation);
+        // 1 × 32.5 + 0.5 × 30 + 3 × 100 = 347.5, with its own margin 40: 347.5 + trunc(139) = 486.5
+        await Expected("budgets").UpdateOneAsync(new BsonDocument("_id", target), new BsonDocument("$set", new BsonDocument
+        {
+            { "complete", false }, { "wasPdfDownloaded", false }, { "total", 486.5 }, { "description", "Fornecimento conforme especificação." },
+        }), cancellationToken: Cancellation);
+
+        var answer = await LegacyHttp.SendAsync(_client, HttpMethod.Put, "/api/budget/import/" + Ids["{{budget}}"],
+            """{"importDescription":true,"importTasks":true,"budgetNumber":"26-0003"}""", null, Cancellation);
+
+        answer.Status.Should().Be(200, answer.Text);
+        JsonElement.Parse(answer.Text).GetProperty("_id").GetString().Should().Be(target.ToString(), "the receiving budget is answered");
+        await DocumentsShouldMatchAsync("D24: copies added, total recomputed, description replaced, flags reset; nothing deleted, the open budget unchanged");
+    }
+
+    [Fact]
+    public async Task D24_revision_0_adds_its_tasks_to_the_latest_revision_of_its_own_number()
+    {
+        await ResetAsync();
+        var target = ObjectId.Parse(Ids["{{source-r1}}"]);
+        await Expected("tasks").InsertManyAsync(await OwnTasksAsync("{{source}}", target), cancellationToken: Cancellation);
+        // 32.5 + 15 + 577.5 − 2e21, margin 40 (JavaScript arithmetic)
+        var tasksTotal = 32.5 + (0.5 * 30) + (15 * 38.5) + (-2 * 1e21);
+        await Expected("budgets").UpdateOneAsync(new BsonDocument("_id", target), new BsonDocument("$set", new BsonDocument
+        {
+            { "complete", false }, { "wasPdfDownloaded", false }, { "total", tasksTotal + Math.Truncate(tasksTotal * 40 / 100) },
+        }), cancellationToken: Cancellation);
+
+        var answer = await LegacyHttp.SendAsync(_client, HttpMethod.Put, "/api/budget/import/" + Ids["{{source}}"],
+            """{"importDescription":false,"importTasks":true,"budgetNumber":"26-0003"}""", null, Cancellation);
+
+        answer.Status.Should().Be(200, answer.Text);
+        await DocumentsShouldMatchAsync("D24: revision 0 into revision 1 of the same number");
+    }
+
+    [Fact]
+    public async Task D24_a_missing_description_is_not_imported_and_the_flags_are_reset()
+    {
+        await ResetAsync();
+        await Expected("budgets").UpdateOneAsync(new BsonDocument("_id", ObjectId.Parse(Ids["{{budget}}"])),
+            new BsonDocument("$set", new BsonDocument { { "complete", false }, { "wasPdfDownloaded", false } }), cancellationToken: Cancellation);
+
+        var answer = await LegacyHttp.SendAsync(_client, HttpMethod.Put, "/api/budget/import/" + Ids["{{imported}}"],
+            """{"importDescription":true,"importTasks":false,"budgetNumber":"26-0007"}""", null, Cancellation);
+
+        answer.Status.Should().Be(200, answer.Text);
+        await DocumentsShouldMatchAsync("the receiving budget keeps its description; only its flags change");
+    }
+
+    [Theory]
+    [InlineData("{{budget}}", "26-0007", "Não é possível importar para o próprio orçamento.")]
+    [InlineData("{{budget}}", "26-0004", "Orçamento gerou obra!")]
+    [InlineData("{{job-budget}}", "26-0007", null)]
+    public async Task D24_import_into_itself_or_into_a_budget_with_a_job_is_refused(string open, string number, string? refusal)
+    {
+        await ResetAsync();
+        if (refusal is null)
+        {
+            // An open budget with a job may still send its tasks elsewhere (it does not change).
+            var target = ObjectId.Parse(Ids["{{budget}}"]);
+            await Expected("tasks").InsertManyAsync(await OwnTasksAsync(open, target), cancellationToken: Cancellation);
+            // its own 3 tasks (347.5) + 2 × 28 = 403.5, margin 35: 403.5 + trunc(141.225) = 544.5
+            await Expected("budgets").UpdateOneAsync(new BsonDocument("_id", target), new BsonDocument("$set", new BsonDocument
+            {
+                { "complete", false }, { "wasPdfDownloaded", false }, { "total", 544.5 }, { "description", "Fornecimento conforme especificação." },
+            }), cancellationToken: Cancellation);
+        }
+
+        var answer = await LegacyHttp.SendAsync(_client, HttpMethod.Put, "/api/budget/import/" + Ids[open],
+            $$"""{"importDescription":true,"importTasks":true,"budgetNumber":"{{number}}"}""", null, Cancellation);
+
+        if (refusal is null)
+        {
+            answer.Status.Should().Be(200, answer.Text);
+        }
+        else
+        {
+            (answer.Status, answer.Text).Should().Be((400, refusal));
+        }
+
+        await DocumentsShouldMatchAsync(refusal ?? "a budget with a job can send its tasks");
     }
 
     [Theory]
@@ -109,6 +202,34 @@ public sealed partial class BudgetDetailsGoldenTests(AppWithMongo app) : IClassF
         created.Names.Should().Equal(stored.Names.OrderBy(n => n switch { "_id" => 0, "budgetId" => 1, "taskType" => 2, "description" => 3, "unitPrice" => 4, "quantity" => 5, _ => 6 }));
         var budget = await app.Database.GetCollection<BsonDocument>("budgets").Find(new BsonDocument("_id", ObjectId.Parse(Ids["{{budget}}"]))).SingleAsync(Cancellation);
         (budget["complete"].AsBoolean, budget["wasPdfDownloaded"].AsBoolean).Should().Be((false, false), "the budget is marked incomplete, like the edit");
+    }
+
+    /// <summary>
+    /// Legacy import cases D24 leaves as they are: refusals from Joi, an unknown number and the open budget's id or
+    /// absence (the job check now concerns the receiving budget, so legacy's job refusal is not among them).
+    /// </summary>
+    private static bool IsUnchangedImportRefusal(JsonElement item) =>
+        item.GetProperty("status").GetInt32() != 200
+        && !(item.TryGetProperty("text", out var text) && text.GetString() == "Orçamento gerou obra!");
+
+    /// <summary>Copies of a stored budget's tasks for <paramref name="target"/>, as the import writes them (natural order, copy field order).</summary>
+    private async Task<List<BsonDocument>> OwnTasksAsync(string budget, ObjectId target)
+    {
+        var own = await Expected("tasks").Find(new BsonDocument("budgetId", ObjectId.Parse(Ids[budget]))).ToListAsync(Cancellation);
+        return [.. own.Select(task =>
+        {
+            var copy = new BsonDocument { { "_id", ObjectId.GenerateNewId() }, { "taskType", task["taskType"] }, { "budgetId", target } };
+            foreach (var field in new[] { "description", "unitPrice", "quantity" })
+            {
+                if (task.TryGetValue(field, out var value))
+                {
+                    copy[field] = value;
+                }
+            }
+
+            copy["__v"] = 0;
+            return copy;
+        })];
     }
 
     private static (HttpMethod Method, string Path, string? Body) Request(string section, JsonElement item)

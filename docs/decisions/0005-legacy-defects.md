@@ -33,7 +33,7 @@ stays readable by the legacy model (§4.3).
 | **D21** | Keep existing paths; **reject `/` in new descriptives** (owner), see below |
 | **D22** | **Fix** (owner): PDF blocks grow downward, see below |
 | **D23** | **Fix** (owner): PDF date in Europe/Lisbon, see below |
-| **D24** | **Keep** (owner, 2026-11-16): importing a budget's tasks from its own number deletes them, exactly as legacy (found in Phase 3 step 2) |
+| **D24** | **Fix** (owner, 2026-11-16): the import never deletes tasks, see below |
 
 ## D10: dashboard counts the whole year
 
@@ -96,3 +96,20 @@ they now show the Lisbon day, e.g. sample `09` shows `25/5/2022` instead of `24/
 - Owner check N5 (time zone of the legacy container) is **no longer needed**: the new app does not depend on it.
 - Unchanged on purpose (parity): the budget number year (`YY`) and the NAS folder year keep the legacy rules
   (§5, §7.1); folder names must keep matching the folders legacy created.
+
+## D24: the budget import never deletes
+
+Legacy `PUT /api/budget/import/:id` replaces the open budget's tasks with copies of the typed number's (its first
+document in natural order) and copies that budget's total and margin; importing from the budget's own number
+(revision 0) deletes its tasks and copies nothing. The owner decided (2026-11-16, after trying it in the legacy app)
+that this is a bug. In the new app, "Importar" on budget A's page with number N:
+
+- copies A's tasks (when "Tarefas" is ticked) and **adds** them to the **highest revision of N**; A's description
+  (when "Descrição" is ticked and A has one) replaces that budget's description;
+- recomputes that budget's total from all its tasks with its own margin (`tasks + trunc(tasks × margin / 100)`) and
+  resets its `complete`/`wasPdfDownloaded` flags (like any other change);
+- deletes nothing, in no budget, and does not change A;
+- refuses N's highest revision when it is A itself ("Não é possível importar para o próprio orçamento.") or has a
+  job ("Orçamento gerou obra!").
+
+The legacy app is not changed.

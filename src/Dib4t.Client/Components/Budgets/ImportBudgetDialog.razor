@@ -1,9 +1,10 @@
-@* Legacy budgetDetails/importBudgetDetailsModal.jsx: import the tasks and/or the description of another budget
-   number (both ticked at first). *@
+@* Legacy budgetDetails/importBudgetDetailsModal.jsx, with the D24 behavior (PLAN.md §9): this budget's tasks are
+   ADDED to, and/or its description REPLACES the one of, the highest revision of the typed number (both ticked at
+   first). Nothing is deleted. The legacy notice ("… irão discartar as atuais") no longer applies. *@
 <MudDialog Visible="Visible" VisibleChanged="VisibleChanged" Options="Options" Class="settings-dialog" AriaLabel="Importar">
     <TitleContent><h2 class="settings-dialog-title">Importar</h2></TitleContent>
     <DialogContent>
-        <MudAlert Severity="Severity.Info" Dense="true" Class="budget-import-alert">Descritivo ou tarefas importadas irão discartar as atuais.</MudAlert>
+        <MudAlert Severity="Severity.Info" Dense="true" Class="budget-import-alert">As tarefas deste orçamento são adicionadas e a descrição substitui a atual na última revisão do orçamento indicado. Nada é apagado.</MudAlert>
         <form id="import-form" novalidate @onsubmit="SubmitAsync">
             <MudCheckBox T="bool" @bind-Value="_tasks" Label="Tarefas" Color="Color.Primary" />
             <MudCheckBox T="bool" @bind-Value="_description" Label="Descrição" Color="Color.Primary" />

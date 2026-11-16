@@ -50,4 +50,6 @@ holds the password hash, which the new app never sends), or `error` (an exceptio
   then `total` and `margin` copied (a source without `total` removes it). Description: copied (missing → removed).
   **The complete/PDF flags are not touched.** The route tests the original values' truthiness, so `"false"` imports.
 - **Importing from the budget's own number** (revision 0) deletes its tasks before reading them: the budget ends with
-  no tasks, and the legacy details page then renders nothing. Kept in the new app (D24, owner 2026-11-16).
+  no tasks, and the legacy details page then renders nothing. The new app imports differently (D24, owner
+  2026-11-16: the open budget's tasks/description go into the highest revision of the typed number; nothing is
+  deleted): only the import refusals D24 leaves unchanged replay from this section.

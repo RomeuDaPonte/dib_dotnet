@@ -180,13 +180,6 @@ internal sealed class MongoBudgetRepository(IMongoDatabase database) : IBudgetRe
         return ToDomain(BsonSerializer.Deserialize<BudgetDocument>(stored));
     }
 
-    public async Task<Budget?> FindFirstByNumberAsync(string budgetNumber, CancellationToken cancellationToken)
-    {
-        // findOne({ budgetNumber }) without a sort: natural order.
-        var document = await _budgets.Find(Builders<BudgetDocument>.Filter.Eq(b => b.BudgetNumber, budgetNumber)).Limit(1).FirstOrDefaultAsync(cancellationToken);
-        return document is null ? null : ToDomain(document);
-    }
-
     public Task<Budget?> PatchAsync(string id, BudgetPatch patch, CancellationToken cancellationToken)
     {
         ArgumentNullException.ThrowIfNull(patch);
@@ -208,17 +201,16 @@ internal sealed class MongoBudgetRepository(IMongoDatabase database) : IBudgetRe
     public Task<Budget?> ImportAsync(string id, BudgetImport import, CancellationToken cancellationToken)
     {
         ArgumentNullException.ThrowIfNull(import);
-        // routes/budget.js PUT /import: budget.total, budget.margin (with tasks), then budget.description.
-        var assignments = new List<(string Field, BsonValue? Value)>();
-        if (import.Tasks)
+        // D24: flags reset like any other change, then what was imported; nothing is removed.
+        var assignments = new List<(string Field, BsonValue? Value)> { ("complete", false), ("wasPdfDownloaded", false) };
+        if (import.Total is { } total)
         {
-            assignments.Add(("total", import.Total is { } total ? JsNumberSerializer.ToBsonValue(total) : null));
-            assignments.Add(("margin", JsNumberSerializer.ToBsonValue(import.Margin)));
+            assignments.Add(("total", JsNumberSerializer.ToBsonValue(total)));
         }
 
-        if (import.Description)
+        if (import.Description is { } text)
         {
-            assignments.Add(("description", import.DescriptionText is { } text ? new BsonString(text) : null));
+            assignments.Add(("description", text));
         }
 
         return SaveAsync(id, assignments, cancellationToken);

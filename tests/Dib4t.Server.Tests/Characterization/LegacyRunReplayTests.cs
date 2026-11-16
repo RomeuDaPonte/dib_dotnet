@@ -49,6 +49,14 @@ public sealed partial class LegacyRunReplayTests(AppWithMongo app) : IClassFixtu
     /// </summary>
     private static readonly Regex NotYetImplemented = new("^budget-pdf", RegexOptions.CultureInvariant);
 
+    /// <summary>
+    /// D24 (owner 2026-11-16): the new app's import copies the open budget's tasks/description into the typed number
+    /// instead of replacing the open budget's. The two successful legacy imports are not replayed (their own tests:
+    /// <c>BudgetDetailsGoldenTests</c>); their recorded document changes are written, so the later steps (list,
+    /// search) still run on the legacy state.
+    /// </summary>
+    private static readonly HashSet<string> LegacyStateOnly = new(StringComparer.Ordinal) { "budget-import", "budget-import-description-only" };
+
     private readonly Dictionary<string, string> _bound = new(StringComparer.Ordinal);
     private readonly Dictionary<string, string> _tokens = new(StringComparer.Ordinal);
     private readonly HttpClient _client = app.Factory.CreateClient();
@@ -73,7 +81,7 @@ public sealed partial class LegacyRunReplayTests(AppWithMongo app) : IClassFixtu
                     continue;
                 }
 
-                if (NotYetImplemented.IsMatch(id))
+                if (NotYetImplemented.IsMatch(id) || LegacyStateOnly.Contains(id))
                 {
                     await ApplyRecordedChangesAsync(step.GetProperty("db"));
                     applied.Add(id);
@@ -85,8 +93,8 @@ public sealed partial class LegacyRunReplayTests(AppWithMongo app) : IClassFixtu
             }
         }
 
-        replayed.Should().HaveCount(122, "every recorded step of the five files but the allow-listed and the not yet implemented ones");
-        applied.Should().HaveCount(2, "the PDF steps (Phase 3 step 3)");
+        replayed.Should().HaveCount(120, "every recorded step of the five files but the allow-listed, the not yet implemented and the D24 ones");
+        applied.Should().HaveCount(4, "the PDF steps (Phase 3 step 3) and the two D24 imports");
     }
 
     private async Task ReplayAsync(JsonElement step, bool ordered)

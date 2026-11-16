@@ -17,7 +17,7 @@ namespace Dib4t.Application.Tests.Budgets;
 /// <summary>
 /// The budget details contract (legacy <c>routes/task.js</c>, <c>patchProperty</c>, <c>import</c>): the Joi texts of
 /// every golden case (<c>budget-details-golden.json</c>, the legacy routes' own answers), the values Mongoose then
-/// stores, the order of the checks, the decided D8, D24 kept as legacy, and the log events. (Documents and answers are checked over
+/// stores, the order of the checks, the decided D8 and D24 (the import adds into the typed number), and the log events. (Documents and answers are checked over
 /// HTTP on MongoDB in <c>Dib4t.Server.Tests</c>.)
 /// </summary>
 public sealed class BudgetDetailsTests
@@ -25,6 +25,7 @@ public sealed class BudgetDetailsTests
     private const string BudgetId = "5f1e9a2b3c4d5e6f70810001";
     private const string SourceId = "5f1e9a2b3c4d5e6f70810010";
     private const string JobBudgetId = "5f1e9a2b3c4d5e6f70810013";
+    private const string SourceR1Id = "5f1e9a2b3c4d5e6f70810011";
     private const string TaskId = "5f1e9a2b3c4d5e6f70840001";
     private const string Unknown = "5f1e9a2b3c4d5e6f708399ff";
 
@@ -48,8 +49,12 @@ public sealed class BudgetDetailsTests
         _budgets.FindByIdAsync(BudgetId, Arg.Any<CancellationToken>()).Returns(Stored(BudgetId));
         _budgets.FindByIdAsync(SourceId, Arg.Any<CancellationToken>()).Returns(Stored(SourceId) with { BudgetNumber = "26-0003", Total = null, Description = null });
         _budgets.FindByIdAsync(JobBudgetId, Arg.Any<CancellationToken>()).Returns(Stored(JobBudgetId) with { HasGenerateJob = true });
-        _budgets.FindFirstByNumberAsync("26-0003", Arg.Any<CancellationToken>()).Returns(Stored(SourceId) with { BudgetNumber = "26-0003", Total = null, Margin = 32.5, Description = null });
-        _budgets.FindFirstByNumberAsync("26-0007", Arg.Any<CancellationToken>()).Returns(Stored(BudgetId));
+        // Revisions, highest first: 26-0003 has R1 (margin 40) and R0 (SourceId); 26-0007 only BudgetId; 26-0004 has a job.
+        _budgets.ListRevisionsAsync("26-0003", Arg.Any<CancellationToken>()).Returns(
+            [Stored(SourceR1Id) with { BudgetNumber = "26-0003", Revision = 1, Margin = 40 }, Stored(SourceId) with { BudgetNumber = "26-0003", Total = null, Description = null }]);
+        _budgets.ListRevisionsAsync("26-0007", Arg.Any<CancellationToken>()).Returns([Stored(BudgetId)]);
+        _budgets.ListRevisionsAsync("26-0004", Arg.Any<CancellationToken>()).Returns([Stored(JobBudgetId) with { BudgetNumber = "26-0004", HasGenerateJob = true }]);
+        _budgets.ListRevisionsAsync("00-0000", Arg.Any<CancellationToken>()).Returns([]);
         _budgets.PatchAsync(Arg.Any<string>(), Arg.Any<BudgetPatch>(), Arg.Any<CancellationToken>()).Returns(call => Stored(call.Arg<string>()));
         _budgets.ImportAsync(Arg.Any<string>(), Arg.Any<BudgetImport>(), Arg.Any<CancellationToken>()).Returns(call => Stored(call.Arg<string>()));
         _tasks.FindByIdAsync(TaskId, Arg.Any<CancellationToken>()).Returns(TaskOf(TaskId, BudgetId));
@@ -194,59 +199,62 @@ public sealed class BudgetDetailsTests
     }
 
     [Fact]
-    public async Task Import_checks_joi_the_number_the_id_the_budget_then_the_job()
+    public async Task D24_import_checks_joi_the_number_the_id_the_budget_itself_then_the_receiving_budgets_job()
     {
         var joi = await Budgets.ImportAsync("abc", Body("""{"importTasks":true}"""), Cancellation);
         var number = await Budgets.ImportAsync("abc", ImportBody("00-0000"), Cancellation);
         var cast = await Budgets.ImportAsync("abc", ImportBody("26-0003"), Cancellation);
         var missing = await Budgets.ImportAsync(Unknown, ImportBody("26-0003"), Cancellation);
-        var job = await Budgets.ImportAsync(JobBudgetId, ImportBody("26-0003"), Cancellation);
+        var itself = await Budgets.ImportAsync(BudgetId, ImportBody("26-0007"), Cancellation);
+        var job = await Budgets.ImportAsync(BudgetId, ImportBody("26-0004"), Cancellation);
 
         joi.Error.Should().Be(Error.Validation("Erro: \"importDescription\" is required"));
         number.Error.Should().Be(Error.Validation(BudgetMessages.ImportSourceMissing));
         cast.Error!.Message.Should().Be("Something failed.");
         missing.Error.Should().Be(Error.Validation(BudgetMessages.NotFound));
-        job.Error.Should().Be(Error.Validation(BudgetMessages.HasJob));
-        await _tasks.DidNotReceiveWithAnyArgs().DeleteByBudgetAsync(default!, Cancellation);
+        itself.Error.Should().Be(Error.Validation(BudgetMessages.ImportIntoItself));
+        job.Error.Should().Be(Error.Validation(BudgetMessages.HasJob), "the receiving budget has a job");
+        await _tasks.DidNotReceiveWithAnyArgs().InsertCopiesAsync(default!, default!, Cancellation);
+        await _budgets.DidNotReceiveWithAnyArgs().ImportAsync(default!, default!, Cancellation);
     }
 
     [Fact]
-    public async Task Import_copies_the_sources_tasks_total_margin_and_description()
+    public async Task D24_import_adds_the_open_budgets_tasks_to_the_highest_revision_and_recomputes_its_total()
     {
         var result = await Budgets.ImportAsync(BudgetId, ImportBody("26-0003"), Cancellation);
 
-        result.IsSuccess.Should().BeTrue();
+        result.Value.Budget.Id.Should().Be(SourceR1Id, "the receiving budget is answered");
         Received.InOrder(() =>
         {
-            _tasks.DeleteByBudgetAsync(BudgetId, Arg.Any<CancellationToken>());
-            _tasks.ListByBudgetAsync(SourceId, Arg.Any<CancellationToken>());
-            _tasks.InsertCopiesAsync(BudgetId, Arg.Is<IReadOnlyList<BudgetTask>>(t => t.Count == 1 && t[0].BudgetId == SourceId), Arg.Any<CancellationToken>());
-            _budgets.ImportAsync(BudgetId, new BudgetImport(true, null, 32.5, true, null), Arg.Any<CancellationToken>());
-        });
-        _logger.Entries.Should().Contain(e => e.EventId == 81 && e.Message.Contains("tasks copied 1, description True", StringComparison.Ordinal));
-    }
-
-    [Fact]
-    public async Task D24_importing_from_the_own_number_deletes_the_tasks_before_reading_them_as_legacy()
-    {
-        var result = await Budgets.ImportAsync(BudgetId, ImportBody("26-0007"), Cancellation);
-
-        result.IsSuccess.Should().BeTrue();
-        Received.InOrder(() =>
-        {
-            _tasks.DeleteByBudgetAsync(BudgetId, Arg.Any<CancellationToken>());
             _tasks.ListByBudgetAsync(BudgetId, Arg.Any<CancellationToken>());
+            _tasks.InsertCopiesAsync(SourceR1Id, Arg.Is<IReadOnlyList<BudgetTask>>(t => t.Count == 1 && t[0].BudgetId == BudgetId), Arg.Any<CancellationToken>());
+            _tasks.ListByBudgetAsync(SourceR1Id, Arg.Any<CancellationToken>());
+            // its tasks (the substitute: one of 32.5) with its own margin 40: 32.5 + trunc(13) = 45.5; the open budget's description
+            _budgets.ImportAsync(SourceR1Id, new BudgetImport(45.5, "Texto"), Arg.Any<CancellationToken>());
         });
+        await _tasks.DidNotReceiveWithAnyArgs().DeleteByBudgetAsync(default!, Cancellation);
+        await _tasks.DidNotReceiveWithAnyArgs().DeleteAsync(default!, Cancellation);
+        await _budgets.DidNotReceive().ImportAsync(BudgetId, Arg.Any<BudgetImport>(), Arg.Any<CancellationToken>());
+        _logger.Entries.Should().Contain(e => e.EventId == 81 && e.Message.Contains("tasks added 1, description replaced True", StringComparison.Ordinal));
     }
 
     [Fact]
-    public async Task Description_only_import_leaves_the_tasks()
+    public async Task D24_revision_0_can_import_into_the_latest_revision_of_its_own_number()
     {
-        await Budgets.ImportAsync(BudgetId, Body("""{"importDescription":true,"importTasks":false,"budgetNumber":"26-0003"}"""), Cancellation);
+        var result = await Budgets.ImportAsync(SourceId, ImportBody("26-0003"), Cancellation);
+
+        result.Value.Budget.Id.Should().Be(SourceR1Id);
+        await _tasks.Received().InsertCopiesAsync(SourceR1Id, Arg.Any<IReadOnlyList<BudgetTask>>(), Arg.Any<CancellationToken>());
+    }
+
+    [Fact]
+    public async Task D24_without_a_description_the_receiving_budget_keeps_its_own_and_unticked_imports_change_nothing()
+    {
+        await Budgets.ImportAsync(SourceId, Body("""{"importDescription":true,"importTasks":false,"budgetNumber":"26-0007"}"""), Cancellation);
+        await Budgets.ImportAsync(SourceId, Body("""{"importDescription":false,"importTasks":false,"budgetNumber":"26-0007"}"""), Cancellation);
 
         await _tasks.DidNotReceiveWithAnyArgs().ListByBudgetAsync(default!, Cancellation);
-        await _tasks.DidNotReceiveWithAnyArgs().DeleteByBudgetAsync(default!, Cancellation);
-        await _budgets.Received().ImportAsync(BudgetId, new BudgetImport(false, null, 32.5, true, null), Arg.Any<CancellationToken>());
+        await _budgets.Received(1).ImportAsync(BudgetId, new BudgetImport(null, null), Arg.Any<CancellationToken>()); // the flags only
     }
 
     [Fact]

@@ -21,8 +21,9 @@ namespace Dib4t.Client.Budgets;
 /// orçamento") and nothing is sent.</item>
 /// </list>
 /// Fixed legacy UI defects: the header's totals always use the rows' current values (legacy re-reads the saved tasks
-/// whenever the total changes and then sums values the user has not saved yet with stale ones); after an import the
-/// budget and its tasks are read again (D13; legacy shows <c>total + 1</c> and the old margin until a reload); the
+/// whenever the total changes and then sums values the user has not saved yet with stale ones); the import (D24)
+/// copies this budget's tasks/description into another budget, so this page does not change (legacy replaced this
+/// budget's tasks and showed <c>total + 1</c>, D13); the
 /// saves are sent one after the other (legacy sends them concurrently, so an older answer can win); a budget without
 /// tasks offers "Adicionar" (legacy renders nothing, so such a budget cannot get a task back).
 /// </summary>
@@ -330,7 +331,10 @@ public sealed class BudgetDetailsState(IBudgetApi budgets, ITaskApi tasks, IPric
     }
 
     // ---------------------------------------------------------------- import
-    /// <summary>The import dialog's "Importar": <c>true</c> when it worked (the dialog closes).</summary>
+    /// <summary>
+    /// The import dialog's "Importar" (D24): this budget's tasks and/or description are copied into the highest
+    /// revision of the typed number; <c>true</c> when it worked (the dialog closes).
+    /// </summary>
     public async Task<bool> ImportAsync(ImportBudgetRequest request)
     {
         var ok = false;
@@ -343,11 +347,8 @@ public sealed class BudgetDetailsState(IBudgetApi budgets, ITaskApi tasks, IPric
                 return;
             }
 
-            // D13: read the budget and its tasks again (legacy sets total + 1 to trigger a reload of the tasks).
-            var list = await tasks.ListAsync(Budget.Id);
-            _tasks.Clear();
-            _tasks.AddRange((list.Value ?? []).Select(t => new BudgetTaskRow(t)));
-            SetBudget(imported.Value!);
+            // D24: the copies went into the highest revision of the typed number; this budget did not change, so
+            // nothing is read again (legacy replaced this budget's tasks and showed total + 1, D13).
             snackbar.Add(ImportedMessage, Severity.Success);
             ok = true;
         });

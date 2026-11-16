@@ -15,8 +15,9 @@ namespace Dib4t.ImportCompatibility.Tests;
 /// in the details page without changing anything (every header input and every task line focused and left, with
 /// the request bodies the page sends) writes only what legacy writes: the two flags reset, no task and no other
 /// field changed (BSON types, field order and the 6 non-NFC texts of production kept). Budgets with a job stay
-/// untouched (the patch answers them unchanged, the task routes refuse). An import copies the tasks of the budget
-/// with most tasks as stored (js-bson number rule) with its total and margin.
+/// untouched (the patch answers them unchanged, the task routes refuse). An import (D24) adds copies of the tasks of
+/// the budget with most tasks (as stored, js-bson number rule) and its description to the highest revision of another
+/// number, recomputes that budget's total and resets its flags, and deletes or changes nothing else.
 /// </summary>
 public sealed class ImportedBudgetDetailsTests(AppWithMongo app) : IClassFixture<AppWithMongo>
 {
@@ -122,25 +123,46 @@ public sealed class ImportedBudgetDetailsTests(AppWithMongo app) : IClassFixture
             now[legacy["_id"].AsObjectId].ToJson().Should().Be(legacy.ToJson(), legacy["budgetNumber"].AsString + ": only the flags reset");
         }
 
-        // Import: the tasks of the budget with most tasks into another budget, as legacy copies them.
-        var source = stored.Where(b => b.GetValue("revision", 0).ToDouble() == 0)
-            .OrderByDescending(b => tasksByBudget.GetValueOrDefault(b["_id"].AsObjectId)?.Count ?? 0).First();
-        var sourceNumber = source["budgetNumber"].AsString;
-        var first = stored.First(b => b["budgetNumber"].AsString == sourceNumber); // findOne: natural order
-        var target = editable.First(b => b["budgetNumber"].AsString != sourceNumber);
-        using var imported = await client.PutAsJsonAsync(new Uri("/api/budget/import/" + target["_id"], UriKind.Relative),
-            new ImportBudgetRequest(true, true, sourceNumber), Web, Cancellation);
+        // Import (D24): the budget with most tasks sends its tasks and description into the highest revision of another
+        // number; tasks are added (copies as stored, js-bson number rule), nothing is deleted, the open budget is unchanged.
+        var open = stored.OrderByDescending(b => tasksByBudget.GetValueOrDefault(b["_id"].AsObjectId)?.Count ?? 0).First();
+        var latest = stored.GroupBy(b => b["budgetNumber"].AsString)
+            .Select(g => g.OrderByDescending(b => b.GetValue("revision", 0).ToDouble()).First()).ToList();
+        var target = latest.First(b => b["budgetNumber"] != open["budgetNumber"] && !b.GetValue("hasGenerateJob", false).AsBoolean
+                                       && tasksByBudget.ContainsKey(b["_id"].AsObjectId));
+        var budgetsBefore = (await app.Database.GetCollection<BsonDocument>("budgets").Find(FilterDefinition<BsonDocument>.Empty).ToListAsync(Cancellation))
+            .ToDictionary(b => b["_id"].AsObjectId);
+        var tasksBefore = await app.Database.GetCollection<BsonDocument>("tasks").Find(FilterDefinition<BsonDocument>.Empty).ToListAsync(Cancellation);
+        using var imported = await client.PutAsJsonAsync(new Uri("/api/budget/import/" + open["_id"], UriKind.Relative),
+            new ImportBudgetRequest(true, true, target["budgetNumber"].AsString), Web, Cancellation);
         var importedText = await imported.Content.ReadAsStringAsync(Cancellation);
         imported.StatusCode.Should().Be(HttpStatusCode.OK, importedText);
-        var answer = JsonSerializer.Deserialize<BudgetResponse>(importedText, Web)!;
-        answer.Total.Should().Be(first.TryGetValue("total", out var total) ? total.ToDouble() : null);
-        answer.Margin.Should().Be(first.GetValue("margin", 30).ToDouble());
-        answer.Description.Should().Be(first.TryGetValue("description", out var description) ? description.AsString : null);
-        var copies = await app.Database.GetCollection<BsonDocument>("tasks").Find(new BsonDocument("budgetId", target["_id"])).ToListAsync(Cancellation);
+        JsonSerializer.Deserialize<BudgetResponse>(importedText, Web)!.Id.Should().Be(target["_id"].ToString(), "the receiving budget");
+
+        var tasksAfter = await app.Database.GetCollection<BsonDocument>("tasks").Find(FilterDefinition<BsonDocument>.Empty).ToListAsync(Cancellation);
+        var openTasks = tasksByBudget[open["_id"].AsObjectId];
+        tasksAfter.Take(tasksBefore.Count).Select(t => t.ToJson()).Should().Equal(tasksBefore.Select(t => t.ToJson()), "nothing deleted or changed");
+        var added = tasksAfter.Skip(tasksBefore.Count).ToList();
         static string Copy(BsonDocument t) => string.Join(" | ", t["taskType"].AsString, t.GetValue("description", "(missing)").ToString(),
             JsNumber.ToString(t["unitPrice"].ToDouble()), JsNumber.ToString(t["quantity"].ToDouble()));
-        copies.Select(Copy).Should().Equal((tasksByBudget.GetValueOrDefault(first["_id"].AsObjectId) ?? []).Select(Copy), "as stored, in natural order");
-        copies.Select(t => t.Names.ToArray()[1]).Should().AllBe("taskType", "the copies' field order (taskType before budgetId)");
+        added.Select(Copy).Should().Equal(openTasks.Select(Copy), "copies of the open budget's tasks, in natural order");
+        added.Should().AllSatisfy(t => t["budgetId"].Should().Be(target["_id"]));
+        added.Select(t => t.Names.ToArray()[1]).Should().AllBe("taskType", "the copies' field order (taskType before budgetId)");
+
+        var budgetsAfter = (await app.Database.GetCollection<BsonDocument>("budgets").Find(FilterDefinition<BsonDocument>.Empty).ToListAsync(Cancellation))
+            .ToDictionary(b => b["_id"].AsObjectId);
+        var receiving = budgetsAfter[target["_id"].AsObjectId];
+        var all = tasksAfter.Where(t => t["budgetId"] == target["_id"]).Select(t => (t["quantity"].ToDouble(), t["unitPrice"].ToDouble()));
+        var tasksTotal = Dib4t.SharedKernel.Calculations.BudgetCalculations.TasksTotal(all);
+        receiving["total"].ToDouble().Should().Be(Dib4t.SharedKernel.Calculations.BudgetCalculations.TotalFromTasks(tasksTotal, receiving.GetValue("margin", 30).ToDouble()));
+        receiving.GetValue("complete", false).AsBoolean.Should().BeFalse();
+        receiving.GetValue("wasPdfDownloaded", false).AsBoolean.Should().BeFalse();
+        receiving.GetValue("description", BsonNull.Value).Should().Be(open.TryGetValue("description", out var openDescription)
+            ? openDescription : budgetsBefore[target["_id"].AsObjectId].GetValue("description", BsonNull.Value));
+        foreach (var (id, before) in budgetsBefore.Where(b => b.Key != target["_id"].AsObjectId))
+        {
+            budgetsAfter[id].ToJson().Should().Be(before.ToJson(), "only the receiving budget changes");
+        }
     }
 
     private static async Task RestoreAsync(HttpClient client)

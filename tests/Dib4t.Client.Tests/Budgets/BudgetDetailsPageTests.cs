@@ -16,7 +16,7 @@ namespace Dib4t.Client.Tests.Budgets;
 /// <summary>
 /// The budget details page (legacy <c>components/budgetDetails/*</c>) against substituted API clients: the header's
 /// live totals and margin color, what each change sends and when (the total at once, the task on blur, the header
-/// inputs on blur), the lock and its warnings, the description and "Concluir", the import (D13) and the fixed
+/// inputs on blur), the lock and its warnings, the description and "Concluir", the import (D24) and the fixed
 /// legacy UI defects (header totals from the rows' current values, a budget without tasks can get one).
 /// </summary>
 public sealed class BudgetDetailsPageTests : IAsyncDisposable
@@ -253,23 +253,22 @@ public sealed class BudgetDetailsPageTests : IAsyncDisposable
     }
 
     [Fact]
-    public async Task D13_an_import_reads_the_budget_and_its_tasks_again()
+    public async Task D24_an_import_sends_this_budget_into_another_number_and_this_page_does_not_change()
     {
         var page = await RenderAsync();
-        _budgets.ImportAsync(BudgetId, Arg.Any<ImportBudgetRequest>()).Returns(ApiResult.Success(Budget() with { Margin = 32.5, Total = 1234 }));
-        _tasks.ListAsync(BudgetId).Returns(ApiResult.Success<IReadOnlyList<BudgetTaskResponse>>([Task("t9", "automation", 32.5, 2)]));
+        _budgets.ImportAsync(BudgetId, Arg.Any<ImportBudgetRequest>()).Returns(ApiResult.Success(Budget() with { Id = "other", Margin = 32.5, Total = 1234 }));
 
         await page.Find("button[aria-label='Importar']").ClickAsync(new MouseEventArgs());
-        _dialogs.WaitForAssertion(() => _dialogs.Markup.Should().Contain("Descritivo ou tarefas importadas irão discartar as atuais."));
+        _dialogs.WaitForAssertion(() => _dialogs.Markup.Should().Contain("Nada é apagado."));
         await _dialogs.Find("#import-number").InputAsync(new ChangeEventArgs { Value = "26-0003" });
         await _dialogs.Find("#import-form").SubmitAsync();
 
         await _budgets.Received(1).ImportAsync(BudgetId, new ImportBudgetRequest(true, true, "26-0003"));
-        page.WaitForAssertion(() => page.FindAll(".budget-task").Should().HaveCount(1));
-        page.Find("#budget-margin").GetAttribute("value").Should().Be("32.5");
-        page.Find("#budget-total").GetAttribute("value").Should().Be("1234", "not total + 1 (legacy hack)");
         Snackbar.ShownSnackbars.Should().Contain(s => s.Message == "Importado com sucesso");
         _dialogs.WaitForAssertion(() => _dialogs.Markup.Should().NotContain("Nª Orçamento"));
+        page.FindAll(".budget-task").Should().HaveCount(2, "this budget's tasks are unchanged");
+        page.Find("#budget-margin").GetAttribute("value").Should().Be("25", "the answer is the receiving budget, not this one");
+        await _tasks.Received(1).ListAsync(BudgetId); // only the first load
     }
 
     [Fact]

@@ -1,5 +1,6 @@
 using System.Text.Json;
 using Dib4t.Application.Common;
+using Dib4t.SharedKernel.Calculations;
 using Microsoft.Extensions.Logging;
 
 namespace Dib4t.Application.Budgets;
@@ -7,8 +8,9 @@ namespace Dib4t.Application.Budgets;
 /// <summary>
 /// The budget details routes of legacy <c>routes/budget.js</c> (PLAN.md §6, §7.1): <c>patchProperty</c> and
 /// <c>import</c>, in the legacy order of checks with the legacy texts (checked in <c>budget-details-golden.json</c>).
-/// D24 (PLAN.md §9, owner 2026-11-16: keep the legacy behavior): the budget's tasks are deleted before the source's
-/// are read, so importing from the budget's own number leaves it without tasks, as in legacy.
+/// D24 (PLAN.md §9, owner 2026-11-16): the import never deletes anything. It copies the open budget's tasks
+/// and/or description INTO the highest revision of the typed number (legacy: the other way round, replacing the
+/// open budget's tasks, so importing from its own number deleted them).
 /// </summary>
 public sealed partial class BudgetsService
 {
@@ -55,10 +57,14 @@ public sealed partial class BudgetsService
     }
 
     /// <summary>
-    /// <c>PUT /import/:id</c>: Joi (400 "Erro: …") → the source, the first document with the number (400
-    /// <see cref="BudgetMessages.ImportSourceMissing"/>) → id cast (500) → budget (400 <see cref="BudgetMessages.NotFound"/>)
-    /// → job (400 <see cref="BudgetMessages.HasJob"/>) → tasks (replaced by copies of the source's; total and margin
-    /// copied) and/or description → save. The complete/PDF flags stay as they are (legacy).
+    /// <c>PUT /import/:id</c> (D24): Joi (400 "Erro: …", legacy texts) → the receiving budget, the highest revision of
+    /// the typed number (400 <see cref="BudgetMessages.ImportSourceMissing"/>) → id cast of the open budget (500) → the
+    /// open budget (400 <see cref="BudgetMessages.NotFound"/>) → not into itself (400
+    /// <see cref="BudgetMessages.ImportIntoItself"/>) → the receiving budget has no job (400
+    /// <see cref="BudgetMessages.HasJob"/>) → copies of the open budget's tasks ADDED to it (when ticked), its
+    /// description replaced by the open budget's (when ticked and there is one), its total recomputed from all its
+    /// tasks with its own margin (when tasks were added), and its complete/PDF flags reset. Nothing is deleted; the
+    /// open budget does not change. Answers the receiving budget.
     /// </summary>
     public async Task<Result<BudgetDetails>> ImportAsync(string id, JsonElement body, CancellationToken cancellationToken)
     {
@@ -69,8 +75,9 @@ public sealed partial class BudgetsService
         }
 
         var input = validated.Value;
-        var source = await budgets.FindFirstByNumberAsync(input.BudgetNumber, cancellationToken);
-        if (source is null)
+        var revisions = await budgets.ListRevisionsAsync(input.BudgetNumber, cancellationToken); // highest revision first
+        var target = revisions.Count > 0 ? revisions[0] : null;
+        if (target is null)
         {
             return Error.Validation(BudgetMessages.ImportSourceMissing);
         }
@@ -81,32 +88,47 @@ public sealed partial class BudgetsService
             return found.Error;
         }
 
-        var budget = found.Value;
-        if (budget.HasGenerateJob)
+        var source = found.Value;
+        if (source.Id == target.Id)
+        {
+            return Error.Validation(BudgetMessages.ImportIntoItself);
+        }
+
+        if (target.HasGenerateJob)
         {
             return Error.Validation(BudgetMessages.HasJob);
         }
 
-        var copied = 0;
+        if (!input.ImportTasks && !input.ImportDescription)
+        {
+            return await DetailsAsync(target, cancellationToken); // nothing to copy: nothing changes
+        }
+
+        int? copied = null;
+        double? total = null;
         if (input.ImportTasks)
         {
-            // Legacy order (D24 kept): delete, then read the source (its own number: nothing left to copy).
-            await tasks.DeleteByBudgetAsync(budget.Id, cancellationToken);
             var sourceTasks = await tasks.ListByBudgetAsync(source.Id, cancellationToken);
-            await tasks.InsertCopiesAsync(budget.Id, sourceTasks, cancellationToken);
+            await tasks.InsertCopiesAsync(target.Id, sourceTasks, cancellationToken);
             copied = sourceTasks.Count;
+            var all = await tasks.ListByBudgetAsync(target.Id, cancellationToken);
+            var tasksTotal = BudgetCalculations.TasksTotal(all.Select(t => (t.Quantity ?? double.NaN, t.UnitPrice ?? double.NaN)));
+            total = BudgetCalculations.TotalFromTasks(tasksTotal, target.Margin);
+            if (!double.IsFinite(total.Value))
+            {
+                LogTotalNotComputed(target.Id, target.BudgetNumber);
+                total = null; // a task without a number: the total stays as it is
+            }
         }
 
-        var saved = await budgets.ImportAsync(
-            budget.Id,
-            new BudgetImport(input.ImportTasks, source.Total, source.Margin, input.ImportDescription, source.Description),
-            cancellationToken);
+        var description = input.ImportDescription ? source.Description : null; // none: the receiving budget keeps its own
+        var saved = await budgets.ImportAsync(target.Id, new BudgetImport(total, description), cancellationToken);
         if (saved is null)
         {
-            return Error.Validation(BudgetMessages.NotFound); // deleted meanwhile
+            return Error.Validation(BudgetMessages.ImportSourceMissing); // deleted meanwhile
         }
 
-        LogImported(saved.Id, saved.BudgetNumber, source.Id, source.BudgetNumber, input.ImportTasks ? copied : null, input.ImportDescription);
+        LogImported(saved.Id, saved.BudgetNumber, saved.Revision, source.Id, source.BudgetNumber, copied, description is not null);
         return await DetailsAsync(saved, cancellationToken);
     }
 
@@ -114,6 +136,9 @@ public sealed partial class BudgetsService
     private partial void LogPatched(string budgetId, string? budgetNumber, double revision, string field);
 
     [LoggerMessage(EventId = 81, Level = LogLevel.Information,
-        Message = "Budget {BudgetId} ({BudgetNumber}) imported from {SourceId} ({SourceNumber}): tasks copied {TaskCount}, description {Description}")]
-    private partial void LogImported(string budgetId, string? budgetNumber, string sourceId, string? sourceNumber, int? taskCount, bool description);
+        Message = "Budget {BudgetId} ({BudgetNumber} R{Revision}) imported from {SourceId} ({SourceNumber}): tasks added {TaskCount}, description replaced {Description}")]
+    private partial void LogImported(string budgetId, string? budgetNumber, double revision, string sourceId, string? sourceNumber, int? taskCount, bool description);
+
+    [LoggerMessage(EventId = 82, Level = LogLevel.Warning, Message = "Budget {BudgetId} ({BudgetNumber}): total not recomputed after an import (a task without a number)")]
+    private partial void LogTotalNotComputed(string budgetId, string? budgetNumber);
 }

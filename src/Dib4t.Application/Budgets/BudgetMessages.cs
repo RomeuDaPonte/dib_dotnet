@@ -36,7 +36,7 @@ public static class BudgetMessages
     /// <summary><c>PUT /import/:id</c>: prefix of the Joi 400.</summary>
     public const string ImportRefusedPrefix = "Erro: ";
 
-    /// <summary><c>PUT /import/:id</c>: no budget with the number to import from (400).</summary>
+    /// <summary><c>PUT /import/:id</c>: no budget with the typed number (400; legacy text, D24: the receiving budget's number).</summary>
     public const string ImportSourceMissing = "Orçamento com esse número não existe";
 
     /// <summary>
@@ -44,6 +44,9 @@ public static class BudgetMessages
     /// edit routes answer such a budget unchanged instead.
     /// </summary>
     public const string HasJob = "Orçamento gerou obra!";
+
+    /// <summary>D24: <c>PUT /import/:id</c> with the open budget's own number when it is the highest revision (400).</summary>
+    public const string ImportIntoItself = "Não é possível importar para o próprio orçamento.";
 
     /// <summary>The task routes: no task with this id (400).</summary>
     public const string TaskMissing = "Tarefa não encontrada";
