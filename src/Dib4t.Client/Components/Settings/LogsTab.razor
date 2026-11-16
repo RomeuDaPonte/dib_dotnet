@@ -1,0 +1,173 @@
+@implements IDisposable
+@inject ILogsApi Logs
+@inject TimeProvider Time
+
+@* Registos (PLAN.md §3.3, C11; new-app only): filters, newest first, 100 per page with "Carregar mais", a row expands
+   to its properties and exception, a request id shows every entry of that request. Phones: the filters fold into a
+   panel and the table becomes cards (app.css .logs-*). *@
+<div class="logs">
+    <MudButton Variant="Variant.Outlined" Class="logs-filters-toggle" StartIcon="@Icons.Material.Filled.FilterList"
+               aria-expanded="@(_filtersOpen ? "true" : "false")" aria-controls="logs-filters" OnClick="() => _filtersOpen = !_filtersOpen">
+        Filtros
+    </MudButton>
+    <form id="logs-filters" class="@($"logs-filters{(_filtersOpen ? " logs-filters--open" : string.Empty)}")" @onsubmit="SearchAsync" aria-label="Filtros dos registos">
+        <div class="logs-filter-row">
+            <LabeledSelect TValue="LogRange" Id="logs-range" Label="Período" Value="_view.Range" ValueChanged="RangeChanged" Options="LogsView.Ranges" Class="logs-field" />
+            @if (_view.Range == LogRange.Custom)
+            {
+                <div class="field-select logs-field">
+                    <label for="logs-from" class="field-select-label">De</label>
+                    <input id="logs-from" type="datetime-local" class="field-select-input" value="@_view.CustomFrom" @onchange="e => _view.CustomFrom = e.Value?.ToString()" />
+                </div>
+                <div class="field-select logs-field">
+                    <label for="logs-to" class="field-select-label">Até</label>
+                    <input id="logs-to" type="datetime-local" class="field-select-input" value="@_view.CustomTo" @onchange="e => _view.CustomTo = e.Value?.ToString()" />
+                </div>
+            }
+            <LabeledSelect TValue="string" Id="logs-user" Label="Utilizador" Value="@(_view.User ?? string.Empty)" ValueChanged="u => _view.User = string.IsNullOrEmpty(u) ? null : u"
+                           Options="UserOptions" Class="logs-field" />
+        </div>
+        <fieldset class="logs-checks">
+            <legend>Nível</legend>
+            @foreach (var level in LogsView.Levels)
+            {
+                <MudCheckBox T="bool" Value="_view.SelectedLevels.Contains(level)" ValueChanged="on => LogsView.Toggle(_view.SelectedLevels, level, on)"
+                             Label="@LogsView.LevelLabel(level)" Color="Color.Primary" Dense="true" />
+            }
+        </fieldset>
+        <fieldset class="logs-checks">
+            <legend>Categoria</legend>
+            @foreach (var category in _view.Categories)
+            {
+                <MudCheckBox T="bool" Value="_view.SelectedCategories.Contains(category)" ValueChanged="on => LogsView.Toggle(_view.SelectedCategories, category, on)"
+                             Label="@category" Color="Color.Primary" Dense="true" />
+            }
+        </fieldset>
+        <div class="logs-filter-row">
+            <MudTextField T="string" @bind-Value="_view.Text" Immediate="true" Label="Pesquisar" InputId="logs-search" Class="logs-field logs-field--wide"
+                          HelperText="Palavras (início da palavra) ou &quot;frase exata&quot;" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" />
+            <MudTextField T="string" @bind-Value="_view.RequestId" Immediate="true" Label="Pedido (request id)" InputId="logs-request-id" Class="logs-field" />
+        </div>
+        <div class="logs-actions">
+            <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary" Disabled="_view.Loading">Pesquisar</MudButton>
+            <MudSwitch T="bool" Value="_view.AutoRefresh" ValueChanged="_view.SetAutoRefresh" Disabled="!_view.CanAutoRefresh"
+                       Label="Atualizar a cada 10 s" Color="Color.Primary" />
+        </div>
+    </form>
+
+    @if (_view.Error is not null)
+    {
+        <p class="logs-error" role="alert">@_view.Error</p>
+    }
+
+    <div class="logs-results" aria-busy="@(_view.Loading ? "true" : "false")">
+        <table class="logs-table" aria-label="Registos">
+            <thead>
+                <tr>
+                    <th scope="col">Data/hora</th>
+                    <th scope="col">Nível</th>
+                    <th scope="col">Categoria</th>
+                    <th scope="col">Utilizador</th>
+                    <th scope="col">Mensagem</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var entry in _view.Items)
+                {
+                    var expanded = _view.Expanded.Contains(entry.Id);
+                    <tr class="logs-row" @key="entry.Id">
+                        <td data-label="Data/hora" class="logs-time">
+                            <button type="button" class="logs-expand" aria-expanded="@(expanded ? "true" : "false")" aria-controls="@($"logs-detail-{entry.Id}")"
+                                    @onclick="() => _view.ToggleExpanded(entry.Id)">
+                                <MudIcon Icon="@(expanded ? Icons.Material.Filled.ExpandLess : Icons.Material.Filled.ExpandMore)" Size="Size.Small" />
+                                <span>@_view.FormatTime(entry.Timestamp)</span>
+                            </button>
+                        </td>
+                        <td data-label="Nível"><span class="@($"logs-level logs-level--{entry.Level.ToLowerInvariant()}")">@LogsView.LevelLabel(entry.Level)</span></td>
+                        <td data-label="Categoria">@entry.Category</td>
+                        <td data-label="Utilizador" class="logs-wrap">@entry.UserName</td>
+                        <td data-label="Mensagem" class="logs-message">@entry.Message</td>
+                    </tr>
+                    @if (expanded)
+                    {
+                        <tr class="logs-detail" id="@($"logs-detail-{entry.Id}")" @key="-entry.Id">
+                            <td colspan="5">
+                                <dl class="logs-detail-list">
+                                    @if (entry.RequestId is not null)
+                                    {
+                                        <dt>Pedido</dt>
+                                        <dd>
+                                            <button type="button" class="logs-request" title="Ver todos os registos deste pedido"
+                                                    @onclick="() => _view.ShowRequestAsync(entry.RequestId)">@entry.RequestId</button>
+                                        </dd>
+                                    }
+                                    @if (entry.SourceContext is not null)
+                                    {
+                                        <dt>Origem</dt>
+                                        <dd class="logs-wrap">@entry.SourceContext</dd>
+                                    }
+                                    @if (entry.Properties is not null)
+                                    {
+                                        <dt>Propriedades</dt>
+                                        <dd><pre class="logs-pre">@LogsView.FormatProperties(entry.Properties)</pre></dd>
+                                    }
+                                    @if (entry.Exception is not null)
+                                    {
+                                        <dt>Exceção</dt>
+                                        <dd><pre class="logs-pre">@entry.Exception</pre></dd>
+                                    }
+                                </dl>
+                            </td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+        @if (_view.Items.Count == 0 && !_view.Loading)
+        {
+            <p class="logs-empty">Sem registos para estes filtros.</p>
+        }
+        @if (_view.NextCursor is not null)
+        {
+            <MudButton Variant="Variant.Outlined" Color="Color.Primary" Class="logs-more" Disabled="_view.Loading" OnClick="_view.LoadMoreAsync">Carregar mais</MudButton>
+        }
+    </div>
+</div>
+
+@code {
+    private LogsView _view = null!;
+    private bool _filtersOpen;
+
+    private IReadOnlyList<(string Value, string Text)> UserOptions =>
+        [(string.Empty, "Todos"), .. _view.Users.Select(u => (u, u))];
+
+    /// <summary>For tests: the browser's time zone otherwise.</summary>
+    [Parameter]
+    public TimeZoneInfo? Zone { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        _view = new LogsView(Logs, Time) { Zone = Zone ?? TimeZoneInfo.Local };
+        _view.RefreshDue += RefreshDueAsync;
+        await _view.InitializeAsync();
+    }
+
+    public void Dispose()
+    {
+        if (_view is not null)
+        {
+            _view.RefreshDue -= RefreshDueAsync;
+            _view.Dispose();
+        }
+    }
+
+    private Task SearchAsync() => _view.SearchAsync();
+
+    private void RangeChanged(LogRange range) => _view.SetRange(range);
+
+    private Task RefreshDueAsync() => InvokeAsync(async () =>
+    {
+        await _view.RefreshAsync();
+        StateHasChanged();
+    });
+}

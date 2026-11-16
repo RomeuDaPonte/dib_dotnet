@@ -33,4 +33,34 @@ public sealed class LogsOptions
 
     /// <summary>Console output (<c>docker logs</c>): Warning and up in Production keeps it small.</summary>
     public LogEventLevel ConsoleMinimumLevel { get; set; } = LogEventLevel.Information;
+
+    /// <summary>Entries older than this many calendar months are deleted by the daily cleanup.</summary>
+    [Range(1, 120)]
+    public int RetentionMonths { get; set; } = 1;
+
+    /// <summary>Size guard: when the entries take more than this, the cleanup deletes the oldest ones first.</summary>
+    [Range(1, 1_000_000)]
+    public int MaxSizeMB { get; set; } = 2048;
+
+    /// <summary>The daily cleanup job (<see cref="LogCleanupService"/>).</summary>
+    public LogCleanupOptions Cleanup { get; set; } = new();
+}
+
+/// <summary>Section <c>Logs:Cleanup</c> (PLAN.md §3.3): every day at <see cref="At"/> in <see cref="TimeZone"/>.</summary>
+public sealed class LogCleanupOptions
+{
+    /// <summary>Local time of the daily run (the scheduled database backup defaults to 03:00, so they never overlap).</summary>
+    public TimeOnly At { get; set; } = new(2, 0);
+
+    /// <summary>IANA time zone of <see cref="At"/> and of the retention's calendar months (the container runs in UTC).</summary>
+    [Required]
+    public string TimeZone { get; set; } = "Europe/Lisbon";
+
+    /// <summary>Rows deleted per transaction, so the log writer is never blocked for long.</summary>
+    [Range(1, 1_000_000)]
+    public int ChunkSize { get; set; } = 5_000;
+
+    /// <summary>The time zone, or <see langword="null"/> when the system does not know it.</summary>
+    public TimeZoneInfo? FindTimeZone() =>
+        TimeZoneInfo.TryFindSystemTimeZoneById(TimeZone, out var zone) ? zone : null;
 }

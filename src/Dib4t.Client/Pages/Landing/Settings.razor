@@ -5,7 +5,7 @@
 <PageTitle>Dib4t</PageTitle>
 
 @* Legacy components/settings/settings.jsx: tabs Utilizadores, Preços, M/Pagamento, Impressoras, (Base de Dados,
-   Phase 5), Info. Registos (C11) comes with the logs step. Only for canSeeDefinicoes (the menu shows the page only
+   Phase 5), Info, plus the new-app Registos tab (C11, PLAN.md §3.3) before Info. Only for canSeeDefinicoes (the menu shows the page only
    then; the API refuses the rest anyway). The tab bar wraps instead of scrolling (§8.4). *@
 @if (Session.User?.HasRole(RoleNames.CanSeeDefinicoes) == true)
 {
@@ -17,6 +17,7 @@
                 case 1: <PricesTab /> break;
                 case 2: <PaymentMethodsTab /> break;
                 case 3: <PrintersTab /> break;
+                case 4: <LogsTab /> break;
                 default: <InfoTab /> break;
             }
         </SettingsTabs>
@@ -34,6 +35,7 @@ else
         ("Preços", Icons.Material.TwoTone.EuroSymbol),
         ("M/Pagamento", Icons.Material.TwoTone.Payments),
         ("Impressoras", Icons.Material.Filled.Print),
+        ("Registos", Icons.Material.Filled.ReceiptLong),
         ("Info", Icons.Material.Filled.Info),
     ];
 

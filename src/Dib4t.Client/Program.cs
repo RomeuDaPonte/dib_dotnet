@@ -34,6 +34,8 @@ builder.Services.AddScoped<IUsersApi, UsersApi>();
 builder.Services.AddScoped<IPricesApi, PricesApi>();
 builder.Services.AddScoped<IPaymentMethodsApi, PaymentMethodsApi>();
 builder.Services.AddScoped<IPrinterSettingsApi, PrinterSettingsApi>();
+builder.Services.AddScoped<ILogsApi, LogsApi>();
+builder.Services.AddSingleton(TimeProvider.System);
 builder.Services.AddScoped<AuthSession>();
 builder.Services.AddScoped<AuthenticationStateProvider>(provider => provider.GetRequiredService<AuthSession>());
 builder.Services.AddScoped<ThemeState>();

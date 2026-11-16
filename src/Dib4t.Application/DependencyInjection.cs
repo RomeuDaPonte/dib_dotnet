@@ -1,5 +1,6 @@
 using Dib4t.Application.Account;
 using Dib4t.Application.Database;
+using Dib4t.Application.Logs;
 using Dib4t.Application.Settings;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
@@ -22,6 +23,7 @@ public static class DependencyInjection
         services.AddScoped<DefaultDataSeeder>();
         services.AddSingleton<DatabaseOperationLock>();
         services.AddScoped<DatabaseRestoreService>();
+        services.AddScoped<LogsService>();
         return services;
     }
 }

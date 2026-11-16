@@ -9,7 +9,8 @@ namespace Dib4t.Infrastructure.Logging;
 /// </summary>
 internal sealed class SqliteLogStore : ILogBatchWriter
 {
-    public const int SchemaVersion = 1;
+    /// <summary>2: index on <c>(user_name, timestamp_utc)</c> for the Registos user filter and list.</summary>
+    public const int SchemaVersion = 2;
 
     private const string Schema = """
         CREATE TABLE IF NOT EXISTS logs (
@@ -27,6 +28,7 @@ internal sealed class SqliteLogStore : ILogBatchWriter
         CREATE INDEX IF NOT EXISTS ix_logs_level_timestamp ON logs (level, timestamp_utc);
         CREATE INDEX IF NOT EXISTS ix_logs_category_timestamp ON logs (category, timestamp_utc);
         CREATE INDEX IF NOT EXISTS ix_logs_request_id ON logs (request_id);
+        CREATE INDEX IF NOT EXISTS ix_logs_user_timestamp ON logs (user_name, timestamp_utc);
         CREATE VIRTUAL TABLE IF NOT EXISTS logs_fts USING fts5 (
             message, exception, properties_json, content = 'logs', content_rowid = 'id');
         CREATE TRIGGER IF NOT EXISTS logs_ai AFTER INSERT ON logs BEGIN
@@ -41,7 +43,8 @@ internal sealed class SqliteLogStore : ILogBatchWriter
             id INTEGER PRIMARY KEY CHECK (id = 1),
             schema_version INTEGER NOT NULL,
             last_cleanup_utc INTEGER);
-        INSERT OR IGNORE INTO meta (id, schema_version) VALUES (1, 1);
+        INSERT OR IGNORE INTO meta (id, schema_version) VALUES (1, 2);
+        UPDATE meta SET schema_version = 2 WHERE schema_version < 2;
         """;
 
     private const string InsertSql = """
@@ -63,20 +66,11 @@ internal sealed class SqliteLogStore : ILogBatchWriter
         }
 
         Path = path;
-        _connection = new SqliteConnection(new SqliteConnectionStringBuilder
-        {
-            DataSource = path,
-            Mode = SqliteOpenMode.ReadWriteCreate,
-            Pooling = false,
-        }.ToString());
-        _connection.Open();
+        _connection = OpenConnection(path, SqliteOpenMode.ReadWriteCreate);
 
         // auto_vacuum only takes effect before the first table is created (new file); WAL is persistent.
         Execute("PRAGMA auto_vacuum = INCREMENTAL;");
         Execute("PRAGMA journal_mode = WAL;");
-        Execute("PRAGMA synchronous = NORMAL;");
-        Execute("PRAGMA cache_size = -8192;"); // 8 MB
-        Execute("PRAGMA busy_timeout = 5000;");
         Execute(Schema);
 
         _insert = _connection.CreateCommand();
@@ -124,6 +118,25 @@ internal sealed class SqliteLogStore : ILogBatchWriter
 
         transaction.Commit();
         _insert.Transaction = null;
+    }
+
+    /// <summary>
+    /// A connection to the store with the per-connection settings (the writer's, and the separate ones of the Registos
+    /// queries and the cleanup job: WAL lets them read while the writer writes; a writer waits up to 5 s for another).
+    /// </summary>
+    internal static SqliteConnection OpenConnection(string path, SqliteOpenMode mode)
+    {
+        var connection = new SqliteConnection(new SqliteConnectionStringBuilder
+        {
+            DataSource = path,
+            Mode = mode,
+            Pooling = false,
+        }.ToString());
+        connection.Open();
+        using var command = connection.CreateCommand();
+        command.CommandText = "PRAGMA synchronous = NORMAL; PRAGMA cache_size = -8192; PRAGMA busy_timeout = 5000;"; // 8 MB cache
+        command.ExecuteNonQuery();
+        return connection;
     }
 
     public void Dispose()

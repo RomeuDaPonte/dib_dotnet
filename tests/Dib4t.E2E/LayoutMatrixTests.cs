@@ -69,6 +69,22 @@ public sealed class LayoutMatrixTests(E2EHarness harness) : E2ETest(harness)
             ("Guardar", page.GetByRole(AriaRole.Button, new() { Name = "Guardar" })),
             ("Nova Impressora", page.GetByRole(AriaRole.Button, new() { Name = "Nova Impressora" })),
         ], Open: page => OpenTabAsync(page, "Impressoras", "#printer-ip")),
+        new("settings-logs", "/landing/settings", SignedIn: true, Ready: ".settings-table tbody tr", page =>
+        [
+            // Wide: the search box and button; phones: the filters fold behind "Filtros" (§3.3).
+            ("Pesquisar | Filtros", page.GetByRole(AriaRole.Button, new() { Name = "Pesquisar", Exact = true })
+                .Or(page.GetByRole(AriaRole.Button, new() { Name = "Filtros" })).Filter(new() { Visible = true })),
+            ("Info", Tab(page, "Info")),
+        ], Open: OpenLogsWithRowsAsync),
+        new("settings-logs-expanded", "/landing/settings", SignedIn: true, Ready: ".settings-table tbody tr", page =>
+        [
+            ("Pedido", page.Locator(".logs-detail .logs-request").First),
+        ], Open: async page =>
+        {
+            await OpenLogsWithRowsAsync(page);
+            await page.Locator(".logs-expand").First.ClickAsync();
+            await page.Locator(".logs-detail .logs-request").First.WaitForAsync();
+        }),
         new("settings-info", "/landing/settings", SignedIn: true, Ready: ".settings-table tbody tr", page =>
         [
             ("Utilizadores", Tab(page, "Utilizadores")),
@@ -76,6 +92,24 @@ public sealed class LayoutMatrixTests(E2EHarness harness) : E2ETest(harness)
     ];
 
     private static ILocator Tab(IPage page, string name) => page.GetByRole(AriaRole.Tab, new() { Name = name });
+
+    /// <summary>Registos with entries (the store commits every 2 s: re-opening the tab searches again).</summary>
+    private static async Task OpenLogsWithRowsAsync(IPage page)
+    {
+        for (var attempt = 0; ; attempt++)
+        {
+            await OpenTabAsync(page, "Registos", ".logs-table"); // the search box is folded away on phones
+            try
+            {
+                await page.Locator("tr.logs-row").First.WaitForAsync(new() { Timeout = 3_000 });
+                return;
+            }
+            catch (TimeoutException) when (attempt < 5)
+            {
+                await Tab(page, "Info").ClickAsync();
+            }
+        }
+    }
 
     private static async Task OpenTabAsync(IPage page, string tab, string ready)
     {

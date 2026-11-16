@@ -35,14 +35,14 @@ public sealed class SqliteLogStoreTests : IAsyncDisposable
 
         (await LogStoreFile.ScalarAsync(_path, "PRAGMA journal_mode;", Cancellation)).Should().Be("wal");
         (await LogStoreFile.ScalarAsync(_path, "PRAGMA auto_vacuum;", Cancellation)).Should().Be(2L); // INCREMENTAL
-        (await LogStoreFile.ScalarAsync(_path, "SELECT schema_version FROM meta WHERE id = 1;", Cancellation)).Should().Be(1L);
+        (await LogStoreFile.ScalarAsync(_path, "SELECT schema_version FROM meta WHERE id = 1;", Cancellation)).Should().Be(2L);
         (await LogStoreFile.ScalarAsync(_path, "SELECT last_cleanup_utc FROM meta WHERE id = 1;", Cancellation)).Should().Be(DBNull.Value);
         var objects = (string)(await LogStoreFile.ScalarAsync(_path,
             "SELECT group_concat(name, ',') FROM (SELECT name FROM sqlite_master WHERE name NOT LIKE 'sqlite_%' AND name NOT LIKE 'logs_fts_%' ORDER BY name);",
             Cancellation))!;
         objects.Split(',').Should().BeEquivalentTo(
             "logs", "logs_fts", "logs_ai", "logs_ad", "meta",
-            "ix_logs_timestamp", "ix_logs_level_timestamp", "ix_logs_category_timestamp", "ix_logs_request_id");
+            "ix_logs_timestamp", "ix_logs_level_timestamp", "ix_logs_category_timestamp", "ix_logs_request_id", "ix_logs_user_timestamp");
     }
 
     [Fact]
@@ -145,6 +145,7 @@ public sealed class SqliteLogStoreTests : IAsyncDisposable
     [InlineData("Dib4t.Application.Database.DatabaseRestoreService", "Database")]
     [InlineData("Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerHandler", "Auth")]
     [InlineData("Microsoft.AspNetCore.Authorization.DefaultAuthorizationService", "Auth")]
+    [InlineData("Dib4t.Infrastructure.Logging.LogCleanupService", "Jobs")]
     [InlineData("Dib4t.Application.DatabaseX", "App")]
     [InlineData("Dib4t.Server.Http.LegacyExceptionHandler", "App")]
     [InlineData(null, "App")]

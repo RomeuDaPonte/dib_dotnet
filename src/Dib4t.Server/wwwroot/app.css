@@ -544,3 +544,294 @@ body {
   min-width: 0;
   overflow-wrap: anywhere;
 }
+
+/* ---------------------------------------------------------------- Registos tab (PLAN.md §3.3, §8.4) */
+.logs-filters-toggle.mud-button-root {
+  display: none;
+}
+
+.logs-filters {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.logs-filter-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0 1.5rem;
+  align-items: flex-end;
+}
+
+.logs-field {
+  flex: 1 1 12rem;
+  min-width: 0;
+  max-width: 20rem;
+}
+
+.logs-field--wide {
+  flex-basis: 20rem;
+  max-width: 32rem;
+}
+
+.logs-checks {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0 0.5rem;
+  margin: 0;
+  padding: 0.25rem 0.5rem;
+  border: 1px solid var(--mud-palette-lines-inputs);
+  border-radius: 4px;
+  min-width: 0;
+}
+
+.logs-checks legend {
+  padding: 0 0.25rem;
+  color: var(--mud-palette-text-secondary);
+  font-size: 0.75rem;
+}
+
+.logs-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1.5rem;
+  align-items: center;
+}
+
+.logs-error {
+  color: var(--mud-palette-error);
+  overflow-wrap: anywhere;
+}
+
+.logs-results {
+  overflow-x: auto; /* the table scrolls in its own box, never the page (§8.4 rule 5) */
+}
+
+.logs-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.875rem;
+}
+
+.logs-table th {
+  text-align: left;
+  font-weight: 500;
+  color: var(--mud-palette-text-primary);
+  border-bottom: 1px solid var(--mud-palette-divider);
+  padding: 0.5rem;
+  white-space: nowrap;
+}
+
+.logs-table td {
+  padding: 0.25rem 0.5rem;
+  border-bottom: 1px solid var(--mud-palette-divider);
+  vertical-align: top;
+}
+
+.logs-time {
+  white-space: nowrap;
+}
+
+.logs-message {
+  overflow-wrap: anywhere;
+  min-width: 16rem;
+}
+
+.logs-wrap {
+  overflow-wrap: anywhere;
+}
+
+.logs-expand,
+.logs-request {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  min-height: 1.5rem;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.logs-request {
+  color: var(--mud-palette-text-primary); /* the primary orange/blue is below AA on the surface; underlined like a link */
+  text-decoration: underline;
+  text-decoration-color: var(--mud-palette-primary);
+  text-decoration-thickness: 2px;
+  overflow-wrap: anywhere;
+}
+
+.logs-expand:focus-visible,
+.logs-request:focus-visible {
+  outline: 2px solid var(--mud-palette-primary);
+  outline-offset: 2px;
+}
+
+/* Level chip: outlined in the status color, text in the normal text color (contrast in both themes). */
+.logs-level {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0 0.5rem;
+  border: 1px solid var(--mud-palette-text-secondary);
+  border-radius: 1rem;
+  white-space: nowrap;
+}
+
+.logs-level::before {
+  content: "";
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 50%;
+  background-color: var(--mud-palette-text-secondary);
+}
+
+.logs-level--error,
+.logs-level--fatal {
+  border-color: var(--mud-palette-error);
+}
+
+.logs-level--error::before,
+.logs-level--fatal::before {
+  background-color: var(--mud-palette-error);
+}
+
+.logs-level--warning {
+  border-color: var(--mud-palette-warning);
+}
+
+.logs-level--warning::before {
+  background-color: var(--mud-palette-warning);
+}
+
+.logs-detail td {
+  background-color: var(--mud-palette-action-default-hover);
+}
+
+.logs-detail-list {
+  display: grid;
+  grid-template-columns: max-content minmax(0, 1fr);
+  gap: 0.25rem 1rem;
+  margin: 0.25rem 0;
+}
+
+.logs-detail-list dt {
+  color: var(--mud-palette-text-secondary);
+}
+
+.logs-detail-list dd {
+  margin: 0;
+  min-width: 0;
+}
+
+.logs-pre {
+  margin: 0;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  font-size: 0.8125rem;
+}
+
+.logs-empty {
+  color: var(--mud-palette-text-secondary);
+}
+
+.logs-more.mud-button-root {
+  margin: 1rem 0;
+}
+
+/* Phones (and large text / zoom): filters in a folding panel, entries as cards. */
+@media (max-width: 599.98px) {
+  .logs-filters-toggle.mud-button-root {
+    display: inline-flex;
+    margin-bottom: 0.5rem;
+  }
+
+  .logs-filters {
+    display: none;
+  }
+
+  .logs-filters.logs-filters--open {
+    display: flex;
+  }
+
+  .logs-field,
+  .logs-field--wide {
+    flex: 1 1 100%;
+    max-width: none;
+  }
+
+  .logs-table thead {
+    display: none; /* each card cell carries its label (data-label) */
+  }
+
+  .logs-table,
+  .logs-table tbody,
+  .logs-table tr,
+  .logs-table td {
+    display: block;
+  }
+
+  .logs-table tr.logs-row {
+    padding: 0.5rem 0;
+    border-top: 1px solid var(--mud-palette-divider);
+  }
+
+  .logs-table td {
+    display: grid;
+    grid-template-columns: 6.5rem minmax(0, 1fr);
+    gap: 0.5rem;
+    border-bottom: 0;
+  }
+
+  .logs-table td::before {
+    content: attr(data-label);
+    color: var(--mud-palette-text-secondary);
+  }
+
+  .logs-table .logs-detail td {
+    display: block;
+  }
+
+  .logs-table .logs-detail td::before {
+    content: none;
+  }
+
+  .logs-time,
+  .logs-level {
+    white-space: normal;
+  }
+
+  .logs-level {
+    justify-self: start;
+  }
+
+  .logs-expand {
+    min-width: 0;
+    max-width: 100%;
+  }
+
+  .logs-expand span {
+    min-width: 0;
+    overflow-wrap: anywhere;
+  }
+
+  .logs-message {
+    min-width: 0;
+  }
+
+  .logs-detail-list {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+/* Very narrow (in em: also large text / zoom): a card's labels go above their values. */
+@media (max-width: 22em) {
+  .logs-table td {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0;
+  }
+}
