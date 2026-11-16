@@ -26,4 +26,28 @@ public static class BudgetMessages
 
     /// <summary><c>GET /search</c>: prefix of the answer when the pattern cannot be used (D9: 400 instead of 500).</summary>
     public const string SearchFailedPrefix = "Error performing search: ";
+
+    /// <summary><c>PUT /patchProperty/:id</c>: no budget with this id (400; the legacy text has a "!").</summary>
+    public const string PatchMissing = "Orçamento não existe!";
+
+    /// <summary><c>PUT /patchProperty/:id</c>: prefix of the 400 when the body is refused, followed by JavaScript <c>String(propertyName)</c>.</summary>
+    public const string PatchRefusedPrefix = "Não é possível atualizar ";
+
+    /// <summary><c>PUT /import/:id</c>: prefix of the Joi 400.</summary>
+    public const string ImportRefusedPrefix = "Erro: ";
+
+    /// <summary><c>PUT /import/:id</c>: no budget with the number to import from (400).</summary>
+    public const string ImportSourceMissing = "Orçamento com esse número não existe";
+
+    /// <summary>
+    /// <c>PUT /import/:id</c> and the task routes: the budget has a job, so it can no longer change (400). The patch and
+    /// edit routes answer such a budget unchanged instead.
+    /// </summary>
+    public const string HasJob = "Orçamento gerou obra!";
+
+    /// <summary>The task routes: no task with this id (400).</summary>
+    public const string TaskMissing = "Tarefa não encontrada";
+
+    /// <summary><c>DELETE /api/task/:taskId/:budgetId</c>: nothing was deleted (500; after the budget was marked incomplete).</summary>
+    public const string TaskNotDeleted = "Erro no servidor";
 }

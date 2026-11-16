@@ -22,10 +22,16 @@ internal static class MongooseSave
     /// nothing (checked in <c>budget-golden.json</c>: an imported budget without <c>complete</c> saved with
     /// <c>complete = false</c> sends no <c>$set</c>).
     /// </summary>
+    /// <remarks>
+    /// With <paramref name="keepEquivalentTexts"/>, a text that is the NFC form of the stored one (canonically
+    /// equivalent: the same characters) counts as unchanged, so a save of an unchanged imported text keeps it as
+    /// stored (PLAN.md §4.5 item 6: 6 non-NFC texts in production; NFC applies only to texts the app changes).
+    /// </remarks>
     public static UpdateDefinition<BsonDocument>? Update(
         BsonDocument stored,
         IEnumerable<(string Field, BsonValue? Value)> assignments,
-        IReadOnlyDictionary<string, BsonValue>? defaults = null)
+        IReadOnlyDictionary<string, BsonValue>? defaults = null,
+        bool keepEquivalentTexts = false)
     {
         ArgumentNullException.ThrowIfNull(stored);
         ArgumentNullException.ThrowIfNull(assignments);
@@ -46,6 +52,12 @@ internal static class MongooseSave
             }
 
             if (stored.TryGetValue(field, out var current) && JsEquals(current, value))
+            {
+                continue;
+            }
+
+            if (keepEquivalentTexts && current is { IsString: true } && value.IsString
+                && string.Equals(current.AsString.Normalize(System.Text.NormalizationForm.FormC), value.AsString, StringComparison.Ordinal))
             {
                 continue;
             }

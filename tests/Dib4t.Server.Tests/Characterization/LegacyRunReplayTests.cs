@@ -37,16 +37,17 @@ public sealed partial class LegacyRunReplayTests(AppWithMongo app) : IClassFixtu
         "user-me-legacy",             // GET /api/account/me exists in the new app (§4.6)
         "budget-update-missing-user", // D7: the edit is validated ("madeById" is required) instead of failing on the lookup
         "budget-search-bad-regex",    // D9: 400 instead of 500
+        "task-create-d8",             // D8: POST /api/task creates the task instead of refusing every body
         "user-delete-d2",             // D2: the new app deletes the requested user, not the first one
         "users-after-delete",         // follows from D2
         "budget-list-after-delete",   // follows from D2 (the deleted user is an author here)
     };
 
     /// <summary>
-    /// Steps of routes that come with later Phase 3 steps (task editor, budget details, PDF): their recorded document
-    /// changes are written directly, so the replay continues on exactly the legacy state.
+    /// Steps of routes that come with a later Phase 3 step (the PDF): their recorded document changes are written
+    /// directly, so the replay continues on exactly the legacy state.
     /// </summary>
-    private static readonly Regex NotYetImplemented = new("^(task-|budget-patch-|budget-pdf|budget-import)", RegexOptions.CultureInvariant);
+    private static readonly Regex NotYetImplemented = new("^budget-pdf", RegexOptions.CultureInvariant);
 
     private readonly Dictionary<string, string> _bound = new(StringComparer.Ordinal);
     private readonly Dictionary<string, string> _tokens = new(StringComparer.Ordinal);
@@ -84,8 +85,8 @@ public sealed partial class LegacyRunReplayTests(AppWithMongo app) : IClassFixtu
             }
         }
 
-        replayed.Should().HaveCount(89, "every recorded step of the five files but the allow-listed and the not yet implemented ones");
-        applied.Should().HaveCount(36, "the task, patch, PDF and import steps (Phase 3 steps 2 and 3)");
+        replayed.Should().HaveCount(122, "every recorded step of the five files but the allow-listed and the not yet implemented ones");
+        applied.Should().HaveCount(2, "the PDF steps (Phase 3 step 3)");
     }
 
     private async Task ReplayAsync(JsonElement step, bool ordered)

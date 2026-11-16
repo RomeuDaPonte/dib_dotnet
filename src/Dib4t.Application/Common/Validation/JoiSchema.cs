@@ -70,8 +70,16 @@ internal sealed class JoiString : JoiRule
     private readonly List<Func<string, string, string?>> _rules = [];
     private string[]? _valid;
     private bool _required;
+    private bool _allowEmpty;
 
     public static JoiString Create() => new();
+
+    /// <summary><c>.allow("")</c>: the empty string passes (before the rules, like any allowed value).</summary>
+    public JoiString AllowEmpty()
+    {
+        _allowEmpty = true;
+        return this;
+    }
 
     public JoiString Required()
     {
@@ -127,7 +135,7 @@ internal sealed class JoiString : JoiRule
 
         if (text.Length == 0)
         {
-            return $"\"{label}\" is not allowed to be empty";
+            return _allowEmpty ? null : $"\"{label}\" is not allowed to be empty";
         }
 
         if (_valid is not null)
@@ -368,6 +376,44 @@ internal sealed class JoiArray : JoiRule
             array = default;
             return false;
         }
+    }
+}
+
+/// <summary>
+/// <c>Joi.boolean()</c> (Joi 14.3.1, checked in <c>budget-details-golden.json</c>): presence, then <c>true</c>/<c>false</c>,
+/// or with the default conversion the strings <c>"true"</c>/<c>"false"</c> in any case (<c>"TRUE"</c>, <c>"False"</c>);
+/// anything else (<c>1</c>, <c>null</c>, <c>"yes"</c>) "must be a boolean".
+/// </summary>
+internal sealed class JoiBoolean : JoiRule
+{
+    private bool _required;
+
+    public static JoiBoolean Create() => new();
+
+    public JoiBoolean Required()
+    {
+        _required = true;
+        return this;
+    }
+
+    /// <summary>The value Joi validates (its conversion), or <c>null</c> when it is not a boolean.</summary>
+    public static bool? Convert(JsonElement value) => value.ValueKind switch
+    {
+        JsonValueKind.True => true,
+        JsonValueKind.False => false,
+        JsonValueKind.String when string.Equals(value.GetString(), "true", StringComparison.OrdinalIgnoreCase) => true,
+        JsonValueKind.String when string.Equals(value.GetString(), "false", StringComparison.OrdinalIgnoreCase) => false,
+        _ => null,
+    };
+
+    public override string? Validate(string label, JsonElement? value, IReadOnlyDictionary<string, JsonElement> parent)
+    {
+        if (value is null)
+        {
+            return _required ? $"\"{label}\" is required" : null;
+        }
+
+        return Convert(value.Value) is null ? $"\"{label}\" must be a boolean" : null;
     }
 }
 

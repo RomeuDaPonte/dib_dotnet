@@ -11,8 +11,8 @@ namespace Dib4t.Server.Controllers;
 
 /// <summary>
 /// <c>/api/budget</c> (legacy <c>routes/budget.js</c>, PLAN.md §6), every route T (any signed-in user; legacy checks
-/// no role here): the list, search, one budget, its revisions, create, clone, new revision and edit. The details
-/// routes (<c>patchProperty</c>, <c>import</c>, <c>getPdf</c>) come with the next steps.
+/// no role here): the list, search, one budget, its revisions, create, clone, new revision, edit, and the details
+/// routes <c>patchProperty</c> and <c>import</c> (<c>getPdf</c> comes with the PDF step).
 /// </summary>
 [Route("api/budget")]
 [Authorize]
@@ -60,6 +60,20 @@ public sealed class BudgetController(BudgetsService budgets) : LegacyControllerB
     {
         var (body, error) = await ReadJsonBodyAsync();
         return error ?? Answer(await budgets.UpdateAsync(budgetId, body, cancellationToken), ToResponse);
+    }
+
+    [HttpPut("patchProperty/{budgetId}")]
+    public async Task<IActionResult> Patch(string budgetId, CancellationToken cancellationToken)
+    {
+        var (body, error) = await ReadJsonBodyAsync();
+        return error ?? Answer(await budgets.PatchAsync(budgetId, body, cancellationToken), ToResponse);
+    }
+
+    [HttpPut("import/{budgetId}")]
+    public async Task<IActionResult> Import(string budgetId, CancellationToken cancellationToken)
+    {
+        var (body, error) = await ReadJsonBodyAsync();
+        return error ?? Answer(await budgets.ImportAsync(budgetId, body, cancellationToken), ToResponse);
     }
 
     /// <summary>The new budget, or the legacy 200 text when nothing was created (a supplier).</summary>

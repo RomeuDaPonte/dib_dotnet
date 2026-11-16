@@ -1,6 +1,6 @@
-# ADR-0005: Legacy defects D1–D23: what the new app does
+# ADR-0005: Legacy defects D1–D24: what the new app does
 
-- Status: Accepted (owner, 2026-11-14)
+- Status: Accepted (owner, 2026-11-14; D24 added 2026-11-16)
 - Answers: PLAN.md §14 question 3 and the open "Decide" items of §9
 
 The owner **accepted every proposed fix** in PLAN.md §9 and decided the open items below. All changes are made in
@@ -33,6 +33,7 @@ stays readable by the legacy model (§4.3).
 | **D21** | Keep existing paths; **reject `/` in new descriptives** (owner), see below |
 | **D22** | **Fix** (owner): PDF blocks grow downward, see below |
 | **D23** | **Fix** (owner): PDF date in Europe/Lisbon, see below |
+| **D24** | **Keep** (owner, 2026-11-16): importing a budget's tasks from its own number deletes them, exactly as legacy (found in Phase 3 step 2) |
 
 ## D10: dashboard counts the whole year
 

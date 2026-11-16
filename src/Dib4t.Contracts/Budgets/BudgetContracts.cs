@@ -93,3 +93,37 @@ public sealed record NewBudgetRequest(string Descriptive, string PersonInCharge,
 
 /// <summary><c>PUT /api/budget/:id</c> body, as legacy <c>budgetService.updateBudget</c> sends it.</summary>
 public sealed record UpdateBudgetRequest(string MadeById, string Descriptive, string PersonInCharge);
+
+/// <summary>
+/// A budget line (legacy <c>tasks</c> document, <c>toJSON</c>) as the task routes answer it, in the order of a new task:
+/// <c>_id, budgetId, taskType, description, unitPrice, quantity, __v</c> (legacy: the stored order). A missing value
+/// is left out.
+/// </summary>
+public sealed record BudgetTaskResponse(
+    [property: JsonPropertyName("_id")] string Id,
+    [property: JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)] string? BudgetId,
+    [property: JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)] string? TaskType,
+    [property: JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)] string? Description,
+    [property: JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)] double? UnitPrice,
+    [property: JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)] double? Quantity,
+    [property: JsonPropertyName("__v")] int Version);
+
+/// <summary>
+/// <c>PUT /api/task/:taskId/:budgetId</c> body, as legacy <c>taskService.updateTask</c> sends it. The numbers are what
+/// the inputs hold: the stored number, or the typed text once the user changed it (the server casts the text, as
+/// legacy); a missing value (<c>undefined</c> in legacy) is left out.
+/// </summary>
+public sealed record UpdateTaskRequest(
+    [property: JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)] string? TaskType,
+    [property: JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)] string? Description,
+    [property: JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)] object? Quantity,
+    [property: JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)] object? UnitPrice);
+
+/// <summary>
+/// <c>PUT /api/budget/patchProperty/:id</c> body (legacy <c>budgetService.patchBudget</c>): one property and its value
+/// (a number, the typed text, a boolean, or <c>null</c> for a value JavaScript would serialize as <c>null</c>, NaN).
+/// </summary>
+public sealed record PatchBudgetRequest(string PropertyName, object? Value);
+
+/// <summary><c>PUT /api/budget/import/:id</c> body (legacy <c>budgetService.importFromBudget</c>).</summary>
+public sealed record ImportBudgetRequest(bool ImportDescription, bool ImportTasks, string BudgetNumber);

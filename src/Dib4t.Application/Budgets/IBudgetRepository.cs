@@ -53,6 +53,30 @@ public interface IBudgetRepository
     /// differs. The budget as saved, or <c>null</c> when it does not exist (any more).
     /// </summary>
     Task<Budget?> UpdateAsync(string id, BudgetEdit edit, CancellationToken cancellationToken);
+
+    /// <summary>
+    /// Legacy <c>getBudgetByNumber</c>: <c>findOne({ budgetNumber })</c> without a sort, i.e. the first document with
+    /// this number in natural order (usually revision 0), or <c>null</c>.
+    /// </summary>
+    Task<Budget?> FindFirstByNumberAsync(string budgetNumber, CancellationToken cancellationToken);
+
+    /// <summary>
+    /// Legacy <c>budget.patch(propertyName, value)</c> + <c>save()</c>: <c>complete = false</c>,
+    /// <c>wasPdfDownloaded = false</c>, then the property, each written only when the final value differs from the
+    /// stored one (a missing field counts as its schema default). The budget as saved, or <c>null</c> when it does
+    /// not exist (any more).
+    /// </summary>
+    Task<Budget?> PatchAsync(string id, BudgetPatch patch, CancellationToken cancellationToken);
+
+    /// <summary>Legacy <c>budget.setIncomplete()</c> + <c>save()</c> (the task routes): both flags <c>false</c>, written only when they change.</summary>
+    Task SetIncompleteAsync(string id, CancellationToken cancellationToken);
+
+    /// <summary>
+    /// The save of <c>PUT /import/:id</c>: <c>total</c> and <c>margin</c> (when tasks are imported) and
+    /// <c>description</c> (when it is imported) set to the source's values, a missing value removed (<c>$unset</c>);
+    /// the flags are not touched (legacy). The budget as saved, or <c>null</c>.
+    /// </summary>
+    Task<Budget?> ImportAsync(string id, BudgetImport import, CancellationToken cancellationToken);
 }
 
 /// <summary>The <c>tasks</c> of a budget (legacy <c>repositories/taskRepository.js</c>).</summary>
@@ -72,6 +96,25 @@ public interface IBudgetTaskRepository
     /// quantity })</c> + <c>insertMany</c>), in this order, a missing description left out.
     /// </summary>
     Task InsertCopiesAsync(string budgetId, IReadOnlyList<BudgetTask> tasks, CancellationToken cancellationToken);
+
+    /// <summary>The task with this <c>_id</c> (24 lowercase hex digits), or <c>null</c>.</summary>
+    Task<BudgetTask?> FindByIdAsync(string taskId, CancellationToken cancellationToken);
+
+    /// <summary>
+    /// Legacy <c>task.update(body)</c> + <c>save()</c>: description (missing = removed), unit price, quantity and type,
+    /// each written only when it differs from the stored value (numbers as JavaScript compares them, so the stored
+    /// type is kept). The task as saved, or <c>null</c> when it does not exist (any more).
+    /// </summary>
+    Task<BudgetTask?> UpdateAsync(string taskId, TaskInput task, CancellationToken cancellationToken);
+
+    /// <summary>D8: <c>new Task({ budgetId, taskType, description, unitPrice, quantity })</c> + <c>save()</c> (the default task's field order).</summary>
+    Task<BudgetTask> InsertAsync(string budgetId, TaskInput task, CancellationToken cancellationToken);
+
+    /// <summary>Legacy <c>deleteTask</c> (<c>findByIdAndDelete</c>): the deleted task, or <c>null</c> when there was none.</summary>
+    Task<BudgetTask?> DeleteAsync(string taskId, CancellationToken cancellationToken);
+
+    /// <summary>Legacy <c>deleteByBudgetId</c> (<c>deleteMany({ budgetId })</c>): the number of deleted tasks.</summary>
+    Task<long> DeleteByBudgetAsync(string budgetId, CancellationToken cancellationToken);
 }
 
 /// <summary>A list or search row: a budget with its client's and author's names (<c>null</c> when not found).</summary>
@@ -107,6 +150,17 @@ public sealed record NewBudget(
     double Validity,
     string? Description,
     DateTime Date);
+
+/// <summary>
+/// The values <c>PUT /import/:id</c> copies from the source budget; <c>null</c> = the source has no such value
+/// (removed from the budget, like Mongoose saving <c>undefined</c>).
+/// </summary>
+/// <param name="Tasks">Tasks are imported: <see cref="Total"/> and <see cref="Margin"/> are set.</param>
+/// <param name="Total">The source's total.</param>
+/// <param name="Margin">The source's margin (its schema default when the source lacks it).</param>
+/// <param name="Description">The description is imported: <see cref="DescriptionText"/> is set.</param>
+/// <param name="DescriptionText">The source's description.</param>
+public sealed record BudgetImport(bool Tasks, double? Total, double Margin, bool Description, string? DescriptionText);
 
 /// <summary>The values of an edit (legacy <c>budget.update</c>).</summary>
 public sealed record BudgetEdit(string MadeById, string Descriptive, string PersonInCharge);

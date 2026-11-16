@@ -934,11 +934,164 @@ body {
   text-align: left;
 }
 
+/* ---------------------------------------------------------------- Budget details (/landing/budgets/{id}, PLAN.md §7.1, §8.4)
+   Legacy: six fixed columns (sm=1/3/2/2/2/2) with 30 px type; here the boxes wrap onto more rows when space runs out
+   (rule 3) and the type follows the user's font size (rule 1). The separators are left shadows, clipped at the
+   container's edge, so the first box of every row has none. */
+.budget-details {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  min-width: 0;
+}
+
 .budget-header {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(15rem, 100%), 1fr));
+  overflow: hidden;
+}
+
+.budget-box {
+  min-width: 0;
+  padding: 0.75rem 1rem;
+  box-shadow: -1px 0 0 var(--mud-palette-divider);
+}
+
+.budget-box--identity {
   display: flex;
   align-items: flex-start;
+  gap: 0.5rem;
+  grid-column: span 2;
+}
+
+@media (max-width: 599.98px) {
+  .budget-box--identity {
+    grid-column: auto;
+  }
+}
+
+.budget-box--actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+}
+
+.budget-box--amounts,
+.budget-box--terms {
+  display: flex;
+  flex-direction: column;
+}
+
+.budget-box--totals {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-end;
+  text-align: right;
+}
+
+.budget-total-line {
+  margin: 0.25rem 0;
+  font-size: 1.25rem;
+  font-variant-numeric: tabular-nums;
+  overflow-wrap: anywhere;
+}
+
+.budget-amount input {
+  font-size: 1.5rem;
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+}
+
+.budget-tasks {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.5rem;
+  container-type: inline-size; /* the lines stack by the space they get (drawer, zoom, font size), not the viewport */
+}
+
+.budget-task {
+  display: grid;
+  grid-template-columns: minmax(10rem, 1fr) minmax(12rem, 3fr) minmax(6rem, 1fr) minmax(7rem, 1fr) minmax(5rem, auto) auto;
+  align-items: center;
+  gap: 0.25rem 1rem;
+  width: 100%;
+  padding: 0 1rem;
+}
+
+.budget-task .field-select {
+  margin-top: 0.5rem;
+}
+
+.budget-task-number input {
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+}
+
+.budget-task-total {
+  margin: 0;
+  font-size: 1.25rem;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+  overflow-wrap: anywhere;
+}
+
+.budget-task-actions {
+  display: flex;
   gap: 1rem;
-  padding: 1rem;
+}
+
+@container (max-width: 60rem) {
+  .budget-task {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    padding-bottom: 0.5rem;
+  }
+
+  .budget-task-type,
+  .budget-task-description {
+    grid-column: 1 / -1;
+  }
+
+  .budget-task-total {
+    text-align: left;
+  }
+
+  .budget-task-actions {
+    justify-content: flex-end;
+  }
+}
+
+/* The import notice: the info alert's own text color is too faint on the dark theme (axe color-contrast). */
+.budget-import-alert .mud-alert-message {
+  color: var(--mud-palette-text-primary);
+}
+
+.budget-term {
+  display: flex;
+  flex-direction: column;
+  margin-top: 0.5rem;
+}
+
+.budget-description {
+  padding: 0.5rem;
+}
+
+/* 20 lines (legacy) are taller than a short screen (phone at 200 % zoom): cap the box, it scrolls inside. */
+@media (max-height: 30rem) {
+  .budget-description textarea {
+    max-height: 8em;
+  }
+}
+
+.budget-description-actions {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.budget-complete {
+  min-width: min(15em, 100%);
 }
 
 .budget-header-grid {

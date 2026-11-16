@@ -1,47 +1,59 @@
 @page "/landing/budgets/{BudgetId}"
 @layout LandingLayout
+@implements IDisposable
 @inject AuthSession Session
-@inject IBudgetApi BudgetApi
-@inject ISnackbar Snackbar
+@inject BudgetDetailsState State
 
 <PageTitle>Dib4t</PageTitle>
 
-@* Legacy budgetDetails/budgetGeneralDetails.jsx, header only for now: number, client, descriptive, person in charge,
-   author and date, with the edit dialog (newBudgetModdal.jsx with a budget). The totals, tasks, description,
-   lock and import come with the next Phase 3 step. *@
+@* Legacy budgetDetails/indexBudgetDetails.jsx + budgetDetails.jsx: the header (BudgetDetailsHeader), then the tasks
+   or (Alternar) the description with "Concluir"; the edit and import dialogs. The behavior lives in
+   BudgetDetailsState. *@
 @if (Session.User?.HasRole(RoleNames.CanSeeOrcamentos) != true)
 {
     <p class="settings-denied">@AuthTexts.NoPermission</p>
 }
-else if (_budget is { } budget)
+else if (State.Budget is { } budget)
 {
-    <MudPaper Elevation="1" Class="budget-header">
-        <dl class="budget-header-grid">
-            <div><dt>Nº</dt><dd>@budget.BudgetNumber@(budget.Revision > 0 ? $" | R {budget.Revision}" : string.Empty)</dd></div>
-            <div><dt>Cliente</dt><dd class="settings-wrap">@budget.Client?.Name</dd></div>
-            <div><dt>Descritivo</dt><dd class="settings-wrap">@budget.Descriptive</dd></div>
-            <div><dt>Responsável</dt><dd class="settings-wrap">@budget.PersonInCharge</dd></div>
-            <div><dt>Elaborado por</dt><dd class="settings-wrap">@budget.MadeBy?.Name</dd></div>
-            <div><dt>Data</dt><dd>@BudgetList.Date(budget.Date, Zone)</dd></div>
-        </dl>
-        @if (!budget.HasGenerateJob)
+    <div class="budget-details">
+        <BudgetDetailsHeader State="State" Zone="Zone" OnEdit="() => _form = BudgetForm.Edit(budget)" OnImport="() => _importing = true" />
+        @if (State.IsLoaded)
         {
-            <MudTooltip Text="Editar orçamento">
-                <MudIconButton Icon="@Icons.Material.TwoTone.Edit" aria-label="Editar orçamento" OnClick="() => _form = BudgetForm.Edit(budget)" />
-            </MudTooltip>
+            @if (State.ShowTasks)
+            {
+                <div class="budget-tasks">
+                    @for (var i = 0; i < State.Tasks.Count; i++)
+                    {
+                        var index = i;
+                        var row = State.Tasks[i];
+                        <BudgetTaskEditor @key="row.Id" State="State" Row="row" Index="index" ShowDelete="@(State.Tasks.Count > 1)" />
+                    }
+                    @if (State.Tasks.Count == 0)
+                    {
+                        @* Fixed legacy UI defect: a budget without tasks renders nothing in legacy, so it could never get one back. *@
+                        <MudButton Variant="Variant.Outlined" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Add" OnClick="() => State.AddTaskAsync(null)">
+                            Adicionar
+                        </MudButton>
+                    }
+                </div>
+            }
+            else
+            {
+                <BudgetDescriptionEditor State="State" />
+            }
         }
-    </MudPaper>
+    </div>
     <BudgetDialog Form="_form" OnSaved="Saved" OnClosed="() => _form = null" />
+    <ImportBudgetDialog State="State" Visible="_importing" OnClosed="() => _importing = false" />
 }
-else if (_error is not null)
+else if (State.LoadError is { } error)
 {
-    <p class="settings-denied">@_error</p>
+    <p class="settings-denied">@error</p>
 }
 
 @code {
-    private BudgetResponse? _budget;
     private BudgetForm? _form;
-    private string? _error;
+    private bool _importing;
 
     [Parameter]
     public string BudgetId { get; set; } = string.Empty;
@@ -50,20 +62,23 @@ else if (_error is not null)
     [Parameter]
     public TimeZoneInfo Zone { get; set; } = TimeZoneInfo.Local;
 
+    protected override void OnInitialized() => State.Changed += Refresh;
+
     protected override async Task OnParametersSetAsync()
     {
-        var result = await BudgetApi.GetAsync(BudgetId);
-        _budget = result.Value;
-        if (!result.IsSuccess && !result.IsUnexpected)
+        if (Session.User?.HasRole(RoleNames.CanSeeOrcamentos) == true)
         {
-            _error = result.ErrorText;
-            Snackbar.Add(result.ErrorText!, Severity.Error);
+            await State.LoadAsync(BudgetId);
         }
     }
 
+    public void Dispose() => State.Changed -= Refresh;
+
+    private void Refresh() => _ = InvokeAsync(StateHasChanged);
+
     private void Saved(BudgetResponse saved)
     {
-        _budget = saved;
+        State.Replace(saved);
         _form = null;
     }
 }

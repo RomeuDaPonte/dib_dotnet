@@ -28,6 +28,12 @@ public static class Fixtures
     /// </summary>
     public static string BudgetGolden => Path.Combine(Root, "legacy", "budgets", "budget-golden.json");
 
+    /// <summary>
+    /// Budget details contract answers of the legacy code (the task routes, patchProperty and import run verbatim:
+    /// Joi, Mongoose casts and saves; tools/legacy/budget-details-golden.js).
+    /// </summary>
+    public static string BudgetDetailsGolden => Path.Combine(Root, "legacy", "budget-details", "budget-details-golden.json");
+
     private static string FindRoot()
     {
         for (var directory = new DirectoryInfo(AppContext.BaseDirectory); directory is not null; directory = directory.Parent)

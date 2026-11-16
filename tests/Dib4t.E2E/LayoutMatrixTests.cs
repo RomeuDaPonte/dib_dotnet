@@ -132,14 +132,50 @@ public sealed class LayoutMatrixTests(E2EHarness harness) : E2ETest(harness)
         new("budget-details", "/landing/budgets", SignedIn: true, Ready: ".budgets-table tbody tr td", page =>
         [
             ("Editar orçamento", page.GetByRole(AriaRole.Button, new() { Name = "Editar orçamento" })),
+            ("Alternar", page.GetByRole(AriaRole.Button, new() { Name = "Alternar" })),
+            ("Margem", page.Locator("#budget-margin")),
+            ("Total", page.Locator("#budget-total")),
+            ("Prazo / Dias", page.Locator("#budget-days")),
+            ("M / Pagamento", page.Locator("#budget-payment")),
+            ("Qtd", page.Locator(".budget-task").First.Locator("input[id$='-quantity']")),
+            ("Unit", page.Locator(".budget-task").First.Locator("input[id$='-unit-price']")),
+            ("Adicionar", page.Locator(".budget-task").First.GetByRole(AriaRole.Button, new() { Name = "Adicionar" })),
+        ], Open: OpenBudgetDetailsAsync),
+        new("budget-details-description", "/landing/budgets", SignedIn: true, Ready: ".budgets-table tbody tr td", page =>
+        [
+            ("Descrição", page.Locator("#budget-description")),
+            ("Concluir", page.GetByRole(AriaRole.Button, new() { Name = "Concluir" })),
         ], Open: async page =>
         {
-            // A budget without a job: only those can be edited.
-            await page.Locator(".budgets-table tbody tr").Filter(new() { HasNot = page.Locator(".budgets-has-job") }).First
-                .GetByRole(AriaRole.Button, new() { Name = "Editar" }).ClickAsync();
-            await page.Locator(".budget-header").WaitForAsync();
+            await OpenBudgetDetailsAsync(page);
+            await page.GetByRole(AriaRole.Button, new() { Name = "Alternar" }).ClickAsync();
+            await page.Locator("#budget-description").WaitForAsync();
+            await page.Mouse.MoveAsync(0, 0); // off the icon: its tooltip would be open during the checks
         }),
+        new("budget-details-import", "/landing/budgets", SignedIn: true, Ready: ".budgets-table tbody tr td", page =>
+        [
+            ("Nª Orçamento", page.Locator("#import-number")),
+            ("Importar", page.Locator(".mud-dialog").GetByRole(AriaRole.Button, new() { Name = "Importar", Exact = true })),
+        ], Open: async page =>
+        {
+            await OpenBudgetDetailsAsync(page);
+            await page.GetByRole(AriaRole.Button, new() { Name = "Importar" }).ClickAsync();
+            await page.Locator("#import-number").WaitForAsync();
+            // The pointer stays where the header's icon was: on some sizes that is over "Cancelar", whose hover
+            // background axe would measure instead of the button's normal state.
+            await page.Mouse.MoveAsync(0, 0);
+        }, Scope: ".mud-dialog"),
     ];
+
+    /// <summary>The details of an editable budget (no job, not locked: the import button shows), opened from the list.</summary>
+    private static async Task OpenBudgetDetailsAsync(IPage page)
+    {
+        await page.Locator(".budgets-table tbody tr").Filter(new() { HasNot = page.Locator(".budgets-has-job") })
+            .Filter(new() { Has = page.Locator(".budgets-incomplete") }).First
+            .GetByRole(AriaRole.Button, new() { Name = "Editar" }).ClickAsync();
+        await page.Locator(".budget-task").First.WaitForAsync();
+        await page.Mouse.MoveAsync(0, 0); // the pointer would rest on a header icon and open its tooltip during the checks
+    }
 
     /// <summary>
     /// The pages to run: all of them, or only the keys in <c>DIB4T_LAYOUT_PAGES</c> (comma-separated, e.g.

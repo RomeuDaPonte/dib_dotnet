@@ -1,0 +1,121 @@
+@* Legacy budgetDetails/budgetGeneralDetails.jsx: the budget (number, client, descriptive, person in charge, author,
+   date; edit dialog), the actions (Alternar, Bloquear/Desbloquear, Importar while editable; the PDF comes with its
+   step), margin and total, the live totals with the effective margin in its color, delivery days, validity and
+   payment method. The boxes wrap onto more rows when space runs out (PLAN.md §8.4 rule 3); sizes in rem, not the
+   legacy fontSize 30 px. *@
+<MudPaper Elevation="1" Class="budget-header">
+    <section class="budget-box budget-box--identity" aria-label="Orçamento">
+        <dl class="budget-header-grid">
+            <div><dt>Nº</dt><dd class="budget-number">@Budget.BudgetNumber@(Budget.Revision > 0 ? $" | R {Budget.Revision}" : string.Empty)</dd></div>
+            <div><dt>Cliente</dt><dd class="settings-wrap">@Budget.Client?.Name</dd></div>
+            <div><dt>Descritivo</dt><dd class="settings-wrap">@Budget.Descriptive</dd></div>
+            <div><dt>Responsável</dt><dd class="settings-wrap">@Budget.PersonInCharge</dd></div>
+            <div><dt>Elaborado por</dt><dd class="settings-wrap">@Budget.MadeBy?.Name</dd></div>
+            <div><dt>Data</dt><dd>@BudgetList.Date(Budget.Date, Zone)</dd></div>
+        </dl>
+        @if (!Budget.HasGenerateJob)
+        {
+            <MudTooltip Text="Editar orçamento">
+                <MudIconButton Icon="@Icons.Material.TwoTone.Edit" aria-label="Editar orçamento" OnClick="OnEdit" />
+            </MudTooltip>
+        }
+    </section>
+
+    <section class="budget-box budget-box--actions" aria-label="Ações">
+        <MudTooltip Text="Alternar">
+            <MudIconButton Icon="@Icons.Material.Filled.DesignServices" Size="Size.Large" aria-label="Alternar" aria-pressed="@(State.ShowTasks ? "false" : "true")"
+                           OnClick="State.ToggleView" />
+        </MudTooltip>
+        @if (State.CanEdit)
+        {
+            <MudTooltip Text="Bloquear">
+                <MudIconButton Icon="@Icons.Material.Filled.LockOpen" Size="Size.Large" aria-label="Bloquear" OnClick="State.ToggleLock" />
+            </MudTooltip>
+            <MudTooltip Text="Importar">
+                <MudIconButton Icon="@Icons.Material.Filled.AssignmentReturned" Size="Size.Large" aria-label="Importar" OnClick="OnImport" />
+            </MudTooltip>
+        }
+        else
+        {
+            <MudTooltip Text="Desbloquear">
+                <MudIconButton Icon="@Icons.Material.Filled.Lock" Size="Size.Large" aria-label="Desbloquear" OnClick="State.ToggleLock" />
+            </MudTooltip>
+        }
+    </section>
+
+    <section class="budget-box budget-box--amounts" aria-label="Margem e total">
+        <MudTextField T="string" InputId="budget-margin" Label="Margem" InputType="InputType.Number" Immediate="true" Class="budget-amount"
+                      Value="@State.Margin.Display" ValueChanged="State.MarginChanged" OnBlur="_ => State.MarginBlurAsync()"
+                      ReadOnly="@(!State.CanEdit)" OnKeyDown="e => State.LockedKey(e.Key)"
+                      Adornment="Adornment.End" AdornmentText="%" />
+        <MudTextField T="string" InputId="budget-total" Label="Total" InputType="InputType.Number" Immediate="true" Class="budget-amount"
+                      Value="@State.Total.Display" ValueChanged="State.TotalChanged" OnBlur="_ => State.TotalBlurAsync()"
+                      ReadOnly="@(!State.CanEdit)" OnKeyDown="e => State.LockedKey(e.Key)"
+                      Adornment="Adornment.End" AdornmentText="€" />
+    </section>
+
+    <section class="budget-box budget-box--totals" aria-label="Totais">
+        <p class="budget-total-line">Tarefas - <span class="budget-tasks-total">@State.TasksTotalText</span> €</p>
+        <p class="budget-total-line">C / Margem - <span class="budget-with-margin">@State.WithMarginText</span> €</p>
+        <p class="budget-total-line budget-effective-margin" style="color: @State.EffectiveMarginColor">@State.EffectiveMarginText %</p>
+    </section>
+
+    <section class="budget-box budget-box--terms" aria-label="Condições">
+        @* Own labels (they wrap on narrow screens; MudBlazor's floating label is one clipped line). *@
+        <div class="budget-term">
+            <label for="budget-days" class="field-select-label">Prazo / Dias</label>
+            <MudTextField T="string" InputId="budget-days" InputType="InputType.Number" Immediate="true"
+                          Value="@State.Days.Display" ValueChanged="State.DaysChanged" OnBlur="_ => State.DaysBlurAsync()"
+                          ReadOnly="@(!State.CanEdit)" OnKeyDown="e => State.LockedKey(e.Key)" />
+        </div>
+        <div class="budget-term">
+            <label for="budget-validity" class="field-select-label">Validade Proposta</label>
+            <MudTextField T="string" InputId="budget-validity" InputType="InputType.Number" Immediate="true"
+                          Value="@State.Validity.Display" ValueChanged="State.ValidityChanged" OnBlur="_ => State.ValidityBlurAsync()"
+                          ReadOnly="@(!State.CanEdit)" OnKeyDown="e => State.LockedKey(e.Key)" />
+        </div>
+        <div class="field-select">
+            <label for="budget-payment" class="field-select-label">M / Pagamento</label>
+            @* Re-created after a refused change, so the select shows the saved value again. *@
+            <select @key="_paymentKey" id="budget-payment" class="field-select-input" value="@State.PaymentMethod"
+                    @onchange="PaymentChanged" @onblur="State.PaymentMethodBlurAsync">
+                @if (State.PaymentMethod is { } current && !State.PaymentMethods.Contains(current))
+                {
+                    <option value="@current">@current</option>
+                }
+                @foreach (var method in State.PaymentMethods)
+                {
+                    <option value="@method">@method</option>
+                }
+            </select>
+        </div>
+    </section>
+</MudPaper>
+
+@code {
+    private int _paymentKey;
+
+    [Parameter, EditorRequired]
+    public BudgetDetailsState State { get; set; } = null!;
+
+    [Parameter]
+    public TimeZoneInfo Zone { get; set; } = TimeZoneInfo.Local;
+
+    [Parameter]
+    public EventCallback OnEdit { get; set; }
+
+    [Parameter]
+    public EventCallback OnImport { get; set; }
+
+    private BudgetResponse Budget => State.Budget!;
+
+    private void PaymentChanged(ChangeEventArgs e)
+    {
+        var locked = !State.CanEdit;
+        State.PaymentMethodChanged(e.Value?.ToString());
+        if (locked)
+        {
+            _paymentKey++;
+        }
+    }
+}

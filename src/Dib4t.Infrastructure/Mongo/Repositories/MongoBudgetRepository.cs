@@ -1,6 +1,7 @@
 using Dib4t.Application.Budgets;
 using Dib4t.Domain.Budgets;
 using Dib4t.Infrastructure.Mongo.Documents;
+using Dib4t.Infrastructure.Mongo.Serialization;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization;
 using MongoDB.Driver;
@@ -17,11 +18,19 @@ internal sealed class MongoBudgetRepository(IMongoDatabase database) : IBudgetRe
     /// <summary>MongoDB's "Regular expression is invalid" (an <c>$regex</c> PCRE2 refuses).</summary>
     private const int InvalidRegexCode = 51091;
 
-    /// <summary>The static defaults of the schema paths <see cref="UpdateAsync"/> assigns (Mongoose applies them on read).</summary>
-    private static readonly Dictionary<string, BsonValue> EditDefaults = new(StringComparer.Ordinal)
+    /// <summary>
+    /// The static defaults of the budget schema (legacy <c>models/budget.js</c>): Mongoose applies them on read, so
+    /// assigning a default to a document that lacks the field writes nothing.
+    /// </summary>
+    private static readonly Dictionary<string, BsonValue> SchemaDefaults = new(StringComparer.Ordinal)
     {
+        ["revision"] = 0,
         ["complete"] = false,
         ["wasPdfDownloaded"] = false,
+        ["margin"] = 30,
+        ["daysNeededToDoTheWork"] = 60,
+        ["validity"] = 30,
+        ["hasGenerateJob"] = false,
     };
 
     private readonly IMongoCollection<BudgetDocument> _budgets = database.Collection<BudgetDocument>();
@@ -158,7 +167,74 @@ internal sealed class MongoBudgetRepository(IMongoDatabase database) : IBudgetRe
             ("personInCharge", edit.PersonInCharge),
             ("complete", false),
             ("wasPdfDownloaded", false),
-        ], EditDefaults);
+        ], SchemaDefaults);
+        if (changes is not null)
+        {
+            var result = await _raw.UpdateOneAsync(filter, changes, cancellationToken: cancellationToken);
+            if (result.MatchedCount == 0)
+            {
+                return null;
+            }
+        }
+
+        return ToDomain(BsonSerializer.Deserialize<BudgetDocument>(stored));
+    }
+
+    public async Task<Budget?> FindFirstByNumberAsync(string budgetNumber, CancellationToken cancellationToken)
+    {
+        // findOne({ budgetNumber }) without a sort: natural order.
+        var document = await _budgets.Find(Builders<BudgetDocument>.Filter.Eq(b => b.BudgetNumber, budgetNumber)).Limit(1).FirstOrDefaultAsync(cancellationToken);
+        return document is null ? null : ToDomain(document);
+    }
+
+    public Task<Budget?> PatchAsync(string id, BudgetPatch patch, CancellationToken cancellationToken)
+    {
+        ArgumentNullException.ThrowIfNull(patch);
+        BsonValue value = patch switch
+        {
+            { Number: { } number } => JsNumberSerializer.ToBsonValue(number),
+            { Text: { } text } => text,
+            { Flag: { } flag } => flag,
+            _ => throw new ArgumentException("A patch needs a value.", nameof(patch)),
+        };
+
+        // budget.patch(propertyName, value): the flags first, then the property (the final values are compared).
+        return SaveAsync(id, [("complete", false), ("wasPdfDownloaded", false), (patch.Field, value)], cancellationToken);
+    }
+
+    public Task SetIncompleteAsync(string id, CancellationToken cancellationToken) =>
+        SaveAsync(id, [("complete", false), ("wasPdfDownloaded", false)], cancellationToken);
+
+    public Task<Budget?> ImportAsync(string id, BudgetImport import, CancellationToken cancellationToken)
+    {
+        ArgumentNullException.ThrowIfNull(import);
+        // routes/budget.js PUT /import: budget.total, budget.margin (with tasks), then budget.description.
+        var assignments = new List<(string Field, BsonValue? Value)>();
+        if (import.Tasks)
+        {
+            assignments.Add(("total", import.Total is { } total ? JsNumberSerializer.ToBsonValue(total) : null));
+            assignments.Add(("margin", JsNumberSerializer.ToBsonValue(import.Margin)));
+        }
+
+        if (import.Description)
+        {
+            assignments.Add(("description", import.DescriptionText is { } text ? new BsonString(text) : null));
+        }
+
+        return SaveAsync(id, assignments, cancellationToken);
+    }
+
+    /// <summary>Assignments to a stored budget + <c>save()</c> (<see cref="MongooseSave"/>); the budget as saved, or <c>null</c>.</summary>
+    private async Task<Budget?> SaveAsync(string id, IReadOnlyList<(string Field, BsonValue? Value)> assignments, CancellationToken cancellationToken)
+    {
+        var filter = Builders<BsonDocument>.Filter.Eq("_id", ObjectId.Parse(id));
+        var stored = await _raw.Find(filter).Limit(1).FirstOrDefaultAsync(cancellationToken);
+        if (stored is null)
+        {
+            return null;
+        }
+
+        var changes = MongooseSave.Update(stored, assignments, SchemaDefaults, keepEquivalentTexts: true);
         if (changes is not null)
         {
             var result = await _raw.UpdateOneAsync(filter, changes, cancellationToken: cancellationToken);

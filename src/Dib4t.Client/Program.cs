@@ -36,6 +36,8 @@ builder.Services.AddScoped<IPaymentMethodsApi, PaymentMethodsApi>();
 builder.Services.AddScoped<IPrinterSettingsApi, PrinterSettingsApi>();
 builder.Services.AddScoped<IEntityApi, EntityApi>();
 builder.Services.AddScoped<IBudgetApi, BudgetApi>();
+builder.Services.AddScoped<ITaskApi, TaskApi>();
+builder.Services.AddTransient<Dib4t.Client.Budgets.BudgetDetailsState>();
 builder.Services.AddScoped<Dib4t.Client.Budgets.IClipboard, Dib4t.Client.Budgets.Clipboard>();
 builder.Services.AddScoped<ILogsApi, LogsApi>();
 builder.Services.AddSingleton(TimeProvider.System);

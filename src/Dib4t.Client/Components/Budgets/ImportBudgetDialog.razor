@@ -1,0 +1,55 @@
+@* Legacy budgetDetails/importBudgetDetailsModal.jsx: import the tasks and/or the description of another budget
+   number (both ticked at first). *@
+<MudDialog Visible="Visible" VisibleChanged="VisibleChanged" Options="Options" Class="settings-dialog" AriaLabel="Importar">
+    <TitleContent><h2 class="settings-dialog-title">Importar</h2></TitleContent>
+    <DialogContent>
+        <MudAlert Severity="Severity.Info" Dense="true" Class="budget-import-alert">Descritivo ou tarefas importadas irão discartar as atuais.</MudAlert>
+        <form id="import-form" novalidate @onsubmit="SubmitAsync">
+            <MudCheckBox T="bool" @bind-Value="_tasks" Label="Tarefas" Color="Color.Primary" />
+            <MudCheckBox T="bool" @bind-Value="_description" Label="Descrição" Color="Color.Primary" />
+            <MudTextField T="string" @bind-Value="_number" Immediate="true" Label="Nª Orçamento" InputId="import-number" AutoFocus="true" />
+        </form>
+    </DialogContent>
+    <DialogActions>
+        <MudButton Color="Color.Primary" OnClick="CloseAsync">Cancelar</MudButton>
+        <MudButton Color="Color.Primary" ButtonType="ButtonType.Submit" form="import-form" Disabled="_saving">Importar</MudButton>
+    </DialogActions>
+</MudDialog>
+
+@code {
+    private static readonly DialogOptions Options = new() { MaxWidth = MaxWidth.ExtraSmall, FullWidth = true, CloseOnEscapeKey = true };
+
+    private bool _tasks = true;
+    private bool _description = true;
+    private string _number = string.Empty;
+    private bool _saving;
+
+    [Parameter, EditorRequired]
+    public BudgetDetailsState State { get; set; } = null!;
+
+    [Parameter]
+    public bool Visible { get; set; }
+
+    [Parameter]
+    public EventCallback OnClosed { get; set; }
+
+    private Task VisibleChanged(bool visible) => visible ? Task.CompletedTask : CloseAsync();
+
+    private Task CloseAsync() => OnClosed.InvokeAsync();
+
+    private async Task SubmitAsync()
+    {
+        _saving = true;
+        try
+        {
+            if (await State.ImportAsync(new ImportBudgetRequest(_description, _tasks, _number)))
+            {
+                await CloseAsync();
+            }
+        }
+        finally
+        {
+            _saving = false;
+        }
+    }
+}

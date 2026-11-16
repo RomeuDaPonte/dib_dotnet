@@ -1,0 +1,6084 @@
+{
+  "generatedBy": "tools/legacy/budget-details-golden.js",
+  "versions": {
+    "bson": "1.1.6",
+    "express": "4.18.2",
+    "joi": "14.3.1",
+    "joi-objectid": "3.0.1",
+    "mongoose": "5.13.20",
+    "node": "v16.20.2"
+  },
+  "clock": "2026-03-15T10:20:30.123Z (TZ=UTC)",
+  "prices": {
+    "automation": 32.5,
+    "consultancy": 10,
+    "development": 10,
+    "margin": 35,
+    "machining": 10,
+    "assembly": 10
+  },
+  "ids": {
+    "{{budget}}": "5f1e9a2b3c4d5e6f70810001",
+    "{{source}}": "5f1e9a2b3c4d5e6f70810010",
+    "{{source-r1}}": "5f1e9a2b3c4d5e6f70810011",
+    "{{bare}}": "5f1e9a2b3c4d5e6f70810012",
+    "{{job-budget}}": "5f1e9a2b3c4d5e6f70810013",
+    "{{imported}}": "5f1e9a2b3c4d5e6f70810014",
+    "{{client}}": "5f1e9a2b3c4d5e6f70820001",
+    "{{user}}": "5f1e9a2b3c4d5e6f70830001",
+    "{{missing}}": "5f1e9a2b3c4d5e6f708100ff",
+    "{{task}}": "5f1e9a2b3c4d5e6f70840001",
+    "{{task-copy}}": "5f1e9a2b3c4d5e6f70840002",
+    "{{task-no-description}}": "5f1e9a2b3c4d5e6f70840003",
+    "{{task-job}}": "5f1e9a2b3c4d5e6f70840004",
+    "{{missing-task}}": "5f1e9a2b3c4d5e6f708400ff",
+    "{{source-task-1}}": "5f1e9a2b3c4d5e6f70840011",
+    "{{source-task-2}}": "5f1e9a2b3c4d5e6f70840012",
+    "{{source-task-3}}": "5f1e9a2b3c4d5e6f70840013",
+    "{{source-task-4}}": "5f1e9a2b3c4d5e6f70840014",
+    "{{budget-task-1}}": "5f1e9a2b3c4d5e6f70840021",
+    "{{budget-task-2}}": "5f1e9a2b3c4d5e6f70840022"
+  },
+  "budgets": [
+    {
+      "_id": {
+        "$oid": "{{bare}}"
+      },
+      "revision": {
+        "$numberInt": "0"
+      },
+      "complete": true,
+      "wasPdfDownloaded": true,
+      "margin": {
+        "$numberInt": "35"
+      },
+      "daysNeededToDoTheWork": {
+        "$numberInt": "60"
+      },
+      "validity": {
+        "$numberInt": "30"
+      },
+      "hasGenerateJob": false,
+      "client": {
+        "$oid": "{{client}}"
+      },
+      "descriptive": "Máquina de corte",
+      "personInCharge": "Eng.ª Maria",
+      "madeBy": {
+        "$oid": "{{user}}"
+      },
+      "budgetNumber": "26-0002",
+      "paymentMethod": "30 dias",
+      "date": {
+        "$date": "2026-02-01T09:00:00.000Z"
+      },
+      "__v": {
+        "$numberInt": "0"
+      }
+    },
+    {
+      "_id": {
+        "$oid": "{{source}}"
+      },
+      "revision": {
+        "$numberInt": "0"
+      },
+      "complete": false,
+      "wasPdfDownloaded": false,
+      "margin": {
+        "$numberDouble": "32.5"
+      },
+      "daysNeededToDoTheWork": {
+        "$numberInt": "60"
+      },
+      "validity": {
+        "$numberInt": "30"
+      },
+      "hasGenerateJob": false,
+      "client": {
+        "$oid": "{{client}}"
+      },
+      "descriptive": "Máquina de corte",
+      "personInCharge": "Eng.ª Maria",
+      "madeBy": {
+        "$oid": "{{user}}"
+      },
+      "budgetNumber": "26-0003",
+      "paymentMethod": "30 dias",
+      "total": {
+        "$numberInt": "1234"
+      },
+      "date": {
+        "$date": "2026-02-01T09:00:00.000Z"
+      },
+      "__v": {
+        "$numberInt": "0"
+      },
+      "description": "Texto da origem\nsegunda linha"
+    },
+    {
+      "_id": {
+        "$oid": "{{budget}}"
+      },
+      "revision": {
+        "$numberInt": "0"
+      },
+      "complete": true,
+      "wasPdfDownloaded": true,
+      "margin": {
+        "$numberInt": "35"
+      },
+      "daysNeededToDoTheWork": {
+        "$numberInt": "60"
+      },
+      "validity": {
+        "$numberInt": "30"
+      },
+      "hasGenerateJob": false,
+      "client": {
+        "$oid": "{{client}}"
+      },
+      "descriptive": "Máquina de corte",
+      "personInCharge": "Eng.ª Maria",
+      "madeBy": {
+        "$oid": "{{user}}"
+      },
+      "budgetNumber": "26-0007",
+      "paymentMethod": "30 dias",
+      "total": {
+        "$numberDouble": "43.5"
+      },
+      "date": {
+        "$date": "2026-02-01T09:00:00.000Z"
+      },
+      "__v": {
+        "$numberInt": "0"
+      },
+      "description": "Fornecimento conforme especificação."
+    },
+    {
+      "_id": {
+        "$oid": "{{source-r1}}"
+      },
+      "revision": {
+        "$numberInt": "1"
+      },
+      "complete": true,
+      "wasPdfDownloaded": true,
+      "margin": {
+        "$numberInt": "40"
+      },
+      "daysNeededToDoTheWork": {
+        "$numberInt": "60"
+      },
+      "validity": {
+        "$numberInt": "30"
+      },
+      "hasGenerateJob": false,
+      "client": {
+        "$oid": "{{client}}"
+      },
+      "descriptive": "Máquina de corte",
+      "personInCharge": "Eng.ª Maria",
+      "madeBy": {
+        "$oid": "{{user}}"
+      },
+      "budgetNumber": "26-0003",
+      "paymentMethod": "30 dias",
+      "total": {
+        "$numberInt": "999"
+      },
+      "date": {
+        "$date": "2026-02-01T09:00:00.000Z"
+      },
+      "__v": {
+        "$numberInt": "0"
+      },
+      "description": "Texto da R1"
+    },
+    {
+      "_id": {
+        "$oid": "{{job-budget}}"
+      },
+      "revision": {
+        "$numberInt": "0"
+      },
+      "complete": true,
+      "wasPdfDownloaded": true,
+      "margin": {
+        "$numberInt": "35"
+      },
+      "daysNeededToDoTheWork": {
+        "$numberInt": "60"
+      },
+      "validity": {
+        "$numberInt": "30"
+      },
+      "hasGenerateJob": true,
+      "client": {
+        "$oid": "{{client}}"
+      },
+      "descriptive": "Máquina de corte",
+      "personInCharge": "Eng.ª Maria",
+      "madeBy": {
+        "$oid": "{{user}}"
+      },
+      "budgetNumber": "26-0004",
+      "paymentMethod": "30 dias",
+      "total": {
+        "$numberDouble": "43.5"
+      },
+      "date": {
+        "$date": "2026-02-01T09:00:00.000Z"
+      },
+      "__v": {
+        "$numberInt": "0"
+      },
+      "description": "Fornecimento conforme especificação."
+    },
+    {
+      "_id": {
+        "$oid": "{{imported}}"
+      },
+      "revision": {
+        "$numberInt": "0"
+      },
+      "margin": {
+        "$numberDouble": "32.5"
+      },
+      "daysNeededToDoTheWork": {
+        "$numberInt": "60"
+      },
+      "validity": {
+        "$numberInt": "30"
+      },
+      "hasGenerateJob": false,
+      "client": {
+        "$oid": "{{client}}"
+      },
+      "descriptive": "Máquina de corte",
+      "personInCharge": "Eng.ª Maria",
+      "madeBy": {
+        "$oid": "{{user}}"
+      },
+      "budgetNumber": "26-0005",
+      "paymentMethod": "30 dias",
+      "total": {
+        "$numberDouble": "43.5"
+      },
+      "date": {
+        "$date": "2026-02-01T09:00:00.000Z"
+      },
+      "__v": {
+        "$numberInt": "0"
+      }
+    }
+  ],
+  "tasks": [
+    {
+      "_id": {
+        "$oid": "{{task}}"
+      },
+      "budgetId": {
+        "$oid": "{{budget}}"
+      },
+      "taskType": "automation",
+      "description": "",
+      "unitPrice": {
+        "$numberDouble": "32.5"
+      },
+      "quantity": {
+        "$numberInt": "1"
+      },
+      "__v": {
+        "$numberInt": "0"
+      }
+    },
+    {
+      "_id": {
+        "$oid": "{{task-copy}}"
+      },
+      "taskType": "development",
+      "budgetId": {
+        "$oid": "{{budget}}"
+      },
+      "description": "Projeto  ",
+      "unitPrice": {
+        "$numberInt": "30"
+      },
+      "quantity": {
+        "$numberDouble": "0.5"
+      },
+      "__v": {
+        "$numberInt": "0"
+      }
+    },
+    {
+      "_id": {
+        "$oid": "{{task-no-description}}"
+      },
+      "budgetId": {
+        "$oid": "{{imported}}"
+      },
+      "taskType": "machining",
+      "unitPrice": {
+        "$numberDouble": "38.5"
+      },
+      "quantity": {
+        "$numberInt": "15"
+      },
+      "__v": {
+        "$numberInt": "0"
+      }
+    },
+    {
+      "_id": {
+        "$oid": "{{task-job}}"
+      },
+      "budgetId": {
+        "$oid": "{{job-budget}}"
+      },
+      "taskType": "assembly",
+      "description": "x",
+      "unitPrice": {
+        "$numberInt": "28"
+      },
+      "quantity": {
+        "$numberInt": "2"
+      },
+      "__v": {
+        "$numberInt": "0"
+      }
+    },
+    {
+      "_id": {
+        "$oid": "{{source-task-1}}"
+      },
+      "budgetId": {
+        "$oid": "{{source}}"
+      },
+      "taskType": "automation",
+      "description": "",
+      "unitPrice": {
+        "$numberDouble": "32.5"
+      },
+      "quantity": {
+        "$numberInt": "1"
+      },
+      "__v": {
+        "$numberInt": "0"
+      }
+    },
+    {
+      "_id": {
+        "$oid": "{{source-task-2}}"
+      },
+      "taskType": "development",
+      "budgetId": {
+        "$oid": "{{source}}"
+      },
+      "description": "Projeto",
+      "unitPrice": {
+        "$numberInt": "30"
+      },
+      "quantity": {
+        "$numberDouble": "0.5"
+      },
+      "__v": {
+        "$numberInt": "0"
+      }
+    },
+    {
+      "_id": {
+        "$oid": "{{source-task-3}}"
+      },
+      "budgetId": {
+        "$oid": "{{source}}"
+      },
+      "taskType": "machining",
+      "unitPrice": {
+        "$numberDouble": "38.5"
+      },
+      "quantity": {
+        "$numberInt": "15"
+      },
+      "__v": {
+        "$numberInt": "0"
+      }
+    },
+    {
+      "_id": {
+        "$oid": "{{source-task-4}}"
+      },
+      "budgetId": {
+        "$oid": "{{source}}"
+      },
+      "taskType": "others",
+      "description": "Cáfé  ",
+      "unitPrice": {
+        "$numberDouble": "1e+21"
+      },
+      "quantity": {
+        "$numberInt": "-2"
+      }
+    },
+    {
+      "_id": {
+        "$oid": "{{budget-task-1}}"
+      },
+      "budgetId": {
+        "$oid": "{{budget}}"
+      },
+      "taskType": "components",
+      "description": "Peças",
+      "unitPrice": {
+        "$numberInt": "100"
+      },
+      "quantity": {
+        "$numberInt": "3"
+      },
+      "__v": {
+        "$numberInt": "0"
+      }
+    }
+  ],
+  "entity": {
+    "_id": {
+      "$oid": "{{client}}"
+    },
+    "name": "Metalúrgica Exemplo, Lda.",
+    "fiscalNumber": "509999990",
+    "address": "Rua das Flores, 12",
+    "zipCode": "4000-123",
+    "location": "Porto",
+    "paymentCondition": "30 dias",
+    "type": "Cliente",
+    "__v": {
+      "$numberInt": "0"
+    }
+  },
+  "user": {
+    "_id": {
+      "$oid": "{{user}}"
+    },
+    "roles": [
+      "canSeeOrcamentos",
+      null,
+      "canSeeDefinicoes"
+    ],
+    "fieldOfCompetencies": "Desenvolvimento",
+    "name": "Ana Administradora",
+    "email": "ana.admin@dib4t.local",
+    "password": "$2a$10$abcdefghijklmnopqrstuuabcdefghijklmnopqrstuvwxyz01234",
+    "__v": {
+      "$numberInt": "0"
+    }
+  },
+  "taskTypes": [
+    "automation",
+    "consultancy",
+    "development",
+    "machining",
+    "assembly",
+    "others",
+    "components"
+  ],
+  "listTasks": [
+    {
+      "budgetId": "{{budget}}",
+      "status": 200,
+      "json": [
+        {
+          "_id": "{{task}}",
+          "budgetId": "{{budget}}",
+          "taskType": "automation",
+          "description": "",
+          "unitPrice": 32.5,
+          "quantity": 1,
+          "__v": 0
+        },
+        {
+          "_id": "{{task-copy}}",
+          "taskType": "development",
+          "budgetId": "{{budget}}",
+          "description": "Projeto  ",
+          "unitPrice": 30,
+          "quantity": 0.5,
+          "__v": 0
+        },
+        {
+          "_id": "{{budget-task-1}}",
+          "budgetId": "{{budget}}",
+          "taskType": "components",
+          "description": "Peças",
+          "unitPrice": 100,
+          "quantity": 3,
+          "__v": 0
+        }
+      ],
+      "effects": []
+    },
+    {
+      "budgetId": "{{imported}}",
+      "status": 200,
+      "json": [
+        {
+          "_id": "{{task-no-description}}",
+          "budgetId": "{{imported}}",
+          "taskType": "machining",
+          "unitPrice": 38.5,
+          "quantity": 15,
+          "__v": 0
+        }
+      ],
+      "effects": []
+    },
+    {
+      "budgetId": "{{job-budget}}",
+      "status": 200,
+      "json": [
+        {
+          "_id": "{{task-job}}",
+          "budgetId": "{{job-budget}}",
+          "taskType": "assembly",
+          "description": "x",
+          "unitPrice": 28,
+          "quantity": 2,
+          "__v": 0
+        }
+      ],
+      "effects": []
+    },
+    {
+      "budgetId": "{{missing}}",
+      "status": 400,
+      "text": "Orçamento não existe",
+      "effects": []
+    },
+    {
+      "budgetId": "abc",
+      "status": 500,
+      "error": "CastError: Cast to ObjectId failed for value \"abc\" at path \"_id\"",
+      "effects": []
+    },
+    {
+      "budgetId": "abcdefghijkl",
+      "status": 400,
+      "text": "Orçamento não existe",
+      "effects": []
+    },
+    {
+      "budgetId": "5F1E9A2B3C4D5E6F70810001",
+      "status": 200,
+      "json": [
+        {
+          "_id": "{{task}}",
+          "budgetId": "{{budget}}",
+          "taskType": "automation",
+          "description": "",
+          "unitPrice": 32.5,
+          "quantity": 1,
+          "__v": 0
+        },
+        {
+          "_id": "{{task-copy}}",
+          "taskType": "development",
+          "budgetId": "{{budget}}",
+          "description": "Projeto  ",
+          "unitPrice": 30,
+          "quantity": 0.5,
+          "__v": 0
+        },
+        {
+          "_id": "{{budget-task-1}}",
+          "budgetId": "{{budget}}",
+          "taskType": "components",
+          "description": "Peças",
+          "unitPrice": 100,
+          "quantity": 3,
+          "__v": 0
+        }
+      ],
+      "effects": []
+    }
+  ],
+  "defaultTask": [
+    {
+      "budgetId": "{{budget}}",
+      "status": 200,
+      "json": {
+        "_id": "{{new}}",
+        "budgetId": "{{budget}}",
+        "taskType": "automation",
+        "description": "",
+        "unitPrice": 32.5,
+        "quantity": 1,
+        "__v": 0
+      },
+      "effects": [
+        {
+          "insert": "tasks",
+          "document": {
+            "_id": {
+              "$oid": "{{new}}"
+            },
+            "budgetId": {
+              "$oid": "{{budget}}"
+            },
+            "taskType": "automation",
+            "description": "",
+            "unitPrice": {
+              "$numberDouble": "32.5"
+            },
+            "quantity": {
+              "$numberInt": "1"
+            },
+            "__v": {
+              "$numberInt": "0"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "budgetId": "{{imported}}",
+      "status": 200,
+      "json": {
+        "_id": "{{new}}",
+        "budgetId": "{{imported}}",
+        "taskType": "automation",
+        "description": "",
+        "unitPrice": 32.5,
+        "quantity": 1,
+        "__v": 0
+      },
+      "effects": [
+        {
+          "insert": "tasks",
+          "document": {
+            "_id": {
+              "$oid": "{{new}}"
+            },
+            "budgetId": {
+              "$oid": "{{imported}}"
+            },
+            "taskType": "automation",
+            "description": "",
+            "unitPrice": {
+              "$numberDouble": "32.5"
+            },
+            "quantity": {
+              "$numberInt": "1"
+            },
+            "__v": {
+              "$numberInt": "0"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "budgetId": "{{job-budget}}",
+      "status": 400,
+      "text": "Orçamento gerou obra!",
+      "effects": []
+    },
+    {
+      "budgetId": "{{missing}}",
+      "status": 400,
+      "text": "Orçamento não existe",
+      "effects": []
+    },
+    {
+      "budgetId": "abc",
+      "status": 500,
+      "error": "CastError: Cast to ObjectId failed for value \"abc\" at path \"_id\"",
+      "effects": []
+    },
+    {
+      "budgetId": "abcdefghijkl",
+      "status": 400,
+      "text": "Orçamento não existe",
+      "effects": []
+    },
+    {
+      "budgetId": "5F1E9A2B3C4D5E6F70810001",
+      "status": 200,
+      "json": {
+        "_id": "{{new}}",
+        "budgetId": "{{budget}}",
+        "taskType": "automation",
+        "description": "",
+        "unitPrice": 32.5,
+        "quantity": 1,
+        "__v": 0
+      },
+      "effects": [
+        {
+          "insert": "tasks",
+          "document": {
+            "_id": {
+              "$oid": "{{new}}"
+            },
+            "budgetId": {
+              "$oid": "{{budget}}"
+            },
+            "taskType": "automation",
+            "description": "",
+            "unitPrice": {
+              "$numberDouble": "32.5"
+            },
+            "quantity": {
+              "$numberInt": "1"
+            },
+            "__v": {
+              "$numberInt": "0"
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "newTask": [
+    {
+      "body": "{\"budgetId\":\"{{budget}}\",\"taskType\":\"development\",\"description\":\"Projeto mecânico\",\"unitPrice\":30,\"quantity\":20}",
+      "legacy": {
+        "status": 400,
+        "text": "\"budgetId\" is not allowed"
+      },
+      "intended": {
+        "message": null,
+        "stored": {
+          "_id": {
+            "$oid": "{{new}}"
+          },
+          "budgetId": {
+            "$oid": "{{budget}}"
+          },
+          "taskType": "development",
+          "description": "Projeto mecânico",
+          "unitPrice": {
+            "$numberInt": "30"
+          },
+          "quantity": {
+            "$numberInt": "20"
+          },
+          "__v": {
+            "$numberInt": "0"
+          }
+        }
+      }
+    },
+    {
+      "body": "{\"taskType\":\"development\",\"description\":\"Projeto mecânico\",\"unitPrice\":30,\"quantity\":20,\"budgetId\":\"{{budget}}\"}",
+      "legacy": {
+        "status": 400,
+        "text": "\"budgetId\" is not allowed"
+      },
+      "intended": {
+        "message": null,
+        "stored": {
+          "_id": {
+            "$oid": "{{new}}"
+          },
+          "taskType": "development",
+          "description": "Projeto mecânico",
+          "unitPrice": {
+            "$numberInt": "30"
+          },
+          "quantity": {
+            "$numberInt": "20"
+          },
+          "budgetId": {
+            "$oid": "{{budget}}"
+          },
+          "__v": {
+            "$numberInt": "0"
+          }
+        }
+      }
+    },
+    {
+      "body": "{\"taskType\":\"development\",\"description\":\"Projeto mecânico\",\"unitPrice\":\"12\",\"quantity\":\"2\",\"budgetId\":\"{{budget}}\"}",
+      "legacy": {
+        "status": 400,
+        "text": "\"budgetId\" is not allowed"
+      },
+      "intended": {
+        "message": null,
+        "stored": {
+          "_id": {
+            "$oid": "{{new}}"
+          },
+          "taskType": "development",
+          "description": "Projeto mecânico",
+          "unitPrice": {
+            "$numberInt": "12"
+          },
+          "quantity": {
+            "$numberInt": "2"
+          },
+          "budgetId": {
+            "$oid": "{{budget}}"
+          },
+          "__v": {
+            "$numberInt": "0"
+          }
+        }
+      }
+    },
+    {
+      "body": "{\"taskType\":\"development\",\"unitPrice\":30,\"quantity\":20,\"budgetId\":\"{{budget}}\"}",
+      "legacy": {
+        "status": 400,
+        "text": "\"budgetId\" is not allowed"
+      },
+      "intended": {
+        "message": null,
+        "stored": {
+          "_id": {
+            "$oid": "{{new}}"
+          },
+          "taskType": "development",
+          "unitPrice": {
+            "$numberInt": "30"
+          },
+          "quantity": {
+            "$numberInt": "20"
+          },
+          "budgetId": {
+            "$oid": "{{budget}}"
+          },
+          "__v": {
+            "$numberInt": "0"
+          }
+        }
+      }
+    },
+    {
+      "body": "{\"taskType\":\"development\",\"description\":\"Projeto mecânico\",\"unitPrice\":30,\"quantity\":20}",
+      "legacy": {
+        "status": 400,
+        "text": "Orçamento não existe"
+      },
+      "intended": {
+        "message": "\"budgetId\" is required",
+        "stored": null
+      }
+    },
+    {
+      "body": "{\"taskType\":\"development\",\"description\":\"Projeto mecânico\",\"unitPrice\":30,\"quantity\":20,\"budgetId\":\"abc\"}",
+      "legacy": {
+        "status": 400,
+        "text": "\"budgetId\" is not allowed"
+      },
+      "intended": {
+        "message": "\"budgetId\" with value \"abc\" fails to match the valid mongo id pattern",
+        "stored": null
+      }
+    },
+    {
+      "body": "{\"taskType\":\"development\",\"description\":\"Projeto mecânico\",\"unitPrice\":30,\"quantity\":20,\"budgetId\":\"{{missing}}\"}",
+      "legacy": {
+        "status": 400,
+        "text": "\"budgetId\" is not allowed"
+      },
+      "intended": {
+        "message": null,
+        "stored": {
+          "_id": {
+            "$oid": "{{new}}"
+          },
+          "taskType": "development",
+          "description": "Projeto mecânico",
+          "unitPrice": {
+            "$numberInt": "30"
+          },
+          "quantity": {
+            "$numberInt": "20"
+          },
+          "budgetId": {
+            "$oid": "{{missing}}"
+          },
+          "__v": {
+            "$numberInt": "0"
+          }
+        }
+      }
+    },
+    {
+      "body": "{\"taskType\":\"development\",\"description\":\"Projeto mecânico\",\"unitPrice\":30,\"quantity\":20,\"budgetId\":\"{{job-budget}}\"}",
+      "legacy": {
+        "status": 400,
+        "text": "\"budgetId\" is not allowed"
+      },
+      "intended": {
+        "message": null,
+        "stored": {
+          "_id": {
+            "$oid": "{{new}}"
+          },
+          "taskType": "development",
+          "description": "Projeto mecânico",
+          "unitPrice": {
+            "$numberInt": "30"
+          },
+          "quantity": {
+            "$numberInt": "20"
+          },
+          "budgetId": {
+            "$oid": "{{job-budget}}"
+          },
+          "__v": {
+            "$numberInt": "0"
+          }
+        }
+      }
+    },
+    {
+      "body": "{\"taskType\":\"x\",\"description\":\"Projeto mecânico\",\"unitPrice\":30,\"quantity\":20,\"budgetId\":\"{{budget}}\"}",
+      "legacy": {
+        "status": 400,
+        "text": "\"taskType\" must be one of [automation, consultancy, development, machining, assembly, others, components]"
+      },
+      "intended": {
+        "message": "\"taskType\" must be one of [automation, consultancy, development, machining, assembly, others, components]",
+        "stored": null
+      }
+    },
+    {
+      "body": "{\"taskType\":\"development\",\"description\":\"Projeto mecânico\",\"unitPrice\":30,\"quantity\":20,\"budgetId\":\"{{budget}}\",\"extra\":1}",
+      "legacy": {
+        "status": 400,
+        "text": "\"budgetId\" is not allowed"
+      },
+      "intended": {
+        "message": "\"extra\" is not allowed",
+        "stored": null
+      }
+    }
+  ],
+  "updateTask": [
+    {
+      "taskId": "{{task}}",
+      "budgetId": "{{budget}}",
+      "body": "{\"taskType\":\"development\",\"description\":\"Projeto mecânico\",\"unitPrice\":30,\"quantity\":20}",
+      "status": 200,
+      "json": {
+        "_id": "{{task}}",
+        "budgetId": "{{budget}}",
+        "taskType": "development",
+        "description": "Projeto mecânico",
+        "unitPrice": 30,
+        "quantity": 20,
+        "__v": 0
+      },
+      "effects": [
+        {
+          "update": {
+            "$set": {
+              "description": "Projeto mecânico",
+              "quantity": {
+                "$numberInt": "20"
+              },
+              "taskType": "development",
+              "unitPrice": {
+                "$numberInt": "30"
+              }
+            }
+          },
+          "_id": {
+            "$oid": "{{task}}"
+          }
+        },
+        {
+          "update": {
+            "$set": {
+              "complete": false,
+              "wasPdfDownloaded": false
+            }
+          },
+          "_id": {
+            "$oid": "{{budget}}"
+          }
+        }
+      ]
+    },
+    {
+      "taskId": "{{task}}",
+      "budgetId": "{{budget}}",
+      "body": "{\"taskType\":\"automation\",\"description\":\"\",\"unitPrice\":32.5,\"quantity\":1}",
+      "status": 200,
+      "json": {
+        "_id": "{{task}}",
+        "budgetId": "{{budget}}",
+        "taskType": "automation",
+        "description": "",
+        "unitPrice": 32.5,
+        "quantity": 1,
+        "__v": 0
+      },
+      "effects": [
+        {
+          "update": null,
+          "_id": {
+            "$oid": "{{task}}"
+          }
+        },
+        {
+          "update": {
+            "$set": {
+              "complete": false,
+              "wasPdfDownloaded": false
+            }
+          },
+          "_id": {
+            "$oid": "{{budget}}"
+          }
+        }
+      ]
+    },
+    {
+      "taskId": "{{task}}",
+      "budgetId": "{{budget}}",
+      "body": "{\"taskType\":\"development\",\"description\":\"Projeto mecânico\",\"unitPrice\":\"30\",\"quantity\":\"20\"}",
+      "status": 200,
+      "json": {
+        "_id": "{{task}}",
+        "budgetId": "{{budget}}",
+        "taskType": "development",
+        "description": "Projeto mecânico",
+        "unitPrice": 30,
+        "quantity": 20,
+        "__v": 0
+      },
+      "effects": [
+        {
+          "update": {
+            "$set": {
+              "description": "Projeto mecânico",
+              "quantity": {
+                "$numberInt": "20"
+              },
+              "taskType": "development",
+              "unitPrice": {
+                "$numberInt": "30"
+              }
+            }
+          },
+          "_id": {
+            "$oid": "{{task}}"
+          }
+        },
+        {
+          "update": {
+            "$set": {
+              "complete": false,
+              "wasPdfDownloaded": false
+            }
+          },
+          "_id": {
+            "$oid": "{{budget}}"
+          }
+        }
+      ]
+    },
+    {
+      "taskId": "{{task}}",
+      "budgetId": "{{budget}}",
+      "body": "{\"taskType\":\"development\",\"description\":\"Projeto mecânico\",\"unitPrice\":\" 12.50 \",\"quantity\":\"1.5\"}",
+      "status": 200,
+      "json": {
+        "_id": "{{task}}",
+        "budgetId": "{{budget}}",
+        "taskType": "development",
+        "description": "Projeto mecânico",
+        "unitPrice": 12.5,
+        "quantity": 1.5,
+        "__v": 0
+      },
+      "effects": [
+        {
+          "update": {
+            "$set": {
+              "description": "Projeto mecânico",
+              "quantity": {
+                "$numberDouble": "1.5"
+              },
+              "taskType": "development",
+              "unitPrice": {
+                "$numberDouble": "12.5"
+              }
+            }
+          },
+          "_id": {
+            "$oid": "{{task}}"
+          }
+        },
+        {
+          "update": {
+            "$set": {
+              "complete": false,
+              "wasPdfDownloaded": false
+            }
+          },
+          "_id": {
+            "$oid": "{{budget}}"
+          }
+        }
+      ]
+    },
+    {
+      "taskId": "{{task}}",
+      "budgetId": "{{budget}}",
+      "body": "{\"taskType\":\"development\",\"description\":\"Projeto mecânico\",\"unitPrice\":0,\"quantity\":0}",
+      "status": 200,
+      "json": {
+        "_id": "{{task}}",
+        "budgetId": "{{budget}}",
+        "taskType": "development",
+        "description": "Projeto mecânico",
+        "unitPrice": 0,
+        "quantity": 0,
+        "__v": 0
+      },
+      "effects": [
+        {
+          "update": {
+            "$set": {
+              "description": "Projeto mecânico",
+              "quantity": {
+                "$numberInt": "0"
+              },
+              "taskType": "development",
+              "unitPrice": {
+                "$numberInt": "0"
+              }
+            }
+          },
+          "_id": {
+            "$oid": "{{task}}"
+          }
+        },
+        {
+          "update": {
+            "$set": {
+              "complete": false,
+              "wasPdfDownloaded": false
+            }
+          },
+          "_id": {
+            "$oid": "{{budget}}"
+          }
+        }
+      ]
+    },
+    {
+      "taskId": "{{task}}",
+      "budgetId": "{{budget}}",
+      "body": "{\"taskType\":\"development\",\"description\":\"Projeto mecânico\",\"unitPrice\":1250.75,\"quantity\":1.5}",
+      "status": 200,
+      "json": {
+        "_id": "{{task}}",
+        "budgetId": "{{budget}}",
+        "taskType": "development",
+        "description": "Projeto mecânico",
+        "unitPrice": 1250.75,
+        "quantity": 1.5,
+        "__v": 0
+      },
+      "effects": [
+        {
+          "update": {
+            "$set": {
+              "description": "Projeto mecânico",
+              "quantity": {
+                "$numberDouble": "1.5"
+              },
+              "taskType": "development",
+              "unitPrice": {
+                "$numberDouble": "1250.75"
+              }
+            }
+          },
+          "_id": {
+            "$oid": "{{task}}"
+          }
+        },
+        {
+          "update": {
+            "$set": {
+              "complete": false,
+              "wasPdfDownloaded": false
+            }
+          },
+          "_id": {
+            "$oid": "{{budget}}"
+          }
+        }
+      ]
+    },
+    {
+      "taskId": "{{task}}",
+      "budgetId": "{{budget}}",
+      "body": "{\"taskType\":\"development\",\"description\":\"Projeto mecânico\",\"unitPrice\":1e+21,\"quantity\":0}",
+      "status": 400,
+      "text": "\"unitPrice\" must be a safe number",
+      "effects": []
+    },
+    {
+      "taskId": "{{task}}",
+      "budgetId": "{{budget}}",
+      "body": "{\"taskType\":\"development\",\"description\":\"Máquina  \",\"unitPrice\":30,\"quantity\":20}",
+      "status": 200,
+      "json": {
+        "_id": "{{task}}",
+        "budgetId": "{{budget}}",
+        "taskType": "development",
+        "description": "Máquina  ",
+        "unitPrice": 30,
+        "quantity": 20,
+        "__v": 0
+      },
+      "effects": [
+        {
+          "update": {
+            "$set": {
+              "description": "Máquina  ",
+              "quantity": {
+                "$numberInt": "20"
+              },
+              "taskType": "development",
+              "unitPrice": {
+                "$numberInt": "30"
+              }
+            }
+          },
+          "_id": {
+            "$oid": "{{task}}"
+          }
+        },
+        {
+          "update": {
+            "$set": {
+              "complete": false,
+              "wasPdfDownloaded": false
+            }
+          },
+          "_id": {
+            "$oid": "{{budget}}"
+          }
+        }
+      ]
+    },
+    {
+      "taskId": "{{task}}",
+      "budgetId": "{{budget}}",
+      "body": "{\"taskType\":\"development\",\"description\":\"linha 1\\nlinha 2\",\"unitPrice\":30,\"quantity\":20}",
+      "status": 200,
+      "json": {
+        "_id": "{{task}}",
+        "budgetId": "{{budget}}",
+        "taskType": "development",
+        "description": "linha 1\nlinha 2",
+        "unitPrice": 30,
+        "quantity": 20,
+        "__v": 0
+      },
+      "effects": [
+        {
+          "update": {
+            "$set": {
+              "description": "linha 1\nlinha 2",
+              "quantity": {
+                "$numberInt": "20"
+              },
+              "taskType": "development",
+              "unitPrice": {
+                "$numberInt": "30"
+              }
+            }
+          },
+          "_id": {
+            "$oid": "{{task}}"
+          }
+        },
+        {
+          "update": {
+            "$set": {
+              "complete": false,
+              "wasPdfDownloaded": false
+            }
+          },
+          "_id": {
+            "$oid": "{{budget}}"
+          }
+        }
+      ]
+    },
+    {
+      "taskId": "{{task}}",
+      "budgetId": "{{budget}}",
+      "body": "{\"taskType\":\"development\",\"unitPrice\":30,\"quantity\":20}",
+      "status": 200,
+      "json": {
+        "_id": "{{task}}",
+        "budgetId": "{{budget}}",
+        "taskType": "development",
+        "unitPrice": 30,
+        "quantity": 20,
+        "__v": 0
+      },
+      "effects": [
+        {
+          "update": {
+            "$set": {
+              "quantity": {
+                "$numberInt": "20"
+              },
+              "taskType": "development",
+              "unitPrice": {
+                "$numberInt": "30"
+              }
+            },
+            "$unset": {
+              "description": {
+                "$numberInt": "1"
+              }
+            }
+          },
+          "_id": {
+            "$oid": "{{task}}"
+          }
+        },
+        {
+          "update": {
+            "$set": {
+              "complete": false,
+              "wasPdfDownloaded": false
+            }
+          },
+          "_id": {
+            "$oid": "{{budget}}"
+          }
+        }
+      ]
+    },
+    {
+      "taskId": "{{task}}",
+      "budgetId": "{{budget}}",
+      "body": "{}",
+      "status": 400,
+      "text": "\"taskType\" is required",
+      "effects": []
+    },
+    {
+      "taskId": "{{task}}",
+      "budgetId": "{{budget}}",
+      "body": "{\"description\":\"Projeto mecânico\",\"unitPrice\":30,\"quantity\":20}",
+      "status": 400,
+      "text": "\"taskType\" is required",
+      "effects": []
+    },
+    {
+      "taskId": "{{task}}",
+      "budgetId": "{{budget}}",
+      "body": "{\"taskType\":\"development\",\"description\":\"Projeto mecânico\",\"quantity\":20}",
+      "status": 400,
+      "text": "\"unitPrice\" is required",
+      "effects": []
+    },
+    {
+      "taskId": "{{task}}",
+      "budgetId": "{{budget}}",
+      "body": "{\"taskType\":\"development\",\"description\":\"Projeto mecânico\",\"unitPrice\":30}",
+      "status": 400,
+      "text": "\"quantity\" is required",
+      "effects": []
+    },
+    {
+      "taskId": "{{task}}",
+      "budgetId": "{{budget}}",
+      "body": "{\"taskType\":\"painting\",\"description\":\"Projeto mecânico\",\"unitPrice\":30,\"quantity\":20}",
+      "status": 400,
+      "text": "\"taskType\" must be one of [automation, consultancy, development, machining, assembly, others, components]",
+      "effects": []
+    },
+    {
+      "taskId": "{{task}}",
+      "budgetId": "{{budget}}",
+      "body": "{\"taskType\":\"Automation\",\"description\":\"Projeto mecânico\",\"unitPrice\":30,\"quantity\":20}",
+      "status": 400,
+      "text": "\"taskType\" must be one of [automation, consultancy, development, machining, assembly, others, components]",
+      "effects": []
+    },
+    {
+      "taskId": "{{task}}",
+      "budgetId": "{{budget}}",
+      "body": "{\"taskType\":\"\",\"description\":\"Projeto mecânico\",\"unitPrice\":30,\"quantity\":20}",
+      "status": 400,
+      "text": "\"taskType\" is not allowed to be empty",
+      "effects": []
+    },
+    {
+      "taskId": "{{task}}",
+      "budgetId": "{{budget}}",
+      "body": "{\"taskType\":null,\"description\":\"Projeto mecânico\",\"unitPrice\":30,\"quantity\":20}",
+      "status": 400,
+      "text": "\"taskType\" must be a string",
+      "effects": []
+    },
+    {
+      "taskId": "{{task}}",
+      "budgetId": "{{budget}}",
+      "body": "{\"taskType\":1,\"description\":\"Projeto mecânico\",\"unitPrice\":30,\"quantity\":20}",
+      "status": 400,
+      "text": "\"taskType\" must be a string",
+      "effects": []
+    },
+    {
+      "taskId": "{{task}}",
+      "budgetId": "{{budget}}",
+      "body": "{\"taskType\":\"development\",\"description\":null,\"unitPrice\":30,\"quantity\":20}",
+      "status": 400,
+      "text": "\"description\" must be a string",
+      "effects": []
+    },
+    {
+      "taskId": "{{task}}",
+      "budgetId": "{{budget}}",
+      "body": "{\"taskType\":\"development\",\"description\":5,\"unitPrice\":30,\"quantity\":20}",
+      "status": 400,
+      "text": "\"description\" must be a string",
+      "effects": []
+    },
+    {
+      "taskId": "{{task}}",
+      "budgetId": "{{budget}}",
+      "body": "{\"taskType\":\"development\",\"description\":\"Projeto mecânico\",\"unitPrice\":\"\",\"quantity\":20}",
+      "status": 400,
+      "text": "\"unitPrice\" must be a number",
+      "effects": []
+    },
+    {
+      "taskId": "{{task}}",
+      "budgetId": "{{budget}}",
+      "body": "{\"taskType\":\"development\",\"description\":\"Projeto mecânico\",\"unitPrice\":\"abc\",\"quantity\":20}",
+      "status": 400,
+      "text": "\"unitPrice\" must be a number",
+      "effects": []
+    },
+    {
+      "taskId": "{{task}}",
+      "budgetId": "{{budget}}",
+      "body": "{\"taskType\":\"development\",\"description\":\"Projeto mecânico\",\"unitPrice\":\"12abc\",\"quantity\":20}",
+      "status": 400,
+      "text": "\"unitPrice\" must be a number",
+      "effects": []
+    },
+    {
+      "taskId": "{{task}}",
+      "budgetId": "{{budget}}",
+      "body": "{\"taskType\":\"development\",\"description\":\"Projeto mecânico\",\"unitPrice\":null,\"quantity\":20}",
+      "status": 400,
+      "text": "\"unitPrice\" must be a number",
+      "effects": []
+    },
+    {
+      "taskId": "{{task}}",
+      "budgetId": "{{budget}}",
+      "body": "{\"taskType\":\"development\",\"description\":\"Projeto mecânico\",\"unitPrice\":-1,\"quantity\":20}",
+      "status": 400,
+      "text": "\"unitPrice\" must be larger than or equal to 0",
+      "effects": []
+    },
+    {
+      "taskId": "{{task}}",
+      "budgetId": "{{budget}}",
+      "body": "{\"taskType\":\"development\",\"description\":\"Projeto mecânico\",\"unitPrice\":-0.01,\"quantity\":20}",
+      "status": 400,
+      "text": "\"unitPrice\" must be larger than or equal to 0",
+      "effects": []
+    },
+    {
+      "taskId": "{{task}}",
+      "budgetId": "{{budget}}",
+      "body": "{\"taskType\":\"development\",\"description\":\"Projeto mecânico\",\"unitPrice\":30,\"quantity\":-1}",
+      "status": 400,
+      "text": "\"quantity\" must be larger than or equal to 0",
+      "effects": []
+    },
+    {
+      "taskId": "{{task}}",
+      "budgetId": "{{budget}}",
+      "body": "{\"taskType\":\"development\",\"description\":\"Projeto mecânico\",\"unitPrice\":30,\"quantity\":true}",
+      "status": 400,
+      "text": "\"quantity\" must be a number",
+      "effects": []
+    },
+    {
+      "taskId": "{{task}}",
+      "budgetId": "{{budget}}",
+      "body": "{\"taskType\":\"development\",\"description\":\"Projeto mecânico\",\"unitPrice\":30,\"quantity\":[1]}",
+      "status": 400,
+      "text": "\"quantity\" must be a number",
+      "effects": []
+    },
+    {
+      "taskId": "{{task}}",
+      "budgetId": "{{budget}}",
+      "body": "{\"taskType\":\"development\",\"description\":\"Projeto mecânico\",\"unitPrice\":\"0x10\",\"quantity\":20}",
+      "status": 400,
+      "text": "\"unitPrice\" must be a number",
+      "effects": []
+    },
+    {
+      "taskId": "{{task}}",
+      "budgetId": "{{budget}}",
+      "body": "{\"taskType\":\"development\",\"description\":\"Projeto mecânico\",\"unitPrice\":\"1e3\",\"quantity\":20}",
+      "status": 200,
+      "json": {
+        "_id": "{{task}}",
+        "budgetId": "{{budget}}",
+        "taskType": "development",
+        "description": "Projeto mecânico",
+        "unitPrice": 1000,
+        "quantity": 20,
+        "__v": 0
+      },
+      "effects": [
+        {
+          "update": {
+            "$set": {
+              "description": "Projeto mecânico",
+              "quantity": {
+                "$numberInt": "20"
+              },
+              "taskType": "development",
+              "unitPrice": {
+                "$numberInt": "1000"
+              }
+            }
+          },
+          "_id": {
+            "$oid": "{{task}}"
+          }
+        },
+        {
+          "update": {
+            "$set": {
+              "complete": false,
+              "wasPdfDownloaded": false
+            }
+          },
+          "_id": {
+            "$oid": "{{budget}}"
+          }
+        }
+      ]
+    },
+    {
+      "taskId": "{{task}}",
+      "budgetId": "{{budget}}",
+      "body": "{\"taskType\":\"development\",\"description\":\"Projeto mecânico\",\"unitPrice\":null,\"quantity\":20}",
+      "status": 400,
+      "text": "\"unitPrice\" must be a number",
+      "effects": []
+    },
+    {
+      "taskId": "{{task}}",
+      "budgetId": "{{budget}}",
+      "body": "{\"taskType\":\"development\",\"description\":\"Projeto mecânico\",\"unitPrice\":9007199254740992,\"quantity\":20}",
+      "status": 400,
+      "text": "\"unitPrice\" must be a safe number",
+      "effects": []
+    },
+    {
+      "taskId": "{{task}}",
+      "budgetId": "{{budget}}",
+      "body": "{\"taskType\":\"development\",\"description\":\"Projeto mecânico\",\"unitPrice\":30,\"quantity\":20,\"total\":600}",
+      "status": 400,
+      "text": "\"total\" is not allowed",
+      "effects": []
+    },
+    {
+      "taskId": "{{task}}",
+      "budgetId": "{{budget}}",
+      "body": "{\"taskType\":\"development\",\"description\":\"Projeto mecânico\",\"unitPrice\":30,\"quantity\":20,\"_id\":\"5f1e9a2b3c4d5e6f70840001\"}",
+      "status": 400,
+      "text": "\"_id\" is not allowed",
+      "effects": []
+    },
+    {
+      "taskId": "{{task}}",
+      "budgetId": "{{budget}}",
+      "body": "{\"taskType\":\"development\",\"description\":\"Projeto mecânico\",\"unitPrice\":30,\"quantity\":20,\"budgetId\":\"5f1e9a2b3c4d5e6f70810001\"}",
+      "status": 400,
+      "text": "\"budgetId\" is not allowed",
+      "effects": []
+    },
+    {
+      "taskId": "{{task}}",
+      "budgetId": "{{budget}}",
+      "body": "{\"taskType\":\"painting\",\"unitPrice\":-1}",
+      "status": 400,
+      "text": "\"taskType\" must be one of [automation, consultancy, development, machining, assembly, others, components]",
+      "effects": []
+    },
+    {
+      "taskId": "{{task}}",
+      "budgetId": "{{budget}}",
+      "body": "[]",
+      "status": 400,
+      "text": "\"value\" must be an object",
+      "effects": []
+    },
+    {
+      "taskId": "{{task-copy}}",
+      "budgetId": "{{budget}}",
+      "body": "{\"taskType\":\"development\",\"description\":\"Projeto  \",\"unitPrice\":30,\"quantity\":0.5}",
+      "status": 200,
+      "json": {
+        "_id": "{{task-copy}}",
+        "taskType": "development",
+        "budgetId": "{{budget}}",
+        "description": "Projeto  ",
+        "unitPrice": 30,
+        "quantity": 0.5,
+        "__v": 0
+      },
+      "effects": [
+        {
+          "update": null,
+          "_id": {
+            "$oid": "{{task-copy}}"
+          }
+        },
+        {
+          "update": {
+            "$set": {
+              "complete": false,
+              "wasPdfDownloaded": false
+            }
+          },
+          "_id": {
+            "$oid": "{{budget}}"
+          }
+        }
+      ]
+    },
+    {
+      "taskId": "{{task-copy}}",
+      "budgetId": "{{budget}}",
+      "body": "{\"taskType\":\"development\",\"unitPrice\":30,\"quantity\":20}",
+      "status": 200,
+      "json": {
+        "_id": "{{task-copy}}",
+        "taskType": "development",
+        "budgetId": "{{budget}}",
+        "unitPrice": 30,
+        "quantity": 20,
+        "__v": 0
+      },
+      "effects": [
+        {
+          "update": {
+            "$set": {
+              "quantity": {
+                "$numberInt": "20"
+              }
+            },
+            "$unset": {
+              "description": {
+                "$numberInt": "1"
+              }
+            }
+          },
+          "_id": {
+            "$oid": "{{task-copy}}"
+          }
+        },
+        {
+          "update": {
+            "$set": {
+              "complete": false,
+              "wasPdfDownloaded": false
+            }
+          },
+          "_id": {
+            "$oid": "{{budget}}"
+          }
+        }
+      ]
+    },
+    {
+      "taskId": "{{task-no-description}}",
+      "budgetId": "{{imported}}",
+      "body": "{\"taskType\":\"development\",\"unitPrice\":30,\"quantity\":20}",
+      "status": 200,
+      "json": {
+        "_id": "{{task-no-description}}",
+        "budgetId": "{{imported}}",
+        "taskType": "development",
+        "unitPrice": 30,
+        "quantity": 20,
+        "__v": 0
+      },
+      "effects": [
+        {
+          "update": {
+            "$set": {
+              "quantity": {
+                "$numberInt": "20"
+              },
+              "taskType": "development",
+              "unitPrice": {
+                "$numberInt": "30"
+              }
+            }
+          },
+          "_id": {
+            "$oid": "{{task-no-description}}"
+          }
+        },
+        {
+          "update": null,
+          "_id": {
+            "$oid": "{{imported}}"
+          }
+        }
+      ]
+    },
+    {
+      "taskId": "{{task-no-description}}",
+      "budgetId": "{{imported}}",
+      "body": "{\"taskType\":\"development\",\"description\":\"\",\"unitPrice\":30,\"quantity\":20}",
+      "status": 200,
+      "json": {
+        "_id": "{{task-no-description}}",
+        "budgetId": "{{imported}}",
+        "taskType": "development",
+        "unitPrice": 30,
+        "quantity": 20,
+        "__v": 0,
+        "description": ""
+      },
+      "effects": [
+        {
+          "update": {
+            "$set": {
+              "description": "",
+              "quantity": {
+                "$numberInt": "20"
+              },
+              "taskType": "development",
+              "unitPrice": {
+                "$numberInt": "30"
+              }
+            }
+          },
+          "_id": {
+            "$oid": "{{task-no-description}}"
+          }
+        },
+        {
+          "update": null,
+          "_id": {
+            "$oid": "{{imported}}"
+          }
+        }
+      ]
+    },
+    {
+      "taskId": "{{task-no-description}}",
+      "budgetId": "{{imported}}",
+      "body": "{\"taskType\":\"machining\",\"unitPrice\":\"38.5\",\"quantity\":\"15\"}",
+      "status": 200,
+      "json": {
+        "_id": "{{task-no-description}}",
+        "budgetId": "{{imported}}",
+        "taskType": "machining",
+        "unitPrice": 38.5,
+        "quantity": 15,
+        "__v": 0
+      },
+      "effects": [
+        {
+          "update": null,
+          "_id": {
+            "$oid": "{{task-no-description}}"
+          }
+        },
+        {
+          "update": null,
+          "_id": {
+            "$oid": "{{imported}}"
+          }
+        }
+      ]
+    },
+    {
+      "taskId": "{{task}}",
+      "budgetId": "{{imported}}",
+      "body": "{\"taskType\":\"development\",\"description\":\"Projeto mecânico\",\"unitPrice\":30,\"quantity\":20}",
+      "status": 200,
+      "json": {
+        "_id": "{{task}}",
+        "budgetId": "{{budget}}",
+        "taskType": "development",
+        "description": "Projeto mecânico",
+        "unitPrice": 30,
+        "quantity": 20,
+        "__v": 0
+      },
+      "effects": [
+        {
+          "update": {
+            "$set": {
+              "description": "Projeto mecânico",
+              "quantity": {
+                "$numberInt": "20"
+              },
+              "taskType": "development",
+              "unitPrice": {
+                "$numberInt": "30"
+              }
+            }
+          },
+          "_id": {
+            "$oid": "{{task}}"
+          }
+        },
+        {
+          "update": null,
+          "_id": {
+            "$oid": "{{imported}}"
+          }
+        }
+      ]
+    },
+    {
+      "taskId": "abc",
+      "budgetId": "def",
+      "body": "{\"taskType\":\"development\",\"description\":\"Projeto mecânico\",\"unitPrice\":30,\"quantity\":20}",
+      "status": 400,
+      "text": "\"taskId\" with value \"abc\" fails to match the valid mongo id pattern",
+      "effects": []
+    },
+    {
+      "taskId": "{{task}}",
+      "budgetId": "def",
+      "body": "{\"taskType\":\"development\",\"description\":\"Projeto mecânico\",\"unitPrice\":30,\"quantity\":20}",
+      "status": 400,
+      "text": "\"budgetId\" with value \"def\" fails to match the valid mongo id pattern",
+      "effects": []
+    },
+    {
+      "taskId": "abc",
+      "budgetId": "{{budget}}",
+      "body": "{\"taskType\":\"painting\",\"description\":\"Projeto mecânico\",\"unitPrice\":30,\"quantity\":20}",
+      "status": 400,
+      "text": "\"taskType\" must be one of [automation, consultancy, development, machining, assembly, others, components]",
+      "effects": []
+    },
+    {
+      "taskId": "5F1E9A2B3C4D5E6F70840001",
+      "budgetId": "{{budget}}",
+      "body": "{\"taskType\":\"development\",\"description\":\"Projeto mecânico\",\"unitPrice\":30,\"quantity\":20}",
+      "status": 200,
+      "json": {
+        "_id": "{{task}}",
+        "budgetId": "{{budget}}",
+        "taskType": "development",
+        "description": "Projeto mecânico",
+        "unitPrice": 30,
+        "quantity": 20,
+        "__v": 0
+      },
+      "effects": [
+        {
+          "update": {
+            "$set": {
+              "description": "Projeto mecânico",
+              "quantity": {
+                "$numberInt": "20"
+              },
+              "taskType": "development",
+              "unitPrice": {
+                "$numberInt": "30"
+              }
+            }
+          },
+          "_id": {
+            "$oid": "{{task}}"
+          }
+        },
+        {
+          "update": {
+            "$set": {
+              "complete": false,
+              "wasPdfDownloaded": false
+            }
+          },
+          "_id": {
+            "$oid": "{{budget}}"
+          }
+        }
+      ]
+    },
+    {
+      "taskId": "abcdefghijkl",
+      "budgetId": "{{budget}}",
+      "body": "{\"taskType\":\"development\",\"description\":\"Projeto mecânico\",\"unitPrice\":30,\"quantity\":20}",
+      "status": 400,
+      "text": "\"taskId\" with value \"abcdefghijkl\" fails to match the valid mongo id pattern",
+      "effects": []
+    },
+    {
+      "taskId": "{{missing-task}}",
+      "budgetId": "{{budget}}",
+      "body": "{\"taskType\":\"development\",\"description\":\"Projeto mecânico\",\"unitPrice\":30,\"quantity\":20}",
+      "status": 400,
+      "text": "Tarefa não encontrada",
+      "effects": []
+    },
+    {
+      "taskId": "{{task}}",
+      "budgetId": "{{missing}}",
+      "body": "{\"taskType\":\"development\",\"description\":\"Projeto mecânico\",\"unitPrice\":30,\"quantity\":20}",
+      "status": 400,
+      "text": "Orçamento não existe",
+      "effects": []
+    },
+    {
+      "taskId": "{{missing-task}}",
+      "budgetId": "{{missing}}",
+      "body": "{\"taskType\":\"development\",\"description\":\"Projeto mecânico\",\"unitPrice\":30,\"quantity\":20}",
+      "status": 400,
+      "text": "Tarefa não encontrada",
+      "effects": []
+    },
+    {
+      "taskId": "{{task-job}}",
+      "budgetId": "{{job-budget}}",
+      "body": "{\"taskType\":\"development\",\"description\":\"Projeto mecânico\",\"unitPrice\":30,\"quantity\":20}",
+      "status": 400,
+      "text": "Orçamento gerou obra!",
+      "effects": []
+    }
+  ],
+  "deleteTask": [
+    {
+      "taskId": "{{task}}",
+      "budgetId": "{{budget}}",
+      "status": 200,
+      "json": {
+        "_id": "{{task}}",
+        "budgetId": "{{budget}}",
+        "taskType": "automation",
+        "description": "",
+        "unitPrice": 32.5,
+        "quantity": 1,
+        "__v": 0
+      },
+      "effects": [
+        {
+          "update": {
+            "$set": {
+              "complete": false,
+              "wasPdfDownloaded": false
+            }
+          },
+          "_id": {
+            "$oid": "{{budget}}"
+          }
+        },
+        {
+          "deleteOne": {
+            "_id": {
+              "$oid": "{{task}}"
+            }
+          },
+          "deletedCount": 1
+        }
+      ]
+    },
+    {
+      "taskId": "{{task-no-description}}",
+      "budgetId": "{{imported}}",
+      "status": 200,
+      "json": {
+        "_id": "{{task-no-description}}",
+        "budgetId": "{{imported}}",
+        "taskType": "machining",
+        "unitPrice": 38.5,
+        "quantity": 15,
+        "__v": 0
+      },
+      "effects": [
+        {
+          "update": null,
+          "_id": {
+            "$oid": "{{imported}}"
+          }
+        },
+        {
+          "deleteOne": {
+            "_id": {
+              "$oid": "{{task-no-description}}"
+            }
+          },
+          "deletedCount": 1
+        }
+      ]
+    },
+    {
+      "taskId": "{{task}}",
+      "budgetId": "{{imported}}",
+      "status": 200,
+      "json": {
+        "_id": "{{task}}",
+        "budgetId": "{{budget}}",
+        "taskType": "automation",
+        "description": "",
+        "unitPrice": 32.5,
+        "quantity": 1,
+        "__v": 0
+      },
+      "effects": [
+        {
+          "update": null,
+          "_id": {
+            "$oid": "{{imported}}"
+          }
+        },
+        {
+          "deleteOne": {
+            "_id": {
+              "$oid": "{{task}}"
+            }
+          },
+          "deletedCount": 1
+        }
+      ]
+    },
+    {
+      "taskId": "abc",
+      "budgetId": "{{budget}}",
+      "status": 400,
+      "text": "\"taskId\" with value \"abc\" fails to match the valid mongo id pattern",
+      "effects": []
+    },
+    {
+      "taskId": "{{task}}",
+      "budgetId": "abc",
+      "status": 400,
+      "text": "\"budgetId\" with value \"abc\" fails to match the valid mongo id pattern",
+      "effects": []
+    },
+    {
+      "taskId": "{{task}}",
+      "budgetId": "{{missing}}",
+      "status": 400,
+      "text": "Orçamento não existe",
+      "effects": []
+    },
+    {
+      "taskId": "{{task-job}}",
+      "budgetId": "{{job-budget}}",
+      "status": 400,
+      "text": "Orçamento gerou obra!",
+      "effects": []
+    },
+    {
+      "taskId": "{{missing-task}}",
+      "budgetId": "{{budget}}",
+      "status": 500,
+      "text": "Erro no servidor",
+      "effects": [
+        {
+          "update": {
+            "$set": {
+              "complete": false,
+              "wasPdfDownloaded": false
+            }
+          },
+          "_id": {
+            "$oid": "{{budget}}"
+          }
+        },
+        {
+          "deleteOne": {
+            "_id": {
+              "$oid": "{{missing-task}}"
+            }
+          },
+          "deletedCount": 0
+        }
+      ]
+    }
+  ],
+  "patch": [
+    {
+      "budgetId": "{{budget}}",
+      "body": "{\"propertyName\":\"description\",\"value\":\"Fornecimento conforme especificação.\\nInclui montagem e ensaios.\"}",
+      "status": 200,
+      "json": {
+        "revision": 0,
+        "complete": false,
+        "wasPdfDownloaded": false,
+        "margin": 35,
+        "daysNeededToDoTheWork": 60,
+        "validity": 30,
+        "hasGenerateJob": false,
+        "_id": "{{budget}}",
+        "client": {
+          "_id": "{{client}}",
+          "name": "Metalúrgica Exemplo, Lda.",
+          "fiscalNumber": "509999990",
+          "address": "Rua das Flores, 12",
+          "zipCode": "4000-123",
+          "location": "Porto",
+          "paymentCondition": "30 dias",
+          "type": "Cliente",
+          "__v": 0
+        },
+        "descriptive": "Máquina de corte",
+        "personInCharge": "Eng.ª Maria",
+        "madeBy": {
+          "roles": [
+            "canSeeOrcamentos",
+            null,
+            "canSeeDefinicoes"
+          ],
+          "fieldOfCompetencies": "Desenvolvimento",
+          "_id": "{{user}}",
+          "name": "Ana Administradora",
+          "email": "ana.admin@dib4t.local",
+          "password": "$2a$10$abcdefghijklmnopqrstuuabcdefghijklmnopqrstuvwxyz01234",
+          "__v": 0
+        },
+        "budgetNumber": "26-0007",
+        "paymentMethod": "30 dias",
+        "total": 43.5,
+        "date": "2026-02-01T09:00:00.000Z",
+        "__v": 0,
+        "description": "Fornecimento conforme especificação.\nInclui montagem e ensaios."
+      },
+      "effects": [
+        {
+          "update": {
+            "$set": {
+              "complete": false,
+              "description": "Fornecimento conforme especificação.\nInclui montagem e ensaios.",
+              "wasPdfDownloaded": false
+            }
+          },
+          "_id": {
+            "$oid": "{{budget}}"
+          }
+        }
+      ]
+    },
+    {
+      "budgetId": "{{budget}}",
+      "body": "{\"propertyName\":\"description\",\"value\":\"Fornecimento conforme especificação.\"}",
+      "status": 200,
+      "json": {
+        "revision": 0,
+        "complete": false,
+        "wasPdfDownloaded": false,
+        "margin": 35,
+        "daysNeededToDoTheWork": 60,
+        "validity": 30,
+        "hasGenerateJob": false,
+        "_id": "{{budget}}",
+        "client": {
+          "_id": "{{client}}",
+          "name": "Metalúrgica Exemplo, Lda.",
+          "fiscalNumber": "509999990",
+          "address": "Rua das Flores, 12",
+          "zipCode": "4000-123",
+          "location": "Porto",
+          "paymentCondition": "30 dias",
+          "type": "Cliente",
+          "__v": 0
+        },
+        "descriptive": "Máquina de corte",
+        "personInCharge": "Eng.ª Maria",
+        "madeBy": {
+          "roles": [
+            "canSeeOrcamentos",
+            null,
+            "canSeeDefinicoes"
+          ],
+          "fieldOfCompetencies": "Desenvolvimento",
+          "_id": "{{user}}",
+          "name": "Ana Administradora",
+          "email": "ana.admin@dib4t.local",
+          "password": "$2a$10$abcdefghijklmnopqrstuuabcdefghijklmnopqrstuvwxyz01234",
+          "__v": 0
+        },
+        "budgetNumber": "26-0007",
+        "paymentMethod": "30 dias",
+        "total": 43.5,
+        "date": "2026-02-01T09:00:00.000Z",
+        "__v": 0,
+        "description": "Fornecimento conforme especificação."
+      },
+      "effects": [
+        {
+          "update": {
+            "$set": {
+              "complete": false,
+              "wasPdfDownloaded": false
+            }
+          },
+          "_id": {
+            "$oid": "{{budget}}"
+          }
+        }
+      ]
+    },
+    {
+      "budgetId": "{{budget}}",
+      "body": "{\"propertyName\":\"description\",\"value\":\" \"}",
+      "status": 200,
+      "json": {
+        "revision": 0,
+        "complete": false,
+        "wasPdfDownloaded": false,
+        "margin": 35,
+        "daysNeededToDoTheWork": 60,
+        "validity": 30,
+        "hasGenerateJob": false,
+        "_id": "{{budget}}",
+        "client": {
+          "_id": "{{client}}",
+          "name": "Metalúrgica Exemplo, Lda.",
+          "fiscalNumber": "509999990",
+          "address": "Rua das Flores, 12",
+          "zipCode": "4000-123",
+          "location": "Porto",
+          "paymentCondition": "30 dias",
+          "type": "Cliente",
+          "__v": 0
+        },
+        "descriptive": "Máquina de corte",
+        "personInCharge": "Eng.ª Maria",
+        "madeBy": {
+          "roles": [
+            "canSeeOrcamentos",
+            null,
+            "canSeeDefinicoes"
+          ],
+          "fieldOfCompetencies": "Desenvolvimento",
+          "_id": "{{user}}",
+          "name": "Ana Administradora",
+          "email": "ana.admin@dib4t.local",
+          "password": "$2a$10$abcdefghijklmnopqrstuuabcdefghijklmnopqrstuvwxyz01234",
+          "__v": 0
+        },
+        "budgetNumber": "26-0007",
+        "paymentMethod": "30 dias",
+        "total": 43.5,
+        "date": "2026-02-01T09:00:00.000Z",
+        "__v": 0,
+        "description": " "
+      },
+      "effects": [
+        {
+          "update": {
+            "$set": {
+              "complete": false,
+              "description": " ",
+              "wasPdfDownloaded": false
+            }
+          },
+          "_id": {
+            "$oid": "{{budget}}"
+          }
+        }
+      ]
+    },
+    {
+      "budgetId": "{{budget}}",
+      "body": "{\"propertyName\":\"description\",\"value\":\"Máquina\"}",
+      "status": 200,
+      "json": {
+        "revision": 0,
+        "complete": false,
+        "wasPdfDownloaded": false,
+        "margin": 35,
+        "daysNeededToDoTheWork": 60,
+        "validity": 30,
+        "hasGenerateJob": false,
+        "_id": "{{budget}}",
+        "client": {
+          "_id": "{{client}}",
+          "name": "Metalúrgica Exemplo, Lda.",
+          "fiscalNumber": "509999990",
+          "address": "Rua das Flores, 12",
+          "zipCode": "4000-123",
+          "location": "Porto",
+          "paymentCondition": "30 dias",
+          "type": "Cliente",
+          "__v": 0
+        },
+        "descriptive": "Máquina de corte",
+        "personInCharge": "Eng.ª Maria",
+        "madeBy": {
+          "roles": [
+            "canSeeOrcamentos",
+            null,
+            "canSeeDefinicoes"
+          ],
+          "fieldOfCompetencies": "Desenvolvimento",
+          "_id": "{{user}}",
+          "name": "Ana Administradora",
+          "email": "ana.admin@dib4t.local",
+          "password": "$2a$10$abcdefghijklmnopqrstuuabcdefghijklmnopqrstuvwxyz01234",
+          "__v": 0
+        },
+        "budgetNumber": "26-0007",
+        "paymentMethod": "30 dias",
+        "total": 43.5,
+        "date": "2026-02-01T09:00:00.000Z",
+        "__v": 0,
+        "description": "Máquina"
+      },
+      "effects": [
+        {
+          "update": {
+            "$set": {
+              "complete": false,
+              "description": "Máquina",
+              "wasPdfDownloaded": false
+            }
+          },
+          "_id": {
+            "$oid": "{{budget}}"
+          }
+        }
+      ]
+    },
+    {
+      "budgetId": "{{budget}}",
+      "body": "{\"propertyName\":\"daysNeededToDoTheWork\",\"value\":45}",
+      "status": 200,
+      "json": {
+        "revision": 0,
+        "complete": false,
+        "wasPdfDownloaded": false,
+        "margin": 35,
+        "daysNeededToDoTheWork": 45,
+        "validity": 30,
+        "hasGenerateJob": false,
+        "_id": "{{budget}}",
+        "client": {
+          "_id": "{{client}}",
+          "name": "Metalúrgica Exemplo, Lda.",
+          "fiscalNumber": "509999990",
+          "address": "Rua das Flores, 12",
+          "zipCode": "4000-123",
+          "location": "Porto",
+          "paymentCondition": "30 dias",
+          "type": "Cliente",
+          "__v": 0
+        },
+        "descriptive": "Máquina de corte",
+        "personInCharge": "Eng.ª Maria",
+        "madeBy": {
+          "roles": [
+            "canSeeOrcamentos",
+            null,
+            "canSeeDefinicoes"
+          ],
+          "fieldOfCompetencies": "Desenvolvimento",
+          "_id": "{{user}}",
+          "name": "Ana Administradora",
+          "email": "ana.admin@dib4t.local",
+          "password": "$2a$10$abcdefghijklmnopqrstuuabcdefghijklmnopqrstuvwxyz01234",
+          "__v": 0
+        },
+        "budgetNumber": "26-0007",
+        "paymentMethod": "30 dias",
+        "total": 43.5,
+        "date": "2026-02-01T09:00:00.000Z",
+        "__v": 0,
+        "description": "Fornecimento conforme especificação."
+      },
+      "effects": [
+        {
+          "update": {
+            "$set": {
+              "complete": false,
+              "daysNeededToDoTheWork": {
+                "$numberInt": "45"
+              },
+              "wasPdfDownloaded": false
+            }
+          },
+          "_id": {
+            "$oid": "{{budget}}"
+          }
+        }
+      ]
+    },
+    {
+      "budgetId": "{{budget}}",
+      "body": "{\"propertyName\":\"daysNeededToDoTheWork\",\"value\":0}",
+      "status": 200,
+      "json": {
+        "revision": 0,
+        "complete": false,
+        "wasPdfDownloaded": false,
+        "margin": 35,
+        "daysNeededToDoTheWork": 0,
+        "validity": 30,
+        "hasGenerateJob": false,
+        "_id": "{{budget}}",
+        "client": {
+          "_id": "{{client}}",
+          "name": "Metalúrgica Exemplo, Lda.",
+          "fiscalNumber": "509999990",
+          "address": "Rua das Flores, 12",
+          "zipCode": "4000-123",
+          "location": "Porto",
+          "paymentCondition": "30 dias",
+          "type": "Cliente",
+          "__v": 0
+        },
+        "descriptive": "Máquina de corte",
+        "personInCharge": "Eng.ª Maria",
+        "madeBy": {
+          "roles": [
+            "canSeeOrcamentos",
+            null,
+            "canSeeDefinicoes"
+          ],
+          "fieldOfCompetencies": "Desenvolvimento",
+          "_id": "{{user}}",
+          "name": "Ana Administradora",
+          "email": "ana.admin@dib4t.local",
+          "password": "$2a$10$abcdefghijklmnopqrstuuabcdefghijklmnopqrstuvwxyz01234",
+          "__v": 0
+        },
+        "budgetNumber": "26-0007",
+        "paymentMethod": "30 dias",
+        "total": 43.5,
+        "date": "2026-02-01T09:00:00.000Z",
+        "__v": 0,
+        "description": "Fornecimento conforme especificação."
+      },
+      "effects": [
+        {
+          "update": {
+            "$set": {
+              "complete": false,
+              "daysNeededToDoTheWork": {
+                "$numberInt": "0"
+              },
+              "wasPdfDownloaded": false
+            }
+          },
+          "_id": {
+            "$oid": "{{budget}}"
+          }
+        }
+      ]
+    },
+    {
+      "budgetId": "{{budget}}",
+      "body": "{\"propertyName\":\"daysNeededToDoTheWork\",\"value\":7.5}",
+      "status": 200,
+      "json": {
+        "revision": 0,
+        "complete": false,
+        "wasPdfDownloaded": false,
+        "margin": 35,
+        "daysNeededToDoTheWork": 7.5,
+        "validity": 30,
+        "hasGenerateJob": false,
+        "_id": "{{budget}}",
+        "client": {
+          "_id": "{{client}}",
+          "name": "Metalúrgica Exemplo, Lda.",
+          "fiscalNumber": "509999990",
+          "address": "Rua das Flores, 12",
+          "zipCode": "4000-123",
+          "location": "Porto",
+          "paymentCondition": "30 dias",
+          "type": "Cliente",
+          "__v": 0
+        },
+        "descriptive": "Máquina de corte",
+        "personInCharge": "Eng.ª Maria",
+        "madeBy": {
+          "roles": [
+            "canSeeOrcamentos",
+            null,
+            "canSeeDefinicoes"
+          ],
+          "fieldOfCompetencies": "Desenvolvimento",
+          "_id": "{{user}}",
+          "name": "Ana Administradora",
+          "email": "ana.admin@dib4t.local",
+          "password": "$2a$10$abcdefghijklmnopqrstuuabcdefghijklmnopqrstuvwxyz01234",
+          "__v": 0
+        },
+        "budgetNumber": "26-0007",
+        "paymentMethod": "30 dias",
+        "total": 43.5,
+        "date": "2026-02-01T09:00:00.000Z",
+        "__v": 0,
+        "description": "Fornecimento conforme especificação."
+      },
+      "effects": [
+        {
+          "update": {
+            "$set": {
+              "complete": false,
+              "daysNeededToDoTheWork": {
+                "$numberDouble": "7.5"
+              },
+              "wasPdfDownloaded": false
+            }
+          },
+          "_id": {
+            "$oid": "{{budget}}"
+          }
+        }
+      ]
+    },
+    {
+      "budgetId": "{{budget}}",
+      "body": "{\"propertyName\":\"daysNeededToDoTheWork\",\"value\":\"45\"}",
+      "status": 200,
+      "json": {
+        "revision": 0,
+        "complete": false,
+        "wasPdfDownloaded": false,
+        "margin": 35,
+        "daysNeededToDoTheWork": 45,
+        "validity": 30,
+        "hasGenerateJob": false,
+        "_id": "{{budget}}",
+        "client": {
+          "_id": "{{client}}",
+          "name": "Metalúrgica Exemplo, Lda.",
+          "fiscalNumber": "509999990",
+          "address": "Rua das Flores, 12",
+          "zipCode": "4000-123",
+          "location": "Porto",
+          "paymentCondition": "30 dias",
+          "type": "Cliente",
+          "__v": 0
+        },
+        "descriptive": "Máquina de corte",
+        "personInCharge": "Eng.ª Maria",
+        "madeBy": {
+          "roles": [
+            "canSeeOrcamentos",
+            null,
+            "canSeeDefinicoes"
+          ],
+          "fieldOfCompetencies": "Desenvolvimento",
+          "_id": "{{user}}",
+          "name": "Ana Administradora",
+          "email": "ana.admin@dib4t.local",
+          "password": "$2a$10$abcdefghijklmnopqrstuuabcdefghijklmnopqrstuvwxyz01234",
+          "__v": 0
+        },
+        "budgetNumber": "26-0007",
+        "paymentMethod": "30 dias",
+        "total": 43.5,
+        "date": "2026-02-01T09:00:00.000Z",
+        "__v": 0,
+        "description": "Fornecimento conforme especificação."
+      },
+      "effects": [
+        {
+          "update": {
+            "$set": {
+              "complete": false,
+              "daysNeededToDoTheWork": {
+                "$numberInt": "45"
+              },
+              "wasPdfDownloaded": false
+            }
+          },
+          "_id": {
+            "$oid": "{{budget}}"
+          }
+        }
+      ]
+    },
+    {
+      "budgetId": "{{budget}}",
+      "body": "{\"propertyName\":\"validity\",\"value\":60}",
+      "status": 200,
+      "json": {
+        "revision": 0,
+        "complete": false,
+        "wasPdfDownloaded": false,
+        "margin": 35,
+        "daysNeededToDoTheWork": 60,
+        "validity": 60,
+        "hasGenerateJob": false,
+        "_id": "{{budget}}",
+        "client": {
+          "_id": "{{client}}",
+          "name": "Metalúrgica Exemplo, Lda.",
+          "fiscalNumber": "509999990",
+          "address": "Rua das Flores, 12",
+          "zipCode": "4000-123",
+          "location": "Porto",
+          "paymentCondition": "30 dias",
+          "type": "Cliente",
+          "__v": 0
+        },
+        "descriptive": "Máquina de corte",
+        "personInCharge": "Eng.ª Maria",
+        "madeBy": {
+          "roles": [
+            "canSeeOrcamentos",
+            null,
+            "canSeeDefinicoes"
+          ],
+          "fieldOfCompetencies": "Desenvolvimento",
+          "_id": "{{user}}",
+          "name": "Ana Administradora",
+          "email": "ana.admin@dib4t.local",
+          "password": "$2a$10$abcdefghijklmnopqrstuuabcdefghijklmnopqrstuvwxyz01234",
+          "__v": 0
+        },
+        "budgetNumber": "26-0007",
+        "paymentMethod": "30 dias",
+        "total": 43.5,
+        "date": "2026-02-01T09:00:00.000Z",
+        "__v": 0,
+        "description": "Fornecimento conforme especificação."
+      },
+      "effects": [
+        {
+          "update": {
+            "$set": {
+              "complete": false,
+              "validity": {
+                "$numberInt": "60"
+              },
+              "wasPdfDownloaded": false
+            }
+          },
+          "_id": {
+            "$oid": "{{budget}}"
+          }
+        }
+      ]
+    },
+    {
+      "budgetId": "{{budget}}",
+      "body": "{\"propertyName\":\"validity\",\"value\":\"60\"}",
+      "status": 200,
+      "json": {
+        "revision": 0,
+        "complete": false,
+        "wasPdfDownloaded": false,
+        "margin": 35,
+        "daysNeededToDoTheWork": 60,
+        "validity": 60,
+        "hasGenerateJob": false,
+        "_id": "{{budget}}",
+        "client": {
+          "_id": "{{client}}",
+          "name": "Metalúrgica Exemplo, Lda.",
+          "fiscalNumber": "509999990",
+          "address": "Rua das Flores, 12",
+          "zipCode": "4000-123",
+          "location": "Porto",
+          "paymentCondition": "30 dias",
+          "type": "Cliente",
+          "__v": 0
+        },
+        "descriptive": "Máquina de corte",
+        "personInCharge": "Eng.ª Maria",
+        "madeBy": {
+          "roles": [
+            "canSeeOrcamentos",
+            null,
+            "canSeeDefinicoes"
+          ],
+          "fieldOfCompetencies": "Desenvolvimento",
+          "_id": "{{user}}",
+          "name": "Ana Administradora",
+          "email": "ana.admin@dib4t.local",
+          "password": "$2a$10$abcdefghijklmnopqrstuuabcdefghijklmnopqrstuvwxyz01234",
+          "__v": 0
+        },
+        "budgetNumber": "26-0007",
+        "paymentMethod": "30 dias",
+        "total": 43.5,
+        "date": "2026-02-01T09:00:00.000Z",
+        "__v": 0,
+        "description": "Fornecimento conforme especificação."
+      },
+      "effects": [
+        {
+          "update": {
+            "$set": {
+              "complete": false,
+              "validity": {
+                "$numberInt": "60"
+              },
+              "wasPdfDownloaded": false
+            }
+          },
+          "_id": {
+            "$oid": "{{budget}}"
+          }
+        }
+      ]
+    },
+    {
+      "budgetId": "{{budget}}",
+      "body": "{\"propertyName\":\"validity\",\"value\":1}",
+      "status": 200,
+      "json": {
+        "revision": 0,
+        "complete": false,
+        "wasPdfDownloaded": false,
+        "margin": 35,
+        "daysNeededToDoTheWork": 60,
+        "validity": 1,
+        "hasGenerateJob": false,
+        "_id": "{{budget}}",
+        "client": {
+          "_id": "{{client}}",
+          "name": "Metalúrgica Exemplo, Lda.",
+          "fiscalNumber": "509999990",
+          "address": "Rua das Flores, 12",
+          "zipCode": "4000-123",
+          "location": "Porto",
+          "paymentCondition": "30 dias",
+          "type": "Cliente",
+          "__v": 0
+        },
+        "descriptive": "Máquina de corte",
+        "personInCharge": "Eng.ª Maria",
+        "madeBy": {
+          "roles": [
+            "canSeeOrcamentos",
+            null,
+            "canSeeDefinicoes"
+          ],
+          "fieldOfCompetencies": "Desenvolvimento",
+          "_id": "{{user}}",
+          "name": "Ana Administradora",
+          "email": "ana.admin@dib4t.local",
+          "password": "$2a$10$abcdefghijklmnopqrstuuabcdefghijklmnopqrstuvwxyz01234",
+          "__v": 0
+        },
+        "budgetNumber": "26-0007",
+        "paymentMethod": "30 dias",
+        "total": 43.5,
+        "date": "2026-02-01T09:00:00.000Z",
+        "__v": 0,
+        "description": "Fornecimento conforme especificação."
+      },
+      "effects": [
+        {
+          "update": {
+            "$set": {
+              "complete": false,
+              "validity": {
+                "$numberInt": "1"
+              },
+              "wasPdfDownloaded": false
+            }
+          },
+          "_id": {
+            "$oid": "{{budget}}"
+          }
+        }
+      ]
+    },
+    {
+      "budgetId": "{{budget}}",
+      "body": "{\"propertyName\":\"total\",\"value\":12345.67}",
+      "status": 200,
+      "json": {
+        "revision": 0,
+        "complete": false,
+        "wasPdfDownloaded": false,
+        "margin": 35,
+        "daysNeededToDoTheWork": 60,
+        "validity": 30,
+        "hasGenerateJob": false,
+        "_id": "{{budget}}",
+        "client": {
+          "_id": "{{client}}",
+          "name": "Metalúrgica Exemplo, Lda.",
+          "fiscalNumber": "509999990",
+          "address": "Rua das Flores, 12",
+          "zipCode": "4000-123",
+          "location": "Porto",
+          "paymentCondition": "30 dias",
+          "type": "Cliente",
+          "__v": 0
+        },
+        "descriptive": "Máquina de corte",
+        "personInCharge": "Eng.ª Maria",
+        "madeBy": {
+          "roles": [
+            "canSeeOrcamentos",
+            null,
+            "canSeeDefinicoes"
+          ],
+          "fieldOfCompetencies": "Desenvolvimento",
+          "_id": "{{user}}",
+          "name": "Ana Administradora",
+          "email": "ana.admin@dib4t.local",
+          "password": "$2a$10$abcdefghijklmnopqrstuuabcdefghijklmnopqrstuvwxyz01234",
+          "__v": 0
+        },
+        "budgetNumber": "26-0007",
+        "paymentMethod": "30 dias",
+        "total": 12345.67,
+        "date": "2026-02-01T09:00:00.000Z",
+        "__v": 0,
+        "description": "Fornecimento conforme especificação."
+      },
+      "effects": [
+        {
+          "update": {
+            "$set": {
+              "complete": false,
+              "total": {
+                "$numberDouble": "12345.67"
+              },
+              "wasPdfDownloaded": false
+            }
+          },
+          "_id": {
+            "$oid": "{{budget}}"
+          }
+        }
+      ]
+    },
+    {
+      "budgetId": "{{budget}}",
+      "body": "{\"propertyName\":\"total\",\"value\":\"999\"}",
+      "status": 200,
+      "json": {
+        "revision": 0,
+        "complete": false,
+        "wasPdfDownloaded": false,
+        "margin": 35,
+        "daysNeededToDoTheWork": 60,
+        "validity": 30,
+        "hasGenerateJob": false,
+        "_id": "{{budget}}",
+        "client": {
+          "_id": "{{client}}",
+          "name": "Metalúrgica Exemplo, Lda.",
+          "fiscalNumber": "509999990",
+          "address": "Rua das Flores, 12",
+          "zipCode": "4000-123",
+          "location": "Porto",
+          "paymentCondition": "30 dias",
+          "type": "Cliente",
+          "__v": 0
+        },
+        "descriptive": "Máquina de corte",
+        "personInCharge": "Eng.ª Maria",
+        "madeBy": {
+          "roles": [
+            "canSeeOrcamentos",
+            null,
+            "canSeeDefinicoes"
+          ],
+          "fieldOfCompetencies": "Desenvolvimento",
+          "_id": "{{user}}",
+          "name": "Ana Administradora",
+          "email": "ana.admin@dib4t.local",
+          "password": "$2a$10$abcdefghijklmnopqrstuuabcdefghijklmnopqrstuvwxyz01234",
+          "__v": 0
+        },
+        "budgetNumber": "26-0007",
+        "paymentMethod": "30 dias",
+        "total": 999,
+        "date": "2026-02-01T09:00:00.000Z",
+        "__v": 0,
+        "description": "Fornecimento conforme especificação."
+      },
+      "effects": [
+        {
+          "update": {
+            "$set": {
+              "complete": false,
+              "total": {
+                "$numberInt": "999"
+              },
+              "wasPdfDownloaded": false
+            }
+          },
+          "_id": {
+            "$oid": "{{budget}}"
+          }
+        }
+      ]
+    },
+    {
+      "budgetId": "{{budget}}",
+      "body": "{\"propertyName\":\"total\",\"value\":\"1234.50\"}",
+      "status": 200,
+      "json": {
+        "revision": 0,
+        "complete": false,
+        "wasPdfDownloaded": false,
+        "margin": 35,
+        "daysNeededToDoTheWork": 60,
+        "validity": 30,
+        "hasGenerateJob": false,
+        "_id": "{{budget}}",
+        "client": {
+          "_id": "{{client}}",
+          "name": "Metalúrgica Exemplo, Lda.",
+          "fiscalNumber": "509999990",
+          "address": "Rua das Flores, 12",
+          "zipCode": "4000-123",
+          "location": "Porto",
+          "paymentCondition": "30 dias",
+          "type": "Cliente",
+          "__v": 0
+        },
+        "descriptive": "Máquina de corte",
+        "personInCharge": "Eng.ª Maria",
+        "madeBy": {
+          "roles": [
+            "canSeeOrcamentos",
+            null,
+            "canSeeDefinicoes"
+          ],
+          "fieldOfCompetencies": "Desenvolvimento",
+          "_id": "{{user}}",
+          "name": "Ana Administradora",
+          "email": "ana.admin@dib4t.local",
+          "password": "$2a$10$abcdefghijklmnopqrstuuabcdefghijklmnopqrstuvwxyz01234",
+          "__v": 0
+        },
+        "budgetNumber": "26-0007",
+        "paymentMethod": "30 dias",
+        "total": 1234.5,
+        "date": "2026-02-01T09:00:00.000Z",
+        "__v": 0,
+        "description": "Fornecimento conforme especificação."
+      },
+      "effects": [
+        {
+          "update": {
+            "$set": {
+              "complete": false,
+              "total": {
+                "$numberDouble": "1234.5"
+              },
+              "wasPdfDownloaded": false
+            }
+          },
+          "_id": {
+            "$oid": "{{budget}}"
+          }
+        }
+      ]
+    },
+    {
+      "budgetId": "{{budget}}",
+      "body": "{\"propertyName\":\"total\",\"value\":\" 7 \"}",
+      "status": 200,
+      "json": {
+        "revision": 0,
+        "complete": false,
+        "wasPdfDownloaded": false,
+        "margin": 35,
+        "daysNeededToDoTheWork": 60,
+        "validity": 30,
+        "hasGenerateJob": false,
+        "_id": "{{budget}}",
+        "client": {
+          "_id": "{{client}}",
+          "name": "Metalúrgica Exemplo, Lda.",
+          "fiscalNumber": "509999990",
+          "address": "Rua das Flores, 12",
+          "zipCode": "4000-123",
+          "location": "Porto",
+          "paymentCondition": "30 dias",
+          "type": "Cliente",
+          "__v": 0
+        },
+        "descriptive": "Máquina de corte",
+        "personInCharge": "Eng.ª Maria",
+        "madeBy": {
+          "roles": [
+            "canSeeOrcamentos",
+            null,
+            "canSeeDefinicoes"
+          ],
+          "fieldOfCompetencies": "Desenvolvimento",
+          "_id": "{{user}}",
+          "name": "Ana Administradora",
+          "email": "ana.admin@dib4t.local",
+          "password": "$2a$10$abcdefghijklmnopqrstuuabcdefghijklmnopqrstuvwxyz01234",
+          "__v": 0
+        },
+        "budgetNumber": "26-0007",
+        "paymentMethod": "30 dias",
+        "total": 7,
+        "date": "2026-02-01T09:00:00.000Z",
+        "__v": 0,
+        "description": "Fornecimento conforme especificação."
+      },
+      "effects": [
+        {
+          "update": {
+            "$set": {
+              "complete": false,
+              "total": {
+                "$numberInt": "7"
+              },
+              "wasPdfDownloaded": false
+            }
+          },
+          "_id": {
+            "$oid": "{{budget}}"
+          }
+        }
+      ]
+    },
+    {
+      "budgetId": "{{budget}}",
+      "body": "{\"propertyName\":\"total\",\"value\":0}",
+      "status": 200,
+      "json": {
+        "revision": 0,
+        "complete": false,
+        "wasPdfDownloaded": false,
+        "margin": 35,
+        "daysNeededToDoTheWork": 60,
+        "validity": 30,
+        "hasGenerateJob": false,
+        "_id": "{{budget}}",
+        "client": {
+          "_id": "{{client}}",
+          "name": "Metalúrgica Exemplo, Lda.",
+          "fiscalNumber": "509999990",
+          "address": "Rua das Flores, 12",
+          "zipCode": "4000-123",
+          "location": "Porto",
+          "paymentCondition": "30 dias",
+          "type": "Cliente",
+          "__v": 0
+        },
+        "descriptive": "Máquina de corte",
+        "personInCharge": "Eng.ª Maria",
+        "madeBy": {
+          "roles": [
+            "canSeeOrcamentos",
+            null,
+            "canSeeDefinicoes"
+          ],
+          "fieldOfCompetencies": "Desenvolvimento",
+          "_id": "{{user}}",
+          "name": "Ana Administradora",
+          "email": "ana.admin@dib4t.local",
+          "password": "$2a$10$abcdefghijklmnopqrstuuabcdefghijklmnopqrstuvwxyz01234",
+          "__v": 0
+        },
+        "budgetNumber": "26-0007",
+        "paymentMethod": "30 dias",
+        "total": 0,
+        "date": "2026-02-01T09:00:00.000Z",
+        "__v": 0,
+        "description": "Fornecimento conforme especificação."
+      },
+      "effects": [
+        {
+          "update": {
+            "$set": {
+              "complete": false,
+              "total": {
+                "$numberInt": "0"
+              },
+              "wasPdfDownloaded": false
+            }
+          },
+          "_id": {
+            "$oid": "{{budget}}"
+          }
+        }
+      ]
+    },
+    {
+      "budgetId": "{{budget}}",
+      "body": "{\"propertyName\":\"total\",\"value\":43.5}",
+      "status": 200,
+      "json": {
+        "revision": 0,
+        "complete": false,
+        "wasPdfDownloaded": false,
+        "margin": 35,
+        "daysNeededToDoTheWork": 60,
+        "validity": 30,
+        "hasGenerateJob": false,
+        "_id": "{{budget}}",
+        "client": {
+          "_id": "{{client}}",
+          "name": "Metalúrgica Exemplo, Lda.",
+          "fiscalNumber": "509999990",
+          "address": "Rua das Flores, 12",
+          "zipCode": "4000-123",
+          "location": "Porto",
+          "paymentCondition": "30 dias",
+          "type": "Cliente",
+          "__v": 0
+        },
+        "descriptive": "Máquina de corte",
+        "personInCharge": "Eng.ª Maria",
+        "madeBy": {
+          "roles": [
+            "canSeeOrcamentos",
+            null,
+            "canSeeDefinicoes"
+          ],
+          "fieldOfCompetencies": "Desenvolvimento",
+          "_id": "{{user}}",
+          "name": "Ana Administradora",
+          "email": "ana.admin@dib4t.local",
+          "password": "$2a$10$abcdefghijklmnopqrstuuabcdefghijklmnopqrstuvwxyz01234",
+          "__v": 0
+        },
+        "budgetNumber": "26-0007",
+        "paymentMethod": "30 dias",
+        "total": 43.5,
+        "date": "2026-02-01T09:00:00.000Z",
+        "__v": 0,
+        "description": "Fornecimento conforme especificação."
+      },
+      "effects": [
+        {
+          "update": {
+            "$set": {
+              "complete": false,
+              "wasPdfDownloaded": false
+            }
+          },
+          "_id": {
+            "$oid": "{{budget}}"
+          }
+        }
+      ]
+    },
+    {
+      "budgetId": "{{budget}}",
+      "body": "{\"propertyName\":\"total\",\"value\":\"1e3\"}",
+      "status": 200,
+      "json": {
+        "revision": 0,
+        "complete": false,
+        "wasPdfDownloaded": false,
+        "margin": 35,
+        "daysNeededToDoTheWork": 60,
+        "validity": 30,
+        "hasGenerateJob": false,
+        "_id": "{{budget}}",
+        "client": {
+          "_id": "{{client}}",
+          "name": "Metalúrgica Exemplo, Lda.",
+          "fiscalNumber": "509999990",
+          "address": "Rua das Flores, 12",
+          "zipCode": "4000-123",
+          "location": "Porto",
+          "paymentCondition": "30 dias",
+          "type": "Cliente",
+          "__v": 0
+        },
+        "descriptive": "Máquina de corte",
+        "personInCharge": "Eng.ª Maria",
+        "madeBy": {
+          "roles": [
+            "canSeeOrcamentos",
+            null,
+            "canSeeDefinicoes"
+          ],
+          "fieldOfCompetencies": "Desenvolvimento",
+          "_id": "{{user}}",
+          "name": "Ana Administradora",
+          "email": "ana.admin@dib4t.local",
+          "password": "$2a$10$abcdefghijklmnopqrstuuabcdefghijklmnopqrstuvwxyz01234",
+          "__v": 0
+        },
+        "budgetNumber": "26-0007",
+        "paymentMethod": "30 dias",
+        "total": 1000,
+        "date": "2026-02-01T09:00:00.000Z",
+        "__v": 0,
+        "description": "Fornecimento conforme especificação."
+      },
+      "effects": [
+        {
+          "update": {
+            "$set": {
+              "complete": false,
+              "total": {
+                "$numberInt": "1000"
+              },
+              "wasPdfDownloaded": false
+            }
+          },
+          "_id": {
+            "$oid": "{{budget}}"
+          }
+        }
+      ]
+    },
+    {
+      "budgetId": "{{budget}}",
+      "body": "{\"propertyName\":\"margin\",\"value\":25}",
+      "status": 200,
+      "json": {
+        "revision": 0,
+        "complete": false,
+        "wasPdfDownloaded": false,
+        "margin": 25,
+        "daysNeededToDoTheWork": 60,
+        "validity": 30,
+        "hasGenerateJob": false,
+        "_id": "{{budget}}",
+        "client": {
+          "_id": "{{client}}",
+          "name": "Metalúrgica Exemplo, Lda.",
+          "fiscalNumber": "509999990",
+          "address": "Rua das Flores, 12",
+          "zipCode": "4000-123",
+          "location": "Porto",
+          "paymentCondition": "30 dias",
+          "type": "Cliente",
+          "__v": 0
+        },
+        "descriptive": "Máquina de corte",
+        "personInCharge": "Eng.ª Maria",
+        "madeBy": {
+          "roles": [
+            "canSeeOrcamentos",
+            null,
+            "canSeeDefinicoes"
+          ],
+          "fieldOfCompetencies": "Desenvolvimento",
+          "_id": "{{user}}",
+          "name": "Ana Administradora",
+          "email": "ana.admin@dib4t.local",
+          "password": "$2a$10$abcdefghijklmnopqrstuuabcdefghijklmnopqrstuvwxyz01234",
+          "__v": 0
+        },
+        "budgetNumber": "26-0007",
+        "paymentMethod": "30 dias",
+        "total": 43.5,
+        "date": "2026-02-01T09:00:00.000Z",
+        "__v": 0,
+        "description": "Fornecimento conforme especificação."
+      },
+      "effects": [
+        {
+          "update": {
+            "$set": {
+              "complete": false,
+              "margin": {
+                "$numberInt": "25"
+              },
+              "wasPdfDownloaded": false
+            }
+          },
+          "_id": {
+            "$oid": "{{budget}}"
+          }
+        }
+      ]
+    },
+    {
+      "budgetId": "{{budget}}",
+      "body": "{\"propertyName\":\"margin\",\"value\":\"25\"}",
+      "status": 200,
+      "json": {
+        "revision": 0,
+        "complete": false,
+        "wasPdfDownloaded": false,
+        "margin": 25,
+        "daysNeededToDoTheWork": 60,
+        "validity": 30,
+        "hasGenerateJob": false,
+        "_id": "{{budget}}",
+        "client": {
+          "_id": "{{client}}",
+          "name": "Metalúrgica Exemplo, Lda.",
+          "fiscalNumber": "509999990",
+          "address": "Rua das Flores, 12",
+          "zipCode": "4000-123",
+          "location": "Porto",
+          "paymentCondition": "30 dias",
+          "type": "Cliente",
+          "__v": 0
+        },
+        "descriptive": "Máquina de corte",
+        "personInCharge": "Eng.ª Maria",
+        "madeBy": {
+          "roles": [
+            "canSeeOrcamentos",
+            null,
+            "canSeeDefinicoes"
+          ],
+          "fieldOfCompetencies": "Desenvolvimento",
+          "_id": "{{user}}",
+          "name": "Ana Administradora",
+          "email": "ana.admin@dib4t.local",
+          "password": "$2a$10$abcdefghijklmnopqrstuuabcdefghijklmnopqrstuvwxyz01234",
+          "__v": 0
+        },
+        "budgetNumber": "26-0007",
+        "paymentMethod": "30 dias",
+        "total": 43.5,
+        "date": "2026-02-01T09:00:00.000Z",
+        "__v": 0,
+        "description": "Fornecimento conforme especificação."
+      },
+      "effects": [
+        {
+          "update": {
+            "$set": {
+              "complete": false,
+              "margin": {
+                "$numberInt": "25"
+              },
+              "wasPdfDownloaded": false
+            }
+          },
+          "_id": {
+            "$oid": "{{budget}}"
+          }
+        }
+      ]
+    },
+    {
+      "budgetId": "{{budget}}",
+      "body": "{\"propertyName\":\"margin\",\"value\":1}",
+      "status": 200,
+      "json": {
+        "revision": 0,
+        "complete": false,
+        "wasPdfDownloaded": false,
+        "margin": 1,
+        "daysNeededToDoTheWork": 60,
+        "validity": 30,
+        "hasGenerateJob": false,
+        "_id": "{{budget}}",
+        "client": {
+          "_id": "{{client}}",
+          "name": "Metalúrgica Exemplo, Lda.",
+          "fiscalNumber": "509999990",
+          "address": "Rua das Flores, 12",
+          "zipCode": "4000-123",
+          "location": "Porto",
+          "paymentCondition": "30 dias",
+          "type": "Cliente",
+          "__v": 0
+        },
+        "descriptive": "Máquina de corte",
+        "personInCharge": "Eng.ª Maria",
+        "madeBy": {
+          "roles": [
+            "canSeeOrcamentos",
+            null,
+            "canSeeDefinicoes"
+          ],
+          "fieldOfCompetencies": "Desenvolvimento",
+          "_id": "{{user}}",
+          "name": "Ana Administradora",
+          "email": "ana.admin@dib4t.local",
+          "password": "$2a$10$abcdefghijklmnopqrstuuabcdefghijklmnopqrstuvwxyz01234",
+          "__v": 0
+        },
+        "budgetNumber": "26-0007",
+        "paymentMethod": "30 dias",
+        "total": 43.5,
+        "date": "2026-02-01T09:00:00.000Z",
+        "__v": 0,
+        "description": "Fornecimento conforme especificação."
+      },
+      "effects": [
+        {
+          "update": {
+            "$set": {
+              "complete": false,
+              "margin": {
+                "$numberInt": "1"
+              },
+              "wasPdfDownloaded": false
+            }
+          },
+          "_id": {
+            "$oid": "{{budget}}"
+          }
+        }
+      ]
+    },
+    {
+      "budgetId": "{{budget}}",
+      "body": "{\"propertyName\":\"margin\",\"value\":250}",
+      "status": 200,
+      "json": {
+        "revision": 0,
+        "complete": false,
+        "wasPdfDownloaded": false,
+        "margin": 250,
+        "daysNeededToDoTheWork": 60,
+        "validity": 30,
+        "hasGenerateJob": false,
+        "_id": "{{budget}}",
+        "client": {
+          "_id": "{{client}}",
+          "name": "Metalúrgica Exemplo, Lda.",
+          "fiscalNumber": "509999990",
+          "address": "Rua das Flores, 12",
+          "zipCode": "4000-123",
+          "location": "Porto",
+          "paymentCondition": "30 dias",
+          "type": "Cliente",
+          "__v": 0
+        },
+        "descriptive": "Máquina de corte",
+        "personInCharge": "Eng.ª Maria",
+        "madeBy": {
+          "roles": [
+            "canSeeOrcamentos",
+            null,
+            "canSeeDefinicoes"
+          ],
+          "fieldOfCompetencies": "Desenvolvimento",
+          "_id": "{{user}}",
+          "name": "Ana Administradora",
+          "email": "ana.admin@dib4t.local",
+          "password": "$2a$10$abcdefghijklmnopqrstuuabcdefghijklmnopqrstuvwxyz01234",
+          "__v": 0
+        },
+        "budgetNumber": "26-0007",
+        "paymentMethod": "30 dias",
+        "total": 43.5,
+        "date": "2026-02-01T09:00:00.000Z",
+        "__v": 0,
+        "description": "Fornecimento conforme especificação."
+      },
+      "effects": [
+        {
+          "update": {
+            "$set": {
+              "complete": false,
+              "margin": {
+                "$numberInt": "250"
+              },
+              "wasPdfDownloaded": false
+            }
+          },
+          "_id": {
+            "$oid": "{{budget}}"
+          }
+        }
+      ]
+    },
+    {
+      "budgetId": "{{budget}}",
+      "body": "{\"propertyName\":\"margin\",\"value\":35}",
+      "status": 200,
+      "json": {
+        "revision": 0,
+        "complete": false,
+        "wasPdfDownloaded": false,
+        "margin": 35,
+        "daysNeededToDoTheWork": 60,
+        "validity": 30,
+        "hasGenerateJob": false,
+        "_id": "{{budget}}",
+        "client": {
+          "_id": "{{client}}",
+          "name": "Metalúrgica Exemplo, Lda.",
+          "fiscalNumber": "509999990",
+          "address": "Rua das Flores, 12",
+          "zipCode": "4000-123",
+          "location": "Porto",
+          "paymentCondition": "30 dias",
+          "type": "Cliente",
+          "__v": 0
+        },
+        "descriptive": "Máquina de corte",
+        "personInCharge": "Eng.ª Maria",
+        "madeBy": {
+          "roles": [
+            "canSeeOrcamentos",
+            null,
+            "canSeeDefinicoes"
+          ],
+          "fieldOfCompetencies": "Desenvolvimento",
+          "_id": "{{user}}",
+          "name": "Ana Administradora",
+          "email": "ana.admin@dib4t.local",
+          "password": "$2a$10$abcdefghijklmnopqrstuuabcdefghijklmnopqrstuvwxyz01234",
+          "__v": 0
+        },
+        "budgetNumber": "26-0007",
+        "paymentMethod": "30 dias",
+        "total": 43.5,
+        "date": "2026-02-01T09:00:00.000Z",
+        "__v": 0,
+        "description": "Fornecimento conforme especificação."
+      },
+      "effects": [
+        {
+          "update": {
+            "$set": {
+              "complete": false,
+              "wasPdfDownloaded": false
+            }
+          },
+          "_id": {
+            "$oid": "{{budget}}"
+          }
+        }
+      ]
+    },
+    {
+      "budgetId": "{{budget}}",
+      "body": "{\"propertyName\":\"paymentMethod\",\"value\":\"Transferência a 30 dias\"}",
+      "status": 200,
+      "json": {
+        "revision": 0,
+        "complete": false,
+        "wasPdfDownloaded": false,
+        "margin": 35,
+        "daysNeededToDoTheWork": 60,
+        "validity": 30,
+        "hasGenerateJob": false,
+        "_id": "{{budget}}",
+        "client": {
+          "_id": "{{client}}",
+          "name": "Metalúrgica Exemplo, Lda.",
+          "fiscalNumber": "509999990",
+          "address": "Rua das Flores, 12",
+          "zipCode": "4000-123",
+          "location": "Porto",
+          "paymentCondition": "30 dias",
+          "type": "Cliente",
+          "__v": 0
+        },
+        "descriptive": "Máquina de corte",
+        "personInCharge": "Eng.ª Maria",
+        "madeBy": {
+          "roles": [
+            "canSeeOrcamentos",
+            null,
+            "canSeeDefinicoes"
+          ],
+          "fieldOfCompetencies": "Desenvolvimento",
+          "_id": "{{user}}",
+          "name": "Ana Administradora",
+          "email": "ana.admin@dib4t.local",
+          "password": "$2a$10$abcdefghijklmnopqrstuuabcdefghijklmnopqrstuvwxyz01234",
+          "__v": 0
+        },
+        "budgetNumber": "26-0007",
+        "paymentMethod": "Transferência a 30 dias",
+        "total": 43.5,
+        "date": "2026-02-01T09:00:00.000Z",
+        "__v": 0,
+        "description": "Fornecimento conforme especificação."
+      },
+      "effects": [
+        {
+          "update": {
+            "$set": {
+              "complete": false,
+              "paymentMethod": "Transferência a 30 dias",
+              "wasPdfDownloaded": false
+            }
+          },
+          "_id": {
+            "$oid": "{{budget}}"
+          }
+        }
+      ]
+    },
+    {
+      "budgetId": "{{budget}}",
+      "body": "{\"propertyName\":\"paymentMethod\",\"value\":\"30 dias\"}",
+      "status": 200,
+      "json": {
+        "revision": 0,
+        "complete": false,
+        "wasPdfDownloaded": false,
+        "margin": 35,
+        "daysNeededToDoTheWork": 60,
+        "validity": 30,
+        "hasGenerateJob": false,
+        "_id": "{{budget}}",
+        "client": {
+          "_id": "{{client}}",
+          "name": "Metalúrgica Exemplo, Lda.",
+          "fiscalNumber": "509999990",
+          "address": "Rua das Flores, 12",
+          "zipCode": "4000-123",
+          "location": "Porto",
+          "paymentCondition": "30 dias",
+          "type": "Cliente",
+          "__v": 0
+        },
+        "descriptive": "Máquina de corte",
+        "personInCharge": "Eng.ª Maria",
+        "madeBy": {
+          "roles": [
+            "canSeeOrcamentos",
+            null,
+            "canSeeDefinicoes"
+          ],
+          "fieldOfCompetencies": "Desenvolvimento",
+          "_id": "{{user}}",
+          "name": "Ana Administradora",
+          "email": "ana.admin@dib4t.local",
+          "password": "$2a$10$abcdefghijklmnopqrstuuabcdefghijklmnopqrstuvwxyz01234",
+          "__v": 0
+        },
+        "budgetNumber": "26-0007",
+        "paymentMethod": "30 dias",
+        "total": 43.5,
+        "date": "2026-02-01T09:00:00.000Z",
+        "__v": 0,
+        "description": "Fornecimento conforme especificação."
+      },
+      "effects": [
+        {
+          "update": {
+            "$set": {
+              "complete": false,
+              "wasPdfDownloaded": false
+            }
+          },
+          "_id": {
+            "$oid": "{{budget}}"
+          }
+        }
+      ]
+    },
+    {
+      "budgetId": "{{budget}}",
+      "body": "{\"propertyName\":\"complete\",\"value\":true}",
+      "status": 200,
+      "json": {
+        "revision": 0,
+        "complete": true,
+        "wasPdfDownloaded": false,
+        "margin": 35,
+        "daysNeededToDoTheWork": 60,
+        "validity": 30,
+        "hasGenerateJob": false,
+        "_id": "{{budget}}",
+        "client": {
+          "_id": "{{client}}",
+          "name": "Metalúrgica Exemplo, Lda.",
+          "fiscalNumber": "509999990",
+          "address": "Rua das Flores, 12",
+          "zipCode": "4000-123",
+          "location": "Porto",
+          "paymentCondition": "30 dias",
+          "type": "Cliente",
+          "__v": 0
+        },
+        "descriptive": "Máquina de corte",
+        "personInCharge": "Eng.ª Maria",
+        "madeBy": {
+          "roles": [
+            "canSeeOrcamentos",
+            null,
+            "canSeeDefinicoes"
+          ],
+          "fieldOfCompetencies": "Desenvolvimento",
+          "_id": "{{user}}",
+          "name": "Ana Administradora",
+          "email": "ana.admin@dib4t.local",
+          "password": "$2a$10$abcdefghijklmnopqrstuuabcdefghijklmnopqrstuvwxyz01234",
+          "__v": 0
+        },
+        "budgetNumber": "26-0007",
+        "paymentMethod": "30 dias",
+        "total": 43.5,
+        "date": "2026-02-01T09:00:00.000Z",
+        "__v": 0,
+        "description": "Fornecimento conforme especificação."
+      },
+      "effects": [
+        {
+          "update": {
+            "$set": {
+              "complete": true,
+              "wasPdfDownloaded": false
+            }
+          },
+          "_id": {
+            "$oid": "{{budget}}"
+          }
+        }
+      ]
+    },
+    {
+      "budgetId": "{{budget}}",
+      "body": "{\"propertyName\":\"complete\",\"value\":false}",
+      "status": 200,
+      "json": {
+        "revision": 0,
+        "complete": false,
+        "wasPdfDownloaded": false,
+        "margin": 35,
+        "daysNeededToDoTheWork": 60,
+        "validity": 30,
+        "hasGenerateJob": false,
+        "_id": "{{budget}}",
+        "client": {
+          "_id": "{{client}}",
+          "name": "Metalúrgica Exemplo, Lda.",
+          "fiscalNumber": "509999990",
+          "address": "Rua das Flores, 12",
+          "zipCode": "4000-123",
+          "location": "Porto",
+          "paymentCondition": "30 dias",
+          "type": "Cliente",
+          "__v": 0
+        },
+        "descriptive": "Máquina de corte",
+        "personInCharge": "Eng.ª Maria",
+        "madeBy": {
+          "roles": [
+            "canSeeOrcamentos",
+            null,
+            "canSeeDefinicoes"
+          ],
+          "fieldOfCompetencies": "Desenvolvimento",
+          "_id": "{{user}}",
+          "name": "Ana Administradora",
+          "email": "ana.admin@dib4t.local",
+          "password": "$2a$10$abcdefghijklmnopqrstuuabcdefghijklmnopqrstuvwxyz01234",
+          "__v": 0
+        },
+        "budgetNumber": "26-0007",
+        "paymentMethod": "30 dias",
+        "total": 43.5,
+        "date": "2026-02-01T09:00:00.000Z",
+        "__v": 0,
+        "description": "Fornecimento conforme especificação."
+      },
+      "effects": [
+        {
+          "update": {
+            "$set": {
+              "complete": false,
+              "wasPdfDownloaded": false
+            }
+          },
+          "_id": {
+            "$oid": "{{budget}}"
+          }
+        }
+      ]
+    },
+    {
+      "budgetId": "{{budget}}",
+      "body": "{\"propertyName\":\"complete\",\"value\":\"true\"}",
+      "status": 200,
+      "json": {
+        "revision": 0,
+        "complete": true,
+        "wasPdfDownloaded": false,
+        "margin": 35,
+        "daysNeededToDoTheWork": 60,
+        "validity": 30,
+        "hasGenerateJob": false,
+        "_id": "{{budget}}",
+        "client": {
+          "_id": "{{client}}",
+          "name": "Metalúrgica Exemplo, Lda.",
+          "fiscalNumber": "509999990",
+          "address": "Rua das Flores, 12",
+          "zipCode": "4000-123",
+          "location": "Porto",
+          "paymentCondition": "30 dias",
+          "type": "Cliente",
+          "__v": 0
+        },
+        "descriptive": "Máquina de corte",
+        "personInCharge": "Eng.ª Maria",
+        "madeBy": {
+          "roles": [
+            "canSeeOrcamentos",
+            null,
+            "canSeeDefinicoes"
+          ],
+          "fieldOfCompetencies": "Desenvolvimento",
+          "_id": "{{user}}",
+          "name": "Ana Administradora",
+          "email": "ana.admin@dib4t.local",
+          "password": "$2a$10$abcdefghijklmnopqrstuuabcdefghijklmnopqrstuvwxyz01234",
+          "__v": 0
+        },
+        "budgetNumber": "26-0007",
+        "paymentMethod": "30 dias",
+        "total": 43.5,
+        "date": "2026-02-01T09:00:00.000Z",
+        "__v": 0,
+        "description": "Fornecimento conforme especificação."
+      },
+      "effects": [
+        {
+          "update": {
+            "$set": {
+              "complete": true,
+              "wasPdfDownloaded": false
+            }
+          },
+          "_id": {
+            "$oid": "{{budget}}"
+          }
+        }
+      ]
+    },
+    {
+      "budgetId": "{{budget}}",
+      "body": "{\"propertyName\":\"complete\",\"value\":\"false\"}",
+      "status": 200,
+      "json": {
+        "revision": 0,
+        "complete": false,
+        "wasPdfDownloaded": false,
+        "margin": 35,
+        "daysNeededToDoTheWork": 60,
+        "validity": 30,
+        "hasGenerateJob": false,
+        "_id": "{{budget}}",
+        "client": {
+          "_id": "{{client}}",
+          "name": "Metalúrgica Exemplo, Lda.",
+          "fiscalNumber": "509999990",
+          "address": "Rua das Flores, 12",
+          "zipCode": "4000-123",
+          "location": "Porto",
+          "paymentCondition": "30 dias",
+          "type": "Cliente",
+          "__v": 0
+        },
+        "descriptive": "Máquina de corte",
+        "personInCharge": "Eng.ª Maria",
+        "madeBy": {
+          "roles": [
+            "canSeeOrcamentos",
+            null,
+            "canSeeDefinicoes"
+          ],
+          "fieldOfCompetencies": "Desenvolvimento",
+          "_id": "{{user}}",
+          "name": "Ana Administradora",
+          "email": "ana.admin@dib4t.local",
+          "password": "$2a$10$abcdefghijklmnopqrstuuabcdefghijklmnopqrstuvwxyz01234",
+          "__v": 0
+        },
+        "budgetNumber": "26-0007",
+        "paymentMethod": "30 dias",
+        "total": 43.5,
+        "date": "2026-02-01T09:00:00.000Z",
+        "__v": 0,
+        "description": "Fornecimento conforme especificação."
+      },
+      "effects": [
+        {
+          "update": {
+            "$set": {
+              "complete": false,
+              "wasPdfDownloaded": false
+            }
+          },
+          "_id": {
+            "$oid": "{{budget}}"
+          }
+        }
+      ]
+    },
+    {
+      "budgetId": "{{budget}}",
+      "body": "{\"propertyName\":\"complete\",\"value\":\"TRUE\"}",
+      "status": 500,
+      "error": "ValidationError: Budget validation failed: complete: Cast to Boolean failed for value \"TRUE\" (type string) at path \"complete\"",
+      "effects": []
+    },
+    {
+      "budgetId": "{{budget}}",
+      "body": "{\"propertyName\":\"complete\",\"value\":\"False\"}",
+      "status": 500,
+      "error": "ValidationError: Budget validation failed: complete: Cast to Boolean failed for value \"False\" (type string) at path \"complete\"",
+      "effects": []
+    },
+    {
+      "budgetId": "{{budget}}",
+      "body": "{}",
+      "status": 400,
+      "text": "Não é possível atualizar undefined",
+      "effects": []
+    },
+    {
+      "budgetId": "{{budget}}",
+      "body": "{\"value\":1}",
+      "status": 400,
+      "text": "Não é possível atualizar undefined",
+      "effects": []
+    },
+    {
+      "budgetId": "{{budget}}",
+      "body": "{\"propertyName\":\"budgetNumber\",\"value\":\"99-9999\"}",
+      "status": 400,
+      "text": "Não é possível atualizar budgetNumber",
+      "effects": []
+    },
+    {
+      "budgetId": "{{budget}}",
+      "body": "{\"propertyName\":\"hasGenerateJob\",\"value\":false}",
+      "status": 400,
+      "text": "Não é possível atualizar hasGenerateJob",
+      "effects": []
+    },
+    {
+      "budgetId": "{{budget}}",
+      "body": "{\"propertyName\":\"Total\",\"value\":1}",
+      "status": 400,
+      "text": "Não é possível atualizar Total",
+      "effects": []
+    },
+    {
+      "budgetId": "{{budget}}",
+      "body": "{\"propertyName\":\"\",\"value\":1}",
+      "status": 400,
+      "text": "Não é possível atualizar ",
+      "effects": []
+    },
+    {
+      "budgetId": "{{budget}}",
+      "body": "{\"propertyName\":null,\"value\":1}",
+      "status": 400,
+      "text": "Não é possível atualizar null",
+      "effects": []
+    },
+    {
+      "budgetId": "{{budget}}",
+      "body": "{\"propertyName\":5,\"value\":1}",
+      "status": 400,
+      "text": "Não é possível atualizar 5",
+      "effects": []
+    },
+    {
+      "budgetId": "{{budget}}",
+      "body": "{\"propertyName\":[\"total\"],\"value\":1}",
+      "status": 400,
+      "text": "Não é possível atualizar total",
+      "effects": []
+    },
+    {
+      "budgetId": "{{budget}}",
+      "body": "{\"propertyName\":[\"a\",\"b\"],\"value\":1}",
+      "status": 400,
+      "text": "Não é possível atualizar a,b",
+      "effects": []
+    },
+    {
+      "budgetId": "{{budget}}",
+      "body": "{\"propertyName\":{\"a\":1},\"value\":1}",
+      "status": 400,
+      "text": "Não é possível atualizar [object Object]",
+      "effects": []
+    },
+    {
+      "budgetId": "{{budget}}",
+      "body": "{\"propertyName\":true,\"value\":1}",
+      "status": 400,
+      "text": "Não é possível atualizar true",
+      "effects": []
+    },
+    {
+      "budgetId": "{{budget}}",
+      "body": "{\"propertyName\":\"total\",\"value\":1,\"extra\":2}",
+      "status": 400,
+      "text": "Não é possível atualizar total",
+      "effects": []
+    },
+    {
+      "budgetId": "{{budget}}",
+      "body": "{\"propertyName\":\"total\"}",
+      "status": 400,
+      "text": "Não é possível atualizar total",
+      "effects": []
+    },
+    {
+      "budgetId": "{{budget}}",
+      "body": "{\"propertyName\":\"total\",\"value\":null}",
+      "status": 400,
+      "text": "Não é possível atualizar total",
+      "effects": []
+    },
+    {
+      "budgetId": "{{budget}}",
+      "body": "{\"propertyName\":\"total\",\"value\":-1}",
+      "status": 400,
+      "text": "Não é possível atualizar total",
+      "effects": []
+    },
+    {
+      "budgetId": "{{budget}}",
+      "body": "{\"propertyName\":\"total\",\"value\":\"\"}",
+      "status": 400,
+      "text": "Não é possível atualizar total",
+      "effects": []
+    },
+    {
+      "budgetId": "{{budget}}",
+      "body": "{\"propertyName\":\"total\",\"value\":\"abc\"}",
+      "status": 400,
+      "text": "Não é possível atualizar total",
+      "effects": []
+    },
+    {
+      "budgetId": "{{budget}}",
+      "body": "{\"propertyName\":\"total\",\"value\":true}",
+      "status": 400,
+      "text": "Não é possível atualizar total",
+      "effects": []
+    },
+    {
+      "budgetId": "{{budget}}",
+      "body": "{\"propertyName\":\"total\",\"value\":null}",
+      "status": 400,
+      "text": "Não é possível atualizar total",
+      "effects": []
+    },
+    {
+      "budgetId": "{{budget}}",
+      "body": "{\"propertyName\":\"daysNeededToDoTheWork\",\"value\":-0.5}",
+      "status": 400,
+      "text": "Não é possível atualizar daysNeededToDoTheWork",
+      "effects": []
+    },
+    {
+      "budgetId": "{{budget}}",
+      "body": "{\"propertyName\":\"validity\",\"value\":0}",
+      "status": 400,
+      "text": "Não é possível atualizar validity",
+      "effects": []
+    },
+    {
+      "budgetId": "{{budget}}",
+      "body": "{\"propertyName\":\"validity\",\"value\":1.5}",
+      "status": 400,
+      "text": "Não é possível atualizar validity",
+      "effects": []
+    },
+    {
+      "budgetId": "{{budget}}",
+      "body": "{\"propertyName\":\"validity\",\"value\":\"1.5\"}",
+      "status": 400,
+      "text": "Não é possível atualizar validity",
+      "effects": []
+    },
+    {
+      "budgetId": "{{budget}}",
+      "body": "{\"propertyName\":\"margin\",\"value\":0}",
+      "status": 400,
+      "text": "Não é possível atualizar margin",
+      "effects": []
+    },
+    {
+      "budgetId": "{{budget}}",
+      "body": "{\"propertyName\":\"margin\",\"value\":0.5}",
+      "status": 400,
+      "text": "Não é possível atualizar margin",
+      "effects": []
+    },
+    {
+      "budgetId": "{{budget}}",
+      "body": "{\"propertyName\":\"paymentMethod\",\"value\":\"\"}",
+      "status": 400,
+      "text": "Não é possível atualizar paymentMethod",
+      "effects": []
+    },
+    {
+      "budgetId": "{{budget}}",
+      "body": "{\"propertyName\":\"paymentMethod\",\"value\":5}",
+      "status": 400,
+      "text": "Não é possível atualizar paymentMethod",
+      "effects": []
+    },
+    {
+      "budgetId": "{{budget}}",
+      "body": "{\"propertyName\":\"paymentMethod\",\"value\":null}",
+      "status": 400,
+      "text": "Não é possível atualizar paymentMethod",
+      "effects": []
+    },
+    {
+      "budgetId": "{{budget}}",
+      "body": "{\"propertyName\":\"description\",\"value\":\"\"}",
+      "status": 400,
+      "text": "Não é possível atualizar description",
+      "effects": []
+    },
+    {
+      "budgetId": "{{budget}}",
+      "body": "{\"propertyName\":\"description\",\"value\":5}",
+      "status": 400,
+      "text": "Não é possível atualizar description",
+      "effects": []
+    },
+    {
+      "budgetId": "{{budget}}",
+      "body": "{\"propertyName\":\"description\"}",
+      "status": 400,
+      "text": "Não é possível atualizar description",
+      "effects": []
+    },
+    {
+      "budgetId": "{{budget}}",
+      "body": "{\"propertyName\":\"complete\",\"value\":\"yes\"}",
+      "status": 400,
+      "text": "Não é possível atualizar complete",
+      "effects": []
+    },
+    {
+      "budgetId": "{{budget}}",
+      "body": "{\"propertyName\":\"complete\",\"value\":1}",
+      "status": 400,
+      "text": "Não é possível atualizar complete",
+      "effects": []
+    },
+    {
+      "budgetId": "{{budget}}",
+      "body": "{\"propertyName\":\"complete\",\"value\":null}",
+      "status": 400,
+      "text": "Não é possível atualizar complete",
+      "effects": []
+    },
+    {
+      "budgetId": "{{budget}}",
+      "body": "{\"propertyName\":\"complete\",\"value\":\"on\"}",
+      "status": 400,
+      "text": "Não é possível atualizar complete",
+      "effects": []
+    },
+    {
+      "budgetId": "{{budget}}",
+      "body": "[]",
+      "status": 400,
+      "text": "Não é possível atualizar undefined",
+      "effects": []
+    },
+    {
+      "budgetId": "{{source}}",
+      "body": "{\"propertyName\":\"total\",\"value\":999}",
+      "status": 200,
+      "json": {
+        "revision": 0,
+        "complete": false,
+        "wasPdfDownloaded": false,
+        "margin": 32.5,
+        "daysNeededToDoTheWork": 60,
+        "validity": 30,
+        "hasGenerateJob": false,
+        "_id": "{{source}}",
+        "client": {
+          "_id": "{{client}}",
+          "name": "Metalúrgica Exemplo, Lda.",
+          "fiscalNumber": "509999990",
+          "address": "Rua das Flores, 12",
+          "zipCode": "4000-123",
+          "location": "Porto",
+          "paymentCondition": "30 dias",
+          "type": "Cliente",
+          "__v": 0
+        },
+        "descriptive": "Máquina de corte",
+        "personInCharge": "Eng.ª Maria",
+        "madeBy": {
+          "roles": [
+            "canSeeOrcamentos",
+            null,
+            "canSeeDefinicoes"
+          ],
+          "fieldOfCompetencies": "Desenvolvimento",
+          "_id": "{{user}}",
+          "name": "Ana Administradora",
+          "email": "ana.admin@dib4t.local",
+          "password": "$2a$10$abcdefghijklmnopqrstuuabcdefghijklmnopqrstuvwxyz01234",
+          "__v": 0
+        },
+        "budgetNumber": "26-0003",
+        "paymentMethod": "30 dias",
+        "total": 999,
+        "date": "2026-02-01T09:00:00.000Z",
+        "__v": 0,
+        "description": "Texto da origem\nsegunda linha"
+      },
+      "effects": [
+        {
+          "update": {
+            "$set": {
+              "total": {
+                "$numberInt": "999"
+              }
+            }
+          },
+          "_id": {
+            "$oid": "{{source}}"
+          }
+        }
+      ]
+    },
+    {
+      "budgetId": "{{source}}",
+      "body": "{\"propertyName\":\"total\",\"value\":1234}",
+      "status": 200,
+      "json": {
+        "revision": 0,
+        "complete": false,
+        "wasPdfDownloaded": false,
+        "margin": 32.5,
+        "daysNeededToDoTheWork": 60,
+        "validity": 30,
+        "hasGenerateJob": false,
+        "_id": "{{source}}",
+        "client": {
+          "_id": "{{client}}",
+          "name": "Metalúrgica Exemplo, Lda.",
+          "fiscalNumber": "509999990",
+          "address": "Rua das Flores, 12",
+          "zipCode": "4000-123",
+          "location": "Porto",
+          "paymentCondition": "30 dias",
+          "type": "Cliente",
+          "__v": 0
+        },
+        "descriptive": "Máquina de corte",
+        "personInCharge": "Eng.ª Maria",
+        "madeBy": {
+          "roles": [
+            "canSeeOrcamentos",
+            null,
+            "canSeeDefinicoes"
+          ],
+          "fieldOfCompetencies": "Desenvolvimento",
+          "_id": "{{user}}",
+          "name": "Ana Administradora",
+          "email": "ana.admin@dib4t.local",
+          "password": "$2a$10$abcdefghijklmnopqrstuuabcdefghijklmnopqrstuvwxyz01234",
+          "__v": 0
+        },
+        "budgetNumber": "26-0003",
+        "paymentMethod": "30 dias",
+        "total": 1234,
+        "date": "2026-02-01T09:00:00.000Z",
+        "__v": 0,
+        "description": "Texto da origem\nsegunda linha"
+      },
+      "effects": [
+        {
+          "update": null,
+          "_id": {
+            "$oid": "{{source}}"
+          }
+        }
+      ]
+    },
+    {
+      "budgetId": "{{source}}",
+      "body": "{\"propertyName\":\"complete\",\"value\":true}",
+      "status": 200,
+      "json": {
+        "revision": 0,
+        "complete": true,
+        "wasPdfDownloaded": false,
+        "margin": 32.5,
+        "daysNeededToDoTheWork": 60,
+        "validity": 30,
+        "hasGenerateJob": false,
+        "_id": "{{source}}",
+        "client": {
+          "_id": "{{client}}",
+          "name": "Metalúrgica Exemplo, Lda.",
+          "fiscalNumber": "509999990",
+          "address": "Rua das Flores, 12",
+          "zipCode": "4000-123",
+          "location": "Porto",
+          "paymentCondition": "30 dias",
+          "type": "Cliente",
+          "__v": 0
+        },
+        "descriptive": "Máquina de corte",
+        "personInCharge": "Eng.ª Maria",
+        "madeBy": {
+          "roles": [
+            "canSeeOrcamentos",
+            null,
+            "canSeeDefinicoes"
+          ],
+          "fieldOfCompetencies": "Desenvolvimento",
+          "_id": "{{user}}",
+          "name": "Ana Administradora",
+          "email": "ana.admin@dib4t.local",
+          "password": "$2a$10$abcdefghijklmnopqrstuuabcdefghijklmnopqrstuvwxyz01234",
+          "__v": 0
+        },
+        "budgetNumber": "26-0003",
+        "paymentMethod": "30 dias",
+        "total": 1234,
+        "date": "2026-02-01T09:00:00.000Z",
+        "__v": 0,
+        "description": "Texto da origem\nsegunda linha"
+      },
+      "effects": [
+        {
+          "update": {
+            "$set": {
+              "complete": true
+            }
+          },
+          "_id": {
+            "$oid": "{{source}}"
+          }
+        }
+      ]
+    },
+    {
+      "budgetId": "{{imported}}",
+      "body": "{\"propertyName\":\"complete\",\"value\":false}",
+      "status": 200,
+      "json": {
+        "revision": 0,
+        "complete": false,
+        "wasPdfDownloaded": false,
+        "margin": 32.5,
+        "daysNeededToDoTheWork": 60,
+        "validity": 30,
+        "hasGenerateJob": false,
+        "_id": "{{imported}}",
+        "client": {
+          "_id": "{{client}}",
+          "name": "Metalúrgica Exemplo, Lda.",
+          "fiscalNumber": "509999990",
+          "address": "Rua das Flores, 12",
+          "zipCode": "4000-123",
+          "location": "Porto",
+          "paymentCondition": "30 dias",
+          "type": "Cliente",
+          "__v": 0
+        },
+        "descriptive": "Máquina de corte",
+        "personInCharge": "Eng.ª Maria",
+        "madeBy": {
+          "roles": [
+            "canSeeOrcamentos",
+            null,
+            "canSeeDefinicoes"
+          ],
+          "fieldOfCompetencies": "Desenvolvimento",
+          "_id": "{{user}}",
+          "name": "Ana Administradora",
+          "email": "ana.admin@dib4t.local",
+          "password": "$2a$10$abcdefghijklmnopqrstuuabcdefghijklmnopqrstuvwxyz01234",
+          "__v": 0
+        },
+        "budgetNumber": "26-0005",
+        "paymentMethod": "30 dias",
+        "total": 43.5,
+        "date": "2026-02-01T09:00:00.000Z",
+        "__v": 0
+      },
+      "effects": [
+        {
+          "update": null,
+          "_id": {
+            "$oid": "{{imported}}"
+          }
+        }
+      ]
+    },
+    {
+      "budgetId": "{{imported}}",
+      "body": "{\"propertyName\":\"complete\",\"value\":true}",
+      "status": 200,
+      "json": {
+        "revision": 0,
+        "complete": true,
+        "wasPdfDownloaded": false,
+        "margin": 32.5,
+        "daysNeededToDoTheWork": 60,
+        "validity": 30,
+        "hasGenerateJob": false,
+        "_id": "{{imported}}",
+        "client": {
+          "_id": "{{client}}",
+          "name": "Metalúrgica Exemplo, Lda.",
+          "fiscalNumber": "509999990",
+          "address": "Rua das Flores, 12",
+          "zipCode": "4000-123",
+          "location": "Porto",
+          "paymentCondition": "30 dias",
+          "type": "Cliente",
+          "__v": 0
+        },
+        "descriptive": "Máquina de corte",
+        "personInCharge": "Eng.ª Maria",
+        "madeBy": {
+          "roles": [
+            "canSeeOrcamentos",
+            null,
+            "canSeeDefinicoes"
+          ],
+          "fieldOfCompetencies": "Desenvolvimento",
+          "_id": "{{user}}",
+          "name": "Ana Administradora",
+          "email": "ana.admin@dib4t.local",
+          "password": "$2a$10$abcdefghijklmnopqrstuuabcdefghijklmnopqrstuvwxyz01234",
+          "__v": 0
+        },
+        "budgetNumber": "26-0005",
+        "paymentMethod": "30 dias",
+        "total": 43.5,
+        "date": "2026-02-01T09:00:00.000Z",
+        "__v": 0
+      },
+      "effects": [
+        {
+          "update": {
+            "$set": {
+              "complete": true
+            }
+          },
+          "_id": {
+            "$oid": "{{imported}}"
+          }
+        }
+      ]
+    },
+    {
+      "budgetId": "{{imported}}",
+      "body": "{\"propertyName\":\"description\",\"value\":\"Novo texto\"}",
+      "status": 200,
+      "json": {
+        "revision": 0,
+        "complete": false,
+        "wasPdfDownloaded": false,
+        "margin": 32.5,
+        "daysNeededToDoTheWork": 60,
+        "validity": 30,
+        "hasGenerateJob": false,
+        "_id": "{{imported}}",
+        "client": {
+          "_id": "{{client}}",
+          "name": "Metalúrgica Exemplo, Lda.",
+          "fiscalNumber": "509999990",
+          "address": "Rua das Flores, 12",
+          "zipCode": "4000-123",
+          "location": "Porto",
+          "paymentCondition": "30 dias",
+          "type": "Cliente",
+          "__v": 0
+        },
+        "descriptive": "Máquina de corte",
+        "personInCharge": "Eng.ª Maria",
+        "madeBy": {
+          "roles": [
+            "canSeeOrcamentos",
+            null,
+            "canSeeDefinicoes"
+          ],
+          "fieldOfCompetencies": "Desenvolvimento",
+          "_id": "{{user}}",
+          "name": "Ana Administradora",
+          "email": "ana.admin@dib4t.local",
+          "password": "$2a$10$abcdefghijklmnopqrstuuabcdefghijklmnopqrstuvwxyz01234",
+          "__v": 0
+        },
+        "budgetNumber": "26-0005",
+        "paymentMethod": "30 dias",
+        "total": 43.5,
+        "date": "2026-02-01T09:00:00.000Z",
+        "__v": 0,
+        "description": "Novo texto"
+      },
+      "effects": [
+        {
+          "update": {
+            "$set": {
+              "description": "Novo texto"
+            }
+          },
+          "_id": {
+            "$oid": "{{imported}}"
+          }
+        }
+      ]
+    },
+    {
+      "budgetId": "{{imported}}",
+      "body": "{\"propertyName\":\"margin\",\"value\":\"32.5\"}",
+      "status": 200,
+      "json": {
+        "revision": 0,
+        "complete": false,
+        "wasPdfDownloaded": false,
+        "margin": 32.5,
+        "daysNeededToDoTheWork": 60,
+        "validity": 30,
+        "hasGenerateJob": false,
+        "_id": "{{imported}}",
+        "client": {
+          "_id": "{{client}}",
+          "name": "Metalúrgica Exemplo, Lda.",
+          "fiscalNumber": "509999990",
+          "address": "Rua das Flores, 12",
+          "zipCode": "4000-123",
+          "location": "Porto",
+          "paymentCondition": "30 dias",
+          "type": "Cliente",
+          "__v": 0
+        },
+        "descriptive": "Máquina de corte",
+        "personInCharge": "Eng.ª Maria",
+        "madeBy": {
+          "roles": [
+            "canSeeOrcamentos",
+            null,
+            "canSeeDefinicoes"
+          ],
+          "fieldOfCompetencies": "Desenvolvimento",
+          "_id": "{{user}}",
+          "name": "Ana Administradora",
+          "email": "ana.admin@dib4t.local",
+          "password": "$2a$10$abcdefghijklmnopqrstuuabcdefghijklmnopqrstuvwxyz01234",
+          "__v": 0
+        },
+        "budgetNumber": "26-0005",
+        "paymentMethod": "30 dias",
+        "total": 43.5,
+        "date": "2026-02-01T09:00:00.000Z",
+        "__v": 0
+      },
+      "effects": [
+        {
+          "update": null,
+          "_id": {
+            "$oid": "{{imported}}"
+          }
+        }
+      ]
+    },
+    {
+      "budgetId": "{{bare}}",
+      "body": "{\"propertyName\":\"total\",\"value\":10}",
+      "status": 200,
+      "json": {
+        "revision": 0,
+        "complete": false,
+        "wasPdfDownloaded": false,
+        "margin": 35,
+        "daysNeededToDoTheWork": 60,
+        "validity": 30,
+        "hasGenerateJob": false,
+        "_id": "{{bare}}",
+        "client": {
+          "_id": "{{client}}",
+          "name": "Metalúrgica Exemplo, Lda.",
+          "fiscalNumber": "509999990",
+          "address": "Rua das Flores, 12",
+          "zipCode": "4000-123",
+          "location": "Porto",
+          "paymentCondition": "30 dias",
+          "type": "Cliente",
+          "__v": 0
+        },
+        "descriptive": "Máquina de corte",
+        "personInCharge": "Eng.ª Maria",
+        "madeBy": {
+          "roles": [
+            "canSeeOrcamentos",
+            null,
+            "canSeeDefinicoes"
+          ],
+          "fieldOfCompetencies": "Desenvolvimento",
+          "_id": "{{user}}",
+          "name": "Ana Administradora",
+          "email": "ana.admin@dib4t.local",
+          "password": "$2a$10$abcdefghijklmnopqrstuuabcdefghijklmnopqrstuvwxyz01234",
+          "__v": 0
+        },
+        "budgetNumber": "26-0002",
+        "paymentMethod": "30 dias",
+        "date": "2026-02-01T09:00:00.000Z",
+        "__v": 0,
+        "total": 10
+      },
+      "effects": [
+        {
+          "update": {
+            "$set": {
+              "complete": false,
+              "total": {
+                "$numberInt": "10"
+              },
+              "wasPdfDownloaded": false
+            }
+          },
+          "_id": {
+            "$oid": "{{bare}}"
+          }
+        }
+      ]
+    },
+    {
+      "budgetId": "{{job-budget}}",
+      "body": "{\"propertyName\":\"total\",\"value\":1}",
+      "status": 200,
+      "json": {
+        "revision": 0,
+        "complete": true,
+        "wasPdfDownloaded": true,
+        "margin": 35,
+        "daysNeededToDoTheWork": 60,
+        "validity": 30,
+        "hasGenerateJob": true,
+        "_id": "{{job-budget}}",
+        "client": {
+          "_id": "{{client}}",
+          "name": "Metalúrgica Exemplo, Lda.",
+          "fiscalNumber": "509999990",
+          "address": "Rua das Flores, 12",
+          "zipCode": "4000-123",
+          "location": "Porto",
+          "paymentCondition": "30 dias",
+          "type": "Cliente",
+          "__v": 0
+        },
+        "descriptive": "Máquina de corte",
+        "personInCharge": "Eng.ª Maria",
+        "madeBy": {
+          "roles": [
+            "canSeeOrcamentos",
+            null,
+            "canSeeDefinicoes"
+          ],
+          "fieldOfCompetencies": "Desenvolvimento",
+          "_id": "{{user}}",
+          "name": "Ana Administradora",
+          "email": "ana.admin@dib4t.local",
+          "password": "$2a$10$abcdefghijklmnopqrstuuabcdefghijklmnopqrstuvwxyz01234",
+          "__v": 0
+        },
+        "budgetNumber": "26-0004",
+        "paymentMethod": "30 dias",
+        "total": 43.5,
+        "date": "2026-02-01T09:00:00.000Z",
+        "__v": 0,
+        "description": "Fornecimento conforme especificação."
+      },
+      "effects": []
+    },
+    {
+      "budgetId": "{{job-budget}}",
+      "body": "{\"propertyName\":\"budgetNumber\",\"value\":1}",
+      "status": 400,
+      "text": "Não é possível atualizar budgetNumber",
+      "effects": []
+    },
+    {
+      "budgetId": "{{missing}}",
+      "body": "{\"propertyName\":\"validity\",\"value\":10}",
+      "status": 400,
+      "text": "Orçamento não existe!",
+      "effects": []
+    },
+    {
+      "budgetId": "abc",
+      "body": "{\"propertyName\":\"validity\",\"value\":10}",
+      "status": 500,
+      "error": "CastError: Cast to ObjectId failed for value \"abc\" at path \"_id\"",
+      "effects": []
+    },
+    {
+      "budgetId": "abc",
+      "body": "{\"propertyName\":\"x\",\"value\":10}",
+      "status": 400,
+      "text": "Não é possível atualizar x",
+      "effects": []
+    },
+    {
+      "budgetId": "5F1E9A2B3C4D5E6F70810001",
+      "body": "{\"propertyName\":\"validity\",\"value\":10}",
+      "status": 200,
+      "json": {
+        "revision": 0,
+        "complete": false,
+        "wasPdfDownloaded": false,
+        "margin": 35,
+        "daysNeededToDoTheWork": 60,
+        "validity": 10,
+        "hasGenerateJob": false,
+        "_id": "{{budget}}",
+        "client": {
+          "_id": "{{client}}",
+          "name": "Metalúrgica Exemplo, Lda.",
+          "fiscalNumber": "509999990",
+          "address": "Rua das Flores, 12",
+          "zipCode": "4000-123",
+          "location": "Porto",
+          "paymentCondition": "30 dias",
+          "type": "Cliente",
+          "__v": 0
+        },
+        "descriptive": "Máquina de corte",
+        "personInCharge": "Eng.ª Maria",
+        "madeBy": {
+          "roles": [
+            "canSeeOrcamentos",
+            null,
+            "canSeeDefinicoes"
+          ],
+          "fieldOfCompetencies": "Desenvolvimento",
+          "_id": "{{user}}",
+          "name": "Ana Administradora",
+          "email": "ana.admin@dib4t.local",
+          "password": "$2a$10$abcdefghijklmnopqrstuuabcdefghijklmnopqrstuvwxyz01234",
+          "__v": 0
+        },
+        "budgetNumber": "26-0007",
+        "paymentMethod": "30 dias",
+        "total": 43.5,
+        "date": "2026-02-01T09:00:00.000Z",
+        "__v": 0,
+        "description": "Fornecimento conforme especificação."
+      },
+      "effects": [
+        {
+          "update": {
+            "$set": {
+              "complete": false,
+              "validity": {
+                "$numberInt": "10"
+              },
+              "wasPdfDownloaded": false
+            }
+          },
+          "_id": {
+            "$oid": "{{budget}}"
+          }
+        }
+      ]
+    }
+  ],
+  "import": [
+    {
+      "budgetId": "{{budget}}",
+      "body": "{\"importDescription\":true,\"importTasks\":true,\"budgetNumber\":\"26-0003\"}",
+      "status": 200,
+      "json": {
+        "revision": 0,
+        "complete": true,
+        "wasPdfDownloaded": true,
+        "margin": 32.5,
+        "daysNeededToDoTheWork": 60,
+        "validity": 30,
+        "hasGenerateJob": false,
+        "_id": "{{budget}}",
+        "client": {
+          "_id": "{{client}}",
+          "name": "Metalúrgica Exemplo, Lda.",
+          "fiscalNumber": "509999990",
+          "address": "Rua das Flores, 12",
+          "zipCode": "4000-123",
+          "location": "Porto",
+          "paymentCondition": "30 dias",
+          "type": "Cliente",
+          "__v": 0
+        },
+        "descriptive": "Máquina de corte",
+        "personInCharge": "Eng.ª Maria",
+        "madeBy": {
+          "roles": [
+            "canSeeOrcamentos",
+            null,
+            "canSeeDefinicoes"
+          ],
+          "fieldOfCompetencies": "Desenvolvimento",
+          "_id": "{{user}}",
+          "name": "Ana Administradora",
+          "email": "ana.admin@dib4t.local",
+          "password": "$2a$10$abcdefghijklmnopqrstuuabcdefghijklmnopqrstuvwxyz01234",
+          "__v": 0
+        },
+        "budgetNumber": "26-0007",
+        "paymentMethod": "30 dias",
+        "total": 1234,
+        "date": "2026-02-01T09:00:00.000Z",
+        "__v": 0,
+        "description": "Texto da origem\nsegunda linha"
+      },
+      "effects": [
+        {
+          "deleteMany": {
+            "budgetId": {
+              "$oid": "{{budget}}"
+            }
+          },
+          "deletedCount": 3
+        },
+        {
+          "insertMany": [
+            {
+              "_id": {
+                "$oid": "{{new}}"
+              },
+              "taskType": "automation",
+              "budgetId": {
+                "$oid": "{{budget}}"
+              },
+              "description": "",
+              "unitPrice": {
+                "$numberDouble": "32.5"
+              },
+              "quantity": {
+                "$numberInt": "1"
+              },
+              "__v": {
+                "$numberInt": "0"
+              }
+            },
+            {
+              "_id": {
+                "$oid": "{{new}}"
+              },
+              "taskType": "development",
+              "budgetId": {
+                "$oid": "{{budget}}"
+              },
+              "description": "Projeto",
+              "unitPrice": {
+                "$numberInt": "30"
+              },
+              "quantity": {
+                "$numberDouble": "0.5"
+              },
+              "__v": {
+                "$numberInt": "0"
+              }
+            },
+            {
+              "_id": {
+                "$oid": "{{new}}"
+              },
+              "taskType": "machining",
+              "budgetId": {
+                "$oid": "{{budget}}"
+              },
+              "unitPrice": {
+                "$numberDouble": "38.5"
+              },
+              "quantity": {
+                "$numberInt": "15"
+              },
+              "__v": {
+                "$numberInt": "0"
+              }
+            },
+            {
+              "_id": {
+                "$oid": "{{new}}"
+              },
+              "taskType": "others",
+              "budgetId": {
+                "$oid": "{{budget}}"
+              },
+              "description": "Cáfé  ",
+              "unitPrice": {
+                "$numberDouble": "1e+21"
+              },
+              "quantity": {
+                "$numberInt": "-2"
+              },
+              "__v": {
+                "$numberInt": "0"
+              }
+            }
+          ]
+        },
+        {
+          "update": {
+            "$set": {
+              "description": "Texto da origem\nsegunda linha",
+              "margin": {
+                "$numberDouble": "32.5"
+              },
+              "total": {
+                "$numberInt": "1234"
+              }
+            }
+          },
+          "_id": {
+            "$oid": "{{budget}}"
+          }
+        }
+      ]
+    },
+    {
+      "budgetId": "{{budget}}",
+      "body": "{\"importDescription\":false,\"importTasks\":true,\"budgetNumber\":\"26-0003\"}",
+      "status": 200,
+      "json": {
+        "revision": 0,
+        "complete": true,
+        "wasPdfDownloaded": true,
+        "margin": 32.5,
+        "daysNeededToDoTheWork": 60,
+        "validity": 30,
+        "hasGenerateJob": false,
+        "_id": "{{budget}}",
+        "client": {
+          "_id": "{{client}}",
+          "name": "Metalúrgica Exemplo, Lda.",
+          "fiscalNumber": "509999990",
+          "address": "Rua das Flores, 12",
+          "zipCode": "4000-123",
+          "location": "Porto",
+          "paymentCondition": "30 dias",
+          "type": "Cliente",
+          "__v": 0
+        },
+        "descriptive": "Máquina de corte",
+        "personInCharge": "Eng.ª Maria",
+        "madeBy": {
+          "roles": [
+            "canSeeOrcamentos",
+            null,
+            "canSeeDefinicoes"
+          ],
+          "fieldOfCompetencies": "Desenvolvimento",
+          "_id": "{{user}}",
+          "name": "Ana Administradora",
+          "email": "ana.admin@dib4t.local",
+          "password": "$2a$10$abcdefghijklmnopqrstuuabcdefghijklmnopqrstuvwxyz01234",
+          "__v": 0
+        },
+        "budgetNumber": "26-0007",
+        "paymentMethod": "30 dias",
+        "total": 1234,
+        "date": "2026-02-01T09:00:00.000Z",
+        "__v": 0,
+        "description": "Fornecimento conforme especificação."
+      },
+      "effects": [
+        {
+          "deleteMany": {
+            "budgetId": {
+              "$oid": "{{budget}}"
+            }
+          },
+          "deletedCount": 3
+        },
+        {
+          "insertMany": [
+            {
+              "_id": {
+                "$oid": "{{new}}"
+              },
+              "taskType": "automation",
+              "budgetId": {
+                "$oid": "{{budget}}"
+              },
+              "description": "",
+              "unitPrice": {
+                "$numberDouble": "32.5"
+              },
+              "quantity": {
+                "$numberInt": "1"
+              },
+              "__v": {
+                "$numberInt": "0"
+              }
+            },
+            {
+              "_id": {
+                "$oid": "{{new}}"
+              },
+              "taskType": "development",
+              "budgetId": {
+                "$oid": "{{budget}}"
+              },
+              "description": "Projeto",
+              "unitPrice": {
+                "$numberInt": "30"
+              },
+              "quantity": {
+                "$numberDouble": "0.5"
+              },
+              "__v": {
+                "$numberInt": "0"
+              }
+            },
+            {
+              "_id": {
+                "$oid": "{{new}}"
+              },
+              "taskType": "machining",
+              "budgetId": {
+                "$oid": "{{budget}}"
+              },
+              "unitPrice": {
+                "$numberDouble": "38.5"
+              },
+              "quantity": {
+                "$numberInt": "15"
+              },
+              "__v": {
+                "$numberInt": "0"
+              }
+            },
+            {
+              "_id": {
+                "$oid": "{{new}}"
+              },
+              "taskType": "others",
+              "budgetId": {
+                "$oid": "{{budget}}"
+              },
+              "description": "Cáfé  ",
+              "unitPrice": {
+                "$numberDouble": "1e+21"
+              },
+              "quantity": {
+                "$numberInt": "-2"
+              },
+              "__v": {
+                "$numberInt": "0"
+              }
+            }
+          ]
+        },
+        {
+          "update": {
+            "$set": {
+              "margin": {
+                "$numberDouble": "32.5"
+              },
+              "total": {
+                "$numberInt": "1234"
+              }
+            }
+          },
+          "_id": {
+            "$oid": "{{budget}}"
+          }
+        }
+      ]
+    },
+    {
+      "budgetId": "{{budget}}",
+      "body": "{\"importDescription\":true,\"importTasks\":false,\"budgetNumber\":\"26-0003\"}",
+      "status": 200,
+      "json": {
+        "revision": 0,
+        "complete": true,
+        "wasPdfDownloaded": true,
+        "margin": 35,
+        "daysNeededToDoTheWork": 60,
+        "validity": 30,
+        "hasGenerateJob": false,
+        "_id": "{{budget}}",
+        "client": {
+          "_id": "{{client}}",
+          "name": "Metalúrgica Exemplo, Lda.",
+          "fiscalNumber": "509999990",
+          "address": "Rua das Flores, 12",
+          "zipCode": "4000-123",
+          "location": "Porto",
+          "paymentCondition": "30 dias",
+          "type": "Cliente",
+          "__v": 0
+        },
+        "descriptive": "Máquina de corte",
+        "personInCharge": "Eng.ª Maria",
+        "madeBy": {
+          "roles": [
+            "canSeeOrcamentos",
+            null,
+            "canSeeDefinicoes"
+          ],
+          "fieldOfCompetencies": "Desenvolvimento",
+          "_id": "{{user}}",
+          "name": "Ana Administradora",
+          "email": "ana.admin@dib4t.local",
+          "password": "$2a$10$abcdefghijklmnopqrstuuabcdefghijklmnopqrstuvwxyz01234",
+          "__v": 0
+        },
+        "budgetNumber": "26-0007",
+        "paymentMethod": "30 dias",
+        "total": 43.5,
+        "date": "2026-02-01T09:00:00.000Z",
+        "__v": 0,
+        "description": "Texto da origem\nsegunda linha"
+      },
+      "effects": [
+        {
+          "update": {
+            "$set": {
+              "description": "Texto da origem\nsegunda linha"
+            }
+          },
+          "_id": {
+            "$oid": "{{budget}}"
+          }
+        }
+      ]
+    },
+    {
+      "budgetId": "{{budget}}",
+      "body": "{\"importDescription\":false,\"importTasks\":false,\"budgetNumber\":\"26-0003\"}",
+      "status": 200,
+      "json": {
+        "revision": 0,
+        "complete": true,
+        "wasPdfDownloaded": true,
+        "margin": 35,
+        "daysNeededToDoTheWork": 60,
+        "validity": 30,
+        "hasGenerateJob": false,
+        "_id": "{{budget}}",
+        "client": {
+          "_id": "{{client}}",
+          "name": "Metalúrgica Exemplo, Lda.",
+          "fiscalNumber": "509999990",
+          "address": "Rua das Flores, 12",
+          "zipCode": "4000-123",
+          "location": "Porto",
+          "paymentCondition": "30 dias",
+          "type": "Cliente",
+          "__v": 0
+        },
+        "descriptive": "Máquina de corte",
+        "personInCharge": "Eng.ª Maria",
+        "madeBy": {
+          "roles": [
+            "canSeeOrcamentos",
+            null,
+            "canSeeDefinicoes"
+          ],
+          "fieldOfCompetencies": "Desenvolvimento",
+          "_id": "{{user}}",
+          "name": "Ana Administradora",
+          "email": "ana.admin@dib4t.local",
+          "password": "$2a$10$abcdefghijklmnopqrstuuabcdefghijklmnopqrstuvwxyz01234",
+          "__v": 0
+        },
+        "budgetNumber": "26-0007",
+        "paymentMethod": "30 dias",
+        "total": 43.5,
+        "date": "2026-02-01T09:00:00.000Z",
+        "__v": 0,
+        "description": "Fornecimento conforme especificação."
+      },
+      "effects": [
+        {
+          "update": null,
+          "_id": {
+            "$oid": "{{budget}}"
+          }
+        }
+      ]
+    },
+    {
+      "budgetId": "{{budget}}",
+      "body": "{\"importDescription\":true,\"importTasks\":true,\"budgetNumber\":\"26-0002\"}",
+      "status": 200,
+      "json": {
+        "revision": 0,
+        "complete": true,
+        "wasPdfDownloaded": true,
+        "margin": 35,
+        "daysNeededToDoTheWork": 60,
+        "validity": 30,
+        "hasGenerateJob": false,
+        "_id": "{{budget}}",
+        "client": {
+          "_id": "{{client}}",
+          "name": "Metalúrgica Exemplo, Lda.",
+          "fiscalNumber": "509999990",
+          "address": "Rua das Flores, 12",
+          "zipCode": "4000-123",
+          "location": "Porto",
+          "paymentCondition": "30 dias",
+          "type": "Cliente",
+          "__v": 0
+        },
+        "descriptive": "Máquina de corte",
+        "personInCharge": "Eng.ª Maria",
+        "madeBy": {
+          "roles": [
+            "canSeeOrcamentos",
+            null,
+            "canSeeDefinicoes"
+          ],
+          "fieldOfCompetencies": "Desenvolvimento",
+          "_id": "{{user}}",
+          "name": "Ana Administradora",
+          "email": "ana.admin@dib4t.local",
+          "password": "$2a$10$abcdefghijklmnopqrstuuabcdefghijklmnopqrstuvwxyz01234",
+          "__v": 0
+        },
+        "budgetNumber": "26-0007",
+        "paymentMethod": "30 dias",
+        "date": "2026-02-01T09:00:00.000Z",
+        "__v": 0
+      },
+      "effects": [
+        {
+          "deleteMany": {
+            "budgetId": {
+              "$oid": "{{budget}}"
+            }
+          },
+          "deletedCount": 3
+        },
+        {
+          "insertMany": []
+        },
+        {
+          "update": {
+            "$unset": {
+              "description": {
+                "$numberInt": "1"
+              },
+              "total": {
+                "$numberInt": "1"
+              }
+            }
+          },
+          "_id": {
+            "$oid": "{{budget}}"
+          }
+        }
+      ]
+    },
+    {
+      "budgetId": "{{budget}}",
+      "body": "{\"importDescription\":true,\"importTasks\":false,\"budgetNumber\":\"26-0002\"}",
+      "status": 200,
+      "json": {
+        "revision": 0,
+        "complete": true,
+        "wasPdfDownloaded": true,
+        "margin": 35,
+        "daysNeededToDoTheWork": 60,
+        "validity": 30,
+        "hasGenerateJob": false,
+        "_id": "{{budget}}",
+        "client": {
+          "_id": "{{client}}",
+          "name": "Metalúrgica Exemplo, Lda.",
+          "fiscalNumber": "509999990",
+          "address": "Rua das Flores, 12",
+          "zipCode": "4000-123",
+          "location": "Porto",
+          "paymentCondition": "30 dias",
+          "type": "Cliente",
+          "__v": 0
+        },
+        "descriptive": "Máquina de corte",
+        "personInCharge": "Eng.ª Maria",
+        "madeBy": {
+          "roles": [
+            "canSeeOrcamentos",
+            null,
+            "canSeeDefinicoes"
+          ],
+          "fieldOfCompetencies": "Desenvolvimento",
+          "_id": "{{user}}",
+          "name": "Ana Administradora",
+          "email": "ana.admin@dib4t.local",
+          "password": "$2a$10$abcdefghijklmnopqrstuuabcdefghijklmnopqrstuvwxyz01234",
+          "__v": 0
+        },
+        "budgetNumber": "26-0007",
+        "paymentMethod": "30 dias",
+        "total": 43.5,
+        "date": "2026-02-01T09:00:00.000Z",
+        "__v": 0
+      },
+      "effects": [
+        {
+          "update": {
+            "$unset": {
+              "description": {
+                "$numberInt": "1"
+              }
+            }
+          },
+          "_id": {
+            "$oid": "{{budget}}"
+          }
+        }
+      ]
+    },
+    {
+      "budgetId": "{{imported}}",
+      "body": "{\"importDescription\":true,\"importTasks\":true,\"budgetNumber\":\"26-0003\"}",
+      "status": 200,
+      "json": {
+        "revision": 0,
+        "complete": false,
+        "wasPdfDownloaded": false,
+        "margin": 32.5,
+        "daysNeededToDoTheWork": 60,
+        "validity": 30,
+        "hasGenerateJob": false,
+        "_id": "{{imported}}",
+        "client": {
+          "_id": "{{client}}",
+          "name": "Metalúrgica Exemplo, Lda.",
+          "fiscalNumber": "509999990",
+          "address": "Rua das Flores, 12",
+          "zipCode": "4000-123",
+          "location": "Porto",
+          "paymentCondition": "30 dias",
+          "type": "Cliente",
+          "__v": 0
+        },
+        "descriptive": "Máquina de corte",
+        "personInCharge": "Eng.ª Maria",
+        "madeBy": {
+          "roles": [
+            "canSeeOrcamentos",
+            null,
+            "canSeeDefinicoes"
+          ],
+          "fieldOfCompetencies": "Desenvolvimento",
+          "_id": "{{user}}",
+          "name": "Ana Administradora",
+          "email": "ana.admin@dib4t.local",
+          "password": "$2a$10$abcdefghijklmnopqrstuuabcdefghijklmnopqrstuvwxyz01234",
+          "__v": 0
+        },
+        "budgetNumber": "26-0005",
+        "paymentMethod": "30 dias",
+        "total": 1234,
+        "date": "2026-02-01T09:00:00.000Z",
+        "__v": 0,
+        "description": "Texto da origem\nsegunda linha"
+      },
+      "effects": [
+        {
+          "deleteMany": {
+            "budgetId": {
+              "$oid": "{{imported}}"
+            }
+          },
+          "deletedCount": 1
+        },
+        {
+          "insertMany": [
+            {
+              "_id": {
+                "$oid": "{{new}}"
+              },
+              "taskType": "automation",
+              "budgetId": {
+                "$oid": "{{imported}}"
+              },
+              "description": "",
+              "unitPrice": {
+                "$numberDouble": "32.5"
+              },
+              "quantity": {
+                "$numberInt": "1"
+              },
+              "__v": {
+                "$numberInt": "0"
+              }
+            },
+            {
+              "_id": {
+                "$oid": "{{new}}"
+              },
+              "taskType": "development",
+              "budgetId": {
+                "$oid": "{{imported}}"
+              },
+              "description": "Projeto",
+              "unitPrice": {
+                "$numberInt": "30"
+              },
+              "quantity": {
+                "$numberDouble": "0.5"
+              },
+              "__v": {
+                "$numberInt": "0"
+              }
+            },
+            {
+              "_id": {
+                "$oid": "{{new}}"
+              },
+              "taskType": "machining",
+              "budgetId": {
+                "$oid": "{{imported}}"
+              },
+              "unitPrice": {
+                "$numberDouble": "38.5"
+              },
+              "quantity": {
+                "$numberInt": "15"
+              },
+              "__v": {
+                "$numberInt": "0"
+              }
+            },
+            {
+              "_id": {
+                "$oid": "{{new}}"
+              },
+              "taskType": "others",
+              "budgetId": {
+                "$oid": "{{imported}}"
+              },
+              "description": "Cáfé  ",
+              "unitPrice": {
+                "$numberDouble": "1e+21"
+              },
+              "quantity": {
+                "$numberInt": "-2"
+              },
+              "__v": {
+                "$numberInt": "0"
+              }
+            }
+          ]
+        },
+        {
+          "update": {
+            "$set": {
+              "description": "Texto da origem\nsegunda linha",
+              "total": {
+                "$numberInt": "1234"
+              }
+            }
+          },
+          "_id": {
+            "$oid": "{{imported}}"
+          }
+        }
+      ]
+    },
+    {
+      "budgetId": "{{budget}}",
+      "body": "{\"importDescription\":true,\"importTasks\":true,\"budgetNumber\":\"26-0007\"}",
+      "status": 200,
+      "json": {
+        "revision": 0,
+        "complete": true,
+        "wasPdfDownloaded": true,
+        "margin": 35,
+        "daysNeededToDoTheWork": 60,
+        "validity": 30,
+        "hasGenerateJob": false,
+        "_id": "{{budget}}",
+        "client": {
+          "_id": "{{client}}",
+          "name": "Metalúrgica Exemplo, Lda.",
+          "fiscalNumber": "509999990",
+          "address": "Rua das Flores, 12",
+          "zipCode": "4000-123",
+          "location": "Porto",
+          "paymentCondition": "30 dias",
+          "type": "Cliente",
+          "__v": 0
+        },
+        "descriptive": "Máquina de corte",
+        "personInCharge": "Eng.ª Maria",
+        "madeBy": {
+          "roles": [
+            "canSeeOrcamentos",
+            null,
+            "canSeeDefinicoes"
+          ],
+          "fieldOfCompetencies": "Desenvolvimento",
+          "_id": "{{user}}",
+          "name": "Ana Administradora",
+          "email": "ana.admin@dib4t.local",
+          "password": "$2a$10$abcdefghijklmnopqrstuuabcdefghijklmnopqrstuvwxyz01234",
+          "__v": 0
+        },
+        "budgetNumber": "26-0007",
+        "paymentMethod": "30 dias",
+        "total": 43.5,
+        "date": "2026-02-01T09:00:00.000Z",
+        "__v": 0,
+        "description": "Fornecimento conforme especificação."
+      },
+      "effects": [
+        {
+          "deleteMany": {
+            "budgetId": {
+              "$oid": "{{budget}}"
+            }
+          },
+          "deletedCount": 3
+        },
+        {
+          "insertMany": []
+        },
+        {
+          "update": null,
+          "_id": {
+            "$oid": "{{budget}}"
+          }
+        }
+      ]
+    },
+    {
+      "budgetId": "{{budget}}",
+      "body": "{\"importDescription\":true,\"importTasks\":true,\"budgetNumber\":\"26-0004\"}",
+      "status": 200,
+      "json": {
+        "revision": 0,
+        "complete": true,
+        "wasPdfDownloaded": true,
+        "margin": 35,
+        "daysNeededToDoTheWork": 60,
+        "validity": 30,
+        "hasGenerateJob": false,
+        "_id": "{{budget}}",
+        "client": {
+          "_id": "{{client}}",
+          "name": "Metalúrgica Exemplo, Lda.",
+          "fiscalNumber": "509999990",
+          "address": "Rua das Flores, 12",
+          "zipCode": "4000-123",
+          "location": "Porto",
+          "paymentCondition": "30 dias",
+          "type": "Cliente",
+          "__v": 0
+        },
+        "descriptive": "Máquina de corte",
+        "personInCharge": "Eng.ª Maria",
+        "madeBy": {
+          "roles": [
+            "canSeeOrcamentos",
+            null,
+            "canSeeDefinicoes"
+          ],
+          "fieldOfCompetencies": "Desenvolvimento",
+          "_id": "{{user}}",
+          "name": "Ana Administradora",
+          "email": "ana.admin@dib4t.local",
+          "password": "$2a$10$abcdefghijklmnopqrstuuabcdefghijklmnopqrstuvwxyz01234",
+          "__v": 0
+        },
+        "budgetNumber": "26-0007",
+        "paymentMethod": "30 dias",
+        "total": 43.5,
+        "date": "2026-02-01T09:00:00.000Z",
+        "__v": 0,
+        "description": "Fornecimento conforme especificação."
+      },
+      "effects": [
+        {
+          "deleteMany": {
+            "budgetId": {
+              "$oid": "{{budget}}"
+            }
+          },
+          "deletedCount": 3
+        },
+        {
+          "insertMany": [
+            {
+              "_id": {
+                "$oid": "{{new}}"
+              },
+              "taskType": "assembly",
+              "budgetId": {
+                "$oid": "{{budget}}"
+              },
+              "description": "x",
+              "unitPrice": {
+                "$numberInt": "28"
+              },
+              "quantity": {
+                "$numberInt": "2"
+              },
+              "__v": {
+                "$numberInt": "0"
+              }
+            }
+          ]
+        },
+        {
+          "update": null,
+          "_id": {
+            "$oid": "{{budget}}"
+          }
+        }
+      ]
+    },
+    {
+      "budgetId": "{{budget}}",
+      "body": "{\"importDescription\":\"false\",\"importTasks\":\"false\",\"budgetNumber\":\"26-0003\"}",
+      "status": 200,
+      "json": {
+        "revision": 0,
+        "complete": true,
+        "wasPdfDownloaded": true,
+        "margin": 32.5,
+        "daysNeededToDoTheWork": 60,
+        "validity": 30,
+        "hasGenerateJob": false,
+        "_id": "{{budget}}",
+        "client": {
+          "_id": "{{client}}",
+          "name": "Metalúrgica Exemplo, Lda.",
+          "fiscalNumber": "509999990",
+          "address": "Rua das Flores, 12",
+          "zipCode": "4000-123",
+          "location": "Porto",
+          "paymentCondition": "30 dias",
+          "type": "Cliente",
+          "__v": 0
+        },
+        "descriptive": "Máquina de corte",
+        "personInCharge": "Eng.ª Maria",
+        "madeBy": {
+          "roles": [
+            "canSeeOrcamentos",
+            null,
+            "canSeeDefinicoes"
+          ],
+          "fieldOfCompetencies": "Desenvolvimento",
+          "_id": "{{user}}",
+          "name": "Ana Administradora",
+          "email": "ana.admin@dib4t.local",
+          "password": "$2a$10$abcdefghijklmnopqrstuuabcdefghijklmnopqrstuvwxyz01234",
+          "__v": 0
+        },
+        "budgetNumber": "26-0007",
+        "paymentMethod": "30 dias",
+        "total": 1234,
+        "date": "2026-02-01T09:00:00.000Z",
+        "__v": 0,
+        "description": "Texto da origem\nsegunda linha"
+      },
+      "effects": [
+        {
+          "deleteMany": {
+            "budgetId": {
+              "$oid": "{{budget}}"
+            }
+          },
+          "deletedCount": 3
+        },
+        {
+          "insertMany": [
+            {
+              "_id": {
+                "$oid": "{{new}}"
+              },
+              "taskType": "automation",
+              "budgetId": {
+                "$oid": "{{budget}}"
+              },
+              "description": "",
+              "unitPrice": {
+                "$numberDouble": "32.5"
+              },
+              "quantity": {
+                "$numberInt": "1"
+              },
+              "__v": {
+                "$numberInt": "0"
+              }
+            },
+            {
+              "_id": {
+                "$oid": "{{new}}"
+              },
+              "taskType": "development",
+              "budgetId": {
+                "$oid": "{{budget}}"
+              },
+              "description": "Projeto",
+              "unitPrice": {
+                "$numberInt": "30"
+              },
+              "quantity": {
+                "$numberDouble": "0.5"
+              },
+              "__v": {
+                "$numberInt": "0"
+              }
+            },
+            {
+              "_id": {
+                "$oid": "{{new}}"
+              },
+              "taskType": "machining",
+              "budgetId": {
+                "$oid": "{{budget}}"
+              },
+              "unitPrice": {
+                "$numberDouble": "38.5"
+              },
+              "quantity": {
+                "$numberInt": "15"
+              },
+              "__v": {
+                "$numberInt": "0"
+              }
+            },
+            {
+              "_id": {
+                "$oid": "{{new}}"
+              },
+              "taskType": "others",
+              "budgetId": {
+                "$oid": "{{budget}}"
+              },
+              "description": "Cáfé  ",
+              "unitPrice": {
+                "$numberDouble": "1e+21"
+              },
+              "quantity": {
+                "$numberInt": "-2"
+              },
+              "__v": {
+                "$numberInt": "0"
+              }
+            }
+          ]
+        },
+        {
+          "update": {
+            "$set": {
+              "description": "Texto da origem\nsegunda linha",
+              "margin": {
+                "$numberDouble": "32.5"
+              },
+              "total": {
+                "$numberInt": "1234"
+              }
+            }
+          },
+          "_id": {
+            "$oid": "{{budget}}"
+          }
+        }
+      ]
+    },
+    {
+      "budgetId": "{{budget}}",
+      "body": "{\"importDescription\":\"true\",\"importTasks\":\"TRUE\",\"budgetNumber\":\"26-0003\"}",
+      "status": 200,
+      "json": {
+        "revision": 0,
+        "complete": true,
+        "wasPdfDownloaded": true,
+        "margin": 32.5,
+        "daysNeededToDoTheWork": 60,
+        "validity": 30,
+        "hasGenerateJob": false,
+        "_id": "{{budget}}",
+        "client": {
+          "_id": "{{client}}",
+          "name": "Metalúrgica Exemplo, Lda.",
+          "fiscalNumber": "509999990",
+          "address": "Rua das Flores, 12",
+          "zipCode": "4000-123",
+          "location": "Porto",
+          "paymentCondition": "30 dias",
+          "type": "Cliente",
+          "__v": 0
+        },
+        "descriptive": "Máquina de corte",
+        "personInCharge": "Eng.ª Maria",
+        "madeBy": {
+          "roles": [
+            "canSeeOrcamentos",
+            null,
+            "canSeeDefinicoes"
+          ],
+          "fieldOfCompetencies": "Desenvolvimento",
+          "_id": "{{user}}",
+          "name": "Ana Administradora",
+          "email": "ana.admin@dib4t.local",
+          "password": "$2a$10$abcdefghijklmnopqrstuuabcdefghijklmnopqrstuvwxyz01234",
+          "__v": 0
+        },
+        "budgetNumber": "26-0007",
+        "paymentMethod": "30 dias",
+        "total": 1234,
+        "date": "2026-02-01T09:00:00.000Z",
+        "__v": 0,
+        "description": "Texto da origem\nsegunda linha"
+      },
+      "effects": [
+        {
+          "deleteMany": {
+            "budgetId": {
+              "$oid": "{{budget}}"
+            }
+          },
+          "deletedCount": 3
+        },
+        {
+          "insertMany": [
+            {
+              "_id": {
+                "$oid": "{{new}}"
+              },
+              "taskType": "automation",
+              "budgetId": {
+                "$oid": "{{budget}}"
+              },
+              "description": "",
+              "unitPrice": {
+                "$numberDouble": "32.5"
+              },
+              "quantity": {
+                "$numberInt": "1"
+              },
+              "__v": {
+                "$numberInt": "0"
+              }
+            },
+            {
+              "_id": {
+                "$oid": "{{new}}"
+              },
+              "taskType": "development",
+              "budgetId": {
+                "$oid": "{{budget}}"
+              },
+              "description": "Projeto",
+              "unitPrice": {
+                "$numberInt": "30"
+              },
+              "quantity": {
+                "$numberDouble": "0.5"
+              },
+              "__v": {
+                "$numberInt": "0"
+              }
+            },
+            {
+              "_id": {
+                "$oid": "{{new}}"
+              },
+              "taskType": "machining",
+              "budgetId": {
+                "$oid": "{{budget}}"
+              },
+              "unitPrice": {
+                "$numberDouble": "38.5"
+              },
+              "quantity": {
+                "$numberInt": "15"
+              },
+              "__v": {
+                "$numberInt": "0"
+              }
+            },
+            {
+              "_id": {
+                "$oid": "{{new}}"
+              },
+              "taskType": "others",
+              "budgetId": {
+                "$oid": "{{budget}}"
+              },
+              "description": "Cáfé  ",
+              "unitPrice": {
+                "$numberDouble": "1e+21"
+              },
+              "quantity": {
+                "$numberInt": "-2"
+              },
+              "__v": {
+                "$numberInt": "0"
+              }
+            }
+          ]
+        },
+        {
+          "update": {
+            "$set": {
+              "description": "Texto da origem\nsegunda linha",
+              "margin": {
+                "$numberDouble": "32.5"
+              },
+              "total": {
+                "$numberInt": "1234"
+              }
+            }
+          },
+          "_id": {
+            "$oid": "{{budget}}"
+          }
+        }
+      ]
+    },
+    {
+      "budgetId": "{{budget}}",
+      "body": "{\"budgetNumber\":\"26-0003\"}",
+      "status": 400,
+      "text": "Erro: \"importDescription\" is required",
+      "effects": []
+    },
+    {
+      "budgetId": "{{budget}}",
+      "body": "{\"importDescription\":true,\"budgetNumber\":\"26-0003\"}",
+      "status": 400,
+      "text": "Erro: \"importTasks\" is required",
+      "effects": []
+    },
+    {
+      "budgetId": "{{budget}}",
+      "body": "{\"importDescription\":true,\"importTasks\":true}",
+      "status": 400,
+      "text": "Erro: \"budgetNumber\" is required",
+      "effects": []
+    },
+    {
+      "budgetId": "{{budget}}",
+      "body": "{\"importDescription\":true,\"importTasks\":true,\"budgetNumber\":\"\"}",
+      "status": 400,
+      "text": "Erro: \"budgetNumber\" is not allowed to be empty",
+      "effects": []
+    },
+    {
+      "budgetId": "{{budget}}",
+      "body": "{\"importDescription\":true,\"importTasks\":true,\"budgetNumber\":3}",
+      "status": 400,
+      "text": "Erro: \"budgetNumber\" must be a string",
+      "effects": []
+    },
+    {
+      "budgetId": "{{budget}}",
+      "body": "{\"importDescription\":true,\"importTasks\":true,\"budgetNumber\":null}",
+      "status": 400,
+      "text": "Erro: \"budgetNumber\" must be a string",
+      "effects": []
+    },
+    {
+      "budgetId": "{{budget}}",
+      "body": "{\"importDescription\":true,\"importTasks\":1,\"budgetNumber\":\"26-0003\"}",
+      "status": 400,
+      "text": "Erro: \"importTasks\" must be a boolean",
+      "effects": []
+    },
+    {
+      "budgetId": "{{budget}}",
+      "body": "{\"importDescription\":true,\"importTasks\":null,\"budgetNumber\":\"26-0003\"}",
+      "status": 400,
+      "text": "Erro: \"importTasks\" must be a boolean",
+      "effects": []
+    },
+    {
+      "budgetId": "{{budget}}",
+      "body": "{\"importDescription\":true,\"importTasks\":\"yes\",\"budgetNumber\":\"26-0003\"}",
+      "status": 400,
+      "text": "Erro: \"importTasks\" must be a boolean",
+      "effects": []
+    },
+    {
+      "budgetId": "{{budget}}",
+      "body": "{\"importDescription\":true,\"importTasks\":true,\"budgetNumber\":\"26-0003\",\"extra\":1}",
+      "status": 400,
+      "text": "Erro: \"extra\" is not allowed",
+      "effects": []
+    },
+    {
+      "budgetId": "{{budget}}",
+      "body": "{\"importDescription\":true,\"importTasks\":true,\"budgetNumber\":\"26-0003\",\"budgetId\":\"{{budget}}\"}",
+      "status": 400,
+      "text": "Erro: \"budgetId\" is not allowed",
+      "effects": []
+    },
+    {
+      "budgetId": "{{budget}}",
+      "body": "{\"importDescription\":true,\"importTasks\":true,\"budgetNumber\":\"00-0000\"}",
+      "status": 400,
+      "text": "Orçamento com esse número não existe",
+      "effects": []
+    },
+    {
+      "budgetId": "{{budget}}",
+      "body": "{\"importDescription\":true,\"importTasks\":true,\"budgetNumber\":\" 26-0003\"}",
+      "status": 400,
+      "text": "Orçamento com esse número não existe",
+      "effects": []
+    },
+    {
+      "budgetId": "{{missing}}",
+      "body": "{\"importDescription\":true,\"importTasks\":true,\"budgetNumber\":\"26-0003\"}",
+      "status": 400,
+      "text": "Orçamento não existe na base de dados",
+      "effects": []
+    },
+    {
+      "budgetId": "abc",
+      "body": "{\"importDescription\":true,\"importTasks\":true,\"budgetNumber\":\"26-0003\"}",
+      "status": 500,
+      "error": "CastError: Cast to ObjectId failed for value \"abc\" at path \"_id\"",
+      "effects": []
+    },
+    {
+      "budgetId": "abc",
+      "body": "{\"importDescription\":true,\"importTasks\":true,\"budgetNumber\":\"00-0000\"}",
+      "status": 400,
+      "text": "Orçamento com esse número não existe",
+      "effects": []
+    },
+    {
+      "budgetId": "{{job-budget}}",
+      "body": "{\"importDescription\":true,\"importTasks\":true,\"budgetNumber\":\"26-0003\"}",
+      "status": 400,
+      "text": "Orçamento gerou obra!",
+      "effects": []
+    },
+    {
+      "budgetId": "{{budget}}",
+      "body": "[]",
+      "status": 400,
+      "text": "Erro: \"value\" must be an object",
+      "effects": []
+    }
+  ],
+  "validateIdMessages": [
+    {
+      "params": {
+        "taskId": "abc",
+        "budgetId": "def"
+      },
+      "message": "\"taskId\" with value \"abc\" fails to match the valid mongo id pattern"
+    }
+  ]
+}

@@ -1,0 +1,65 @@
+@* Legacy budgetDetails/task.jsx (one line): type (its price is set), description, quantity, unit price, the line's
+   total, "Adicionar" and (with more than one line) "Apagar". A change of type, quantity or unit price saves the new
+   budget total at once; the line itself is saved when one of its inputs loses focus. *@
+<MudPaper Elevation="1" Class="budget-task" aria-label="@($"Tarefa {Index + 1}")">
+    <div class="field-select budget-task-type">
+        <label for="@Id("type")" class="field-select-label">Tarefa</label>
+        <select @key="_typeKey" id="@Id("type")" class="field-select-input" value="@Row.TaskType" @onchange="TypeChangedAsync" @onblur="() => State.TaskBlurAsync(Row)">
+            @foreach (var type in State.TaskTypes)
+            {
+                <option value="@type">@(BudgetTaskRow.TypeNames.GetValueOrDefault(type) ?? type)</option>
+            }
+        </select>
+    </div>
+    <MudTextField T="string" InputId="@Id("description")" Label="Descritivo" Immediate="true" Class="budget-task-description"
+                  Value="@Row.Description" ValueChanged="text => State.TaskDescriptionChanged(Row, text)" OnBlur="_ => State.TaskBlurAsync(Row)"
+                  ReadOnly="@(!State.CanEdit)" OnKeyDown="e => State.LockedKey(e.Key)" />
+    <MudTextField T="string" InputId="@Id("quantity")" Label="Qtd" InputType="InputType.Number" Immediate="true" Class="budget-task-number"
+                  Value="@Row.Quantity.Display" ValueChanged="text => State.QuantityChangedAsync(Row, text)" OnBlur="_ => State.TaskBlurAsync(Row)"
+                  ReadOnly="@(!State.CanEdit)" OnKeyDown="e => State.LockedKey(e.Key)" />
+    <MudTextField T="string" InputId="@Id("unit-price")" Label="Unit" InputType="InputType.Number" Immediate="true" Class="budget-task-number"
+                  Value="@Row.UnitPrice.Display" ValueChanged="text => State.UnitPriceChangedAsync(Row, text)" OnBlur="_ => State.TaskBlurAsync(Row)"
+                  ReadOnly="@(!State.CanEdit)" OnKeyDown="e => State.LockedKey(e.Key)" Adornment="Adornment.End" AdornmentText="€" />
+    <p class="budget-task-total" aria-label="Total da tarefa">@Row.LineTotalText</p>
+    <div class="budget-task-actions">
+        <MudTooltip Text="Adicionar">
+            <MudIconButton Icon="@Icons.Material.Filled.Add" Size="Size.Small" aria-label="Adicionar" OnClick="() => State.AddTaskAsync(Row)" />
+        </MudTooltip>
+        @if (ShowDelete)
+        {
+            <MudTooltip Text="Apagar">
+                <MudIconButton Icon="@Icons.Material.TwoTone.DeleteOutline" Size="Size.Small" Class="budget-task-delete" aria-label="Apagar"
+                               OnClick="() => State.RemoveTaskAsync(Row)" />
+            </MudTooltip>
+        }
+    </div>
+</MudPaper>
+
+@code {
+    private int _typeKey;
+
+    [Parameter, EditorRequired]
+    public BudgetDetailsState State { get; set; } = null!;
+
+    [Parameter, EditorRequired]
+    public BudgetTaskRow Row { get; set; } = null!;
+
+    [Parameter]
+    public int Index { get; set; }
+
+    /// <summary>Legacy: "Apagar" only while the budget has more than one task.</summary>
+    [Parameter]
+    public bool ShowDelete { get; set; }
+
+    private string Id(string part) => $"task-{Row.Id}-{part}";
+
+    private async Task TypeChangedAsync(ChangeEventArgs e)
+    {
+        var locked = !State.CanEdit;
+        await State.TaskTypeChangedAsync(Row, e.Value?.ToString());
+        if (locked)
+        {
+            _typeKey++; // the select shows the saved type again
+        }
+    }
+}

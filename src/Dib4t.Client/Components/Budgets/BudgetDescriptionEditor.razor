@@ -1,0 +1,14 @@
+@* Legacy budgetDetails/description.jsx: the PDF text (20 lines, saved on blur) and "Concluir" (complete = true). *@
+<MudPaper Elevation="1" Class="budget-description">
+    <MudTextField T="string" InputId="budget-description" Label="Descrição" Variant="Variant.Outlined" Lines="20" Immediate="true"
+                  Value="@State.Description" ValueChanged="State.DescriptionChanged" OnBlur="_ => State.DescriptionBlurAsync()"
+                  ReadOnly="@(!State.CanEdit)" OnKeyDown="e => State.LockedKey(e.Key)" />
+</MudPaper>
+<div class="budget-description-actions">
+    <MudButton Variant="Variant.Filled" Color="Color.Primary" Class="budget-complete" OnClick="State.CompleteAsync">Concluir</MudButton>
+</div>
+
+@code {
+    [Parameter, EditorRequired]
+    public BudgetDetailsState State { get; set; } = null!;
+}

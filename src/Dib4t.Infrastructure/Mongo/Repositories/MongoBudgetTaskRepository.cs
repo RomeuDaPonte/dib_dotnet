@@ -62,6 +62,68 @@ internal sealed class MongoBudgetTaskRepository(IMongoDatabase database) : IBudg
         await _raw.InsertManyAsync(documents, new InsertManyOptions { IsOrdered = true }, cancellationToken);
     }
 
+    public async Task<BudgetTask?> FindByIdAsync(string taskId, CancellationToken cancellationToken)
+    {
+        var document = await _tasks.Find(Builders<BudgetTaskDocument>.Filter.Eq(t => t.Id, ObjectId.Parse(taskId))).Limit(1).FirstOrDefaultAsync(cancellationToken);
+        return document is null ? null : ToDomain(document);
+    }
+
+    public async Task<BudgetTask?> UpdateAsync(string taskId, TaskInput task, CancellationToken cancellationToken)
+    {
+        ArgumentNullException.ThrowIfNull(task);
+        var filter = Builders<BsonDocument>.Filter.Eq("_id", ObjectId.Parse(taskId));
+        var stored = await _raw.Find(filter).Limit(1).FirstOrDefaultAsync(cancellationToken);
+        if (stored is null)
+        {
+            return null;
+        }
+
+        // task.update(updatedTask), in the method's order.
+        var changes = MongooseSave.Update(stored,
+        [
+            ("description", task.Description is { } description ? new BsonString(description) : null),
+            ("unitPrice", JsNumberSerializer.ToBsonValue(task.UnitPrice)),
+            ("quantity", JsNumberSerializer.ToBsonValue(task.Quantity)),
+            ("taskType", task.TaskType),
+        ], keepEquivalentTexts: true);
+        if (changes is not null)
+        {
+            var result = await _raw.UpdateOneAsync(filter, changes, cancellationToken: cancellationToken);
+            if (result.MatchedCount == 0)
+            {
+                return null;
+            }
+        }
+
+        return ToDomain(MongoDB.Bson.Serialization.BsonSerializer.Deserialize<BudgetTaskDocument>(stored));
+    }
+
+    public async Task<BudgetTask> InsertAsync(string budgetId, TaskInput task, CancellationToken cancellationToken)
+    {
+        ArgumentNullException.ThrowIfNull(task);
+        var document = new BudgetTaskDocument
+        {
+            Id = ObjectId.GenerateNewId(),
+            BudgetId = ObjectId.Parse(budgetId),
+            TaskType = task.TaskType,
+            Description = task.Description,
+            UnitPrice = task.UnitPrice,
+            Quantity = task.Quantity,
+            Version = 0,
+        };
+        await _tasks.InsertOneAsync(document, cancellationToken: cancellationToken);
+        return ToDomain(document);
+    }
+
+    public async Task<BudgetTask?> DeleteAsync(string taskId, CancellationToken cancellationToken)
+    {
+        var document = await _tasks.FindOneAndDeleteAsync(Builders<BudgetTaskDocument>.Filter.Eq(t => t.Id, ObjectId.Parse(taskId)), cancellationToken: cancellationToken);
+        return document is null ? null : ToDomain(document);
+    }
+
+    public async Task<long> DeleteByBudgetAsync(string budgetId, CancellationToken cancellationToken) =>
+        (await _tasks.DeleteManyAsync(Builders<BudgetTaskDocument>.Filter.Eq(t => t.BudgetId, ObjectId.Parse(budgetId)), cancellationToken)).DeletedCount;
+
     private static void Add(BsonDocument document, string field, string? value)
     {
         if (value is not null)

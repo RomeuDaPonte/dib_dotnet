@@ -28,6 +28,9 @@ public sealed class BudgetsPageTests : IAsyncDisposable
     private readonly IBudgetApi _budgets = Substitute.For<IBudgetApi>();
     private readonly IUsersApi _users = Substitute.For<IUsersApi>();
     private readonly IClipboard _clipboard = Substitute.For<IClipboard>();
+    private readonly ITaskApi _tasks = Substitute.For<ITaskApi>();
+    private readonly IPricesApi _prices = Substitute.For<IPricesApi>();
+    private readonly IPaymentMethodsApi _paymentMethods = Substitute.For<IPaymentMethodsApi>();
     private IRenderedComponent<MudDialogProvider> _dialogs = null!;
     private IRenderedComponent<MudPopoverProvider> _popovers = null!;
 
@@ -36,6 +39,14 @@ public sealed class BudgetsPageTests : IAsyncDisposable
         _context.Services.AddSingleton(_budgets);
         _context.Services.AddSingleton(_users);
         _context.Services.AddSingleton(_clipboard);
+        _context.Services.AddSingleton(_tasks);
+        _context.Services.AddSingleton(_prices);
+        _context.Services.AddSingleton(_paymentMethods);
+        _context.Services.AddTransient<BudgetDetailsState>();
+        _tasks.ListAsync(Arg.Any<string>()).Returns(ApiResult.Success<IReadOnlyList<BudgetTaskResponse>>([]));
+        _tasks.ListTypesAsync().Returns(ApiResult.Success<IReadOnlyList<string>>(["automation"]));
+        _prices.GetAsync().Returns(ApiResult.Success(new Dib4t.Contracts.Settings.PricesResponse(32.5, 10, 10, 10, 10, 35)));
+        _paymentMethods.ListAsync().Returns(ApiResult.Success<IReadOnlyList<Dib4t.Contracts.Settings.PaymentMethodResponse>>([]));
         _context.StorageModule.Setup<string?>("getToken").SetResult(ClientTestContext.Token("Ana Administradora", "canSeeOrcamentos"));
         _budgets.ListAsync().Returns(ApiResult.Success<IReadOnlyList<BudgetListItemResponse>>(
         [
