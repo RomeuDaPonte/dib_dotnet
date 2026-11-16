@@ -835,3 +835,125 @@ body {
     gap: 0;
   }
 }
+
+/* ---------------------------------------------------------------- Orçamentos (PLAN.md §7.1, §8.4) */
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+.budgets-new {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 6rem;
+  margin-bottom: 1rem;
+}
+
+.budgets-new-button .mud-button-label {
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+/* The table scrolls in its own box, never the page (§8.4 rule 5): its columns keep a readable width instead of
+   being squeezed to a few characters on phones. */
+.budgets {
+  min-width: 0;
+  max-width: 100%;
+}
+
+.budgets-table .mud-table-container {
+  position: relative; /* clips the visually hidden header labels too (absolutely positioned) */
+  overflow-x: auto;
+}
+
+.budgets-table .mud-table-root {
+  min-width: 52rem;
+}
+
+.budgets-icon-cell {
+  width: 2em;
+}
+
+.budgets-number {
+  white-space: nowrap;
+}
+
+/* Legacy: the warning icon in yellow, the revisions arrow in red, the "contem obra" icon in light green. */
+.budgets-incomplete {
+  color: yellow;
+}
+
+.budgets-revisions-toggle.mud-icon-button {
+  margin-right: 0.5em;
+  color: red;
+}
+
+.budgets-has-job {
+  color: lightgreen;
+  margin-left: 0.5rem;
+}
+
+.budgets-copy.mud-icon-button {
+  color: darkgrey;
+}
+
+.budgets-actions,
+.budgets-actions-inner {
+  white-space: nowrap;
+}
+
+.budgets-actions-inner {
+  display: inline-flex;
+  align-items: center;
+}
+
+.budgets-revisions-cell {
+  padding: 0 0.5rem;
+}
+
+/* Legacy revisions box: #555559 in the dark theme. */
+.budgets-revisions {
+  margin: 0.5rem;
+  background-color: var(--mud-palette-background-gray);
+  overflow-x: auto;
+}
+
+.budgets-revisions-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.budgets-revisions-table th,
+.budgets-revisions-table td {
+  padding: 0.25rem 0.75rem;
+  text-align: left;
+}
+
+.budget-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  padding: 1rem;
+}
+
+.budget-header-grid {
+  display: grid;
+  flex: 1 1 auto;
+  grid-template-columns: repeat(auto-fit, minmax(min(12rem, 100%), 1fr));
+  gap: 0.5rem 1rem;
+  margin: 0;
+}
+
+.budget-header-grid dt {
+  color: var(--mud-palette-text-secondary);
+  font-size: 0.75rem;
+}
+
+.budget-header-grid dd {
+  margin: 0;
+}

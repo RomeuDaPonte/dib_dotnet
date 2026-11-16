@@ -1,0 +1,69 @@
+@page "/landing/budgets/{BudgetId}"
+@layout LandingLayout
+@inject AuthSession Session
+@inject IBudgetApi BudgetApi
+@inject ISnackbar Snackbar
+
+<PageTitle>Dib4t</PageTitle>
+
+@* Legacy budgetDetails/budgetGeneralDetails.jsx, header only for now: number, client, descriptive, person in charge,
+   author and date, with the edit dialog (newBudgetModdal.jsx with a budget). The totals, tasks, description,
+   lock and import come with the next Phase 3 step. *@
+@if (Session.User?.HasRole(RoleNames.CanSeeOrcamentos) != true)
+{
+    <p class="settings-denied">@AuthTexts.NoPermission</p>
+}
+else if (_budget is { } budget)
+{
+    <MudPaper Elevation="1" Class="budget-header">
+        <dl class="budget-header-grid">
+            <div><dt>Nº</dt><dd>@budget.BudgetNumber@(budget.Revision > 0 ? $" | R {budget.Revision}" : string.Empty)</dd></div>
+            <div><dt>Cliente</dt><dd class="settings-wrap">@budget.Client?.Name</dd></div>
+            <div><dt>Descritivo</dt><dd class="settings-wrap">@budget.Descriptive</dd></div>
+            <div><dt>Responsável</dt><dd class="settings-wrap">@budget.PersonInCharge</dd></div>
+            <div><dt>Elaborado por</dt><dd class="settings-wrap">@budget.MadeBy?.Name</dd></div>
+            <div><dt>Data</dt><dd>@BudgetList.Date(budget.Date, Zone)</dd></div>
+        </dl>
+        @if (!budget.HasGenerateJob)
+        {
+            <MudTooltip Text="Editar orçamento">
+                <MudIconButton Icon="@Icons.Material.TwoTone.Edit" aria-label="Editar orçamento" OnClick="() => _form = BudgetForm.Edit(budget)" />
+            </MudTooltip>
+        }
+    </MudPaper>
+    <BudgetDialog Form="_form" OnSaved="Saved" OnClosed="() => _form = null" />
+}
+else if (_error is not null)
+{
+    <p class="settings-denied">@_error</p>
+}
+
+@code {
+    private BudgetResponse? _budget;
+    private BudgetForm? _form;
+    private string? _error;
+
+    [Parameter]
+    public string BudgetId { get; set; } = string.Empty;
+
+    /// <summary>The browser's zone (legacy <c>toLocaleDateString</c>); tests set it.</summary>
+    [Parameter]
+    public TimeZoneInfo Zone { get; set; } = TimeZoneInfo.Local;
+
+    protected override async Task OnParametersSetAsync()
+    {
+        var result = await BudgetApi.GetAsync(BudgetId);
+        _budget = result.Value;
+        if (!result.IsSuccess && !result.IsUnexpected)
+        {
+            _error = result.ErrorText;
+            Snackbar.Add(result.ErrorText!, Severity.Error);
+        }
+    }
+
+    private void Saved(BudgetResponse saved)
+    {
+        _budget = saved;
+        _form = null;
+    }
+}

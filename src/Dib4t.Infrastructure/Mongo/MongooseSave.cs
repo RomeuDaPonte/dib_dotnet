@@ -17,9 +17,15 @@ internal static class MongooseSave
     /// <summary>
     /// The update for <paramref name="assignments"/> (field → value; a <c>null</c> value = <c>undefined</c>), applied
     /// to <paramref name="stored"/> in memory too (so callers can answer the saved document); <c>null</c> when nothing
-    /// differs (Mongoose then sends no command).
+    /// differs (Mongoose then sends no command). A field the document lacks but whose schema has a static default
+    /// (<paramref name="defaults"/>) holds that default after Mongoose's read, so assigning the default value writes
+    /// nothing (checked in <c>budget-golden.json</c>: an imported budget without <c>complete</c> saved with
+    /// <c>complete = false</c> sends no <c>$set</c>).
     /// </summary>
-    public static UpdateDefinition<BsonDocument>? Update(BsonDocument stored, IEnumerable<(string Field, BsonValue? Value)> assignments)
+    public static UpdateDefinition<BsonDocument>? Update(
+        BsonDocument stored,
+        IEnumerable<(string Field, BsonValue? Value)> assignments,
+        IReadOnlyDictionary<string, BsonValue>? defaults = null)
     {
         ArgumentNullException.ThrowIfNull(stored);
         ArgumentNullException.ThrowIfNull(assignments);
@@ -40,6 +46,11 @@ internal static class MongooseSave
             }
 
             if (stored.TryGetValue(field, out var current) && JsEquals(current, value))
+            {
+                continue;
+            }
+
+            if (current is null && defaults is not null && defaults.TryGetValue(field, out var fallback) && JsEquals(fallback, value))
             {
                 continue;
             }

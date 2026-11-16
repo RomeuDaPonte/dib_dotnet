@@ -1,0 +1,281 @@
+@inject IBudgetApi BudgetApi
+@inject IClipboard Clipboard
+@inject AuthSession Session
+@inject ISnackbar Snackbar
+@inject NavigationManager Navigation
+
+@* Legacy components/budgets/*: "Novo orçamento", the search box ("Filtrar", Enter = server search, empty = the
+   list again), the table (latest revision of each number, server order until a column is sorted), revisions per row
+   (red arrow when revision > 0), copy path, edit, the options menu, the "contem obra" icon, pager 5/10/25 (25),
+   dense switch (on). The table scrolls inside its own container (§8.4 rule 5). *@
+<MudPaper Elevation="1" Class="budgets-new">
+    <MudButton Variant="Variant.Text" StartIcon="@Icons.Material.TwoTone.Description" Size="Size.Large" OnClick="OpenNew"
+               Class="budgets-new-button">Novo orçamento</MudButton>
+</MudPaper>
+
+<MudPaper Elevation="1" Class="settings budgets">
+    <div class="settings-toolbar">
+        <MudTextField T="string" @bind-Value="_search" Immediate="true" Label="Filtrar" InputId="budgets-filter" OnKeyDown="SearchKeyDown"
+                      Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" Margin="Margin.Normal" Class="settings-filter" />
+    </div>
+    <MudTable @ref="_table" T="BudgetListItemResponse" Items="_rows" Dense="_dense" Hover="true" HorizontalScrollbar="true" Elevation="0"
+              RowsPerPage="_rowsPerPage" @bind-CurrentPage="_page" Breakpoint="Breakpoint.None" Class="settings-table budgets-table"
+              aria-label="Orçamentos" Loading="_loading">
+        <HeaderContent>
+            <MudTh><MudTableSortLabel T="BudgetListItemResponse" SortBy="b => b.WasPdfDownloaded"><span class="visually-hidden">PDF</span></MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel T="BudgetListItemResponse" SortBy="b => EntityList.SortKey(b.BudgetNumber)">Nº</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel T="BudgetListItemResponse" SortBy="b => EntityList.SortKey(b.ClientName)">Cliente</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel T="BudgetListItemResponse" SortBy="b => EntityList.SortKey(b.Descriptive)">Descritivo</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel T="BudgetListItemResponse" SortBy="b => EntityList.SortKey(b.PersonInCharge)">Responsável</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel T="BudgetListItemResponse" SortBy="b => EntityList.SortKey(b.MadeBy)">Elaborado por</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel T="BudgetListItemResponse" SortBy="b => b.Date ?? DateTime.MinValue">Data</MudTableSortLabel></MudTh>
+            <MudTh><span class="visually-hidden">Opções</span></MudTh>
+        </HeaderContent>
+        <RowTemplate>
+            <MudTd DataLabel="PDF" Class="budgets-icon-cell">
+                @if (!context.WasPdfDownloaded)
+                {
+                    <MudTooltip Text="Incompleto"><MudIcon Icon="@Icons.Material.TwoTone.Warning" Class="budgets-incomplete" aria-label="Incompleto" /></MudTooltip>
+                }
+            </MudTd>
+            <MudTd DataLabel="Nº" Class="budgets-number">
+                @if (context.Revision > 0)
+                {
+                    <MudTooltip Text="revisões">
+                        <MudIconButton Icon="@(IsOpen(context) ? Icons.Material.Filled.KeyboardArrowUp : Icons.Material.Filled.KeyboardArrowDown)"
+                                       Size="Size.Small" Class="budgets-revisions-toggle" aria-label="@($"Revisões de {context.BudgetNumber}")"
+                                       aria-expanded="@(IsOpen(context) ? "true" : "false")" OnClick="() => ToggleRevisionsAsync(context)" />
+                    </MudTooltip>
+                }
+                @context.BudgetNumber
+            </MudTd>
+            <MudTd DataLabel="Cliente" Class="settings-wrap">@context.ClientName</MudTd>
+            <MudTd DataLabel="Descritivo" Class="settings-wrap">@context.Descriptive</MudTd>
+            <MudTd DataLabel="Responsável" Class="settings-wrap">@context.PersonInCharge</MudTd>
+            <MudTd DataLabel="Elaborado por" Class="settings-wrap">@context.MadeBy</MudTd>
+            <MudTd DataLabel="Data">@BudgetList.Date(context.Date, Zone)</MudTd>
+            <MudTd DataLabel="Opções" Class="budgets-actions">
+                <MudTooltip Text="copiar caminho">
+                    <MudIconButton Icon="@Icons.Material.Filled.CopyAll" Class="budgets-copy" aria-label="@($"Copiar caminho de {context.BudgetNumber}")"
+                                   OnClick="() => CopyPathAsync(context)" />
+                </MudTooltip>
+                @Actions(new BudgetActions(context.Id, context.BudgetNumber, context.Revision, context.Complete, context.WasPdfDownloaded,
+                    context.HasGenerateJob, context))
+            </MudTd>
+        </RowTemplate>
+        <ChildRowContent>
+            @if (IsOpen(context) && _revisions.TryGetValue(context.BudgetNumber!, out var revisions))
+            {
+                <MudTr>
+                    <td colspan="8" class="budgets-revisions-cell">
+                        <div class="budgets-revisions">
+                            <table class="budgets-revisions-table" aria-label="@($"Revisões de {context.BudgetNumber}")">
+                                <thead>
+                                    <tr><th>Nª da revisão</th><th>Elaborado por</th><th>Data</th><th>Opções</th></tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var revision in revisions)
+                                    {
+                                        <tr>
+                                            <td>
+                                                @if (!revision.WasPdfDownloaded)
+                                                {
+                                                    <MudTooltip Text="Incompleto"><MudIcon Icon="@Icons.Material.TwoTone.Warning" Class="budgets-incomplete" aria-label="Incompleto" /></MudTooltip>
+                                                }
+                                                R-@revision.Revision
+                                            </td>
+                                            <td class="settings-wrap">@revision.MadeBy?.Name</td>
+                                            <td>@BudgetList.Date(revision.Date, Zone)</td>
+                                            <td class="budgets-actions">
+                                                @Actions(new BudgetActions(revision.Id, revision.BudgetNumber, revision.Revision, revision.Complete,
+                                                    revision.WasPdfDownloaded, revision.HasGenerateJob, context with
+                                                    {
+                                                        Id = revision.Id, Descriptive = revision.Descriptive, PersonInCharge = revision.PersonInCharge,
+                                                    }))
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </td>
+                </MudTr>
+            }
+        </ChildRowContent>
+        <PagerContent>
+            <div class="settings-pager">
+                <LabeledSelect TValue="int" Id="budgets-rows-per-page" Label="Rows per page:" Value="_rowsPerPage" ValueChanged="RowsPerPageChanged"
+                               Options="RowsPerPageOptions" Class="settings-pager-size" />
+                <span class="settings-pager-info">@PageInfo</span>
+                <MudIconButton Icon="@Icons.Material.Filled.NavigateBefore" aria-label="Previous page" Disabled="_page == 0" OnClick="() => _page--" />
+                <MudIconButton Icon="@Icons.Material.Filled.NavigateNext" aria-label="Next page" Disabled="(_page + 1) * _rowsPerPage >= _rows.Count" OnClick="() => _page++" />
+            </div>
+        </PagerContent>
+    </MudTable>
+    <MudSwitch T="bool" @bind-Value="_dense" Label="Tabela densa" Color="Color.Primary" Class="settings-dense" />
+</MudPaper>
+
+<BudgetDialog Form="_form" OnSaved="Saved" OnClosed="() => _form = null" />
+
+@code {
+    private static readonly IReadOnlyList<(int Value, string Text)> RowsPerPageOptions = [(5, "5"), (10, "10"), (25, "25")];
+
+    private readonly Dictionary<string, IReadOnlyList<BudgetRevisionResponse>> _revisions = new(StringComparer.Ordinal);
+    private readonly HashSet<string> _open = new(StringComparer.Ordinal);
+    private List<BudgetListItemResponse> _rows = [];
+    private List<BudgetListItemResponse> _persisted = [];
+    private MudTable<BudgetListItemResponse>? _table;
+    private string? _search;
+    private bool _dense = true;
+    private bool _loading = true;
+    private int _page;
+    private int _rowsPerPage = 25;
+    private BudgetForm? _form;
+
+    /// <summary>The browser's zone (legacy <c>toLocaleDateString</c>); tests set it.</summary>
+    [Parameter]
+    public TimeZoneInfo Zone { get; set; } = TimeZoneInfo.Local;
+
+    private string PageInfo => _rows.Count == 0 ? "0-0 of 0" : $"{(_page * _rowsPerPage) + 1}-{Math.Min((_page + 1) * _rowsPerPage, _rows.Count)} of {_rows.Count}";
+
+    protected override async Task OnInitializedAsync()
+    {
+        var result = await BudgetApi.ListAsync();
+        if (result.IsSuccess)
+        {
+            _persisted = [.. result.Value!];
+            _rows = [.. _persisted];
+        }
+        else if (!result.IsUnexpected)
+        {
+            Snackbar.Add(result.ErrorText!, Severity.Error);
+        }
+
+        _loading = false;
+    }
+
+    private RenderFragment Actions(BudgetActions row) =>
+        @<span class="budgets-actions-inner">
+            <MudTooltip Text="Editar">
+                <MudIconButton Icon="@Icons.Material.TwoTone.Edit" aria-label="@($"Editar {row.BudgetNumber} R{row.Revision}")"
+                               OnClick="@(() => Navigation.NavigateTo("landing/budgets/" + row.Id))" />
+            </MudTooltip>
+            <MudMenu Icon="@Icons.Material.Filled.MoreVert" AriaLabel="@($"Opções de {row.BudgetNumber} R{row.Revision}")" Dense="true">
+                @foreach (var item in BudgetList.Menu(row.Complete, row.WasPdfDownloaded, row.HasGenerateJob))
+                {
+                    <MudMenuItem Icon="@MenuIcon(item)" OnClick="@(() => MenuAsync(item, row))">@BudgetList.Label(item)</MudMenuItem>
+                }
+            </MudMenu>
+            @if (row.HasGenerateJob)
+            {
+                <MudTooltip Text="contem obra"><MudIcon Icon="@Icons.Material.Filled.TaskAlt" Class="budgets-has-job" aria-label="contem obra" /></MudTooltip>
+            }
+        </span>;
+
+    private static string MenuIcon(BudgetMenuItem item) => item switch
+    {
+        BudgetMenuItem.Pdf => Icons.Material.Filled.PictureAsPdf,
+        BudgetMenuItem.JobDetails => Icons.Material.Filled.Article,
+        BudgetMenuItem.Print => Icons.Material.Filled.LocalPrintshop,
+        BudgetMenuItem.Clone => Icons.Material.Filled.ContentCopy,
+        BudgetMenuItem.NewRevision => Icons.Material.Filled.FileCopy,
+        _ => Icons.Material.Filled.Build,
+    };
+
+    private bool IsOpen(BudgetListItemResponse row) => row.BudgetNumber is { } number && _open.Contains(number);
+
+    private void OpenNew() => _form = BudgetForm.New(Session.User?.Id ?? string.Empty);
+
+    /// <summary>Legacy <c>handleKeyPress</c>: Enter searches; an empty text shows the list as first loaded.</summary>
+    private async Task SearchKeyDown(KeyboardEventArgs args)
+    {
+        if (args.Key != "Enter")
+        {
+            return;
+        }
+
+        _page = 0;
+        if (string.IsNullOrEmpty(_search))
+        {
+            _rows = [.. _persisted];
+            return;
+        }
+
+        var result = await BudgetApi.SearchAsync(_search);
+        _rows = result.IsSuccess ? [.. result.Value!] : [];
+        if (!result.IsSuccess && !result.IsUnexpected)
+        {
+            Snackbar.Add(result.ErrorText!, Severity.Warning); // legacy: an empty list only (console.error)
+        }
+    }
+
+    /// <summary>Legacy <c>toggleColapse</c>: the revisions are read again each time the row opens.</summary>
+    private async Task ToggleRevisionsAsync(BudgetListItemResponse row)
+    {
+        var number = row.BudgetNumber!;
+        if (_open.Remove(number))
+        {
+            return;
+        }
+
+        var result = await BudgetApi.ListRevisionsAsync(number);
+        if (result.IsSuccess)
+        {
+            _revisions[number] = result.Value!;
+            _open.Add(number);
+        }
+    }
+
+    private async Task CopyPathAsync(BudgetListItemResponse row)
+    {
+        // A budget with a job: the job's start year and folder (CAD/CAM) come with the jobs API (Phase 4).
+        var copied = await Clipboard.CopyAsync(BudgetList.CopyPath(row, Zone));
+        Snackbar.Add(copied ? "Link copiado!" : "Erro ao copiar!", copied ? Severity.Success : Severity.Error);
+    }
+
+    private async Task MenuAsync(BudgetMenuItem item, BudgetActions row)
+    {
+        switch (item)
+        {
+            case BudgetMenuItem.Clone:
+                _form = BudgetForm.Clone(row.Source, Session.User?.Id ?? string.Empty);
+                break;
+            case BudgetMenuItem.NewRevision:
+                var revision = await BudgetApi.CreateRevisionAsync(row.Id);
+                if (revision.IsSuccess)
+                {
+                    Saved(revision.Value!);
+                }
+                else if (!revision.IsUnexpected)
+                {
+                    Snackbar.Add(revision.ErrorText!, Severity.Error);
+                }
+
+                break;
+        }
+    }
+
+    /// <summary>Legacy <c>updateTable</c>; an open revisions list of that number is read again when reopened.</summary>
+    private void Saved(BudgetResponse saved)
+    {
+        _rows = BudgetList.WithSaved(_rows, saved);
+        _persisted = BudgetList.WithSaved(_persisted, saved);
+        if (saved.BudgetNumber is { } number)
+        {
+            _open.Remove(number);
+        }
+
+        _form = null;
+    }
+
+    private void RowsPerPageChanged(int rows)
+    {
+        _rowsPerPage = rows;
+        _page = 0;
+        _table?.SetRowsPerPage(rows);
+    }
+
+    /// <summary>A row or a revision, with the list row the clone dialog starts from.</summary>
+    private sealed record BudgetActions(string Id, string? BudgetNumber, double Revision, bool Complete, bool WasPdfDownloaded, bool HasGenerateJob,
+        BudgetListItemResponse Source);
+}

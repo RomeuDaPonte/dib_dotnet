@@ -1,4 +1,5 @@
 using Dib4t.Application.Account;
+using Dib4t.Application.Budgets;
 using Dib4t.Application.Database;
 using Dib4t.Application.Entities;
 using Dib4t.Application.Logs;
@@ -24,6 +25,8 @@ public sealed class DependencyInjectionTests
         services.AddSingleton(Substitute.For<IPrinterSettingsRepository>());
         services.AddSingleton(Substitute.For<ILogQueryService>());
         services.AddSingleton(Substitute.For<IEntityRepository>());
+        services.AddSingleton(Substitute.For<IBudgetRepository>());
+        services.AddSingleton(Substitute.For<IBudgetTaskRepository>());
         services.AddSingleton(typeof(ILogger<>), typeof(RecordingLogger<>));
         using var provider = services.BuildServiceProvider(new ServiceProviderOptions { ValidateScopes = true, ValidateOnBuild = true });
 
@@ -38,9 +41,12 @@ public sealed class DependencyInjectionTests
             scope.ServiceProvider.GetRequiredService<DefaultDataSeeder>().Should().NotBeNull();
             scope.ServiceProvider.GetRequiredService<LogsService>().Should().NotBeNull();
             scope.ServiceProvider.GetRequiredService<EntitiesService>().Should().NotBeNull();
+            scope.ServiceProvider.GetRequiredService<BudgetsService>().Should().NotBeNull();
         }
 
         provider.GetRequiredService<DatabaseOperationLock>().Should().BeSameAs(provider.GetRequiredService<DatabaseOperationLock>());
+        // One numbering lock per process (PLAN.md §4.7).
+        provider.GetRequiredService<BudgetNumbering>().Should().BeSameAs(provider.GetRequiredService<BudgetNumbering>());
         // One cache per process: the 30 s window is shared by every request (PLAN.md §4.6).
         provider.GetRequiredService<UserSessionCache>().Should().BeSameAs(provider.GetRequiredService<UserSessionCache>());
         provider.GetRequiredService<TimeProvider>().Should().BeSameAs(TimeProvider.System);

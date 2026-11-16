@@ -1,0 +1,16 @@
+@page "/landing/budgets"
+@layout LandingLayout
+@inject AuthSession Session
+
+<PageTitle>Dib4t</PageTitle>
+
+@* Legacy components/budgets/budgets.jsx. Only for canSeeOrcamentos, like the menu entry (the API is open to every
+   signed-in user, as legacy). *@
+@if (Session.User?.HasRole(RoleNames.CanSeeOrcamentos) == true)
+{
+    <BudgetsTable />
+}
+else
+{
+    <p class="settings-denied">@AuthTexts.NoPermission</p>
+}

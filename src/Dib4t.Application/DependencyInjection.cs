@@ -1,4 +1,6 @@
 using Dib4t.Application.Account;
+using Dib4t.Application.Budgets;
+using Dib4t.Application.Common;
 using Dib4t.Application.Database;
 using Dib4t.Application.Entities;
 using Dib4t.Application.Logs;
@@ -22,6 +24,9 @@ public static class DependencyInjection
         services.AddScoped<PaymentMethodsService>();
         services.AddScoped<PrinterSettingsService>();
         services.AddScoped<EntitiesService>();
+        services.AddOptions<AppOptions>();
+        services.AddSingleton<BudgetNumbering>();
+        services.AddScoped<BudgetsService>();
         services.AddScoped<DefaultDataSeeder>();
         services.AddSingleton<DatabaseOperationLock>();
         services.AddScoped<DatabaseRestoreService>();

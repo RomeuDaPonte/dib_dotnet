@@ -1,0 +1,4852 @@
+{
+  "generatedBy": "tools/legacy/budget-golden.js",
+  "versions": {
+    "bson": "1.1.6",
+    "express": "4.18.2",
+    "joi": "14.3.1",
+    "joi-objectid": "3.0.1",
+    "mongoose": "5.13.20",
+    "qs": "6.11.0",
+    "node": "v16.20.2"
+  },
+  "clock": "2026-03-15T10:20:30.123Z (TZ=UTC)",
+  "newBudget": [
+    {
+      "body": "{\"clientId\":\"5f1e9a2b3c4d5e6f70820001\",\"madeById\":\"5f1e9a2b3c4d5e6f70830001\",\"descriptive\":\"Máquina de corte\",\"personInCharge\":\"Eng.ª Maria\"}",
+      "message": null
+    },
+    {
+      "body": "{\"clientId\":\"5F1E9A2B3C4D5E6F70820001\",\"madeById\":\"5f1e9a2b3c4d5e6f70830001\",\"descriptive\":\"Máquina de corte\",\"personInCharge\":\"Eng.ª Maria\"}",
+      "message": null
+    },
+    {
+      "body": "{\"clientId\":\"5f1e9a2b3c4d5e6f70820001\",\"madeById\":\"5f1e9a2b3c4d5e6f70830001\",\"descriptive\":\"  Espaços  \",\"personInCharge\":\"Eng.ª Maria\"}",
+      "message": null
+    },
+    {
+      "body": "{\"clientId\":\"5f1e9a2b3c4d5e6f70820001\",\"madeById\":\"5f1e9a2b3c4d5e6f70830001\",\"descriptive\":\"Suporte 30/40 mm\",\"personInCharge\":\"Eng.ª Maria\"}",
+      "message": null
+    },
+    {
+      "body": "{\"clientId\":\"5f1e9a2b3c4d5e6f70820001\",\"madeById\":\"5f1e9a2b3c4d5e6f70830001\",\"descriptive\":\"O'Brien\",\"personInCharge\":\"Eng.ª Maria\"}",
+      "message": null
+    },
+    {
+      "body": "{\"clientId\":\"5f1e9a2b3c4d5e6f70820001\",\"madeById\":\"5f1e9a2b3c4d5e6f70830001\",\"descriptive\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\"personInCharge\":\"Eng.ª Maria\"}",
+      "message": null
+    },
+    {
+      "body": "{\"clientId\":\"5f1e9a2b3c4d5e6f70820001\",\"madeById\":\"5f1e9a2b3c4d5e6f70830001\",\"descriptive\":\"Café Decomposto\",\"personInCharge\":\"Eng.ª Maria\"}",
+      "message": null
+    },
+    {
+      "body": "{\"personInCharge\":\"x\",\"descriptive\":\"x\",\"madeById\":\"5f1e9a2b3c4d5e6f70830001\",\"clientId\":\"5f1e9a2b3c4d5e6f70820001\"}",
+      "message": null
+    },
+    {
+      "body": "{}",
+      "message": "\"clientId\" is required"
+    },
+    {
+      "body": "{\"madeById\":\"5f1e9a2b3c4d5e6f70830001\",\"descriptive\":\"Máquina de corte\",\"personInCharge\":\"Eng.ª Maria\"}",
+      "message": "\"clientId\" is required"
+    },
+    {
+      "body": "{\"clientId\":\"5f1e9a2b3c4d5e6f70820001\",\"descriptive\":\"Máquina de corte\",\"personInCharge\":\"Eng.ª Maria\"}",
+      "message": "\"madeById\" is required"
+    },
+    {
+      "body": "{\"clientId\":\"5f1e9a2b3c4d5e6f70820001\",\"madeById\":\"5f1e9a2b3c4d5e6f70830001\",\"personInCharge\":\"Eng.ª Maria\"}",
+      "message": "\"descriptive\" is required"
+    },
+    {
+      "body": "{\"clientId\":\"5f1e9a2b3c4d5e6f70820001\",\"madeById\":\"5f1e9a2b3c4d5e6f70830001\",\"descriptive\":\"Máquina de corte\"}",
+      "message": "\"personInCharge\" is required"
+    },
+    {
+      "body": "{\"clientId\":\"\",\"madeById\":\"5f1e9a2b3c4d5e6f70830001\",\"descriptive\":\"Máquina de corte\",\"personInCharge\":\"Eng.ª Maria\"}",
+      "message": "\"clientId\" is not allowed to be empty"
+    },
+    {
+      "body": "{\"clientId\":\"abc\",\"madeById\":\"5f1e9a2b3c4d5e6f70830001\",\"descriptive\":\"Máquina de corte\",\"personInCharge\":\"Eng.ª Maria\"}",
+      "message": "\"clientId\" with value \"abc\" fails to match the valid mongo id pattern"
+    },
+    {
+      "body": "{\"clientId\":\"5f1e9a2b3c4d5e6f708200010\",\"madeById\":\"5f1e9a2b3c4d5e6f70830001\",\"descriptive\":\"Máquina de corte\",\"personInCharge\":\"Eng.ª Maria\"}",
+      "message": "\"clientId\" with value \"5f1e9a2b3c4d5e6f708200010\" fails to match the valid mongo id pattern"
+    },
+    {
+      "body": "{\"clientId\":\"5f1e9a2b3c4d5e6f7082000g\",\"madeById\":\"5f1e9a2b3c4d5e6f70830001\",\"descriptive\":\"Máquina de corte\",\"personInCharge\":\"Eng.ª Maria\"}",
+      "message": "\"clientId\" with value \"5f1e9a2b3c4d5e6f7082000g\" fails to match the valid mongo id pattern"
+    },
+    {
+      "body": "{\"clientId\":\"abcdefghijkl\",\"madeById\":\"5f1e9a2b3c4d5e6f70830001\",\"descriptive\":\"Máquina de corte\",\"personInCharge\":\"Eng.ª Maria\"}",
+      "message": "\"clientId\" with value \"abcdefghijkl\" fails to match the valid mongo id pattern"
+    },
+    {
+      "body": "{\"clientId\":null,\"madeById\":\"5f1e9a2b3c4d5e6f70830001\",\"descriptive\":\"Máquina de corte\",\"personInCharge\":\"Eng.ª Maria\"}",
+      "message": "\"clientId\" must be a string"
+    },
+    {
+      "body": "{\"clientId\":1,\"madeById\":\"5f1e9a2b3c4d5e6f70830001\",\"descriptive\":\"Máquina de corte\",\"personInCharge\":\"Eng.ª Maria\"}",
+      "message": "\"clientId\" must be a string"
+    },
+    {
+      "body": "{\"clientId\":{\"_id\":\"5f1e9a2b3c4d5e6f70820001\"},\"madeById\":\"5f1e9a2b3c4d5e6f70830001\",\"descriptive\":\"Máquina de corte\",\"personInCharge\":\"Eng.ª Maria\"}",
+      "message": "\"clientId\" must be a string"
+    },
+    {
+      "body": "{\"clientId\":[\"5f1e9a2b3c4d5e6f70820001\"],\"madeById\":\"5f1e9a2b3c4d5e6f70830001\",\"descriptive\":\"Máquina de corte\",\"personInCharge\":\"Eng.ª Maria\"}",
+      "message": "\"clientId\" must be a string"
+    },
+    {
+      "body": "{\"clientId\":\"5f1e9a2b3c4d5e6f70820001\",\"madeById\":\"x\",\"descriptive\":\"Máquina de corte\",\"personInCharge\":\"Eng.ª Maria\"}",
+      "message": "\"madeById\" with value \"x\" fails to match the valid mongo id pattern"
+    },
+    {
+      "body": "{\"clientId\":\"5f1e9a2b3c4d5e6f70820001\",\"madeById\":null,\"descriptive\":\"Máquina de corte\",\"personInCharge\":\"Eng.ª Maria\"}",
+      "message": "\"madeById\" must be a string"
+    },
+    {
+      "body": "{\"clientId\":\"5f1e9a2b3c4d5e6f70820001\",\"madeById\":\"5f1e9a2b3c4d5e6f70830001\",\"descriptive\":\"\",\"personInCharge\":\"Eng.ª Maria\"}",
+      "message": "\"descriptive\" is not allowed to be empty"
+    },
+    {
+      "body": "{\"clientId\":\"5f1e9a2b3c4d5e6f70820001\",\"madeById\":\"5f1e9a2b3c4d5e6f70830001\",\"descriptive\":\" \",\"personInCharge\":\"Eng.ª Maria\"}",
+      "message": null
+    },
+    {
+      "body": "{\"clientId\":\"5f1e9a2b3c4d5e6f70820001\",\"madeById\":\"5f1e9a2b3c4d5e6f70830001\",\"descriptive\":null,\"personInCharge\":\"Eng.ª Maria\"}",
+      "message": "\"descriptive\" must be a string"
+    },
+    {
+      "body": "{\"clientId\":\"5f1e9a2b3c4d5e6f70820001\",\"madeById\":\"5f1e9a2b3c4d5e6f70830001\",\"descriptive\":5,\"personInCharge\":\"Eng.ª Maria\"}",
+      "message": "\"descriptive\" must be a string"
+    },
+    {
+      "body": "{\"clientId\":\"5f1e9a2b3c4d5e6f70820001\",\"madeById\":\"5f1e9a2b3c4d5e6f70830001\",\"descriptive\":true,\"personInCharge\":\"Eng.ª Maria\"}",
+      "message": "\"descriptive\" must be a string"
+    },
+    {
+      "body": "{\"clientId\":\"5f1e9a2b3c4d5e6f70820001\",\"madeById\":\"5f1e9a2b3c4d5e6f70830001\",\"descriptive\":[\"a\"],\"personInCharge\":\"Eng.ª Maria\"}",
+      "message": "\"descriptive\" must be a string"
+    },
+    {
+      "body": "{\"clientId\":\"5f1e9a2b3c4d5e6f70820001\",\"madeById\":\"5f1e9a2b3c4d5e6f70830001\",\"descriptive\":{},\"personInCharge\":\"Eng.ª Maria\"}",
+      "message": "\"descriptive\" must be a string"
+    },
+    {
+      "body": "{\"clientId\":\"5f1e9a2b3c4d5e6f70820001\",\"madeById\":\"5f1e9a2b3c4d5e6f70830001\",\"descriptive\":\"Máquina de corte\",\"personInCharge\":\"\"}",
+      "message": "\"personInCharge\" is not allowed to be empty"
+    },
+    {
+      "body": "{\"clientId\":\"5f1e9a2b3c4d5e6f70820001\",\"madeById\":\"5f1e9a2b3c4d5e6f70830001\",\"descriptive\":\"Máquina de corte\",\"personInCharge\":null}",
+      "message": "\"personInCharge\" must be a string"
+    },
+    {
+      "body": "{\"clientId\":\"5f1e9a2b3c4d5e6f70820001\",\"madeById\":\"5f1e9a2b3c4d5e6f70830001\",\"descriptive\":\"Máquina de corte\",\"personInCharge\":1}",
+      "message": "\"personInCharge\" must be a string"
+    },
+    {
+      "body": "{\"clientId\":\"5f1e9a2b3c4d5e6f70820001\",\"madeById\":\"5f1e9a2b3c4d5e6f70830001\",\"descriptive\":\"Máquina de corte\",\"personInCharge\":\"Eng.ª Maria\",\"extra\":1}",
+      "message": "\"extra\" is not allowed"
+    },
+    {
+      "body": "{\"extra\":1,\"clientId\":\"5f1e9a2b3c4d5e6f70820001\",\"madeById\":\"5f1e9a2b3c4d5e6f70830001\",\"descriptive\":\"Máquina de corte\",\"personInCharge\":\"Eng.ª Maria\"}",
+      "message": "\"extra\" is not allowed"
+    },
+    {
+      "body": "{\"clientId\":\"5f1e9a2b3c4d5e6f70820001\",\"madeById\":\"5f1e9a2b3c4d5e6f70830001\",\"descriptive\":\"Máquina de corte\",\"personInCharge\":\"Eng.ª Maria\",\"client\":{\"_id\":\"5f1e9a2b3c4d5e6f70820001\"}}",
+      "message": "\"client\" is not allowed"
+    },
+    {
+      "body": "{\"clientId\":\"5f1e9a2b3c4d5e6f70820001\",\"madeById\":\"5f1e9a2b3c4d5e6f70830001\",\"descriptive\":\"Máquina de corte\",\"personInCharge\":\"Eng.ª Maria\",\"_id\":\"5f1e9a2b3c4d5e6f70810001\"}",
+      "message": "\"_id\" is not allowed"
+    },
+    {
+      "body": "{\"descriptive\":\"\",\"clientId\":\"x\"}",
+      "message": "\"clientId\" with value \"x\" fails to match the valid mongo id pattern"
+    },
+    {
+      "body": "{\"personInCharge\":\"\",\"descriptive\":\"\"}",
+      "message": "\"clientId\" is required"
+    },
+    {
+      "body": "[]",
+      "message": "\"value\" must be an object"
+    },
+    {
+      "body": "\"texto\"",
+      "message": "\"value\" must be an object"
+    },
+    {
+      "body": "null",
+      "message": "\"value\" must be an object"
+    },
+    {
+      "body": "{\"descriptive\":\"Primeiro\",\"descriptive\":\"Último\",\"clientId\":\"5f1e9a2b3c4d5e6f70820001\",\"madeById\":\"5f1e9a2b3c4d5e6f70830001\",\"personInCharge\":\"x\"}",
+      "message": null
+    }
+  ],
+  "update": [
+    {
+      "body": "{\"madeById\":\"5f1e9a2b3c4d5e6f70830001\",\"descriptive\":\"Máquina de corte\",\"personInCharge\":\"Eng.ª Maria\"}",
+      "legacyError": null,
+      "message": null
+    },
+    {
+      "body": "{\"madeById\":\"5f1e9a2b3c4d5e6f70830001\",\"descriptive\":\"Máquina de corte\",\"personInCharge\":\"Eng.ª Maria\",\"clientId\":\"5f1e9a2b3c4d5e6f70820001\"}",
+      "legacyError": null,
+      "message": "\"clientId\" is not allowed"
+    },
+    {
+      "body": "{\"descriptive\":\"Máquina de corte\",\"personInCharge\":\"Eng.ª Maria\"}",
+      "legacyError": null,
+      "message": "\"madeById\" is required"
+    },
+    {
+      "body": "{\"madeById\":\"5f1e9a2b3c4d5e6f70830001\",\"personInCharge\":\"Eng.ª Maria\"}",
+      "legacyError": null,
+      "message": "\"descriptive\" is required"
+    },
+    {
+      "body": "{\"madeById\":\"5f1e9a2b3c4d5e6f70830001\",\"descriptive\":\"Máquina de corte\"}",
+      "legacyError": null,
+      "message": "\"personInCharge\" is required"
+    },
+    {
+      "body": "{\"madeById\":\"x\",\"descriptive\":\"Máquina de corte\",\"personInCharge\":\"Eng.ª Maria\"}",
+      "legacyError": null,
+      "message": "\"madeById\" with value \"x\" fails to match the valid mongo id pattern"
+    },
+    {
+      "body": "{\"madeById\":\"5f1e9a2b3c4d5e6f70830001\",\"descriptive\":\"\",\"personInCharge\":\"Eng.ª Maria\"}",
+      "legacyError": null,
+      "message": "\"descriptive\" is not allowed to be empty"
+    },
+    {
+      "body": "{\"madeById\":\"5f1e9a2b3c4d5e6f70830001\",\"descriptive\":5,\"personInCharge\":\"Eng.ª Maria\"}",
+      "legacyError": null,
+      "message": "\"descriptive\" must be a string"
+    },
+    {
+      "body": "{\"madeById\":\"5f1e9a2b3c4d5e6f70830001\",\"descriptive\":\"Máquina de corte\",\"personInCharge\":null}",
+      "legacyError": null,
+      "message": "\"personInCharge\" must be a string"
+    },
+    {
+      "body": "{\"madeById\":\"5f1e9a2b3c4d5e6f70830001\",\"descriptive\":\"Suporte 30/40 mm\",\"personInCharge\":\"Eng.ª Maria\"}",
+      "legacyError": null,
+      "message": null
+    },
+    {
+      "body": "{}",
+      "legacyError": null,
+      "message": "\"madeById\" is required"
+    },
+    {
+      "body": "[]",
+      "legacyError": null,
+      "message": "\"value\" must be an object"
+    }
+  ],
+  "search": [
+    {
+      "query": "q=corti",
+      "parsed": {
+        "q": "corti"
+      },
+      "message": null,
+      "outcome": "200",
+      "source": "corti",
+      "flags": "i"
+    },
+    {
+      "query": "q=CORTI",
+      "parsed": {
+        "q": "CORTI"
+      },
+      "message": null,
+      "outcome": "200",
+      "source": "CORTI",
+      "flags": "i"
+    },
+    {
+      "query": "q=26-0001",
+      "parsed": {
+        "q": "26-0001"
+      },
+      "message": null,
+      "outcome": "200",
+      "source": "26-0001",
+      "flags": "i"
+    },
+    {
+      "query": "q=ab",
+      "parsed": {
+        "q": "ab"
+      },
+      "message": null,
+      "outcome": "200",
+      "source": "ab",
+      "flags": "i"
+    },
+    {
+      "query": "q=a",
+      "parsed": {
+        "q": "a"
+      },
+      "message": "\"q\" length must be at least 2 characters long"
+    },
+    {
+      "query": "q=",
+      "parsed": {
+        "q": ""
+      },
+      "message": "\"q\" is not allowed to be empty"
+    },
+    {
+      "query": "",
+      "parsed": {},
+      "message": "\"q\" is required"
+    },
+    {
+      "query": "q=%20%20",
+      "parsed": {
+        "q": "  "
+      },
+      "message": null,
+      "outcome": "200",
+      "source": "  ",
+      "flags": "i"
+    },
+    {
+      "query": "q=M%C3%A1quina",
+      "parsed": {
+        "q": "Máquina"
+      },
+      "message": null,
+      "outcome": "200",
+      "source": "Máquina",
+      "flags": "i"
+    },
+    {
+      "query": "q=Ma%CC%81quina",
+      "parsed": {
+        "q": "Máquina"
+      },
+      "message": null,
+      "outcome": "200",
+      "source": "Máquina",
+      "flags": "i"
+    },
+    {
+      "query": "q=a.c",
+      "parsed": {
+        "q": "a.c"
+      },
+      "message": null,
+      "outcome": "200",
+      "source": "a.c",
+      "flags": "i"
+    },
+    {
+      "query": "q=26-000%5B12%5D",
+      "parsed": {
+        "q": "26-000[12]"
+      },
+      "message": null,
+      "outcome": "200",
+      "source": "26-000[12]",
+      "flags": "i"
+    },
+    {
+      "query": "q=%28%28",
+      "parsed": {
+        "q": "(("
+      },
+      "message": null,
+      "outcome": "500",
+      "text": "Error performing search: Invalid regular expression: /((/: Unterminated group"
+    },
+    {
+      "query": "q=%5B",
+      "parsed": {
+        "q": "["
+      },
+      "message": "\"q\" length must be at least 2 characters long"
+    },
+    {
+      "query": "q=a%7B2%2C1%7D",
+      "parsed": {
+        "q": "a{2,1}"
+      },
+      "message": null,
+      "outcome": "500",
+      "text": "Error performing search: Invalid regular expression: /a{2,1}/: numbers out of order in {} quantifier"
+    },
+    {
+      "query": "q=%5C",
+      "parsed": {
+        "q": "\\"
+      },
+      "message": "\"q\" length must be at least 2 characters long"
+    },
+    {
+      "query": "q=a%2Fb",
+      "parsed": {
+        "q": "a/b"
+      },
+      "message": null,
+      "outcome": "200",
+      "source": "a\\/b",
+      "flags": "i"
+    },
+    {
+      "query": "q=a%0Ab",
+      "parsed": {
+        "q": "a\nb"
+      },
+      "message": null,
+      "outcome": "200",
+      "source": "a\\nb",
+      "flags": "i"
+    },
+    {
+      "query": "q=a%00b",
+      "parsed": {
+        "q": "a\u0000b"
+      },
+      "message": null,
+      "outcome": "500",
+      "text": "Error performing search: value a\u0000b must not contain null bytes"
+    },
+    {
+      "query": "q=%5Ck",
+      "parsed": {
+        "q": "\\k"
+      },
+      "message": null,
+      "outcome": "200",
+      "source": "\\k",
+      "flags": "i"
+    },
+    {
+      "query": "q=%28%3F%3Cn%3Ea%29",
+      "parsed": {
+        "q": "(?<n>a)"
+      },
+      "message": null,
+      "outcome": "200",
+      "source": "(?<n>a)",
+      "flags": "i"
+    },
+    {
+      "query": "q=%28%3F%3C%3Da%29b",
+      "parsed": {
+        "q": "(?<=a)b"
+      },
+      "message": null,
+      "outcome": "200",
+      "source": "(?<=a)b",
+      "flags": "i"
+    },
+    {
+      "query": "q=%5Cp%7BL%7D",
+      "parsed": {
+        "q": "\\p{L}"
+      },
+      "message": null,
+      "outcome": "200",
+      "source": "\\p{L}",
+      "flags": "i"
+    },
+    {
+      "query": "q=a**",
+      "parsed": {
+        "q": "a**"
+      },
+      "message": null,
+      "outcome": "500",
+      "text": "Error performing search: Invalid regular expression: /a**/: Nothing to repeat"
+    },
+    {
+      "query": "q=ab&q=cd",
+      "parsed": {
+        "q": [
+          "ab",
+          "cd"
+        ]
+      },
+      "message": "\"q\" must be a string"
+    },
+    {
+      "query": "q[]=ab",
+      "parsed": {
+        "q": [
+          "ab"
+        ]
+      },
+      "message": "\"q\" must be a string"
+    },
+    {
+      "query": "q[x]=ab",
+      "parsed": {
+        "q": {
+          "x": "ab"
+        }
+      },
+      "message": "\"q\" must be a string"
+    },
+    {
+      "query": "q=ab&extra=1",
+      "parsed": {
+        "q": "ab",
+        "extra": "1"
+      },
+      "message": "\"extra\" is not allowed"
+    },
+    {
+      "query": "Q=ab",
+      "parsed": {
+        "Q": "ab"
+      },
+      "message": "\"q\" is required"
+    },
+    {
+      "query": "q=ab&q=",
+      "parsed": {
+        "q": [
+          "ab",
+          ""
+        ]
+      },
+      "message": "\"q\" must be a string"
+    }
+  ],
+  "budgetNumbers": [
+    {
+      "count": 0,
+      "number": "26-0001"
+    },
+    {
+      "count": 1,
+      "number": "26-0002"
+    },
+    {
+      "count": 8,
+      "number": "26-0009"
+    },
+    {
+      "count": 9,
+      "number": "26-0010"
+    },
+    {
+      "count": 10,
+      "number": "26-0011"
+    },
+    {
+      "count": 98,
+      "number": "26-0099"
+    },
+    {
+      "count": 99,
+      "number": "26-0100"
+    },
+    {
+      "count": 100,
+      "number": "26-0101"
+    },
+    {
+      "count": 998,
+      "number": "26-0999"
+    },
+    {
+      "count": 999,
+      "number": "26-1000"
+    },
+    {
+      "count": 1000,
+      "number": "26-1001"
+    },
+    {
+      "count": 9998,
+      "number": "26-9999"
+    },
+    {
+      "count": 9999,
+      "number": "26-10000"
+    },
+    {
+      "count": 10000,
+      "number": "26-10001"
+    }
+  ],
+  "countForThisYear": {
+    "filter": {
+      "date": {
+        "$gte": {
+          "$date": "2026-01-01T00:00:00.000Z"
+        }
+      }
+    },
+    "distinctField": "budgetNumber",
+    "countOfThreeDistinct": 3
+  },
+  "list": {
+    "query": {
+      "filter": {},
+      "sort": {
+        "budgetNumber": -1,
+        "revision": -1
+      },
+      "limit": 200,
+      "populate": [
+        "madeBy",
+        "client"
+      ]
+    },
+    "rows": [
+      {
+        "_id": "{{budget-r2}}",
+        "budgetNumber": "26-0007",
+        "clientName": "Metalúrgica Exemplo, Lda.",
+        "descriptive": "Máquina de corte",
+        "personInCharge": "Eng.ª Maria",
+        "madeBy": "Ana Administradora",
+        "date": "2026-02-01T09:00:00.000Z",
+        "revision": 2,
+        "complete": true,
+        "wasPdfDownloaded": true,
+        "hasGenerateJob": false,
+        "total": 43.5,
+        "daysNeededToDoTheWork": 60
+      },
+      {
+        "_id": "{{budget-6}}",
+        "budgetNumber": "26-0006",
+        "clientName": "Metalúrgica Exemplo, Lda.",
+        "descriptive": "Máquina de corte",
+        "madeBy": "Ana Administradora",
+        "date": "2026-02-01T09:00:00.000Z",
+        "revision": 0,
+        "complete": true,
+        "wasPdfDownloaded": true,
+        "hasGenerateJob": false,
+        "daysNeededToDoTheWork": 60
+      },
+      {
+        "_id": "{{budget-5}}",
+        "budgetNumber": "26-0005",
+        "clientName": "Metalúrgica Exemplo, Lda.",
+        "descriptive": "Máquina de corte",
+        "personInCharge": "Eng.ª Maria",
+        "madeBy": "Ana Administradora",
+        "date": "2026-02-01T09:00:00.000Z",
+        "revision": 0,
+        "complete": true,
+        "wasPdfDownloaded": true,
+        "hasGenerateJob": false,
+        "total": 43.5,
+        "daysNeededToDoTheWork": 60
+      }
+    ],
+    "clientMissing": "500 (TypeError: Cannot read properties of null (reading 'name'))"
+  },
+  "searchRows": {
+    "pipeline": [
+      {
+        "$lookup": {
+          "from": "entities",
+          "localField": "client",
+          "foreignField": "_id",
+          "as": "client"
+        }
+      },
+      {
+        "$lookup": {
+          "from": "users",
+          "localField": "madeBy",
+          "foreignField": "_id",
+          "as": "madeBy"
+        }
+      },
+      {
+        "$unwind": "$client"
+      },
+      {
+        "$unwind": "$madeBy"
+      },
+      {
+        "$match": {
+          "$or": [
+            {
+              "budgetNumber": {
+                "$regex": {
+                  "$regex": "corti",
+                  "$options": "i"
+                }
+              }
+            },
+            {
+              "client.name": {
+                "$regex": {
+                  "$regex": "corti",
+                  "$options": "i"
+                }
+              }
+            },
+            {
+              "descriptive": {
+                "$regex": {
+                  "$regex": "corti",
+                  "$options": "i"
+                }
+              }
+            },
+            {
+              "personInCharge": {
+                "$regex": {
+                  "$regex": "corti",
+                  "$options": "i"
+                }
+              }
+            },
+            {
+              "madeBy.name": {
+                "$regex": {
+                  "$regex": "corti",
+                  "$options": "i"
+                }
+              }
+            }
+          ]
+        }
+      },
+      {
+        "$sort": {
+          "budgetNumber": -1,
+          "revision": -1
+        }
+      }
+    ],
+    "rows": [
+      {
+        "_id": "{{budget-r2}}",
+        "budgetNumber": "26-0007",
+        "clientName": "Metalúrgica Exemplo, Lda.",
+        "descriptive": "Máquina de corte",
+        "personInCharge": "Eng.ª Maria",
+        "madeBy": "Ana Administradora",
+        "date": "2026-02-01T09:00:00.000Z",
+        "revision": 2,
+        "complete": true,
+        "wasPdfDownloaded": true,
+        "hasGenerateJob": false,
+        "total": 43.5,
+        "daysNeededToDoTheWork": 60
+      },
+      {
+        "_id": "{{budget-6}}",
+        "budgetNumber": "26-0006",
+        "clientName": "Metalúrgica Exemplo, Lda.",
+        "descriptive": "Máquina de corte",
+        "madeBy": "Ana Administradora",
+        "date": "2026-02-01T09:00:00.000Z",
+        "revision": 0,
+        "complete": true,
+        "wasPdfDownloaded": true,
+        "daysNeededToDoTheWork": 60
+      }
+    ]
+  },
+  "create": [
+    {
+      "prices": {
+        "automation": 10,
+        "consultancy": 10,
+        "development": 10,
+        "margin": 35,
+        "machining": 10,
+        "assembly": 10
+      },
+      "entityHasPaymentCondition": true,
+      "descriptive": "Máquina de corte",
+      "outcome": "200",
+      "stored": {
+        "_id": {
+          "$oid": "{{budget}}"
+        },
+        "revision": {
+          "$numberInt": "0"
+        },
+        "complete": false,
+        "wasPdfDownloaded": false,
+        "margin": {
+          "$numberInt": "35"
+        },
+        "daysNeededToDoTheWork": {
+          "$numberInt": "60"
+        },
+        "validity": {
+          "$numberInt": "30"
+        },
+        "hasGenerateJob": false,
+        "client": {
+          "$oid": "{{client}}"
+        },
+        "descriptive": "Máquina de corte",
+        "personInCharge": "Eng.ª Maria",
+        "madeBy": {
+          "$oid": "{{user}}"
+        },
+        "budgetNumber": "26-0007",
+        "paymentMethod": "30 dias",
+        "total": {
+          "$numberInt": "13"
+        },
+        "date": {
+          "$date": "2026-03-15T10:20:30.123Z"
+        },
+        "__v": {
+          "$numberInt": "0"
+        }
+      },
+      "response": {
+        "revision": 0,
+        "complete": false,
+        "wasPdfDownloaded": false,
+        "margin": 35,
+        "daysNeededToDoTheWork": 60,
+        "validity": 30,
+        "hasGenerateJob": false,
+        "_id": "{{budget}}",
+        "client": {
+          "_id": "{{client}}",
+          "name": "Metalúrgica Exemplo, Lda.",
+          "fiscalNumber": "509999990",
+          "address": "Rua das Flores, 12",
+          "zipCode": "4000-123",
+          "location": "Porto",
+          "paymentCondition": "30 dias",
+          "type": "Cliente",
+          "__v": 0
+        },
+        "descriptive": "Máquina de corte",
+        "personInCharge": "Eng.ª Maria",
+        "madeBy": {
+          "roles": [
+            "canSeeOrcamentos",
+            null,
+            "canSeeDefinicoes"
+          ],
+          "fieldOfCompetencies": "Desenvolvimento",
+          "_id": "{{user}}",
+          "name": "Ana Administradora",
+          "email": "ana.admin@dib4t.local",
+          "password": "$2a$10$abcdefghijklmnopqrstuuabcdefghijklmnopqrstuvwxyz01234",
+          "__v": 0
+        },
+        "budgetNumber": "26-0007",
+        "paymentMethod": "30 dias",
+        "total": 13,
+        "date": "2026-03-15T10:20:30.123Z",
+        "__v": 0
+      }
+    },
+    {
+      "prices": {
+        "automation": 32.5,
+        "consultancy": 10,
+        "development": 10,
+        "margin": 35,
+        "machining": 10,
+        "assembly": 10
+      },
+      "entityHasPaymentCondition": false,
+      "descriptive": "Máquina de corte",
+      "outcome": "500",
+      "reason": "Budget validation failed: paymentMethod: Path `paymentMethod` is required."
+    },
+    {
+      "prices": {
+        "automation": 33.33,
+        "consultancy": 10,
+        "development": 10,
+        "margin": 30,
+        "machining": 10,
+        "assembly": 10
+      },
+      "entityHasPaymentCondition": true,
+      "descriptive": "  Espaços  ",
+      "outcome": "200",
+      "stored": {
+        "_id": {
+          "$oid": "{{budget}}"
+        },
+        "revision": {
+          "$numberInt": "0"
+        },
+        "complete": false,
+        "wasPdfDownloaded": false,
+        "margin": {
+          "$numberInt": "30"
+        },
+        "daysNeededToDoTheWork": {
+          "$numberInt": "60"
+        },
+        "validity": {
+          "$numberInt": "30"
+        },
+        "hasGenerateJob": false,
+        "client": {
+          "$oid": "{{client}}"
+        },
+        "descriptive": "  Espaços  ",
+        "personInCharge": "Eng.ª Maria",
+        "madeBy": {
+          "$oid": "{{user}}"
+        },
+        "budgetNumber": "26-0007",
+        "paymentMethod": "30 dias",
+        "total": {
+          "$numberDouble": "42.33"
+        },
+        "date": {
+          "$date": "2026-03-15T10:20:30.123Z"
+        },
+        "__v": {
+          "$numberInt": "0"
+        }
+      },
+      "response": {
+        "revision": 0,
+        "complete": false,
+        "wasPdfDownloaded": false,
+        "margin": 30,
+        "daysNeededToDoTheWork": 60,
+        "validity": 30,
+        "hasGenerateJob": false,
+        "_id": "{{budget}}",
+        "client": {
+          "_id": "{{client}}",
+          "name": "Metalúrgica Exemplo, Lda.",
+          "fiscalNumber": "509999990",
+          "address": "Rua das Flores, 12",
+          "zipCode": "4000-123",
+          "location": "Porto",
+          "paymentCondition": "30 dias",
+          "type": "Cliente",
+          "__v": 0
+        },
+        "descriptive": "  Espaços  ",
+        "personInCharge": "Eng.ª Maria",
+        "madeBy": {
+          "roles": [
+            "canSeeOrcamentos",
+            null,
+            "canSeeDefinicoes"
+          ],
+          "fieldOfCompetencies": "Desenvolvimento",
+          "_id": "{{user}}",
+          "name": "Ana Administradora",
+          "email": "ana.admin@dib4t.local",
+          "password": "$2a$10$abcdefghijklmnopqrstuuabcdefghijklmnopqrstuvwxyz01234",
+          "__v": 0
+        },
+        "budgetNumber": "26-0007",
+        "paymentMethod": "30 dias",
+        "total": 42.33,
+        "date": "2026-03-15T10:20:30.123Z",
+        "__v": 0
+      }
+    },
+    {
+      "prices": {
+        "automation": 100,
+        "consultancy": 10,
+        "development": 10,
+        "margin": 1,
+        "machining": 10,
+        "assembly": 10
+      },
+      "entityHasPaymentCondition": true,
+      "descriptive": "Máquina de corte",
+      "outcome": "200",
+      "stored": {
+        "_id": {
+          "$oid": "{{budget}}"
+        },
+        "revision": {
+          "$numberInt": "0"
+        },
+        "complete": false,
+        "wasPdfDownloaded": false,
+        "margin": {
+          "$numberInt": "1"
+        },
+        "daysNeededToDoTheWork": {
+          "$numberInt": "60"
+        },
+        "validity": {
+          "$numberInt": "30"
+        },
+        "hasGenerateJob": false,
+        "client": {
+          "$oid": "{{client}}"
+        },
+        "descriptive": "Máquina de corte",
+        "personInCharge": "Eng.ª Maria",
+        "madeBy": {
+          "$oid": "{{user}}"
+        },
+        "budgetNumber": "26-0007",
+        "paymentMethod": "30 dias",
+        "total": {
+          "$numberInt": "101"
+        },
+        "date": {
+          "$date": "2026-03-15T10:20:30.123Z"
+        },
+        "__v": {
+          "$numberInt": "0"
+        }
+      },
+      "response": {
+        "revision": 0,
+        "complete": false,
+        "wasPdfDownloaded": false,
+        "margin": 1,
+        "daysNeededToDoTheWork": 60,
+        "validity": 30,
+        "hasGenerateJob": false,
+        "_id": "{{budget}}",
+        "client": {
+          "_id": "{{client}}",
+          "name": "Metalúrgica Exemplo, Lda.",
+          "fiscalNumber": "509999990",
+          "address": "Rua das Flores, 12",
+          "zipCode": "4000-123",
+          "location": "Porto",
+          "paymentCondition": "30 dias",
+          "type": "Cliente",
+          "__v": 0
+        },
+        "descriptive": "Máquina de corte",
+        "personInCharge": "Eng.ª Maria",
+        "madeBy": {
+          "roles": [
+            "canSeeOrcamentos",
+            null,
+            "canSeeDefinicoes"
+          ],
+          "fieldOfCompetencies": "Desenvolvimento",
+          "_id": "{{user}}",
+          "name": "Ana Administradora",
+          "email": "ana.admin@dib4t.local",
+          "password": "$2a$10$abcdefghijklmnopqrstuuabcdefghijklmnopqrstuvwxyz01234",
+          "__v": 0
+        },
+        "budgetNumber": "26-0007",
+        "paymentMethod": "30 dias",
+        "total": 101,
+        "date": "2026-03-15T10:20:30.123Z",
+        "__v": 0
+      }
+    },
+    {
+      "prices": {
+        "automation": 0.5,
+        "consultancy": 10,
+        "development": 10,
+        "margin": 99.5,
+        "machining": 10,
+        "assembly": 10
+      },
+      "entityHasPaymentCondition": true,
+      "descriptive": "Máquina de corte",
+      "outcome": "200",
+      "stored": {
+        "_id": {
+          "$oid": "{{budget}}"
+        },
+        "revision": {
+          "$numberInt": "0"
+        },
+        "complete": false,
+        "wasPdfDownloaded": false,
+        "margin": {
+          "$numberDouble": "99.5"
+        },
+        "daysNeededToDoTheWork": {
+          "$numberInt": "60"
+        },
+        "validity": {
+          "$numberInt": "30"
+        },
+        "hasGenerateJob": false,
+        "client": {
+          "$oid": "{{client}}"
+        },
+        "descriptive": "Máquina de corte",
+        "personInCharge": "Eng.ª Maria",
+        "madeBy": {
+          "$oid": "{{user}}"
+        },
+        "budgetNumber": "26-0007",
+        "paymentMethod": "30 dias",
+        "total": {
+          "$numberDouble": "0.5"
+        },
+        "date": {
+          "$date": "2026-03-15T10:20:30.123Z"
+        },
+        "__v": {
+          "$numberInt": "0"
+        }
+      },
+      "response": {
+        "revision": 0,
+        "complete": false,
+        "wasPdfDownloaded": false,
+        "margin": 99.5,
+        "daysNeededToDoTheWork": 60,
+        "validity": 30,
+        "hasGenerateJob": false,
+        "_id": "{{budget}}",
+        "client": {
+          "_id": "{{client}}",
+          "name": "Metalúrgica Exemplo, Lda.",
+          "fiscalNumber": "509999990",
+          "address": "Rua das Flores, 12",
+          "zipCode": "4000-123",
+          "location": "Porto",
+          "paymentCondition": "30 dias",
+          "type": "Cliente",
+          "__v": 0
+        },
+        "descriptive": "Máquina de corte",
+        "personInCharge": "Eng.ª Maria",
+        "madeBy": {
+          "roles": [
+            "canSeeOrcamentos",
+            null,
+            "canSeeDefinicoes"
+          ],
+          "fieldOfCompetencies": "Desenvolvimento",
+          "_id": "{{user}}",
+          "name": "Ana Administradora",
+          "email": "ana.admin@dib4t.local",
+          "password": "$2a$10$abcdefghijklmnopqrstuuabcdefghijklmnopqrstuvwxyz01234",
+          "__v": 0
+        },
+        "budgetNumber": "26-0007",
+        "paymentMethod": "30 dias",
+        "total": 0.5,
+        "date": "2026-03-15T10:20:30.123Z",
+        "__v": 0
+      }
+    },
+    {
+      "prices": {
+        "automation": 10,
+        "consultancy": 10,
+        "development": 10,
+        "margin": 35.5,
+        "machining": 10,
+        "assembly": 10
+      },
+      "entityHasPaymentCondition": true,
+      "descriptive": "Máquina de corte",
+      "outcome": "200",
+      "stored": {
+        "_id": {
+          "$oid": "{{budget}}"
+        },
+        "revision": {
+          "$numberInt": "0"
+        },
+        "complete": false,
+        "wasPdfDownloaded": false,
+        "margin": {
+          "$numberDouble": "35.5"
+        },
+        "daysNeededToDoTheWork": {
+          "$numberInt": "60"
+        },
+        "validity": {
+          "$numberInt": "30"
+        },
+        "hasGenerateJob": false,
+        "client": {
+          "$oid": "{{client}}"
+        },
+        "descriptive": "Máquina de corte",
+        "personInCharge": "Eng.ª Maria",
+        "madeBy": {
+          "$oid": "{{user}}"
+        },
+        "budgetNumber": "26-0007",
+        "paymentMethod": "30 dias",
+        "total": {
+          "$numberInt": "13"
+        },
+        "date": {
+          "$date": "2026-03-15T10:20:30.123Z"
+        },
+        "__v": {
+          "$numberInt": "0"
+        }
+      },
+      "response": {
+        "revision": 0,
+        "complete": false,
+        "wasPdfDownloaded": false,
+        "margin": 35.5,
+        "daysNeededToDoTheWork": 60,
+        "validity": 30,
+        "hasGenerateJob": false,
+        "_id": "{{budget}}",
+        "client": {
+          "_id": "{{client}}",
+          "name": "Metalúrgica Exemplo, Lda.",
+          "fiscalNumber": "509999990",
+          "address": "Rua das Flores, 12",
+          "zipCode": "4000-123",
+          "location": "Porto",
+          "paymentCondition": "30 dias",
+          "type": "Cliente",
+          "__v": 0
+        },
+        "descriptive": "Máquina de corte",
+        "personInCharge": "Eng.ª Maria",
+        "madeBy": {
+          "roles": [
+            "canSeeOrcamentos",
+            null,
+            "canSeeDefinicoes"
+          ],
+          "fieldOfCompetencies": "Desenvolvimento",
+          "_id": "{{user}}",
+          "name": "Ana Administradora",
+          "email": "ana.admin@dib4t.local",
+          "password": "$2a$10$abcdefghijklmnopqrstuuabcdefghijklmnopqrstuvwxyz01234",
+          "__v": 0
+        },
+        "budgetNumber": "26-0007",
+        "paymentMethod": "30 dias",
+        "total": 13,
+        "date": "2026-03-15T10:20:30.123Z",
+        "__v": 0
+      }
+    }
+  ],
+  "defaultTask": [
+    {
+      "prices": {
+        "automation": 10,
+        "consultancy": 10,
+        "development": 10,
+        "margin": 35,
+        "machining": 10,
+        "assembly": 10
+      },
+      "stored": {
+        "_id": {
+          "$oid": "{{new}}"
+        },
+        "budgetId": {
+          "$oid": "{{budget}}"
+        },
+        "taskType": "automation",
+        "description": "",
+        "unitPrice": {
+          "$numberInt": "10"
+        },
+        "quantity": {
+          "$numberInt": "1"
+        },
+        "__v": {
+          "$numberInt": "0"
+        }
+      },
+      "response": {
+        "_id": "{{new}}",
+        "budgetId": "{{budget}}",
+        "taskType": "automation",
+        "description": "",
+        "unitPrice": 10,
+        "quantity": 1,
+        "__v": 0
+      }
+    },
+    {
+      "prices": {
+        "automation": 32.5,
+        "consultancy": 10,
+        "development": 10,
+        "margin": 35,
+        "machining": 10,
+        "assembly": 10
+      },
+      "stored": {
+        "_id": {
+          "$oid": "{{new}}"
+        },
+        "budgetId": {
+          "$oid": "{{budget}}"
+        },
+        "taskType": "automation",
+        "description": "",
+        "unitPrice": {
+          "$numberDouble": "32.5"
+        },
+        "quantity": {
+          "$numberInt": "1"
+        },
+        "__v": {
+          "$numberInt": "0"
+        }
+      },
+      "response": {
+        "_id": "{{new}}",
+        "budgetId": "{{budget}}",
+        "taskType": "automation",
+        "description": "",
+        "unitPrice": 32.5,
+        "quantity": 1,
+        "__v": 0
+      }
+    },
+    {
+      "prices": {
+        "automation": 33.33,
+        "consultancy": 10,
+        "development": 10,
+        "margin": 30,
+        "machining": 10,
+        "assembly": 10
+      },
+      "stored": {
+        "_id": {
+          "$oid": "{{new}}"
+        },
+        "budgetId": {
+          "$oid": "{{budget}}"
+        },
+        "taskType": "automation",
+        "description": "",
+        "unitPrice": {
+          "$numberDouble": "33.33"
+        },
+        "quantity": {
+          "$numberInt": "1"
+        },
+        "__v": {
+          "$numberInt": "0"
+        }
+      },
+      "response": {
+        "_id": "{{new}}",
+        "budgetId": "{{budget}}",
+        "taskType": "automation",
+        "description": "",
+        "unitPrice": 33.33,
+        "quantity": 1,
+        "__v": 0
+      }
+    }
+  ],
+  "clone": [
+    {
+      "source": "typical",
+      "stored": {
+        "_id": {
+          "$oid": "{{new}}"
+        },
+        "revision": {
+          "$numberInt": "0"
+        },
+        "complete": false,
+        "wasPdfDownloaded": false,
+        "margin": {
+          "$numberInt": "35"
+        },
+        "daysNeededToDoTheWork": {
+          "$numberInt": "60"
+        },
+        "validity": {
+          "$numberInt": "30"
+        },
+        "hasGenerateJob": false,
+        "client": {
+          "$oid": "{{client}}"
+        },
+        "descriptive": "Cópia",
+        "personInCharge": "Sr. Paulo",
+        "madeBy": {
+          "$oid": "{{user2}}"
+        },
+        "budgetNumber": "26-0007",
+        "paymentMethod": "30 dias",
+        "total": {
+          "$numberDouble": "43.5"
+        },
+        "description": "Fornecimento conforme especificação.",
+        "date": {
+          "$date": "2026-03-15T10:20:30.123Z"
+        },
+        "__v": {
+          "$numberInt": "0"
+        }
+      },
+      "response": {
+        "revision": 0,
+        "complete": false,
+        "wasPdfDownloaded": false,
+        "margin": 35,
+        "daysNeededToDoTheWork": 60,
+        "validity": 30,
+        "hasGenerateJob": false,
+        "_id": "{{new}}",
+        "client": {
+          "_id": "{{client}}",
+          "name": "Metalúrgica Exemplo, Lda.",
+          "fiscalNumber": "509999990",
+          "address": "Rua das Flores, 12",
+          "zipCode": "4000-123",
+          "location": "Porto",
+          "paymentCondition": "Pronto pagamento",
+          "type": "Cliente",
+          "__v": 0
+        },
+        "descriptive": "Cópia",
+        "personInCharge": "Sr. Paulo",
+        "madeBy": {
+          "roles": [
+            "canSeeObras"
+          ],
+          "fieldOfCompetencies": "Desenvolvimento",
+          "_id": "{{user2}}",
+          "name": "Bruno Silva",
+          "email": "bruno@dib4t.local",
+          "password": "$2a$10$abcdefghijklmnopqrstuuabcdefghijklmnopqrstuvwxyz01234",
+          "__v": 0
+        },
+        "budgetNumber": "26-0007",
+        "paymentMethod": "30 dias",
+        "total": 43.5,
+        "description": "Fornecimento conforme especificação.",
+        "date": "2026-03-15T10:20:30.123Z",
+        "__v": 0
+      },
+      "tasks": [
+        {
+          "_id": {
+            "$oid": "{{new}}"
+          },
+          "taskType": "automation",
+          "budgetId": {
+            "$oid": "{{new}}"
+          },
+          "description": "",
+          "unitPrice": {
+            "$numberDouble": "32.5"
+          },
+          "quantity": {
+            "$numberInt": "1"
+          },
+          "__v": {
+            "$numberInt": "0"
+          }
+        },
+        {
+          "_id": {
+            "$oid": "{{new}}"
+          },
+          "taskType": "development",
+          "budgetId": {
+            "$oid": "{{new}}"
+          },
+          "description": "Projeto",
+          "unitPrice": {
+            "$numberInt": "30"
+          },
+          "quantity": {
+            "$numberDouble": "0.5"
+          },
+          "__v": {
+            "$numberInt": "0"
+          }
+        },
+        {
+          "_id": {
+            "$oid": "{{new}}"
+          },
+          "taskType": "machining",
+          "budgetId": {
+            "$oid": "{{new}}"
+          },
+          "unitPrice": {
+            "$numberDouble": "38.5"
+          },
+          "quantity": {
+            "$numberInt": "15"
+          },
+          "__v": {
+            "$numberInt": "0"
+          }
+        },
+        {
+          "_id": {
+            "$oid": "{{new}}"
+          },
+          "taskType": "others",
+          "budgetId": {
+            "$oid": "{{new}}"
+          },
+          "description": "Cáfé  ",
+          "unitPrice": {
+            "$numberDouble": "1e+21"
+          },
+          "quantity": {
+            "$numberInt": "-2"
+          },
+          "__v": {
+            "$numberInt": "0"
+          }
+        }
+      ]
+    },
+    {
+      "source": "no description, no personInCharge",
+      "stored": {
+        "_id": {
+          "$oid": "{{new}}"
+        },
+        "revision": {
+          "$numberInt": "0"
+        },
+        "complete": false,
+        "wasPdfDownloaded": false,
+        "margin": {
+          "$numberInt": "35"
+        },
+        "daysNeededToDoTheWork": {
+          "$numberInt": "60"
+        },
+        "validity": {
+          "$numberInt": "30"
+        },
+        "hasGenerateJob": false,
+        "client": {
+          "$oid": "{{client}}"
+        },
+        "descriptive": "Cópia",
+        "personInCharge": "Sr. Paulo",
+        "madeBy": {
+          "$oid": "{{user2}}"
+        },
+        "budgetNumber": "26-0007",
+        "paymentMethod": "30 dias",
+        "total": {
+          "$numberDouble": "43.5"
+        },
+        "date": {
+          "$date": "2026-03-15T10:20:30.123Z"
+        },
+        "__v": {
+          "$numberInt": "0"
+        }
+      },
+      "response": {
+        "revision": 0,
+        "complete": false,
+        "wasPdfDownloaded": false,
+        "margin": 35,
+        "daysNeededToDoTheWork": 60,
+        "validity": 30,
+        "hasGenerateJob": false,
+        "_id": "{{new}}",
+        "client": {
+          "_id": "{{client}}",
+          "name": "Metalúrgica Exemplo, Lda.",
+          "fiscalNumber": "509999990",
+          "address": "Rua das Flores, 12",
+          "zipCode": "4000-123",
+          "location": "Porto",
+          "paymentCondition": "Pronto pagamento",
+          "type": "Cliente",
+          "__v": 0
+        },
+        "descriptive": "Cópia",
+        "personInCharge": "Sr. Paulo",
+        "madeBy": {
+          "roles": [
+            "canSeeObras"
+          ],
+          "fieldOfCompetencies": "Desenvolvimento",
+          "_id": "{{user2}}",
+          "name": "Bruno Silva",
+          "email": "bruno@dib4t.local",
+          "password": "$2a$10$abcdefghijklmnopqrstuuabcdefghijklmnopqrstuvwxyz01234",
+          "__v": 0
+        },
+        "budgetNumber": "26-0007",
+        "paymentMethod": "30 dias",
+        "total": 43.5,
+        "date": "2026-03-15T10:20:30.123Z",
+        "__v": 0
+      },
+      "tasks": [
+        {
+          "_id": {
+            "$oid": "{{new}}"
+          },
+          "taskType": "automation",
+          "budgetId": {
+            "$oid": "{{new}}"
+          },
+          "description": "",
+          "unitPrice": {
+            "$numberDouble": "32.5"
+          },
+          "quantity": {
+            "$numberInt": "1"
+          },
+          "__v": {
+            "$numberInt": "0"
+          }
+        },
+        {
+          "_id": {
+            "$oid": "{{new}}"
+          },
+          "taskType": "development",
+          "budgetId": {
+            "$oid": "{{new}}"
+          },
+          "description": "Projeto",
+          "unitPrice": {
+            "$numberInt": "30"
+          },
+          "quantity": {
+            "$numberDouble": "0.5"
+          },
+          "__v": {
+            "$numberInt": "0"
+          }
+        },
+        {
+          "_id": {
+            "$oid": "{{new}}"
+          },
+          "taskType": "machining",
+          "budgetId": {
+            "$oid": "{{new}}"
+          },
+          "unitPrice": {
+            "$numberDouble": "38.5"
+          },
+          "quantity": {
+            "$numberInt": "15"
+          },
+          "__v": {
+            "$numberInt": "0"
+          }
+        },
+        {
+          "_id": {
+            "$oid": "{{new}}"
+          },
+          "taskType": "others",
+          "budgetId": {
+            "$oid": "{{new}}"
+          },
+          "description": "Cáfé  ",
+          "unitPrice": {
+            "$numberDouble": "1e+21"
+          },
+          "quantity": {
+            "$numberInt": "-2"
+          },
+          "__v": {
+            "$numberInt": "0"
+          }
+        }
+      ]
+    },
+    {
+      "source": "no total, Double margin",
+      "stored": {
+        "_id": {
+          "$oid": "{{new}}"
+        },
+        "revision": {
+          "$numberInt": "0"
+        },
+        "complete": false,
+        "wasPdfDownloaded": false,
+        "margin": {
+          "$numberDouble": "32.5"
+        },
+        "daysNeededToDoTheWork": {
+          "$numberInt": "60"
+        },
+        "validity": {
+          "$numberInt": "30"
+        },
+        "hasGenerateJob": false,
+        "client": {
+          "$oid": "{{client}}"
+        },
+        "descriptive": "Cópia",
+        "personInCharge": "Sr. Paulo",
+        "madeBy": {
+          "$oid": "{{user2}}"
+        },
+        "budgetNumber": "26-0007",
+        "paymentMethod": "30 dias",
+        "description": "Fornecimento conforme especificação.",
+        "date": {
+          "$date": "2026-03-15T10:20:30.123Z"
+        },
+        "__v": {
+          "$numberInt": "0"
+        }
+      },
+      "response": {
+        "revision": 0,
+        "complete": false,
+        "wasPdfDownloaded": false,
+        "margin": 32.5,
+        "daysNeededToDoTheWork": 60,
+        "validity": 30,
+        "hasGenerateJob": false,
+        "_id": "{{new}}",
+        "client": {
+          "_id": "{{client}}",
+          "name": "Metalúrgica Exemplo, Lda.",
+          "fiscalNumber": "509999990",
+          "address": "Rua das Flores, 12",
+          "zipCode": "4000-123",
+          "location": "Porto",
+          "paymentCondition": "Pronto pagamento",
+          "type": "Cliente",
+          "__v": 0
+        },
+        "descriptive": "Cópia",
+        "personInCharge": "Sr. Paulo",
+        "madeBy": {
+          "roles": [
+            "canSeeObras"
+          ],
+          "fieldOfCompetencies": "Desenvolvimento",
+          "_id": "{{user2}}",
+          "name": "Bruno Silva",
+          "email": "bruno@dib4t.local",
+          "password": "$2a$10$abcdefghijklmnopqrstuuabcdefghijklmnopqrstuvwxyz01234",
+          "__v": 0
+        },
+        "budgetNumber": "26-0007",
+        "paymentMethod": "30 dias",
+        "description": "Fornecimento conforme especificação.",
+        "date": "2026-03-15T10:20:30.123Z",
+        "__v": 0
+      },
+      "tasks": [
+        {
+          "_id": {
+            "$oid": "{{new}}"
+          },
+          "taskType": "automation",
+          "budgetId": {
+            "$oid": "{{new}}"
+          },
+          "description": "",
+          "unitPrice": {
+            "$numberDouble": "32.5"
+          },
+          "quantity": {
+            "$numberInt": "1"
+          },
+          "__v": {
+            "$numberInt": "0"
+          }
+        },
+        {
+          "_id": {
+            "$oid": "{{new}}"
+          },
+          "taskType": "development",
+          "budgetId": {
+            "$oid": "{{new}}"
+          },
+          "description": "Projeto",
+          "unitPrice": {
+            "$numberInt": "30"
+          },
+          "quantity": {
+            "$numberDouble": "0.5"
+          },
+          "__v": {
+            "$numberInt": "0"
+          }
+        },
+        {
+          "_id": {
+            "$oid": "{{new}}"
+          },
+          "taskType": "machining",
+          "budgetId": {
+            "$oid": "{{new}}"
+          },
+          "unitPrice": {
+            "$numberDouble": "38.5"
+          },
+          "quantity": {
+            "$numberInt": "15"
+          },
+          "__v": {
+            "$numberInt": "0"
+          }
+        },
+        {
+          "_id": {
+            "$oid": "{{new}}"
+          },
+          "taskType": "others",
+          "budgetId": {
+            "$oid": "{{new}}"
+          },
+          "description": "Cáfé  ",
+          "unitPrice": {
+            "$numberDouble": "1e+21"
+          },
+          "quantity": {
+            "$numberInt": "-2"
+          },
+          "__v": {
+            "$numberInt": "0"
+          }
+        }
+      ]
+    },
+    {
+      "source": "old document: no hasGenerateJob/validity/days/__v",
+      "stored": {
+        "_id": {
+          "$oid": "{{new}}"
+        },
+        "revision": {
+          "$numberInt": "0"
+        },
+        "complete": false,
+        "wasPdfDownloaded": false,
+        "margin": {
+          "$numberInt": "35"
+        },
+        "daysNeededToDoTheWork": {
+          "$numberInt": "60"
+        },
+        "validity": {
+          "$numberInt": "30"
+        },
+        "hasGenerateJob": false,
+        "client": {
+          "$oid": "{{client}}"
+        },
+        "descriptive": "Cópia",
+        "personInCharge": "Sr. Paulo",
+        "madeBy": {
+          "$oid": "{{user2}}"
+        },
+        "budgetNumber": "26-0007",
+        "paymentMethod": "30 dias",
+        "total": {
+          "$numberDouble": "43.5"
+        },
+        "description": "Fornecimento conforme especificação.",
+        "date": {
+          "$date": "2026-03-15T10:20:30.123Z"
+        },
+        "__v": {
+          "$numberInt": "0"
+        }
+      },
+      "response": {
+        "revision": 0,
+        "complete": false,
+        "wasPdfDownloaded": false,
+        "margin": 35,
+        "daysNeededToDoTheWork": 60,
+        "validity": 30,
+        "hasGenerateJob": false,
+        "_id": "{{new}}",
+        "client": {
+          "_id": "{{client}}",
+          "name": "Metalúrgica Exemplo, Lda.",
+          "fiscalNumber": "509999990",
+          "address": "Rua das Flores, 12",
+          "zipCode": "4000-123",
+          "location": "Porto",
+          "paymentCondition": "Pronto pagamento",
+          "type": "Cliente",
+          "__v": 0
+        },
+        "descriptive": "Cópia",
+        "personInCharge": "Sr. Paulo",
+        "madeBy": {
+          "roles": [
+            "canSeeObras"
+          ],
+          "fieldOfCompetencies": "Desenvolvimento",
+          "_id": "{{user2}}",
+          "name": "Bruno Silva",
+          "email": "bruno@dib4t.local",
+          "password": "$2a$10$abcdefghijklmnopqrstuuabcdefghijklmnopqrstuvwxyz01234",
+          "__v": 0
+        },
+        "budgetNumber": "26-0007",
+        "paymentMethod": "30 dias",
+        "total": 43.5,
+        "description": "Fornecimento conforme especificação.",
+        "date": "2026-03-15T10:20:30.123Z",
+        "__v": 0
+      },
+      "tasks": [
+        {
+          "_id": {
+            "$oid": "{{new}}"
+          },
+          "taskType": "automation",
+          "budgetId": {
+            "$oid": "{{new}}"
+          },
+          "description": "",
+          "unitPrice": {
+            "$numberDouble": "32.5"
+          },
+          "quantity": {
+            "$numberInt": "1"
+          },
+          "__v": {
+            "$numberInt": "0"
+          }
+        },
+        {
+          "_id": {
+            "$oid": "{{new}}"
+          },
+          "taskType": "development",
+          "budgetId": {
+            "$oid": "{{new}}"
+          },
+          "description": "Projeto",
+          "unitPrice": {
+            "$numberInt": "30"
+          },
+          "quantity": {
+            "$numberDouble": "0.5"
+          },
+          "__v": {
+            "$numberInt": "0"
+          }
+        },
+        {
+          "_id": {
+            "$oid": "{{new}}"
+          },
+          "taskType": "machining",
+          "budgetId": {
+            "$oid": "{{new}}"
+          },
+          "unitPrice": {
+            "$numberDouble": "38.5"
+          },
+          "quantity": {
+            "$numberInt": "15"
+          },
+          "__v": {
+            "$numberInt": "0"
+          }
+        },
+        {
+          "_id": {
+            "$oid": "{{new}}"
+          },
+          "taskType": "others",
+          "budgetId": {
+            "$oid": "{{new}}"
+          },
+          "description": "Cáfé  ",
+          "unitPrice": {
+            "$numberDouble": "1e+21"
+          },
+          "quantity": {
+            "$numberInt": "-2"
+          },
+          "__v": {
+            "$numberInt": "0"
+          }
+        }
+      ]
+    },
+    {
+      "source": "with job, locked",
+      "stored": {
+        "_id": {
+          "$oid": "{{new}}"
+        },
+        "revision": {
+          "$numberInt": "0"
+        },
+        "complete": false,
+        "wasPdfDownloaded": false,
+        "margin": {
+          "$numberInt": "35"
+        },
+        "daysNeededToDoTheWork": {
+          "$numberInt": "60"
+        },
+        "validity": {
+          "$numberInt": "30"
+        },
+        "hasGenerateJob": false,
+        "client": {
+          "$oid": "{{client}}"
+        },
+        "descriptive": "Cópia",
+        "personInCharge": "Sr. Paulo",
+        "madeBy": {
+          "$oid": "{{user2}}"
+        },
+        "budgetNumber": "26-0007",
+        "paymentMethod": "30 dias",
+        "total": {
+          "$numberDouble": "43.5"
+        },
+        "description": "Fornecimento conforme especificação.",
+        "date": {
+          "$date": "2026-03-15T10:20:30.123Z"
+        },
+        "__v": {
+          "$numberInt": "0"
+        }
+      },
+      "response": {
+        "revision": 0,
+        "complete": false,
+        "wasPdfDownloaded": false,
+        "margin": 35,
+        "daysNeededToDoTheWork": 60,
+        "validity": 30,
+        "hasGenerateJob": false,
+        "_id": "{{new}}",
+        "client": {
+          "_id": "{{client}}",
+          "name": "Metalúrgica Exemplo, Lda.",
+          "fiscalNumber": "509999990",
+          "address": "Rua das Flores, 12",
+          "zipCode": "4000-123",
+          "location": "Porto",
+          "paymentCondition": "Pronto pagamento",
+          "type": "Cliente",
+          "__v": 0
+        },
+        "descriptive": "Cópia",
+        "personInCharge": "Sr. Paulo",
+        "madeBy": {
+          "roles": [
+            "canSeeObras"
+          ],
+          "fieldOfCompetencies": "Desenvolvimento",
+          "_id": "{{user2}}",
+          "name": "Bruno Silva",
+          "email": "bruno@dib4t.local",
+          "password": "$2a$10$abcdefghijklmnopqrstuuabcdefghijklmnopqrstuvwxyz01234",
+          "__v": 0
+        },
+        "budgetNumber": "26-0007",
+        "paymentMethod": "30 dias",
+        "total": 43.5,
+        "description": "Fornecimento conforme especificação.",
+        "date": "2026-03-15T10:20:30.123Z",
+        "__v": 0
+      },
+      "tasks": [
+        {
+          "_id": {
+            "$oid": "{{new}}"
+          },
+          "taskType": "automation",
+          "budgetId": {
+            "$oid": "{{new}}"
+          },
+          "description": "",
+          "unitPrice": {
+            "$numberDouble": "32.5"
+          },
+          "quantity": {
+            "$numberInt": "1"
+          },
+          "__v": {
+            "$numberInt": "0"
+          }
+        },
+        {
+          "_id": {
+            "$oid": "{{new}}"
+          },
+          "taskType": "development",
+          "budgetId": {
+            "$oid": "{{new}}"
+          },
+          "description": "Projeto",
+          "unitPrice": {
+            "$numberInt": "30"
+          },
+          "quantity": {
+            "$numberDouble": "0.5"
+          },
+          "__v": {
+            "$numberInt": "0"
+          }
+        },
+        {
+          "_id": {
+            "$oid": "{{new}}"
+          },
+          "taskType": "machining",
+          "budgetId": {
+            "$oid": "{{new}}"
+          },
+          "unitPrice": {
+            "$numberDouble": "38.5"
+          },
+          "quantity": {
+            "$numberInt": "15"
+          },
+          "__v": {
+            "$numberInt": "0"
+          }
+        },
+        {
+          "_id": {
+            "$oid": "{{new}}"
+          },
+          "taskType": "others",
+          "budgetId": {
+            "$oid": "{{new}}"
+          },
+          "description": "Cáfé  ",
+          "unitPrice": {
+            "$numberDouble": "1e+21"
+          },
+          "quantity": {
+            "$numberInt": "-2"
+          },
+          "__v": {
+            "$numberInt": "0"
+          }
+        }
+      ]
+    },
+    {
+      "source": "unknown field",
+      "stored": {
+        "_id": {
+          "$oid": "{{new}}"
+        },
+        "revision": {
+          "$numberInt": "0"
+        },
+        "complete": false,
+        "wasPdfDownloaded": false,
+        "margin": {
+          "$numberInt": "35"
+        },
+        "daysNeededToDoTheWork": {
+          "$numberInt": "60"
+        },
+        "validity": {
+          "$numberInt": "30"
+        },
+        "hasGenerateJob": false,
+        "client": {
+          "$oid": "{{client}}"
+        },
+        "descriptive": "Cópia",
+        "personInCharge": "Sr. Paulo",
+        "madeBy": {
+          "$oid": "{{user2}}"
+        },
+        "budgetNumber": "26-0007",
+        "paymentMethod": "30 dias",
+        "total": {
+          "$numberDouble": "43.5"
+        },
+        "description": "Fornecimento conforme especificação.",
+        "date": {
+          "$date": "2026-03-15T10:20:30.123Z"
+        },
+        "__v": {
+          "$numberInt": "0"
+        }
+      },
+      "response": {
+        "revision": 0,
+        "complete": false,
+        "wasPdfDownloaded": false,
+        "margin": 35,
+        "daysNeededToDoTheWork": 60,
+        "validity": 30,
+        "hasGenerateJob": false,
+        "_id": "{{new}}",
+        "client": {
+          "_id": "{{client}}",
+          "name": "Metalúrgica Exemplo, Lda.",
+          "fiscalNumber": "509999990",
+          "address": "Rua das Flores, 12",
+          "zipCode": "4000-123",
+          "location": "Porto",
+          "paymentCondition": "Pronto pagamento",
+          "type": "Cliente",
+          "__v": 0
+        },
+        "descriptive": "Cópia",
+        "personInCharge": "Sr. Paulo",
+        "madeBy": {
+          "roles": [
+            "canSeeObras"
+          ],
+          "fieldOfCompetencies": "Desenvolvimento",
+          "_id": "{{user2}}",
+          "name": "Bruno Silva",
+          "email": "bruno@dib4t.local",
+          "password": "$2a$10$abcdefghijklmnopqrstuuabcdefghijklmnopqrstuvwxyz01234",
+          "__v": 0
+        },
+        "budgetNumber": "26-0007",
+        "paymentMethod": "30 dias",
+        "total": 43.5,
+        "description": "Fornecimento conforme especificação.",
+        "date": "2026-03-15T10:20:30.123Z",
+        "__v": 0
+      },
+      "tasks": [
+        {
+          "_id": {
+            "$oid": "{{new}}"
+          },
+          "taskType": "automation",
+          "budgetId": {
+            "$oid": "{{new}}"
+          },
+          "description": "",
+          "unitPrice": {
+            "$numberDouble": "32.5"
+          },
+          "quantity": {
+            "$numberInt": "1"
+          },
+          "__v": {
+            "$numberInt": "0"
+          }
+        },
+        {
+          "_id": {
+            "$oid": "{{new}}"
+          },
+          "taskType": "development",
+          "budgetId": {
+            "$oid": "{{new}}"
+          },
+          "description": "Projeto",
+          "unitPrice": {
+            "$numberInt": "30"
+          },
+          "quantity": {
+            "$numberDouble": "0.5"
+          },
+          "__v": {
+            "$numberInt": "0"
+          }
+        },
+        {
+          "_id": {
+            "$oid": "{{new}}"
+          },
+          "taskType": "machining",
+          "budgetId": {
+            "$oid": "{{new}}"
+          },
+          "unitPrice": {
+            "$numberDouble": "38.5"
+          },
+          "quantity": {
+            "$numberInt": "15"
+          },
+          "__v": {
+            "$numberInt": "0"
+          }
+        },
+        {
+          "_id": {
+            "$oid": "{{new}}"
+          },
+          "taskType": "others",
+          "budgetId": {
+            "$oid": "{{new}}"
+          },
+          "description": "Cáfé  ",
+          "unitPrice": {
+            "$numberDouble": "1e+21"
+          },
+          "quantity": {
+            "$numberInt": "-2"
+          },
+          "__v": {
+            "$numberInt": "0"
+          }
+        }
+      ]
+    }
+  ],
+  "newRevision": [
+    {
+      "source": "typical",
+      "stored": {
+        "_id": {
+          "$oid": "{{new}}"
+        },
+        "revision": {
+          "$numberInt": "2"
+        },
+        "complete": false,
+        "wasPdfDownloaded": false,
+        "margin": {
+          "$numberInt": "35"
+        },
+        "daysNeededToDoTheWork": {
+          "$numberInt": "60"
+        },
+        "validity": {
+          "$numberInt": "30"
+        },
+        "hasGenerateJob": false,
+        "client": {
+          "$oid": "{{client}}"
+        },
+        "descriptive": "Máquina de corte",
+        "personInCharge": "Eng.ª Maria",
+        "madeBy": {
+          "$oid": "{{user}}"
+        },
+        "budgetNumber": "26-0007",
+        "paymentMethod": "30 dias",
+        "total": {
+          "$numberDouble": "43.5"
+        },
+        "description": "Fornecimento conforme especificação.",
+        "date": {
+          "$date": "2026-03-15T10:20:30.123Z"
+        },
+        "__v": {
+          "$numberInt": "0"
+        }
+      },
+      "response": {
+        "revision": 2,
+        "complete": false,
+        "wasPdfDownloaded": false,
+        "margin": 35,
+        "daysNeededToDoTheWork": 60,
+        "validity": 30,
+        "hasGenerateJob": false,
+        "_id": "{{new}}",
+        "client": {
+          "_id": "{{client}}",
+          "name": "Metalúrgica Exemplo, Lda.",
+          "fiscalNumber": "509999990",
+          "address": "Rua das Flores, 12",
+          "zipCode": "4000-123",
+          "location": "Porto",
+          "paymentCondition": "30 dias",
+          "type": "Cliente",
+          "__v": 0
+        },
+        "descriptive": "Máquina de corte",
+        "personInCharge": "Eng.ª Maria",
+        "madeBy": {
+          "roles": [
+            "canSeeOrcamentos",
+            null,
+            "canSeeDefinicoes"
+          ],
+          "fieldOfCompetencies": "Desenvolvimento",
+          "_id": "{{user}}",
+          "name": "Ana Administradora",
+          "email": "ana.admin@dib4t.local",
+          "password": "$2a$10$abcdefghijklmnopqrstuuabcdefghijklmnopqrstuvwxyz01234",
+          "__v": 0
+        },
+        "budgetNumber": "26-0007",
+        "paymentMethod": "30 dias",
+        "total": 43.5,
+        "description": "Fornecimento conforme especificação.",
+        "date": "2026-03-15T10:20:30.123Z",
+        "__v": 0
+      },
+      "tasks": [
+        {
+          "_id": {
+            "$oid": "{{new}}"
+          },
+          "taskType": "automation",
+          "budgetId": {
+            "$oid": "{{new}}"
+          },
+          "description": "",
+          "unitPrice": {
+            "$numberDouble": "32.5"
+          },
+          "quantity": {
+            "$numberInt": "1"
+          },
+          "__v": {
+            "$numberInt": "0"
+          }
+        },
+        {
+          "_id": {
+            "$oid": "{{new}}"
+          },
+          "taskType": "development",
+          "budgetId": {
+            "$oid": "{{new}}"
+          },
+          "description": "Projeto",
+          "unitPrice": {
+            "$numberInt": "30"
+          },
+          "quantity": {
+            "$numberDouble": "0.5"
+          },
+          "__v": {
+            "$numberInt": "0"
+          }
+        },
+        {
+          "_id": {
+            "$oid": "{{new}}"
+          },
+          "taskType": "machining",
+          "budgetId": {
+            "$oid": "{{new}}"
+          },
+          "unitPrice": {
+            "$numberDouble": "38.5"
+          },
+          "quantity": {
+            "$numberInt": "15"
+          },
+          "__v": {
+            "$numberInt": "0"
+          }
+        },
+        {
+          "_id": {
+            "$oid": "{{new}}"
+          },
+          "taskType": "others",
+          "budgetId": {
+            "$oid": "{{new}}"
+          },
+          "description": "Cáfé  ",
+          "unitPrice": {
+            "$numberDouble": "1e+21"
+          },
+          "quantity": {
+            "$numberInt": "-2"
+          },
+          "__v": {
+            "$numberInt": "0"
+          }
+        }
+      ]
+    },
+    {
+      "source": "no description, no personInCharge",
+      "stored": {
+        "_id": {
+          "$oid": "{{new}}"
+        },
+        "revision": {
+          "$numberInt": "2"
+        },
+        "complete": false,
+        "wasPdfDownloaded": false,
+        "margin": {
+          "$numberInt": "35"
+        },
+        "daysNeededToDoTheWork": {
+          "$numberInt": "60"
+        },
+        "validity": {
+          "$numberInt": "30"
+        },
+        "hasGenerateJob": false,
+        "client": {
+          "$oid": "{{client}}"
+        },
+        "descriptive": "Máquina de corte",
+        "madeBy": {
+          "$oid": "{{user}}"
+        },
+        "budgetNumber": "26-0007",
+        "paymentMethod": "30 dias",
+        "total": {
+          "$numberDouble": "43.5"
+        },
+        "date": {
+          "$date": "2026-03-15T10:20:30.123Z"
+        },
+        "__v": {
+          "$numberInt": "0"
+        }
+      },
+      "response": {
+        "revision": 2,
+        "complete": false,
+        "wasPdfDownloaded": false,
+        "margin": 35,
+        "daysNeededToDoTheWork": 60,
+        "validity": 30,
+        "hasGenerateJob": false,
+        "_id": "{{new}}",
+        "client": {
+          "_id": "{{client}}",
+          "name": "Metalúrgica Exemplo, Lda.",
+          "fiscalNumber": "509999990",
+          "address": "Rua das Flores, 12",
+          "zipCode": "4000-123",
+          "location": "Porto",
+          "paymentCondition": "30 dias",
+          "type": "Cliente",
+          "__v": 0
+        },
+        "descriptive": "Máquina de corte",
+        "madeBy": {
+          "roles": [
+            "canSeeOrcamentos",
+            null,
+            "canSeeDefinicoes"
+          ],
+          "fieldOfCompetencies": "Desenvolvimento",
+          "_id": "{{user}}",
+          "name": "Ana Administradora",
+          "email": "ana.admin@dib4t.local",
+          "password": "$2a$10$abcdefghijklmnopqrstuuabcdefghijklmnopqrstuvwxyz01234",
+          "__v": 0
+        },
+        "budgetNumber": "26-0007",
+        "paymentMethod": "30 dias",
+        "total": 43.5,
+        "date": "2026-03-15T10:20:30.123Z",
+        "__v": 0
+      },
+      "tasks": [
+        {
+          "_id": {
+            "$oid": "{{new}}"
+          },
+          "taskType": "automation",
+          "budgetId": {
+            "$oid": "{{new}}"
+          },
+          "description": "",
+          "unitPrice": {
+            "$numberDouble": "32.5"
+          },
+          "quantity": {
+            "$numberInt": "1"
+          },
+          "__v": {
+            "$numberInt": "0"
+          }
+        },
+        {
+          "_id": {
+            "$oid": "{{new}}"
+          },
+          "taskType": "development",
+          "budgetId": {
+            "$oid": "{{new}}"
+          },
+          "description": "Projeto",
+          "unitPrice": {
+            "$numberInt": "30"
+          },
+          "quantity": {
+            "$numberDouble": "0.5"
+          },
+          "__v": {
+            "$numberInt": "0"
+          }
+        },
+        {
+          "_id": {
+            "$oid": "{{new}}"
+          },
+          "taskType": "machining",
+          "budgetId": {
+            "$oid": "{{new}}"
+          },
+          "unitPrice": {
+            "$numberDouble": "38.5"
+          },
+          "quantity": {
+            "$numberInt": "15"
+          },
+          "__v": {
+            "$numberInt": "0"
+          }
+        },
+        {
+          "_id": {
+            "$oid": "{{new}}"
+          },
+          "taskType": "others",
+          "budgetId": {
+            "$oid": "{{new}}"
+          },
+          "description": "Cáfé  ",
+          "unitPrice": {
+            "$numberDouble": "1e+21"
+          },
+          "quantity": {
+            "$numberInt": "-2"
+          },
+          "__v": {
+            "$numberInt": "0"
+          }
+        }
+      ]
+    },
+    {
+      "source": "no total, Double margin",
+      "stored": {
+        "_id": {
+          "$oid": "{{new}}"
+        },
+        "revision": {
+          "$numberInt": "2"
+        },
+        "complete": false,
+        "wasPdfDownloaded": false,
+        "margin": {
+          "$numberDouble": "32.5"
+        },
+        "daysNeededToDoTheWork": {
+          "$numberInt": "60"
+        },
+        "validity": {
+          "$numberInt": "30"
+        },
+        "hasGenerateJob": false,
+        "client": {
+          "$oid": "{{client}}"
+        },
+        "descriptive": "Máquina de corte",
+        "personInCharge": "Eng.ª Maria",
+        "madeBy": {
+          "$oid": "{{user}}"
+        },
+        "budgetNumber": "26-0007",
+        "paymentMethod": "30 dias",
+        "description": "Fornecimento conforme especificação.",
+        "date": {
+          "$date": "2026-03-15T10:20:30.123Z"
+        },
+        "__v": {
+          "$numberInt": "0"
+        }
+      },
+      "response": {
+        "revision": 2,
+        "complete": false,
+        "wasPdfDownloaded": false,
+        "margin": 32.5,
+        "daysNeededToDoTheWork": 60,
+        "validity": 30,
+        "hasGenerateJob": false,
+        "_id": "{{new}}",
+        "client": {
+          "_id": "{{client}}",
+          "name": "Metalúrgica Exemplo, Lda.",
+          "fiscalNumber": "509999990",
+          "address": "Rua das Flores, 12",
+          "zipCode": "4000-123",
+          "location": "Porto",
+          "paymentCondition": "30 dias",
+          "type": "Cliente",
+          "__v": 0
+        },
+        "descriptive": "Máquina de corte",
+        "personInCharge": "Eng.ª Maria",
+        "madeBy": {
+          "roles": [
+            "canSeeOrcamentos",
+            null,
+            "canSeeDefinicoes"
+          ],
+          "fieldOfCompetencies": "Desenvolvimento",
+          "_id": "{{user}}",
+          "name": "Ana Administradora",
+          "email": "ana.admin@dib4t.local",
+          "password": "$2a$10$abcdefghijklmnopqrstuuabcdefghijklmnopqrstuvwxyz01234",
+          "__v": 0
+        },
+        "budgetNumber": "26-0007",
+        "paymentMethod": "30 dias",
+        "description": "Fornecimento conforme especificação.",
+        "date": "2026-03-15T10:20:30.123Z",
+        "__v": 0
+      },
+      "tasks": [
+        {
+          "_id": {
+            "$oid": "{{new}}"
+          },
+          "taskType": "automation",
+          "budgetId": {
+            "$oid": "{{new}}"
+          },
+          "description": "",
+          "unitPrice": {
+            "$numberDouble": "32.5"
+          },
+          "quantity": {
+            "$numberInt": "1"
+          },
+          "__v": {
+            "$numberInt": "0"
+          }
+        },
+        {
+          "_id": {
+            "$oid": "{{new}}"
+          },
+          "taskType": "development",
+          "budgetId": {
+            "$oid": "{{new}}"
+          },
+          "description": "Projeto",
+          "unitPrice": {
+            "$numberInt": "30"
+          },
+          "quantity": {
+            "$numberDouble": "0.5"
+          },
+          "__v": {
+            "$numberInt": "0"
+          }
+        },
+        {
+          "_id": {
+            "$oid": "{{new}}"
+          },
+          "taskType": "machining",
+          "budgetId": {
+            "$oid": "{{new}}"
+          },
+          "unitPrice": {
+            "$numberDouble": "38.5"
+          },
+          "quantity": {
+            "$numberInt": "15"
+          },
+          "__v": {
+            "$numberInt": "0"
+          }
+        },
+        {
+          "_id": {
+            "$oid": "{{new}}"
+          },
+          "taskType": "others",
+          "budgetId": {
+            "$oid": "{{new}}"
+          },
+          "description": "Cáfé  ",
+          "unitPrice": {
+            "$numberDouble": "1e+21"
+          },
+          "quantity": {
+            "$numberInt": "-2"
+          },
+          "__v": {
+            "$numberInt": "0"
+          }
+        }
+      ]
+    },
+    {
+      "source": "old document: no hasGenerateJob/validity/days/__v",
+      "stored": {
+        "_id": {
+          "$oid": "{{new}}"
+        },
+        "revision": {
+          "$numberInt": "2"
+        },
+        "complete": false,
+        "wasPdfDownloaded": false,
+        "margin": {
+          "$numberInt": "35"
+        },
+        "daysNeededToDoTheWork": {
+          "$numberInt": "60"
+        },
+        "validity": {
+          "$numberInt": "30"
+        },
+        "hasGenerateJob": false,
+        "client": {
+          "$oid": "{{client}}"
+        },
+        "descriptive": "Máquina de corte",
+        "personInCharge": "Eng.ª Maria",
+        "madeBy": {
+          "$oid": "{{user}}"
+        },
+        "budgetNumber": "26-0007",
+        "paymentMethod": "30 dias",
+        "total": {
+          "$numberDouble": "43.5"
+        },
+        "description": "Fornecimento conforme especificação.",
+        "date": {
+          "$date": "2026-03-15T10:20:30.123Z"
+        },
+        "__v": {
+          "$numberInt": "0"
+        }
+      },
+      "response": {
+        "revision": 2,
+        "complete": false,
+        "wasPdfDownloaded": false,
+        "margin": 35,
+        "daysNeededToDoTheWork": 60,
+        "validity": 30,
+        "hasGenerateJob": false,
+        "_id": "{{new}}",
+        "client": {
+          "_id": "{{client}}",
+          "name": "Metalúrgica Exemplo, Lda.",
+          "fiscalNumber": "509999990",
+          "address": "Rua das Flores, 12",
+          "zipCode": "4000-123",
+          "location": "Porto",
+          "paymentCondition": "30 dias",
+          "type": "Cliente",
+          "__v": 0
+        },
+        "descriptive": "Máquina de corte",
+        "personInCharge": "Eng.ª Maria",
+        "madeBy": {
+          "roles": [
+            "canSeeOrcamentos",
+            null,
+            "canSeeDefinicoes"
+          ],
+          "fieldOfCompetencies": "Desenvolvimento",
+          "_id": "{{user}}",
+          "name": "Ana Administradora",
+          "email": "ana.admin@dib4t.local",
+          "password": "$2a$10$abcdefghijklmnopqrstuuabcdefghijklmnopqrstuvwxyz01234",
+          "__v": 0
+        },
+        "budgetNumber": "26-0007",
+        "paymentMethod": "30 dias",
+        "total": 43.5,
+        "description": "Fornecimento conforme especificação.",
+        "date": "2026-03-15T10:20:30.123Z",
+        "__v": 0
+      },
+      "tasks": [
+        {
+          "_id": {
+            "$oid": "{{new}}"
+          },
+          "taskType": "automation",
+          "budgetId": {
+            "$oid": "{{new}}"
+          },
+          "description": "",
+          "unitPrice": {
+            "$numberDouble": "32.5"
+          },
+          "quantity": {
+            "$numberInt": "1"
+          },
+          "__v": {
+            "$numberInt": "0"
+          }
+        },
+        {
+          "_id": {
+            "$oid": "{{new}}"
+          },
+          "taskType": "development",
+          "budgetId": {
+            "$oid": "{{new}}"
+          },
+          "description": "Projeto",
+          "unitPrice": {
+            "$numberInt": "30"
+          },
+          "quantity": {
+            "$numberDouble": "0.5"
+          },
+          "__v": {
+            "$numberInt": "0"
+          }
+        },
+        {
+          "_id": {
+            "$oid": "{{new}}"
+          },
+          "taskType": "machining",
+          "budgetId": {
+            "$oid": "{{new}}"
+          },
+          "unitPrice": {
+            "$numberDouble": "38.5"
+          },
+          "quantity": {
+            "$numberInt": "15"
+          },
+          "__v": {
+            "$numberInt": "0"
+          }
+        },
+        {
+          "_id": {
+            "$oid": "{{new}}"
+          },
+          "taskType": "others",
+          "budgetId": {
+            "$oid": "{{new}}"
+          },
+          "description": "Cáfé  ",
+          "unitPrice": {
+            "$numberDouble": "1e+21"
+          },
+          "quantity": {
+            "$numberInt": "-2"
+          },
+          "__v": {
+            "$numberInt": "0"
+          }
+        }
+      ]
+    },
+    {
+      "source": "with job, locked",
+      "stored": {
+        "_id": {
+          "$oid": "{{new}}"
+        },
+        "revision": {
+          "$numberInt": "2"
+        },
+        "complete": false,
+        "wasPdfDownloaded": false,
+        "margin": {
+          "$numberInt": "35"
+        },
+        "daysNeededToDoTheWork": {
+          "$numberInt": "60"
+        },
+        "validity": {
+          "$numberInt": "30"
+        },
+        "hasGenerateJob": false,
+        "client": {
+          "$oid": "{{client}}"
+        },
+        "descriptive": "Máquina de corte",
+        "personInCharge": "Eng.ª Maria",
+        "madeBy": {
+          "$oid": "{{user}}"
+        },
+        "budgetNumber": "26-0007",
+        "paymentMethod": "30 dias",
+        "total": {
+          "$numberDouble": "43.5"
+        },
+        "description": "Fornecimento conforme especificação.",
+        "date": {
+          "$date": "2026-03-15T10:20:30.123Z"
+        },
+        "__v": {
+          "$numberInt": "0"
+        }
+      },
+      "response": {
+        "revision": 2,
+        "complete": false,
+        "wasPdfDownloaded": false,
+        "margin": 35,
+        "daysNeededToDoTheWork": 60,
+        "validity": 30,
+        "hasGenerateJob": false,
+        "_id": "{{new}}",
+        "client": {
+          "_id": "{{client}}",
+          "name": "Metalúrgica Exemplo, Lda.",
+          "fiscalNumber": "509999990",
+          "address": "Rua das Flores, 12",
+          "zipCode": "4000-123",
+          "location": "Porto",
+          "paymentCondition": "30 dias",
+          "type": "Cliente",
+          "__v": 0
+        },
+        "descriptive": "Máquina de corte",
+        "personInCharge": "Eng.ª Maria",
+        "madeBy": {
+          "roles": [
+            "canSeeOrcamentos",
+            null,
+            "canSeeDefinicoes"
+          ],
+          "fieldOfCompetencies": "Desenvolvimento",
+          "_id": "{{user}}",
+          "name": "Ana Administradora",
+          "email": "ana.admin@dib4t.local",
+          "password": "$2a$10$abcdefghijklmnopqrstuuabcdefghijklmnopqrstuvwxyz01234",
+          "__v": 0
+        },
+        "budgetNumber": "26-0007",
+        "paymentMethod": "30 dias",
+        "total": 43.5,
+        "description": "Fornecimento conforme especificação.",
+        "date": "2026-03-15T10:20:30.123Z",
+        "__v": 0
+      },
+      "tasks": [
+        {
+          "_id": {
+            "$oid": "{{new}}"
+          },
+          "taskType": "automation",
+          "budgetId": {
+            "$oid": "{{new}}"
+          },
+          "description": "",
+          "unitPrice": {
+            "$numberDouble": "32.5"
+          },
+          "quantity": {
+            "$numberInt": "1"
+          },
+          "__v": {
+            "$numberInt": "0"
+          }
+        },
+        {
+          "_id": {
+            "$oid": "{{new}}"
+          },
+          "taskType": "development",
+          "budgetId": {
+            "$oid": "{{new}}"
+          },
+          "description": "Projeto",
+          "unitPrice": {
+            "$numberInt": "30"
+          },
+          "quantity": {
+            "$numberDouble": "0.5"
+          },
+          "__v": {
+            "$numberInt": "0"
+          }
+        },
+        {
+          "_id": {
+            "$oid": "{{new}}"
+          },
+          "taskType": "machining",
+          "budgetId": {
+            "$oid": "{{new}}"
+          },
+          "unitPrice": {
+            "$numberDouble": "38.5"
+          },
+          "quantity": {
+            "$numberInt": "15"
+          },
+          "__v": {
+            "$numberInt": "0"
+          }
+        },
+        {
+          "_id": {
+            "$oid": "{{new}}"
+          },
+          "taskType": "others",
+          "budgetId": {
+            "$oid": "{{new}}"
+          },
+          "description": "Cáfé  ",
+          "unitPrice": {
+            "$numberDouble": "1e+21"
+          },
+          "quantity": {
+            "$numberInt": "-2"
+          },
+          "__v": {
+            "$numberInt": "0"
+          }
+        }
+      ]
+    },
+    {
+      "source": "unknown field",
+      "stored": {
+        "_id": {
+          "$oid": "{{new}}"
+        },
+        "revision": {
+          "$numberInt": "2"
+        },
+        "complete": false,
+        "wasPdfDownloaded": false,
+        "margin": {
+          "$numberInt": "35"
+        },
+        "daysNeededToDoTheWork": {
+          "$numberInt": "60"
+        },
+        "validity": {
+          "$numberInt": "30"
+        },
+        "hasGenerateJob": false,
+        "client": {
+          "$oid": "{{client}}"
+        },
+        "descriptive": "Máquina de corte",
+        "personInCharge": "Eng.ª Maria",
+        "madeBy": {
+          "$oid": "{{user}}"
+        },
+        "budgetNumber": "26-0007",
+        "paymentMethod": "30 dias",
+        "total": {
+          "$numberDouble": "43.5"
+        },
+        "description": "Fornecimento conforme especificação.",
+        "date": {
+          "$date": "2026-03-15T10:20:30.123Z"
+        },
+        "__v": {
+          "$numberInt": "0"
+        }
+      },
+      "response": {
+        "revision": 2,
+        "complete": false,
+        "wasPdfDownloaded": false,
+        "margin": 35,
+        "daysNeededToDoTheWork": 60,
+        "validity": 30,
+        "hasGenerateJob": false,
+        "_id": "{{new}}",
+        "client": {
+          "_id": "{{client}}",
+          "name": "Metalúrgica Exemplo, Lda.",
+          "fiscalNumber": "509999990",
+          "address": "Rua das Flores, 12",
+          "zipCode": "4000-123",
+          "location": "Porto",
+          "paymentCondition": "30 dias",
+          "type": "Cliente",
+          "__v": 0
+        },
+        "descriptive": "Máquina de corte",
+        "personInCharge": "Eng.ª Maria",
+        "madeBy": {
+          "roles": [
+            "canSeeOrcamentos",
+            null,
+            "canSeeDefinicoes"
+          ],
+          "fieldOfCompetencies": "Desenvolvimento",
+          "_id": "{{user}}",
+          "name": "Ana Administradora",
+          "email": "ana.admin@dib4t.local",
+          "password": "$2a$10$abcdefghijklmnopqrstuuabcdefghijklmnopqrstuvwxyz01234",
+          "__v": 0
+        },
+        "budgetNumber": "26-0007",
+        "paymentMethod": "30 dias",
+        "total": 43.5,
+        "description": "Fornecimento conforme especificação.",
+        "date": "2026-03-15T10:20:30.123Z",
+        "__v": 0
+      },
+      "tasks": [
+        {
+          "_id": {
+            "$oid": "{{new}}"
+          },
+          "taskType": "automation",
+          "budgetId": {
+            "$oid": "{{new}}"
+          },
+          "description": "",
+          "unitPrice": {
+            "$numberDouble": "32.5"
+          },
+          "quantity": {
+            "$numberInt": "1"
+          },
+          "__v": {
+            "$numberInt": "0"
+          }
+        },
+        {
+          "_id": {
+            "$oid": "{{new}}"
+          },
+          "taskType": "development",
+          "budgetId": {
+            "$oid": "{{new}}"
+          },
+          "description": "Projeto",
+          "unitPrice": {
+            "$numberInt": "30"
+          },
+          "quantity": {
+            "$numberDouble": "0.5"
+          },
+          "__v": {
+            "$numberInt": "0"
+          }
+        },
+        {
+          "_id": {
+            "$oid": "{{new}}"
+          },
+          "taskType": "machining",
+          "budgetId": {
+            "$oid": "{{new}}"
+          },
+          "unitPrice": {
+            "$numberDouble": "38.5"
+          },
+          "quantity": {
+            "$numberInt": "15"
+          },
+          "__v": {
+            "$numberInt": "0"
+          }
+        },
+        {
+          "_id": {
+            "$oid": "{{new}}"
+          },
+          "taskType": "others",
+          "budgetId": {
+            "$oid": "{{new}}"
+          },
+          "description": "Cáfé  ",
+          "unitPrice": {
+            "$numberDouble": "1e+21"
+          },
+          "quantity": {
+            "$numberInt": "-2"
+          },
+          "__v": {
+            "$numberInt": "0"
+          }
+        }
+      ]
+    }
+  ],
+  "edit": [
+    {
+      "name": "same descriptive, other person and author",
+      "existing": {
+        "_id": {
+          "$oid": "{{budget}}"
+        },
+        "revision": {
+          "$numberInt": "0"
+        },
+        "complete": true,
+        "wasPdfDownloaded": true,
+        "margin": {
+          "$numberInt": "35"
+        },
+        "daysNeededToDoTheWork": {
+          "$numberInt": "60"
+        },
+        "validity": {
+          "$numberInt": "30"
+        },
+        "hasGenerateJob": false,
+        "client": {
+          "$oid": "{{client}}"
+        },
+        "descriptive": "Máquina de corte",
+        "personInCharge": "Eng.ª Maria",
+        "madeBy": {
+          "$oid": "{{user}}"
+        },
+        "budgetNumber": "26-0007",
+        "paymentMethod": "30 dias",
+        "total": {
+          "$numberDouble": "43.5"
+        },
+        "date": {
+          "$date": "2026-02-01T09:00:00.000Z"
+        },
+        "__v": {
+          "$numberInt": "0"
+        },
+        "description": "Fornecimento conforme especificação."
+      },
+      "body": {
+        "descriptive": "Máquina de corte",
+        "personInCharge": "Eng.ª Maria Lopes"
+      },
+      "outcome": "200",
+      "update": {
+        "$set": {
+          "complete": false,
+          "madeBy": {
+            "$oid": "{{user2}}"
+          },
+          "personInCharge": "Eng.ª Maria Lopes",
+          "wasPdfDownloaded": false
+        }
+      },
+      "sshCommands": [],
+      "response": {
+        "revision": 0,
+        "complete": false,
+        "wasPdfDownloaded": false,
+        "margin": 35,
+        "daysNeededToDoTheWork": 60,
+        "validity": 30,
+        "hasGenerateJob": false,
+        "_id": "{{budget}}",
+        "client": {
+          "_id": "{{client}}",
+          "name": "Metalúrgica Exemplo, Lda.",
+          "fiscalNumber": "509999990",
+          "address": "Rua das Flores, 12",
+          "zipCode": "4000-123",
+          "location": "Porto",
+          "paymentCondition": "30 dias",
+          "type": "Cliente",
+          "__v": 0
+        },
+        "descriptive": "Máquina de corte",
+        "personInCharge": "Eng.ª Maria Lopes",
+        "madeBy": {
+          "roles": [
+            "canSeeObras"
+          ],
+          "fieldOfCompetencies": "Desenvolvimento",
+          "_id": "{{user2}}",
+          "name": "Bruno Silva",
+          "email": "bruno@dib4t.local",
+          "password": "$2a$10$abcdefghijklmnopqrstuuabcdefghijklmnopqrstuvwxyz01234",
+          "__v": 0
+        },
+        "budgetNumber": "26-0007",
+        "paymentMethod": "30 dias",
+        "total": 43.5,
+        "date": "2026-02-01T09:00:00.000Z",
+        "__v": 0,
+        "description": "Fornecimento conforme especificação."
+      }
+    },
+    {
+      "name": "nothing changes but the flags",
+      "existing": {
+        "_id": {
+          "$oid": "{{budget}}"
+        },
+        "revision": {
+          "$numberInt": "0"
+        },
+        "complete": true,
+        "wasPdfDownloaded": true,
+        "margin": {
+          "$numberInt": "35"
+        },
+        "daysNeededToDoTheWork": {
+          "$numberInt": "60"
+        },
+        "validity": {
+          "$numberInt": "30"
+        },
+        "hasGenerateJob": false,
+        "client": {
+          "$oid": "{{client}}"
+        },
+        "descriptive": "Máquina de corte",
+        "personInCharge": "Eng.ª Maria",
+        "madeBy": {
+          "$oid": "{{user}}"
+        },
+        "budgetNumber": "26-0007",
+        "paymentMethod": "30 dias",
+        "total": {
+          "$numberDouble": "43.5"
+        },
+        "date": {
+          "$date": "2026-02-01T09:00:00.000Z"
+        },
+        "__v": {
+          "$numberInt": "0"
+        },
+        "description": "Fornecimento conforme especificação."
+      },
+      "body": {
+        "descriptive": "Máquina de corte",
+        "personInCharge": "Eng.ª Maria"
+      },
+      "outcome": "200",
+      "update": {
+        "$set": {
+          "complete": false,
+          "wasPdfDownloaded": false
+        }
+      },
+      "sshCommands": [],
+      "response": {
+        "revision": 0,
+        "complete": false,
+        "wasPdfDownloaded": false,
+        "margin": 35,
+        "daysNeededToDoTheWork": 60,
+        "validity": 30,
+        "hasGenerateJob": false,
+        "_id": "{{budget}}",
+        "client": {
+          "_id": "{{client}}",
+          "name": "Metalúrgica Exemplo, Lda.",
+          "fiscalNumber": "509999990",
+          "address": "Rua das Flores, 12",
+          "zipCode": "4000-123",
+          "location": "Porto",
+          "paymentCondition": "30 dias",
+          "type": "Cliente",
+          "__v": 0
+        },
+        "descriptive": "Máquina de corte",
+        "personInCharge": "Eng.ª Maria",
+        "madeBy": {
+          "roles": [
+            "canSeeOrcamentos",
+            null,
+            "canSeeDefinicoes"
+          ],
+          "fieldOfCompetencies": "Desenvolvimento",
+          "_id": "{{user}}",
+          "name": "Ana Administradora",
+          "email": "ana.admin@dib4t.local",
+          "password": "$2a$10$abcdefghijklmnopqrstuuabcdefghijklmnopqrstuvwxyz01234",
+          "__v": 0
+        },
+        "budgetNumber": "26-0007",
+        "paymentMethod": "30 dias",
+        "total": 43.5,
+        "date": "2026-02-01T09:00:00.000Z",
+        "__v": 0,
+        "description": "Fornecimento conforme especificação."
+      }
+    },
+    {
+      "name": "flags already false: nothing to write",
+      "existing": {
+        "_id": {
+          "$oid": "{{budget}}"
+        },
+        "revision": {
+          "$numberInt": "0"
+        },
+        "complete": false,
+        "wasPdfDownloaded": false,
+        "margin": {
+          "$numberInt": "35"
+        },
+        "daysNeededToDoTheWork": {
+          "$numberInt": "60"
+        },
+        "validity": {
+          "$numberInt": "30"
+        },
+        "hasGenerateJob": false,
+        "client": {
+          "$oid": "{{client}}"
+        },
+        "descriptive": "Máquina de corte",
+        "personInCharge": "Eng.ª Maria",
+        "madeBy": {
+          "$oid": "{{user}}"
+        },
+        "budgetNumber": "26-0007",
+        "paymentMethod": "30 dias",
+        "total": {
+          "$numberDouble": "43.5"
+        },
+        "date": {
+          "$date": "2026-02-01T09:00:00.000Z"
+        },
+        "__v": {
+          "$numberInt": "0"
+        },
+        "description": "Fornecimento conforme especificação."
+      },
+      "body": {
+        "descriptive": "Máquina de corte",
+        "personInCharge": "Eng.ª Maria"
+      },
+      "outcome": "200",
+      "update": null,
+      "sshCommands": [],
+      "response": {
+        "revision": 0,
+        "complete": false,
+        "wasPdfDownloaded": false,
+        "margin": 35,
+        "daysNeededToDoTheWork": 60,
+        "validity": 30,
+        "hasGenerateJob": false,
+        "_id": "{{budget}}",
+        "client": {
+          "_id": "{{client}}",
+          "name": "Metalúrgica Exemplo, Lda.",
+          "fiscalNumber": "509999990",
+          "address": "Rua das Flores, 12",
+          "zipCode": "4000-123",
+          "location": "Porto",
+          "paymentCondition": "30 dias",
+          "type": "Cliente",
+          "__v": 0
+        },
+        "descriptive": "Máquina de corte",
+        "personInCharge": "Eng.ª Maria",
+        "madeBy": {
+          "roles": [
+            "canSeeOrcamentos",
+            null,
+            "canSeeDefinicoes"
+          ],
+          "fieldOfCompetencies": "Desenvolvimento",
+          "_id": "{{user}}",
+          "name": "Ana Administradora",
+          "email": "ana.admin@dib4t.local",
+          "password": "$2a$10$abcdefghijklmnopqrstuuabcdefghijklmnopqrstuvwxyz01234",
+          "__v": 0
+        },
+        "budgetNumber": "26-0007",
+        "paymentMethod": "30 dias",
+        "total": 43.5,
+        "date": "2026-02-01T09:00:00.000Z",
+        "__v": 0,
+        "description": "Fornecimento conforme especificação."
+      }
+    },
+    {
+      "name": "revision 1, new descriptive (no NAS rename)",
+      "existing": {
+        "_id": {
+          "$oid": "{{budget}}"
+        },
+        "revision": {
+          "$numberInt": "1"
+        },
+        "complete": true,
+        "wasPdfDownloaded": true,
+        "margin": {
+          "$numberInt": "35"
+        },
+        "daysNeededToDoTheWork": {
+          "$numberInt": "60"
+        },
+        "validity": {
+          "$numberInt": "30"
+        },
+        "hasGenerateJob": false,
+        "client": {
+          "$oid": "{{client}}"
+        },
+        "descriptive": "Máquina de corte",
+        "personInCharge": "Eng.ª Maria",
+        "madeBy": {
+          "$oid": "{{user}}"
+        },
+        "budgetNumber": "26-0007",
+        "paymentMethod": "30 dias",
+        "total": {
+          "$numberDouble": "43.5"
+        },
+        "date": {
+          "$date": "2026-02-01T09:00:00.000Z"
+        },
+        "__v": {
+          "$numberInt": "0"
+        },
+        "description": "Fornecimento conforme especificação."
+      },
+      "body": {
+        "descriptive": "Novo descritivo",
+        "personInCharge": "Eng.ª Maria"
+      },
+      "outcome": "200",
+      "update": {
+        "$set": {
+          "complete": false,
+          "descriptive": "Novo descritivo",
+          "wasPdfDownloaded": false
+        }
+      },
+      "sshCommands": [],
+      "response": {
+        "revision": 1,
+        "complete": false,
+        "wasPdfDownloaded": false,
+        "margin": 35,
+        "daysNeededToDoTheWork": 60,
+        "validity": 30,
+        "hasGenerateJob": false,
+        "_id": "{{budget}}",
+        "client": {
+          "_id": "{{client}}",
+          "name": "Metalúrgica Exemplo, Lda.",
+          "fiscalNumber": "509999990",
+          "address": "Rua das Flores, 12",
+          "zipCode": "4000-123",
+          "location": "Porto",
+          "paymentCondition": "30 dias",
+          "type": "Cliente",
+          "__v": 0
+        },
+        "descriptive": "Novo descritivo",
+        "personInCharge": "Eng.ª Maria",
+        "madeBy": {
+          "roles": [
+            "canSeeOrcamentos",
+            null,
+            "canSeeDefinicoes"
+          ],
+          "fieldOfCompetencies": "Desenvolvimento",
+          "_id": "{{user}}",
+          "name": "Ana Administradora",
+          "email": "ana.admin@dib4t.local",
+          "password": "$2a$10$abcdefghijklmnopqrstuuabcdefghijklmnopqrstuvwxyz01234",
+          "__v": 0
+        },
+        "budgetNumber": "26-0007",
+        "paymentMethod": "30 dias",
+        "total": 43.5,
+        "date": "2026-02-01T09:00:00.000Z",
+        "__v": 0,
+        "description": "Fornecimento conforme especificação."
+      }
+    },
+    {
+      "name": "revision 0, new descriptive (NAS rename, D5)",
+      "existing": {
+        "_id": {
+          "$oid": "{{budget}}"
+        },
+        "revision": {
+          "$numberInt": "0"
+        },
+        "complete": true,
+        "wasPdfDownloaded": true,
+        "margin": {
+          "$numberInt": "35"
+        },
+        "daysNeededToDoTheWork": {
+          "$numberInt": "60"
+        },
+        "validity": {
+          "$numberInt": "30"
+        },
+        "hasGenerateJob": false,
+        "client": {
+          "$oid": "{{client}}"
+        },
+        "descriptive": "Máquina de corte",
+        "personInCharge": "Eng.ª Maria",
+        "madeBy": {
+          "$oid": "{{user}}"
+        },
+        "budgetNumber": "26-0007",
+        "paymentMethod": "30 dias",
+        "total": {
+          "$numberDouble": "43.5"
+        },
+        "date": {
+          "$date": "2026-02-01T09:00:00.000Z"
+        },
+        "__v": {
+          "$numberInt": "0"
+        },
+        "description": "Fornecimento conforme especificação."
+      },
+      "body": {
+        "descriptive": "Novo descritivo",
+        "personInCharge": "Eng.ª Maria"
+      },
+      "outcome": "200",
+      "update": {
+        "$set": {
+          "complete": false,
+          "descriptive": "Novo descritivo",
+          "wasPdfDownloaded": false
+        }
+      },
+      "sshCommands": [
+        "cd /;mv /share/Orçamentos/2026/'Metalúrgica Exemplo, Lda.'/'26-0007 - Máquina de corte' /share/Orçamentos/2026/'Metalúrgica Exemplo, Lda.'/'26-0007 - Novo descritivo'"
+      ],
+      "response": {
+        "revision": 0,
+        "complete": false,
+        "wasPdfDownloaded": false,
+        "margin": 35,
+        "daysNeededToDoTheWork": 60,
+        "validity": 30,
+        "hasGenerateJob": false,
+        "_id": "{{budget}}",
+        "client": {
+          "_id": "{{client}}",
+          "name": "Metalúrgica Exemplo, Lda.",
+          "fiscalNumber": "509999990",
+          "address": "Rua das Flores, 12",
+          "zipCode": "4000-123",
+          "location": "Porto",
+          "paymentCondition": "30 dias",
+          "type": "Cliente",
+          "__v": 0
+        },
+        "descriptive": "Novo descritivo",
+        "personInCharge": "Eng.ª Maria",
+        "madeBy": {
+          "roles": [
+            "canSeeOrcamentos",
+            null,
+            "canSeeDefinicoes"
+          ],
+          "fieldOfCompetencies": "Desenvolvimento",
+          "_id": "{{user}}",
+          "name": "Ana Administradora",
+          "email": "ana.admin@dib4t.local",
+          "password": "$2a$10$abcdefghijklmnopqrstuuabcdefghijklmnopqrstuvwxyz01234",
+          "__v": 0
+        },
+        "budgetNumber": "26-0007",
+        "paymentMethod": "30 dias",
+        "total": 43.5,
+        "date": "2026-02-01T09:00:00.000Z",
+        "__v": 0,
+        "description": "Fornecimento conforme especificação."
+      }
+    },
+    {
+      "name": "imported: no personInCharge stored",
+      "existing": {
+        "_id": {
+          "$oid": "{{budget}}"
+        },
+        "revision": {
+          "$numberInt": "0"
+        },
+        "complete": true,
+        "wasPdfDownloaded": true,
+        "margin": {
+          "$numberInt": "35"
+        },
+        "daysNeededToDoTheWork": {
+          "$numberInt": "60"
+        },
+        "validity": {
+          "$numberInt": "30"
+        },
+        "hasGenerateJob": false,
+        "client": {
+          "$oid": "{{client}}"
+        },
+        "descriptive": "Máquina de corte",
+        "madeBy": {
+          "$oid": "{{user}}"
+        },
+        "budgetNumber": "26-0007",
+        "paymentMethod": "30 dias",
+        "total": {
+          "$numberDouble": "43.5"
+        },
+        "date": {
+          "$date": "2026-02-01T09:00:00.000Z"
+        },
+        "__v": {
+          "$numberInt": "0"
+        },
+        "description": "Fornecimento conforme especificação."
+      },
+      "body": {
+        "descriptive": "Máquina de corte",
+        "personInCharge": "Novo"
+      },
+      "outcome": "200",
+      "update": {
+        "$set": {
+          "complete": false,
+          "personInCharge": "Novo",
+          "wasPdfDownloaded": false
+        }
+      },
+      "sshCommands": [],
+      "response": {
+        "revision": 0,
+        "complete": false,
+        "wasPdfDownloaded": false,
+        "margin": 35,
+        "daysNeededToDoTheWork": 60,
+        "validity": 30,
+        "hasGenerateJob": false,
+        "_id": "{{budget}}",
+        "client": {
+          "_id": "{{client}}",
+          "name": "Metalúrgica Exemplo, Lda.",
+          "fiscalNumber": "509999990",
+          "address": "Rua das Flores, 12",
+          "zipCode": "4000-123",
+          "location": "Porto",
+          "paymentCondition": "30 dias",
+          "type": "Cliente",
+          "__v": 0
+        },
+        "descriptive": "Máquina de corte",
+        "madeBy": {
+          "roles": [
+            "canSeeOrcamentos",
+            null,
+            "canSeeDefinicoes"
+          ],
+          "fieldOfCompetencies": "Desenvolvimento",
+          "_id": "{{user}}",
+          "name": "Ana Administradora",
+          "email": "ana.admin@dib4t.local",
+          "password": "$2a$10$abcdefghijklmnopqrstuuabcdefghijklmnopqrstuvwxyz01234",
+          "__v": 0
+        },
+        "budgetNumber": "26-0007",
+        "paymentMethod": "30 dias",
+        "total": 43.5,
+        "date": "2026-02-01T09:00:00.000Z",
+        "__v": 0,
+        "description": "Fornecimento conforme especificação.",
+        "personInCharge": "Novo"
+      }
+    },
+    {
+      "name": "body without personInCharge (D7: legacy saves undefined)",
+      "existing": {
+        "_id": {
+          "$oid": "{{budget}}"
+        },
+        "revision": {
+          "$numberInt": "0"
+        },
+        "complete": true,
+        "wasPdfDownloaded": true,
+        "margin": {
+          "$numberInt": "35"
+        },
+        "daysNeededToDoTheWork": {
+          "$numberInt": "60"
+        },
+        "validity": {
+          "$numberInt": "30"
+        },
+        "hasGenerateJob": false,
+        "client": {
+          "$oid": "{{client}}"
+        },
+        "descriptive": "Máquina de corte",
+        "personInCharge": "Eng.ª Maria",
+        "madeBy": {
+          "$oid": "{{user}}"
+        },
+        "budgetNumber": "26-0007",
+        "paymentMethod": "30 dias",
+        "total": {
+          "$numberDouble": "43.5"
+        },
+        "date": {
+          "$date": "2026-02-01T09:00:00.000Z"
+        },
+        "__v": {
+          "$numberInt": "0"
+        },
+        "description": "Fornecimento conforme especificação."
+      },
+      "body": {
+        "descriptive": "Máquina de corte"
+      },
+      "outcome": "200",
+      "update": {
+        "$set": {
+          "complete": false,
+          "wasPdfDownloaded": false
+        },
+        "$unset": {
+          "personInCharge": {
+            "$numberInt": "1"
+          }
+        }
+      },
+      "sshCommands": [],
+      "response": {
+        "revision": 0,
+        "complete": false,
+        "wasPdfDownloaded": false,
+        "margin": 35,
+        "daysNeededToDoTheWork": 60,
+        "validity": 30,
+        "hasGenerateJob": false,
+        "_id": "{{budget}}",
+        "client": {
+          "_id": "{{client}}",
+          "name": "Metalúrgica Exemplo, Lda.",
+          "fiscalNumber": "509999990",
+          "address": "Rua das Flores, 12",
+          "zipCode": "4000-123",
+          "location": "Porto",
+          "paymentCondition": "30 dias",
+          "type": "Cliente",
+          "__v": 0
+        },
+        "descriptive": "Máquina de corte",
+        "madeBy": {
+          "roles": [
+            "canSeeOrcamentos",
+            null,
+            "canSeeDefinicoes"
+          ],
+          "fieldOfCompetencies": "Desenvolvimento",
+          "_id": "{{user}}",
+          "name": "Ana Administradora",
+          "email": "ana.admin@dib4t.local",
+          "password": "$2a$10$abcdefghijklmnopqrstuuabcdefghijklmnopqrstuvwxyz01234",
+          "__v": 0
+        },
+        "budgetNumber": "26-0007",
+        "paymentMethod": "30 dias",
+        "total": 43.5,
+        "date": "2026-02-01T09:00:00.000Z",
+        "__v": 0,
+        "description": "Fornecimento conforme especificação."
+      }
+    },
+    {
+      "name": "imported: no complete/wasPdfDownloaded stored",
+      "existing": {
+        "_id": {
+          "$oid": "{{budget}}"
+        },
+        "revision": {
+          "$numberInt": "0"
+        },
+        "margin": {
+          "$numberInt": "35"
+        },
+        "daysNeededToDoTheWork": {
+          "$numberInt": "60"
+        },
+        "validity": {
+          "$numberInt": "30"
+        },
+        "hasGenerateJob": false,
+        "client": {
+          "$oid": "{{client}}"
+        },
+        "descriptive": "Máquina de corte",
+        "personInCharge": "Eng.ª Maria",
+        "madeBy": {
+          "$oid": "{{user}}"
+        },
+        "budgetNumber": "26-0007",
+        "paymentMethod": "30 dias",
+        "total": {
+          "$numberDouble": "43.5"
+        },
+        "date": {
+          "$date": "2026-02-01T09:00:00.000Z"
+        },
+        "__v": {
+          "$numberInt": "0"
+        },
+        "description": "Fornecimento conforme especificação."
+      },
+      "body": {
+        "descriptive": "Máquina de corte",
+        "personInCharge": "Eng.ª Maria"
+      },
+      "outcome": "200",
+      "update": null,
+      "sshCommands": [],
+      "response": {
+        "revision": 0,
+        "complete": false,
+        "wasPdfDownloaded": false,
+        "margin": 35,
+        "daysNeededToDoTheWork": 60,
+        "validity": 30,
+        "hasGenerateJob": false,
+        "_id": "{{budget}}",
+        "client": {
+          "_id": "{{client}}",
+          "name": "Metalúrgica Exemplo, Lda.",
+          "fiscalNumber": "509999990",
+          "address": "Rua das Flores, 12",
+          "zipCode": "4000-123",
+          "location": "Porto",
+          "paymentCondition": "30 dias",
+          "type": "Cliente",
+          "__v": 0
+        },
+        "descriptive": "Máquina de corte",
+        "personInCharge": "Eng.ª Maria",
+        "madeBy": {
+          "roles": [
+            "canSeeOrcamentos",
+            null,
+            "canSeeDefinicoes"
+          ],
+          "fieldOfCompetencies": "Desenvolvimento",
+          "_id": "{{user}}",
+          "name": "Ana Administradora",
+          "email": "ana.admin@dib4t.local",
+          "password": "$2a$10$abcdefghijklmnopqrstuuabcdefghijklmnopqrstuvwxyz01234",
+          "__v": 0
+        },
+        "budgetNumber": "26-0007",
+        "paymentMethod": "30 dias",
+        "total": 43.5,
+        "date": "2026-02-01T09:00:00.000Z",
+        "__v": 0,
+        "description": "Fornecimento conforme especificação."
+      }
+    },
+    {
+      "name": "has a job (route answers the budget unchanged)",
+      "existing": {
+        "_id": {
+          "$oid": "{{budget}}"
+        },
+        "revision": {
+          "$numberInt": "0"
+        },
+        "complete": true,
+        "wasPdfDownloaded": true,
+        "margin": {
+          "$numberInt": "35"
+        },
+        "daysNeededToDoTheWork": {
+          "$numberInt": "60"
+        },
+        "validity": {
+          "$numberInt": "30"
+        },
+        "hasGenerateJob": true,
+        "client": {
+          "$oid": "{{client}}"
+        },
+        "descriptive": "Máquina de corte",
+        "personInCharge": "Eng.ª Maria",
+        "madeBy": {
+          "$oid": "{{user}}"
+        },
+        "budgetNumber": "26-0007",
+        "paymentMethod": "30 dias",
+        "total": {
+          "$numberDouble": "43.5"
+        },
+        "date": {
+          "$date": "2026-02-01T09:00:00.000Z"
+        },
+        "__v": {
+          "$numberInt": "0"
+        },
+        "description": "Fornecimento conforme especificação."
+      },
+      "body": {
+        "descriptive": "Outro",
+        "personInCharge": "X"
+      },
+      "outcome": "200 unchanged",
+      "response": {
+        "revision": 0,
+        "complete": true,
+        "wasPdfDownloaded": true,
+        "margin": 35,
+        "daysNeededToDoTheWork": 60,
+        "validity": 30,
+        "hasGenerateJob": true,
+        "_id": "{{budget}}",
+        "client": {
+          "_id": "{{client}}",
+          "name": "Metalúrgica Exemplo, Lda.",
+          "fiscalNumber": "509999990",
+          "address": "Rua das Flores, 12",
+          "zipCode": "4000-123",
+          "location": "Porto",
+          "paymentCondition": "30 dias",
+          "type": "Cliente",
+          "__v": 0
+        },
+        "descriptive": "Máquina de corte",
+        "personInCharge": "Eng.ª Maria",
+        "madeBy": {
+          "roles": [
+            "canSeeOrcamentos",
+            null,
+            "canSeeDefinicoes"
+          ],
+          "fieldOfCompetencies": "Desenvolvimento",
+          "_id": "{{user}}",
+          "name": "Ana Administradora",
+          "email": "ana.admin@dib4t.local",
+          "password": "$2a$10$abcdefghijklmnopqrstuuabcdefghijklmnopqrstuvwxyz01234",
+          "__v": 0
+        },
+        "budgetNumber": "26-0007",
+        "paymentMethod": "30 dias",
+        "total": 43.5,
+        "date": "2026-02-01T09:00:00.000Z",
+        "__v": 0,
+        "description": "Fornecimento conforme especificação."
+      }
+    }
+  ],
+  "read": [
+    {
+      "name": "as created",
+      "stored": {
+        "_id": {
+          "$oid": "{{budget}}"
+        },
+        "revision": {
+          "$numberInt": "0"
+        },
+        "complete": true,
+        "wasPdfDownloaded": true,
+        "margin": {
+          "$numberInt": "35"
+        },
+        "daysNeededToDoTheWork": {
+          "$numberInt": "60"
+        },
+        "validity": {
+          "$numberInt": "30"
+        },
+        "hasGenerateJob": false,
+        "client": {
+          "$oid": "{{client}}"
+        },
+        "descriptive": "Máquina de corte",
+        "personInCharge": "Eng.ª Maria",
+        "madeBy": {
+          "$oid": "{{user}}"
+        },
+        "budgetNumber": "26-0007",
+        "paymentMethod": "30 dias",
+        "total": {
+          "$numberDouble": "43.5"
+        },
+        "date": {
+          "$date": "2026-02-01T09:00:00.000Z"
+        },
+        "__v": {
+          "$numberInt": "0"
+        }
+      },
+      "response": {
+        "revision": 0,
+        "complete": true,
+        "wasPdfDownloaded": true,
+        "margin": 35,
+        "daysNeededToDoTheWork": 60,
+        "validity": 30,
+        "hasGenerateJob": false,
+        "_id": "{{budget}}",
+        "client": "{{client}}",
+        "descriptive": "Máquina de corte",
+        "personInCharge": "Eng.ª Maria",
+        "madeBy": "{{user}}",
+        "budgetNumber": "26-0007",
+        "paymentMethod": "30 dias",
+        "total": 43.5,
+        "date": "2026-02-01T09:00:00.000Z",
+        "__v": 0
+      },
+      "populated": {
+        "revision": 0,
+        "complete": true,
+        "wasPdfDownloaded": true,
+        "margin": 35,
+        "daysNeededToDoTheWork": 60,
+        "validity": 30,
+        "hasGenerateJob": false,
+        "_id": "{{budget}}",
+        "client": {
+          "_id": "{{client}}",
+          "name": "Metalúrgica Exemplo, Lda.",
+          "fiscalNumber": "509999990",
+          "address": "Rua das Flores, 12",
+          "zipCode": "4000-123",
+          "location": "Porto",
+          "paymentCondition": "30 dias",
+          "type": "Cliente",
+          "__v": 0
+        },
+        "descriptive": "Máquina de corte",
+        "personInCharge": "Eng.ª Maria",
+        "madeBy": {
+          "roles": [
+            "canSeeOrcamentos",
+            null,
+            "canSeeDefinicoes"
+          ],
+          "fieldOfCompetencies": "Desenvolvimento",
+          "_id": "{{user}}",
+          "name": "Ana Administradora",
+          "email": "ana.admin@dib4t.local",
+          "password": "$2a$10$abcdefghijklmnopqrstuuabcdefghijklmnopqrstuvwxyz01234",
+          "__v": 0
+        },
+        "budgetNumber": "26-0007",
+        "paymentMethod": "30 dias",
+        "total": 43.5,
+        "date": "2026-02-01T09:00:00.000Z",
+        "__v": 0
+      }
+    },
+    {
+      "name": "description added later (stored last)",
+      "stored": {
+        "_id": {
+          "$oid": "{{budget}}"
+        },
+        "revision": {
+          "$numberInt": "0"
+        },
+        "complete": true,
+        "wasPdfDownloaded": true,
+        "margin": {
+          "$numberInt": "35"
+        },
+        "daysNeededToDoTheWork": {
+          "$numberInt": "60"
+        },
+        "validity": {
+          "$numberInt": "30"
+        },
+        "hasGenerateJob": false,
+        "client": {
+          "$oid": "{{client}}"
+        },
+        "descriptive": "Máquina de corte",
+        "personInCharge": "Eng.ª Maria",
+        "madeBy": {
+          "$oid": "{{user}}"
+        },
+        "budgetNumber": "26-0007",
+        "paymentMethod": "30 dias",
+        "total": {
+          "$numberDouble": "43.5"
+        },
+        "date": {
+          "$date": "2026-02-01T09:00:00.000Z"
+        },
+        "__v": {
+          "$numberInt": "0"
+        },
+        "description": "Fornecimento conforme especificação."
+      },
+      "response": {
+        "revision": 0,
+        "complete": true,
+        "wasPdfDownloaded": true,
+        "margin": 35,
+        "daysNeededToDoTheWork": 60,
+        "validity": 30,
+        "hasGenerateJob": false,
+        "_id": "{{budget}}",
+        "client": "{{client}}",
+        "descriptive": "Máquina de corte",
+        "personInCharge": "Eng.ª Maria",
+        "madeBy": "{{user}}",
+        "budgetNumber": "26-0007",
+        "paymentMethod": "30 dias",
+        "total": 43.5,
+        "date": "2026-02-01T09:00:00.000Z",
+        "__v": 0,
+        "description": "Fornecimento conforme especificação."
+      },
+      "populated": {
+        "revision": 0,
+        "complete": true,
+        "wasPdfDownloaded": true,
+        "margin": 35,
+        "daysNeededToDoTheWork": 60,
+        "validity": 30,
+        "hasGenerateJob": false,
+        "_id": "{{budget}}",
+        "client": {
+          "_id": "{{client}}",
+          "name": "Metalúrgica Exemplo, Lda.",
+          "fiscalNumber": "509999990",
+          "address": "Rua das Flores, 12",
+          "zipCode": "4000-123",
+          "location": "Porto",
+          "paymentCondition": "30 dias",
+          "type": "Cliente",
+          "__v": 0
+        },
+        "descriptive": "Máquina de corte",
+        "personInCharge": "Eng.ª Maria",
+        "madeBy": {
+          "roles": [
+            "canSeeOrcamentos",
+            null,
+            "canSeeDefinicoes"
+          ],
+          "fieldOfCompetencies": "Desenvolvimento",
+          "_id": "{{user}}",
+          "name": "Ana Administradora",
+          "email": "ana.admin@dib4t.local",
+          "password": "$2a$10$abcdefghijklmnopqrstuuabcdefghijklmnopqrstuvwxyz01234",
+          "__v": 0
+        },
+        "budgetNumber": "26-0007",
+        "paymentMethod": "30 dias",
+        "total": 43.5,
+        "date": "2026-02-01T09:00:00.000Z",
+        "__v": 0,
+        "description": "Fornecimento conforme especificação."
+      }
+    },
+    {
+      "name": "new revision (description before date)",
+      "stored": {
+        "_id": {
+          "$oid": "{{budget}}"
+        },
+        "revision": {
+          "$numberInt": "0"
+        },
+        "complete": true,
+        "wasPdfDownloaded": true,
+        "margin": {
+          "$numberInt": "35"
+        },
+        "daysNeededToDoTheWork": {
+          "$numberInt": "60"
+        },
+        "validity": {
+          "$numberInt": "30"
+        },
+        "hasGenerateJob": false,
+        "client": {
+          "$oid": "{{client}}"
+        },
+        "descriptive": "Máquina de corte",
+        "personInCharge": "Eng.ª Maria",
+        "madeBy": {
+          "$oid": "{{user}}"
+        },
+        "budgetNumber": "26-0007",
+        "paymentMethod": "30 dias",
+        "total": {
+          "$numberDouble": "43.5"
+        },
+        "description": "Fornecimento conforme especificação.",
+        "date": {
+          "$date": "2026-02-01T09:00:00.000Z"
+        },
+        "__v": {
+          "$numberInt": "0"
+        }
+      },
+      "response": {
+        "revision": 0,
+        "complete": true,
+        "wasPdfDownloaded": true,
+        "margin": 35,
+        "daysNeededToDoTheWork": 60,
+        "validity": 30,
+        "hasGenerateJob": false,
+        "_id": "{{budget}}",
+        "client": "{{client}}",
+        "descriptive": "Máquina de corte",
+        "personInCharge": "Eng.ª Maria",
+        "madeBy": "{{user}}",
+        "budgetNumber": "26-0007",
+        "paymentMethod": "30 dias",
+        "total": 43.5,
+        "description": "Fornecimento conforme especificação.",
+        "date": "2026-02-01T09:00:00.000Z",
+        "__v": 0
+      },
+      "populated": {
+        "revision": 0,
+        "complete": true,
+        "wasPdfDownloaded": true,
+        "margin": 35,
+        "daysNeededToDoTheWork": 60,
+        "validity": 30,
+        "hasGenerateJob": false,
+        "_id": "{{budget}}",
+        "client": {
+          "_id": "{{client}}",
+          "name": "Metalúrgica Exemplo, Lda.",
+          "fiscalNumber": "509999990",
+          "address": "Rua das Flores, 12",
+          "zipCode": "4000-123",
+          "location": "Porto",
+          "paymentCondition": "30 dias",
+          "type": "Cliente",
+          "__v": 0
+        },
+        "descriptive": "Máquina de corte",
+        "personInCharge": "Eng.ª Maria",
+        "madeBy": {
+          "roles": [
+            "canSeeOrcamentos",
+            null,
+            "canSeeDefinicoes"
+          ],
+          "fieldOfCompetencies": "Desenvolvimento",
+          "_id": "{{user}}",
+          "name": "Ana Administradora",
+          "email": "ana.admin@dib4t.local",
+          "password": "$2a$10$abcdefghijklmnopqrstuuabcdefghijklmnopqrstuvwxyz01234",
+          "__v": 0
+        },
+        "budgetNumber": "26-0007",
+        "paymentMethod": "30 dias",
+        "total": 43.5,
+        "description": "Fornecimento conforme especificação.",
+        "date": "2026-02-01T09:00:00.000Z",
+        "__v": 0
+      }
+    },
+    {
+      "name": "old: no hasGenerateJob, __v",
+      "stored": {
+        "_id": {
+          "$oid": "{{budget}}"
+        },
+        "revision": {
+          "$numberInt": "0"
+        },
+        "complete": true,
+        "wasPdfDownloaded": true,
+        "margin": {
+          "$numberInt": "35"
+        },
+        "daysNeededToDoTheWork": {
+          "$numberInt": "60"
+        },
+        "validity": {
+          "$numberInt": "30"
+        },
+        "client": {
+          "$oid": "{{client}}"
+        },
+        "descriptive": "Máquina de corte",
+        "personInCharge": "Eng.ª Maria",
+        "madeBy": {
+          "$oid": "{{user}}"
+        },
+        "budgetNumber": "26-0007",
+        "paymentMethod": "30 dias",
+        "total": {
+          "$numberDouble": "43.5"
+        },
+        "date": {
+          "$date": "2026-02-01T09:00:00.000Z"
+        },
+        "description": "Fornecimento conforme especificação."
+      },
+      "response": {
+        "revision": 0,
+        "complete": true,
+        "wasPdfDownloaded": true,
+        "margin": 35,
+        "daysNeededToDoTheWork": 60,
+        "validity": 30,
+        "hasGenerateJob": false,
+        "_id": "{{budget}}",
+        "client": "{{client}}",
+        "descriptive": "Máquina de corte",
+        "personInCharge": "Eng.ª Maria",
+        "madeBy": "{{user}}",
+        "budgetNumber": "26-0007",
+        "paymentMethod": "30 dias",
+        "total": 43.5,
+        "date": "2026-02-01T09:00:00.000Z",
+        "description": "Fornecimento conforme especificação."
+      },
+      "populated": {
+        "revision": 0,
+        "complete": true,
+        "wasPdfDownloaded": true,
+        "margin": 35,
+        "daysNeededToDoTheWork": 60,
+        "validity": 30,
+        "hasGenerateJob": false,
+        "_id": "{{budget}}",
+        "client": {
+          "_id": "{{client}}",
+          "name": "Metalúrgica Exemplo, Lda.",
+          "fiscalNumber": "509999990",
+          "address": "Rua das Flores, 12",
+          "zipCode": "4000-123",
+          "location": "Porto",
+          "paymentCondition": "30 dias",
+          "type": "Cliente",
+          "__v": 0
+        },
+        "descriptive": "Máquina de corte",
+        "personInCharge": "Eng.ª Maria",
+        "madeBy": {
+          "roles": [
+            "canSeeOrcamentos",
+            null,
+            "canSeeDefinicoes"
+          ],
+          "fieldOfCompetencies": "Desenvolvimento",
+          "_id": "{{user}}",
+          "name": "Ana Administradora",
+          "email": "ana.admin@dib4t.local",
+          "password": "$2a$10$abcdefghijklmnopqrstuuabcdefghijklmnopqrstuvwxyz01234",
+          "__v": 0
+        },
+        "budgetNumber": "26-0007",
+        "paymentMethod": "30 dias",
+        "total": 43.5,
+        "date": "2026-02-01T09:00:00.000Z",
+        "description": "Fornecimento conforme especificação."
+      }
+    },
+    {
+      "name": "old: no date (default Date.now on read)",
+      "stored": {
+        "_id": {
+          "$oid": "{{budget}}"
+        },
+        "revision": {
+          "$numberInt": "0"
+        },
+        "complete": true,
+        "wasPdfDownloaded": true,
+        "margin": {
+          "$numberInt": "35"
+        },
+        "daysNeededToDoTheWork": {
+          "$numberInt": "60"
+        },
+        "validity": {
+          "$numberInt": "30"
+        },
+        "hasGenerateJob": false,
+        "client": {
+          "$oid": "{{client}}"
+        },
+        "descriptive": "Máquina de corte",
+        "personInCharge": "Eng.ª Maria",
+        "madeBy": {
+          "$oid": "{{user}}"
+        },
+        "budgetNumber": "26-0007",
+        "paymentMethod": "30 dias",
+        "total": {
+          "$numberDouble": "43.5"
+        },
+        "__v": {
+          "$numberInt": "0"
+        },
+        "description": "Fornecimento conforme especificação."
+      },
+      "response": {
+        "revision": 0,
+        "complete": true,
+        "wasPdfDownloaded": true,
+        "margin": 35,
+        "daysNeededToDoTheWork": 60,
+        "validity": 30,
+        "hasGenerateJob": false,
+        "_id": "{{budget}}",
+        "client": "{{client}}",
+        "descriptive": "Máquina de corte",
+        "personInCharge": "Eng.ª Maria",
+        "madeBy": "{{user}}",
+        "budgetNumber": "26-0007",
+        "paymentMethod": "30 dias",
+        "total": 43.5,
+        "__v": 0,
+        "description": "Fornecimento conforme especificação.",
+        "date": "2026-03-15T10:20:30.123Z"
+      },
+      "populated": {
+        "revision": 0,
+        "complete": true,
+        "wasPdfDownloaded": true,
+        "margin": 35,
+        "daysNeededToDoTheWork": 60,
+        "validity": 30,
+        "hasGenerateJob": false,
+        "_id": "{{budget}}",
+        "client": {
+          "_id": "{{client}}",
+          "name": "Metalúrgica Exemplo, Lda.",
+          "fiscalNumber": "509999990",
+          "address": "Rua das Flores, 12",
+          "zipCode": "4000-123",
+          "location": "Porto",
+          "paymentCondition": "30 dias",
+          "type": "Cliente",
+          "__v": 0
+        },
+        "descriptive": "Máquina de corte",
+        "personInCharge": "Eng.ª Maria",
+        "madeBy": {
+          "roles": [
+            "canSeeOrcamentos",
+            null,
+            "canSeeDefinicoes"
+          ],
+          "fieldOfCompetencies": "Desenvolvimento",
+          "_id": "{{user}}",
+          "name": "Ana Administradora",
+          "email": "ana.admin@dib4t.local",
+          "password": "$2a$10$abcdefghijklmnopqrstuuabcdefghijklmnopqrstuvwxyz01234",
+          "__v": 0
+        },
+        "budgetNumber": "26-0007",
+        "paymentMethod": "30 dias",
+        "total": 43.5,
+        "__v": 0,
+        "description": "Fornecimento conforme especificação.",
+        "date": "2026-03-15T10:20:30.123Z"
+      }
+    },
+    {
+      "name": "unknown field",
+      "stored": {
+        "_id": {
+          "$oid": "{{budget}}"
+        },
+        "revision": {
+          "$numberInt": "0"
+        },
+        "complete": true,
+        "wasPdfDownloaded": true,
+        "margin": {
+          "$numberInt": "35"
+        },
+        "daysNeededToDoTheWork": {
+          "$numberInt": "60"
+        },
+        "validity": {
+          "$numberInt": "30"
+        },
+        "hasGenerateJob": false,
+        "client": {
+          "$oid": "{{client}}"
+        },
+        "descriptive": "Máquina de corte",
+        "personInCharge": "Eng.ª Maria",
+        "madeBy": {
+          "$oid": "{{user}}"
+        },
+        "budgetNumber": "26-0007",
+        "paymentMethod": "30 dias",
+        "total": {
+          "$numberDouble": "43.5"
+        },
+        "date": {
+          "$date": "2026-02-01T09:00:00.000Z"
+        },
+        "__v": {
+          "$numberInt": "0"
+        },
+        "description": "Fornecimento conforme especificação.",
+        "serverFolderPath": "/x"
+      },
+      "response": {
+        "revision": 0,
+        "complete": true,
+        "wasPdfDownloaded": true,
+        "margin": 35,
+        "daysNeededToDoTheWork": 60,
+        "validity": 30,
+        "hasGenerateJob": false,
+        "_id": "{{budget}}",
+        "client": "{{client}}",
+        "descriptive": "Máquina de corte",
+        "personInCharge": "Eng.ª Maria",
+        "madeBy": "{{user}}",
+        "budgetNumber": "26-0007",
+        "paymentMethod": "30 dias",
+        "total": 43.5,
+        "date": "2026-02-01T09:00:00.000Z",
+        "__v": 0,
+        "description": "Fornecimento conforme especificação.",
+        "serverFolderPath": "/x"
+      },
+      "populated": {
+        "revision": 0,
+        "complete": true,
+        "wasPdfDownloaded": true,
+        "margin": 35,
+        "daysNeededToDoTheWork": 60,
+        "validity": 30,
+        "hasGenerateJob": false,
+        "_id": "{{budget}}",
+        "client": {
+          "_id": "{{client}}",
+          "name": "Metalúrgica Exemplo, Lda.",
+          "fiscalNumber": "509999990",
+          "address": "Rua das Flores, 12",
+          "zipCode": "4000-123",
+          "location": "Porto",
+          "paymentCondition": "30 dias",
+          "type": "Cliente",
+          "__v": 0
+        },
+        "descriptive": "Máquina de corte",
+        "personInCharge": "Eng.ª Maria",
+        "madeBy": {
+          "roles": [
+            "canSeeOrcamentos",
+            null,
+            "canSeeDefinicoes"
+          ],
+          "fieldOfCompetencies": "Desenvolvimento",
+          "_id": "{{user}}",
+          "name": "Ana Administradora",
+          "email": "ana.admin@dib4t.local",
+          "password": "$2a$10$abcdefghijklmnopqrstuuabcdefghijklmnopqrstuvwxyz01234",
+          "__v": 0
+        },
+        "budgetNumber": "26-0007",
+        "paymentMethod": "30 dias",
+        "total": 43.5,
+        "date": "2026-02-01T09:00:00.000Z",
+        "__v": 0,
+        "description": "Fornecimento conforme especificação.",
+        "serverFolderPath": "/x"
+      }
+    },
+    {
+      "name": "stored order differs",
+      "stored": {
+        "_id": {
+          "$oid": "{{budget}}"
+        },
+        "budgetNumber": "26-0007",
+        "client": {
+          "$oid": "{{client}}"
+        },
+        "madeBy": {
+          "$oid": "{{user}}"
+        },
+        "descriptive": "x",
+        "paymentMethod": "y",
+        "revision": {
+          "$numberInt": "1"
+        },
+        "total": {
+          "$numberInt": "10"
+        },
+        "date": {
+          "$date": "2026-02-01T09:00:00.000Z"
+        }
+      },
+      "response": {
+        "revision": 1,
+        "complete": false,
+        "wasPdfDownloaded": false,
+        "margin": 30,
+        "daysNeededToDoTheWork": 60,
+        "validity": 30,
+        "hasGenerateJob": false,
+        "_id": "{{budget}}",
+        "budgetNumber": "26-0007",
+        "client": "{{client}}",
+        "madeBy": "{{user}}",
+        "descriptive": "x",
+        "paymentMethod": "y",
+        "total": 10,
+        "date": "2026-02-01T09:00:00.000Z"
+      },
+      "populated": {
+        "revision": 1,
+        "complete": false,
+        "wasPdfDownloaded": false,
+        "margin": 30,
+        "daysNeededToDoTheWork": 60,
+        "validity": 30,
+        "hasGenerateJob": false,
+        "_id": "{{budget}}",
+        "budgetNumber": "26-0007",
+        "client": {
+          "_id": "{{client}}",
+          "name": "Metalúrgica Exemplo, Lda.",
+          "fiscalNumber": "509999990",
+          "address": "Rua das Flores, 12",
+          "zipCode": "4000-123",
+          "location": "Porto",
+          "paymentCondition": "30 dias",
+          "type": "Cliente",
+          "__v": 0
+        },
+        "madeBy": {
+          "roles": [
+            "canSeeOrcamentos",
+            null,
+            "canSeeDefinicoes"
+          ],
+          "fieldOfCompetencies": "Desenvolvimento",
+          "_id": "{{user}}",
+          "name": "Ana Administradora",
+          "email": "ana.admin@dib4t.local",
+          "password": "$2a$10$abcdefghijklmnopqrstuuabcdefghijklmnopqrstuvwxyz01234",
+          "__v": 0
+        },
+        "descriptive": "x",
+        "paymentMethod": "y",
+        "total": 10,
+        "date": "2026-02-01T09:00:00.000Z"
+      }
+    }
+  ]
+}

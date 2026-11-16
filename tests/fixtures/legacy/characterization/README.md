@@ -55,6 +55,15 @@ after every step. Those snapshot calls are not part of the recorded steps.
 | `admin` | login token of *Ana Administradora* (every role) |
 | `limited` | login token of *Bruno Maquinação* (`canSeeObras`, `canSeeLeituras`; no settings role). Its name in the token stays the pre-rename one, which shows up in `machiningStatistic.validatedBy` |
 
+## Replay
+
+`Dib4t.Server.Tests/Characterization/LegacyRunReplayTests` replays `01`–`04` and `07` in order on a fresh new app.
+Steps of routes that a later feature step implements (`task-*`, `budget-patch-*`, `budget-pdf*`, `budget-import*`) are
+not sent: their recorded document changes are written directly, so the following steps run on exactly the legacy state.
+Remove a prefix from `NotYetImplemented` when its routes exist. Allow-listed (decided differences): `user-me-legacy`,
+D2 (`user-delete-d2`, `users-after-delete`, `budget-list-after-delete`), D7 (`budget-update-missing-user`), D9
+(`budget-search-bad-regex`).
+
 ## Normalization (apply the same to the new app's output before comparing)
 
 | Value | Becomes |

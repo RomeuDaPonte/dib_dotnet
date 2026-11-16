@@ -8,7 +8,17 @@ namespace Dib4t.Client.Api;
 /// </summary>
 internal static class ApiCalls
 {
-    public static async Task<ApiResult<T>> SendAsync<T>(HttpClient http, HttpMethod method, string path, object? body = null)
+    /// <summary>The JSON options of <c>ReadFromJsonAsync</c> (web defaults).</summary>
+    public static JsonSerializerOptions Json { get; } = JsonSerializerOptions.Web;
+
+    public static Task<ApiResult<T>> SendAsync<T>(HttpClient http, HttpMethod method, string path, object? body = null) =>
+        SendAsync<T>(http, method, path, body, raw: false);
+
+    /// <summary>
+    /// With <c>raw</c>, the 2xx body as text (<typeparamref name="T"/> is <see cref="string"/>), for routes that answer
+    /// JSON or plain text.
+    /// </summary>
+    public static async Task<ApiResult<T>> SendAsync<T>(HttpClient http, HttpMethod method, string path, object? body, bool raw)
     {
         try
         {
@@ -21,7 +31,7 @@ internal static class ApiCalls
             using var response = await http.SendAsync(request);
             if (response.IsSuccessStatusCode)
             {
-                var value = await response.Content.ReadFromJsonAsync<T>();
+                var value = raw ? (T)(object)await response.Content.ReadAsStringAsync() : await response.Content.ReadFromJsonAsync<T>(Json);
                 return value is null
                     ? ApiResult.Failure<T>(response.StatusCode, ErrorNotificationHandler.UnexpectedError)
                     : ApiResult.Success(value, response.StatusCode);

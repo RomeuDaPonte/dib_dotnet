@@ -105,7 +105,50 @@ public sealed class LayoutMatrixTests(E2EHarness harness) : E2ETest(harness)
             await page.Locator(".entities-table tbody tr").First.GetByRole(AriaRole.Button).ClickAsync();
             await page.Locator("#entity-name").WaitForAsync();
         }, Scope: ".mud-dialog"),
+        new("budgets", "/landing/budgets", SignedIn: true, Ready: ".budgets-table tbody tr td", page =>
+        [
+            ("Filtrar", page.Locator("#budgets-filter")),
+            ("Novo orçamento", page.GetByRole(AriaRole.Button, new() { Name = "Novo orçamento" })),
+            ("Editar", page.Locator(".budgets-table tbody tr").First.GetByRole(AriaRole.Button, new() { Name = "Editar" })),
+        ]),
+        new("budgets-revisions", "/landing/budgets", SignedIn: true, Ready: ".budgets-table tbody tr td", page =>
+        [
+            ("Nª da revisão", page.Locator(".budgets-revisions-table").First),
+        ], Open: async page =>
+        {
+            await page.Locator(".budgets-revisions-toggle").First.ClickAsync();
+            await page.Locator(".budgets-revisions-table").First.WaitForAsync();
+        }),
+        new("budgets-dialog", "/landing/budgets", SignedIn: true, Ready: ".budgets-table tbody tr td", page =>
+        [
+            ("Cliente", page.Locator("#budget-client")),
+            ("Realizado por", page.Locator("#budget-made-by")),
+            ("Concluir", page.GetByRole(AriaRole.Button, new() { Name = "Concluir" })),
+        ], Open: async page =>
+        {
+            await page.GetByRole(AriaRole.Button, new() { Name = "Novo orçamento" }).ClickAsync();
+            await page.Locator("#budget-descriptive").WaitForAsync();
+        }, Scope: ".mud-dialog"),
+        new("budget-details", "/landing/budgets", SignedIn: true, Ready: ".budgets-table tbody tr td", page =>
+        [
+            ("Editar orçamento", page.GetByRole(AriaRole.Button, new() { Name = "Editar orçamento" })),
+        ], Open: async page =>
+        {
+            // A budget without a job: only those can be edited.
+            await page.Locator(".budgets-table tbody tr").Filter(new() { HasNot = page.Locator(".budgets-has-job") }).First
+                .GetByRole(AriaRole.Button, new() { Name = "Editar" }).ClickAsync();
+            await page.Locator(".budget-header").WaitForAsync();
+        }),
     ];
+
+    /// <summary>
+    /// The pages to run: all of them, or only the keys in <c>DIB4T_LAYOUT_PAGES</c> (comma-separated, e.g.
+    /// <c>budgets,budgets-dialog</c>) while working on a page. <c>tools/verify.sh</c> leaves it unset.
+    /// </summary>
+    private static LayoutPage[] Selected { get; } =
+        Environment.GetEnvironmentVariable("DIB4T_LAYOUT_PAGES") is { Length: > 0 } keys
+            ? [.. Pages.Where(p => keys.Split(',', StringSplitOptions.TrimEntries).Contains(p.Key, StringComparer.Ordinal))]
+            : Pages;
 
     private static ILocator Tab(IPage page, string name) => page.GetByRole(AriaRole.Tab, new() { Name = name });
 
@@ -154,7 +197,7 @@ public sealed class LayoutMatrixTests(E2EHarness harness) : E2ETest(harness)
             .ThenBy(r => r.Viewport.Width).ThenBy(r => r.Zoom).ThenBy(r => r.Font).ToList();
         await File.WriteAllTextAsync(Path.Combine(output, "report.md"), Report(ordered), Cancellation);
 
-        ordered.Should().HaveCount(Pages.Length * Viewports.Length * Zooms.Length * Fonts.Length);
+        ordered.Should().HaveCount(Selected.Length * Viewports.Length * Zooms.Length * Fonts.Length);
         ordered.Where(r => r.Error is null).Should().OnlyContain(r => r.RootFont == $"{r.Font}px", "the font size emulation must work");
         ordered.Where(r => r.HasIssue).Select(r => r.Describe()).Should().BeEmpty($"every case passes (report: {output}/report.md)");
     }
@@ -194,7 +237,7 @@ public sealed class LayoutMatrixTests(E2EHarness harness) : E2ETest(harness)
             foreach (var viewport in Viewports)
             {
                 await page.SetViewportSizeAsync((int)Math.Round(viewport.Width / zoom), (int)Math.Round(viewport.Height / zoom));
-                foreach (var layoutPage in Pages)
+                foreach (var layoutPage in Selected)
                 {
                     var result = new LayoutCase { Page = layoutPage.Key, Viewport = viewport, Zoom = zoom, Font = font };
                     try

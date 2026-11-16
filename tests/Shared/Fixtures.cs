@@ -22,6 +22,12 @@ public static class Fixtures
     /// <summary>Entity contract answers of the legacy code (Joi, Mongoose casts and saves, search patterns; tools/legacy/entity-golden.js).</summary>
     public static string EntityGolden => Path.Combine(Root, "legacy", "entities", "entity-golden.json");
 
+    /// <summary>
+    /// Budget list/create/clone/revision/edit contract answers of the legacy code (Joi, repository queries and rows,
+    /// numbering, Mongoose documents and saves; tools/legacy/budget-golden.js).
+    /// </summary>
+    public static string BudgetGolden => Path.Combine(Root, "legacy", "budgets", "budget-golden.json");
+
     private static string FindRoot()
     {
         for (var directory = new DirectoryInfo(AppContext.BaseDirectory); directory is not null; directory = directory.Parent)

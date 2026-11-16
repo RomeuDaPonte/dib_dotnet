@@ -36,6 +36,10 @@
 #   entity-golden        write the entity contract golden file (entity-golden.js): the unchanged legacy Joi
 #                        validation, Mongoose entity model and search RegExps run in Node, offline (nothing is
 #                        started) → tests/fixtures/legacy/entities/ (PLAN.md §6, §7.2)
+#   budget-golden        write the budget list contract golden file (budget-golden.js): the unchanged legacy
+#                        Joi validations, repository queries, numbering and Budget/Task models run in Node,
+#                        offline (nothing is started, SSH replaced by a recorder) → tests/fixtures/legacy/budgets/
+#                        (PLAN.md §6, §7.1)
 #   pdf-samples          write reference budget PDFs (pdf-samples.js) by running the unchanged legacy
 #                        PDF route on the anonymized production fixture, in a throwaway DB
 #                        "dib4t_pdf_samples" → tests/fixtures/legacy/pdf/ (PLAN.md §7.1)
@@ -297,6 +301,12 @@ cmd_settings_golden() {
   (cd "$REPO_ROOT" && DIB4T_LEGACY_ROOT="$LEGACY_ROOT" node "$SCRIPT_DIR/settings-golden.js")
 }
 
+cmd_budget_golden() {
+  ensure_node_modules "$BACKEND_DIR"
+  log "writing the budget contract golden file from the legacy code (offline)"
+  (cd "$REPO_ROOT" && DIB4T_LEGACY_ROOT="$LEGACY_ROOT" node "$SCRIPT_DIR/budget-golden.js")
+}
+
 cmd_entity_golden() {
   ensure_node_modules "$BACKEND_DIR"
   log "writing the entity contract golden file from the legacy code (offline)"
@@ -360,9 +370,10 @@ case "${1:-}" in
   auth-golden) cmd_auth_golden ;;
   settings-golden) cmd_settings_golden ;;
   entity-golden) cmd_entity_golden ;;
+  budget-golden) cmd_budget_golden ;;
   pdf-samples) cmd_pdf_samples ;;
   layout)  shift; cmd_layout "$@" ;;
   token)   legacy_token; echo ;;
   logs)    shift; cmd_logs "$@" ;;
-  *) sed -n '2,49p' "$0"; exit 1 ;;
+  *) sed -n '2,53p' "$0"; exit 1 ;;
 esac

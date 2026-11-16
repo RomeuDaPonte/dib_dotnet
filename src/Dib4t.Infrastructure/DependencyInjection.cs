@@ -1,4 +1,5 @@
 using Dib4t.Application.Account;
+using Dib4t.Application.Budgets;
 using Dib4t.Application.Database;
 using Dib4t.Application.Entities;
 using Dib4t.Application.Settings;
@@ -27,6 +28,8 @@ public static class DependencyInjection
         services.AddScoped<IPaymentMethodRepository, MongoPaymentMethodRepository>();
         services.AddScoped<IPrinterSettingsRepository, MongoPrinterSettingsRepository>();
         services.AddScoped<IEntityRepository, MongoEntityRepository>();
+        services.AddScoped<IBudgetRepository, MongoBudgetRepository>();
+        services.AddScoped<IBudgetTaskRepository, MongoBudgetTaskRepository>();
         services.AddAuthAdapters(configuration);
         return services;
     }

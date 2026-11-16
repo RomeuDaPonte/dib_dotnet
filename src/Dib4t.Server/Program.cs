@@ -9,6 +9,10 @@ using Microsoft.AspNetCore.Diagnostics;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddApplication();
+builder.Services.AddOptions<Dib4t.Application.Common.AppOptions>()
+    .Bind(builder.Configuration.GetSection(Dib4t.Application.Common.AppOptions.SectionName))
+    .Validate(options => options.FindTimeZone() is not null, "App:TimeZone is not a time zone this system knows (IANA id, e.g. Europe/Lisbon).")
+    .ValidateOnStart();
 builder.Services.AddInfrastructure(builder.Configuration);
 builder.Services.AddStartupSeeding();
 builder.Services.AddDib4tAuth(builder.Configuration);
@@ -19,6 +23,7 @@ builder.Services.AddControllers().AddJsonOptions(json =>
     // Like Express's JSON.stringify: non-ASCII text as is (not \u escapes), numbers as JavaScript writes them.
     json.JsonSerializerOptions.Encoder = System.Text.Encodings.Web.JavaScriptEncoder.UnsafeRelaxedJsonEscaping;
     json.JsonSerializerOptions.Converters.Add(new JsNumberJsonConverter());
+    json.JsonSerializerOptions.Converters.Add(new JsDateJsonConverter());
 });
 builder.Services.AddRazorComponents()
     .AddInteractiveWebAssemblyComponents();
