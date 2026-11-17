@@ -6,12 +6,15 @@ namespace Dib4t.Infrastructure.Pdf.Layout;
 
 /// <summary>
 /// The document definition of legacy <c>helpers/budgetPdfGenerator.js</c> (<c>buildPdf</c>): every element at the
-/// legacy absolute position, the same texts. With <c>growBlocks</c> (D22, ADR-0005) a text that wraps pushes the
-/// elements below it in its block instead of overlapping them; texts that fit stay exactly where legacy draws them.
+/// legacy absolute position, the same texts. With <c>growBlocks</c> (the new app, ADR-0005) a text that wraps pushes
+/// the elements below it in its block instead of overlapping them (D22), and the footer moves to the next page when
+/// the description reaches it (D25); texts that fit stay exactly where legacy draws them.
 /// </summary>
 internal static class BudgetPdfDocument
 {
     private const string AnchorId = "anchor";
+    private const string FooterId = "footer";
+    private const string DescriptionId = "description";
     private const string DottedLine =
         "................................................................................................................................................................................................................";
 
@@ -23,7 +26,8 @@ internal static class BudgetPdfDocument
     {
         ArgumentNullException.ThrowIfNull(budget);
         var content = Build(budget, logoPixelWidth, logoPixelHeight, growBlocks ? Measure : null);
-        return PdfmakeLayout.Layout(content, new DocumentFonts());
+        var pages = PdfmakeLayout.Layout(content, new DocumentFonts());
+        return growBlocks ? FooterClearOfDescription(pages) : pages;
 
         // D22 measures every text first, on fonts of their own: the legacy content order, so the same fontkit history.
         static Func<TextNode, (int, double)> Measure()
@@ -59,17 +63,17 @@ internal static class BudgetPdfDocument
         };
         var descriptive = Bold(30, 290, $"Descritivo: {Js(b.Descriptive)}", 12);
         var technical = Bold(30, 330, "Designação técnica:", 12);
-        var description = new TextNode(30, 355, [new TextRun(b.Description ?? string.Empty, 12, false, "justify")]);
+        var description = new TextNode(30, 355, [new TextRun(b.Description ?? string.Empty, 12, false, "justify")], DescriptionId);
         var footer = new[]
         {
             Bold(30, 710, DottedLine, 9) with { Id = AnchorId },
-            Bold(30, 725, DaysOrWeeks(b.DaysNeededToDoTheWork), 9),
-            Bold(30, 745, $"Validade da proposta: {JsNumber.ToString(b.Validity)} dias", 9),
-            Bold(30, 765, $"Condições de pagamento: {Js(b.PaymentMethod)} após emissão da fatura.", 9),
-            Bold(30, 785, "Ao valor apresentado acresce iva à taxa legal em vigor.", 9),
+            Bold(30, 725, DaysOrWeeks(b.DaysNeededToDoTheWork), 9) with { Id = FooterId },
+            Bold(30, 745, $"Validade da proposta: {JsNumber.ToString(b.Validity)} dias", 9) with { Id = FooterId },
+            Bold(30, 765, $"Condições de pagamento: {Js(b.PaymentMethod)} após emissão da fatura.", 9) with { Id = FooterId },
+            Bold(30, 785, "Ao valor apresentado acresce iva à taxa legal em vigor.", 9) with { Id = FooterId },
         };
-        var totalLabel = Bold(380, 780, "Total", 15);
-        var totalValue = new TextNode(450, 780, [new TextRun($"{(b.Total is { } total ? JsNumber.ToString(total) : "undefined")} €", 18, true, "right")]);
+        var totalLabel = Bold(380, 780, "Total", 15) with { Id = FooterId };
+        var totalValue = new TextNode(450, 780, [new TextRun($"{(b.Total is { } total ? JsNumber.ToString(total) : "undefined")} €", 18, true, "right")], FooterId);
         var rectHeight = 115.0;
         var separatorY = 280.0;
 
@@ -128,6 +132,39 @@ internal static class BudgetPdfDocument
         content.Add(totalLabel);
         content.Add(totalValue);
         return content;
+    }
+
+    /// <summary>
+    /// D25 (owner 2026-11-16): legacy draws the footer at its fixed place on page 1 (page 2 when the description takes
+    /// more than one page), under the description when the description reaches it. Here the footer goes to the next
+    /// page instead (a new page when needed), as many times as the description still reaches it there.
+    /// </summary>
+    private static List<Page> FooterClearOfDescription(IReadOnlyList<Page> laidOut)
+    {
+        var pages = laidOut.ToList();
+        var footerPage = pages.FindIndex(p => p.Items.Any(IsFooter));
+        if (footerPage < 0)
+        {
+            return pages;
+        }
+
+        var footer = pages[footerPage].Items.Where(IsFooter).ToList();
+        var top = footer.Cast<LineItem>().Min(l => l.Line.Y);
+        while (pages[footerPage].Items.OfType<LineItem>().Any(l => l.Node == DescriptionId && l.Line.Y + l.Line.Height > top))
+        {
+            pages[footerPage].Items.RemoveAll(footer.Contains);
+            footerPage++;
+            if (footerPage == pages.Count)
+            {
+                pages.Add(new Page());
+            }
+
+            pages[footerPage].Items.AddRange(footer);
+        }
+
+        return pages;
+
+        static bool IsFooter(PageItem item) => item is LineItem { Node: AnchorId or FooterId };
     }
 
     private static TextNode Title() => new(424, 70, [new TextRun("Proposta comercial", 15, true)]);

@@ -8,11 +8,12 @@ namespace Dib4t.Infrastructure.Tests.Pdf;
 
 /// <summary>
 /// The new app's PDF (ADR-0005): D22 (a wrapped text pushes the elements below it in its block; the footer stays on
-/// its page) and D23 (the Lisbon date, set by the caller). Budgets without long texts look exactly like the legacy PDF.
+/// its page), D23 (the Lisbon date, set by the caller) and D25 (the footer moves to the next page when the
+/// description reaches it). Budgets without long texts look exactly like the legacy PDF.
 /// </summary>
 public sealed class BudgetPdfNewAppTests
 {
-    /// <summary>The samples D22/D23 change, compared against approved images (tests/fixtures/pdf-approved).</summary>
+    /// <summary>The samples D22/D23/D25 change, compared against approved images (tests/fixtures/pdf-approved).</summary>
     private static readonly string[] Changed = ["02-revision", "05-most-lines", "09-utc-date-differs", "10-longest-texts"];
 
     private static readonly string[] UnchangedSamples = [.. PdfGolden.Layouts
@@ -109,6 +110,39 @@ public sealed class BudgetPdfNewAppTests
         total.Should().HaveCount(2);
         (total[^1].Y + total[^1].Height).Should().BeApproximately(841.89 - 40, 1e-9, "the footer moved up exactly by the overflow");
         LineStarting(pages[0], "....").Y.Should().BeApproximately(710 - (780 + (2 * 21.09375) - 801.89), 1e-9, "the whole footer moved");
+    }
+
+    [Fact]
+    public void A_description_that_reaches_the_footer_puts_the_footer_on_a_new_page_D25()
+    {
+        // 28 lines from y = 355 end at 748.75: under the footer (710) in legacy, still on one page.
+        var content = Sample("01-typical") with { Description = string.Join('\n', Enumerable.Range(1, 28).Select(i => $"Linha {i}")) };
+        var legacy = PdfsharpBudgetPdfGenerator.LegacyLayout(content);
+        legacy.Should().HaveCount(1);
+        LinesAt(legacy[0], 30).Should().Contain(l => l.Inlines[0].Font.Name == "Roboto-Regular" && l.Y + l.Height > 710, "legacy: description under the footer");
+
+        var pages = Layout(content);
+
+        pages.Should().HaveCount(2);
+        pages[0].Items.OfType<LineItem>().Should().NotContain(i => i.Node == "anchor" || i.Node == "footer");
+        pages[1].Items.OfType<LineItem>().Should().OnlyContain(i => i.Node == "anchor" || i.Node == "footer", "the footer alone on the new page");
+        LineStarting(pages[1], "....").Y.Should().Be(710, "at its usual place");
+        LineStarting(pages[1], "Total").Y.Should().Be(780);
+    }
+
+    [Fact]
+    public void A_footer_page_still_reached_by_the_description_passes_the_footer_on_again_D25()
+    {
+        // Enough lines for page 1, all of page 2 and part of page 3: legacy draws the footer on page 2, over the text.
+        var content = Sample("01-typical") with { Description = string.Join('\n', Enumerable.Range(1, 100).Select(i => $"Linha {i}")) };
+        PdfsharpBudgetPdfGenerator.LegacyLayout(content)[1].Items.OfType<LineItem>().Should().Contain(i => i.Node == "anchor");
+
+        var pages = Layout(content);
+
+        pages.Should().HaveCount(3);
+        pages[2].Items.OfType<LineItem>().Should().Contain(i => i.Node == "anchor");
+        pages[2].Items.OfType<LineItem>().Where(i => i.Node == "description").Should().OnlyContain(i => i.Line.Y + i.Line.Height <= 710);
+        pages[1].Items.OfType<LineItem>().Should().NotContain(i => i.Node == "anchor" || i.Node == "footer");
     }
 
     [Fact]

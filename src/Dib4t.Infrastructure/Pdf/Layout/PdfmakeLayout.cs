@@ -26,7 +26,8 @@ internal sealed class Page
 
 internal abstract record PageItem;
 
-internal sealed record LineItem(Line Line) : PageItem;
+/// <summary>A text line; <see cref="Node"/> is the id of the text node it belongs to (<see cref="TextNode.Id"/>).</summary>
+internal sealed record LineItem(Line Line, string? Node = null) : PageItem;
 
 internal sealed record VectorItem(Vector Vector) : PageItem;
 
@@ -106,7 +107,7 @@ internal sealed class PdfmakeLayout
 
                     BeginDetachedBlock();
                     MoveTo(text.X, text.Y);
-                    var lines = ProcessLeaf(measured[i]!);
+                    var lines = ProcessLeaf(measured[i]!, text.Id);
                     EndDetachedBlock();
                     if (text.Id == "anchor")
                     {
@@ -125,16 +126,16 @@ internal sealed class PdfmakeLayout
         return _pages;
     }
 
-    private int ProcessLeaf(List<Inline> inlines)
+    private int ProcessLeaf(List<Inline> inlines, string? node)
     {
         var count = 0;
         while (PdfmakeText.BuildNextLine(inlines, _availableWidth) is { } line)
         {
             // PageElementWriter.addLine (fitOnPage): on a new page when the line does not fit.
-            if (!WriteLine(line))
+            if (!WriteLine(line, node))
             {
                 MoveToNextPage();
-                WriteLine(line);
+                WriteLine(line, node);
             }
 
             count++;
@@ -144,7 +145,7 @@ internal sealed class PdfmakeLayout
     }
 
     /// <summary><c>ElementWriter.addLine</c>.</summary>
-    private bool WriteLine(Line line)
+    private bool WriteLine(Line line, string? node)
     {
         var height = line.Height;
         if (_availableHeight < height)
@@ -155,7 +156,7 @@ internal sealed class PdfmakeLayout
         line.X = _x + line.X;
         line.Y = _y + line.Y;
         PdfmakeText.AlignLine(line, _availableWidth);
-        _pages[_page].Items.Add(new LineItem(line));
+        _pages[_page].Items.Add(new LineItem(line, node));
         MoveDown(height);
         return true;
     }

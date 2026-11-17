@@ -34,7 +34,7 @@ stays readable by the legacy model (§4.3).
 | **D22** | **Fix** (owner): PDF blocks grow downward, see below |
 | **D23** | **Fix** (owner): PDF date in Europe/Lisbon, see below |
 | **D24** | **Fix** (owner, 2026-11-16): the import never deletes tasks, see below |
-| **D25** | **Open** (found 2026-11-16, kept as legacy until decided): PDF description runs under the footer, see below |
+| **D25** | **Fix** (owner, 2026-11-16): the PDF footer moves to the next page when the description reaches it, see below |
 
 ## D10: dashboard counts the whole year
 
@@ -83,7 +83,7 @@ generator keeps the legacy positions as the **starting** positions and lets a bl
 
 Acceptance: the visual diff of PLAN.md §7.1 stays pixel-identical (within tolerance) for every reference PDF
 **except `02`, `05` and `10`** (`05` found in Phase 3 step 3: same client as `10`), whose new expected images are reviewed and approved once by the owner and then kept as
-fixtures. Unit tests: wrapped client name, wrapped payment condition, footer that would pass the bottom margin.
+fixtures (approved 2026-11-16, `tests/fixtures/pdf-approved/`). Unit tests: wrapped client name, wrapped payment condition, footer that would pass the bottom margin.
 
 ## D23: document date in Europe/Lisbon
 
@@ -116,11 +116,16 @@ that this is a bug. In the new app, "Importar" on budget A's page with number N:
 
 The legacy app is not changed.
 
-## D25: description under the PDF footer (open, legacy kept)
+## D25: the PDF footer moves to the next page when the description reaches it
 
 Found while porting the PDF (Phase 3 step 3). The description starts at y = 355 and flows to the bottom margin; the
 footer is drawn at a fixed y = 710 on page 1 (one-page PDF) or page 2 (longer PDF). A description that reaches
 below y = 710 on the footer's page is printed **under** the dotted line, delivery, validity, payment and VAT lines.
-Real data (production backup 2026-11-11): **27 of 3,397** budgets (26 one-page, 1 on page 2). The new app keeps the
-legacy layout until the owner decides; a possible fix: when the description reaches the footer's area, put the
-footer on the next page (or after the description), and approve the changed reference images.
+Real data (production backup 2026-11-11): **27 of 3,397** budgets (26 one-page, 1 on page 2).
+
+**Decision (owner, 2026-11-16):** move the footer to the new page. The new generator lays the page out as legacy,
+then, while a description line on the footer's page reaches below the footer's top, moves the whole footer (dotted
+line, delivery, validity, payment, VAT, Total) to the next page, adding a page when there is none; the footer keeps
+its usual positions there. A budget whose description does not reach the footer is unchanged. Reference sample `05`
+changes (footer from page 2 to page 3); its approved image is regenerated. Unit tests: a one-page description under
+the footer (footer alone on a new page 2), a description running into page 3 (footer on page 3, below the text).
