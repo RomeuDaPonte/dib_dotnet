@@ -18,6 +18,12 @@ public static class BudgetMessages
     /// <summary><c>POST /clone/:id</c>, <c>POST /newrevision/:id</c>, <c>PUT /:id</c>: no budget with this id (400).</summary>
     public const string Missing = "Orçamento não existe";
 
+    /// <summary>
+    /// <c>POST /</c>, <c>POST /clone/:id</c> (Production, NAS on): the budget folder is not there after the
+    /// <c>mkdir</c> commands (500; the budget and its tasks stay saved, D6).
+    /// </summary>
+    public const string FolderNotCreated = "Erro ao criar pasta";
+
     /// <summary><c>GET /getById/:id</c>: no budget with this id (400).</summary>
     public const string NotFound = "Orçamento não existe na base de dados";
 

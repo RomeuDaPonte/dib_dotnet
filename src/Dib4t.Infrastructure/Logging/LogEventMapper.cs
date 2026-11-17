@@ -125,6 +125,7 @@ internal static class LogCategoryMap
         ("Serilog.AspNetCore.RequestLoggingMiddleware", LogCategories.Http),
         ("Dib4t.Infrastructure.Mongo", LogCategories.Database),
         ("Dib4t.Infrastructure.Backup", LogCategories.Database),
+        ("Dib4t.Infrastructure.Nas", LogCategories.Nas),
         ("Dib4t.Application.Database", LogCategories.Database),
         ("Dib4t.Application.Account", LogCategories.Auth),
         ("Dib4t.Application.Settings.PrinterSettingsService", LogCategories.Printer),

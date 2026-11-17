@@ -28,6 +28,7 @@ public sealed class DependencyInjectionTests
         services.AddSingleton(Substitute.For<IBudgetRepository>());
         services.AddSingleton(Substitute.For<IBudgetTaskRepository>());
         services.AddSingleton(Substitute.For<IBudgetPdfGenerator>());
+        services.AddSingleton(Substitute.For<Nas.INasFileShare>());
         services.AddSingleton(typeof(ILogger<>), typeof(RecordingLogger<>));
         using var provider = services.BuildServiceProvider(new ServiceProviderOptions { ValidateScopes = true, ValidateOnBuild = true });
 

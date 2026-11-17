@@ -118,8 +118,8 @@ public sealed class BudgetEndpointTests(AppWithMongo app) : IClassFixture<AppWit
 
         answer.Status.Should().Be(200);
         var rows = await LogStoreFile.WaitForAsync(app.LogStorePath,
-            r => r.Any(x => x.Message.Contains("Registado no Log", StringComparison.Ordinal)), cancellationToken: Cancellation);
-        var created = rows.Single(r => r.Message.Contains("Registado no Log", StringComparison.Ordinal));
+            r => r.Any(x => x.Category == LogCategories.App && x.Message.Contains("Registado no Log", StringComparison.Ordinal)), cancellationToken: Cancellation);
+        var created = rows.Single(r => r.Category == LogCategories.App && r.Message.Contains("Registado no Log", StringComparison.Ordinal));
         (created.Category, created.Level, created.UserName).Should().Be((LogCategories.App, "Information", TestUser.Limited.Name));
         var request = rows.Where(r => r.RequestId == created.RequestId).ToList();
         request.Should().Contain(r => r.Category == LogCategories.Database && r.Message.Contains("insert", StringComparison.Ordinal) && r.Message.Contains(".budgets", StringComparison.Ordinal));

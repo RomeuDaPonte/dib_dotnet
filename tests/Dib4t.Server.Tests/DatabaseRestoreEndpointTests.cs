@@ -150,7 +150,8 @@ public sealed class DatabaseRestoreEndpointTests(AppWithMongo app) : IClassFixtu
     {
         await using var host = app.Factory.WithWebHostBuilder(builder => builder
             .UseEnvironment(environment)
-            .UseSetting("Jwt:Key", "a-production-like-test-key-0123456789abcdef"));
+            .UseSetting("Jwt:Key", "a-production-like-test-key-0123456789abcdef")
+            .UseSetting("Nas:Enabled", "false"));
         var file = DibbakTestWriter.Valid().ToFile();
 
         using var anonymous = await PostAsync(host.CreateClient(), file);

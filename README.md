@@ -38,6 +38,23 @@ docker compose -f docker-compose.dev.yml up -d --build                     # new
 docker compose -f docker-compose.dev.yml --profile legacy up -d --build    # legacy app :3000/:3001 + mongo:4.1.4
 ```
 
+## NAS folders (Production only)
+
+Budget create/clone make the budget's folder on the NAS over SSH, and renaming revision 0 renames it (PLAN.md §5).
+This happens **only** with `ASPNETCORE_ENVIRONMENT=Production`; in every other environment the commands are only
+written to the log (`Registos`, category `Nas`, "would run: …"). Settings (environment variables, never in the repo):
+
+| Variable | Default | |
+|---|---|---|
+| `Nas__Enabled` | `true` in Production | `false` runs Production without touching the NAS (side-by-side run, PLAN.md §4.7) |
+| `Nas__Host`, `Nas__Port` | –, `22` | required when enabled |
+| `Nas__UserName`, `Nas__Password` | – | required when enabled; the password is never logged |
+| `Nas__HostFingerprint` | empty | the NAS host key, `SHA256:…` as `ssh-keygen -lf /etc/ssh/ssh_host_ed25519_key.pub` prints it on the NAS; empty = any key accepted (as legacy) with a warning in the log |
+| `Nas__ConnectTimeoutSeconds`, `Nas__CommandTimeoutSeconds` | `10`, `60` | |
+
+The app refuses to start in Production with the NAS enabled and no host, user or password. Tests use a fake NAS
+container (`tests/fixtures/nas-fake`), never the real one.
+
 ## Before every commit
 
 ```sh

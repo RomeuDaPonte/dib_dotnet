@@ -72,7 +72,7 @@ public sealed class BudgetDetailsTests
     private static CancellationToken Cancellation => TestContext.Current.CancellationToken;
 
     private BudgetsService Budgets => new(_budgets, _tasks, _entities, _prices, new BudgetNumbering(new RecordingLogger<BudgetNumbering>()),
-        new FakeTimeProvider(), Options.Create(new AppOptions()), _logger);
+        Substitute.For<Nas.INasFileShare>(), new FakeTimeProvider(), Options.Create(new AppOptions()), _logger);
 
     private BudgetTasksService Tasks => new(_budgets, _tasks, _prices, _taskLogger);
 

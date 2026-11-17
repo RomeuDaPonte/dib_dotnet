@@ -12,6 +12,8 @@
     <PackageReference Include="System.IO.Hashing" />
     <!-- Budget PDF (PLAN.md §7.1): the document writer; layout, shaping and fonts are the legacy pdfmake's, ported. -->
     <PackageReference Include="PDFsharp" />
+    <!-- NAS folder operations (PLAN.md §5): SSH in Production, replaces ssh2-promise. -->
+    <PackageReference Include="SSH.NET" />
   </ItemGroup>
 
   <ItemGroup>

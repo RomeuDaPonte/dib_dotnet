@@ -2,6 +2,7 @@ using System.Text.Json;
 using Dib4t.Application.Common;
 using Dib4t.Application.Common.Validation;
 using Dib4t.Application.Entities;
+using Dib4t.Application.Nas;
 using Dib4t.Application.Settings;
 using Dib4t.Domain.Budgets;
 using Dib4t.Domain.Entities;
@@ -17,7 +18,8 @@ namespace Dib4t.Application.Budgets;
 /// of checks and texts as the legacy routes; a failure legacy leaves to Express (cast error, refused save, missing
 /// prices) is a 500 <see cref="LegacyMessages.SomethingFailed"/> (D16), with the reason in the log only. Decided
 /// fixes: D6 (the default task is created right after the budget, before any NAS step), D7 (the edit is validated),
-/// D9 (a pattern MongoDB refuses is a 400), D21 (no <c>/</c> in a new descriptive), the numbering guard (§4.7).
+/// D9 (a pattern MongoDB refuses is a 400), D21 (no <c>/</c> in a new descriptive), the numbering guard (§4.7). The NAS
+/// folder steps (§5) go through <see cref="INasFileShare"/>, which only logs them outside Production (D5).
 /// </summary>
 public sealed partial class BudgetsService(
     IBudgetRepository budgets,
@@ -25,6 +27,7 @@ public sealed partial class BudgetsService(
     IEntityRepository entities,
     IPricesRepository prices,
     BudgetNumbering numbering,
+    INasFileShare nas,
     TimeProvider time,
     IOptions<AppOptions> options,
     ILogger<BudgetsService> logger)
@@ -91,7 +94,8 @@ public sealed partial class BudgetsService(
     /// <c>POST /</c>: Joi (400) → D21 (400) → client (400 <see cref="BudgetMessages.ClientMissing"/>) → a supplier
     /// is a <b>200</b> notice and nothing is created → author (400 <see cref="BudgetMessages.AuthorMissing"/>) →
     /// prices → number (lock + guard) → budget (margin from the prices, payment method from the client, total of one
-    /// automation hour) → default task (D6).
+    /// automation hour) → default task (D6) → NAS folder (500 <see cref="BudgetMessages.FolderNotCreated"/> when it is
+    /// missing afterwards; the budget and its task stay).
     /// </summary>
     public async Task<Result<BudgetSaved>> CreateAsync(JsonElement body, CancellationToken cancellationToken)
     {
@@ -124,9 +128,10 @@ public sealed partial class BudgetsService(
             return NotSaved("create", input.Descriptive, "the client has no payment condition: Path `paymentMethod` is required");
         }
 
+        var year = CurrentYear();
         var budget = await numbering.RunExclusiveAsync(async () =>
         {
-            var number = await numbering.NextAsync(budgets, CurrentYear(), cancellationToken);
+            var number = await numbering.NextAsync(budgets, year, cancellationToken);
             return await budgets.InsertAsync(
                 new NewBudget(0, client.Id, input.Descriptive, input.PersonInCharge, author!.Id, number, client.PaymentCondition, margin,
                     BudgetTotals.NewBudgetTotal(margin, automation), 60, 30, null, Now()),
@@ -134,13 +139,14 @@ public sealed partial class BudgetsService(
         }, cancellationToken);
         await tasks.InsertDefaultAsync(budget.Id, automation, cancellationToken);
         LogCreated(budget.Id, budget.BudgetNumber, budget.Revision, budget.Descriptive, client.Name);
-        return BudgetSaved.Of(new BudgetDetails(budget, client, author));
+        var folder = await CreateFolderAsync(budget, client, year, cancellationToken);
+        return folder is null ? BudgetSaved.Of(new BudgetDetails(budget, client, author)) : folder;
     }
 
     /// <summary>
     /// <c>POST /clone/:id</c>: Joi (400) → D21 (400) → id cast (500) → budget (400 <see cref="BudgetMessages.Missing"/>)
     /// → client (400) → supplier (200 notice) → author (400) → a new number with the source's payment method, margin,
-    /// total, days, validity and description, and copies of its tasks.
+    /// total, days, validity and description, and copies of its tasks → NAS folder (as create).
     /// </summary>
     public async Task<Result<BudgetSaved>> CloneAsync(string id, JsonElement body, CancellationToken cancellationToken)
     {
@@ -175,9 +181,10 @@ public sealed partial class BudgetsService(
         }
 
         var sourceTasks = await tasks.ListByBudgetAsync(from.Id, cancellationToken);
+        var year = CurrentYear();
         var budget = await numbering.RunExclusiveAsync(async () =>
         {
-            var number = await numbering.NextAsync(budgets, CurrentYear(), cancellationToken);
+            var number = await numbering.NextAsync(budgets, year, cancellationToken);
             return await budgets.InsertAsync(
                 new NewBudget(0, client!.Id, input.Descriptive, input.PersonInCharge, author!.Id, number, from.PaymentMethod, from.Margin,
                     from.Total, from.DaysNeededToDoTheWork, from.Validity, from.Description, Now()),
@@ -185,7 +192,8 @@ public sealed partial class BudgetsService(
         }, cancellationToken);
         await tasks.InsertCopiesAsync(budget.Id, sourceTasks, cancellationToken);
         LogCloned(budget.Id, budget.BudgetNumber, from.Id, from.BudgetNumber, sourceTasks.Count);
-        return BudgetSaved.Of(new BudgetDetails(budget, client, author));
+        var folder = await CreateFolderAsync(budget, client!, year, cancellationToken);
+        return folder is null ? BudgetSaved.Of(new BudgetDetails(budget, client, author)) : folder;
     }
 
     /// <summary>
@@ -225,7 +233,9 @@ public sealed partial class BudgetsService(
     /// <summary>
     /// <c>PUT /:id</c>: Joi (D7, 400) → id cast (500) → budget (400 <see cref="BudgetMessages.Missing"/>) → author
     /// (400 <see cref="BudgetMessages.AuthorMissing"/>) → a budget with a job is answered unchanged → D21 (400, only
-    /// for a changed descriptive) → save (descriptive, person in charge, author; complete and PDF flags reset).
+    /// for a changed descriptive) → revision 0 with another descriptive: NAS folder rename, under the year of the
+    /// budget's date (a failure is a 500 and nothing is saved, as legacy) → save (descriptive, person in charge,
+    /// author; complete and PDF flags reset).
     /// </summary>
     public async Task<Result<BudgetDetails>> UpdateAsync(string id, JsonElement body, CancellationToken cancellationToken)
     {
@@ -255,9 +265,15 @@ public sealed partial class BudgetsService(
             return await DetailsAsync(budget, cancellationToken);
         }
 
-        if (!string.Equals(budget.Descriptive, input.Descriptive, StringComparison.Ordinal) && BudgetValidators.HasSlash(input.Descriptive))
+        var renamed = !string.Equals(budget.Descriptive, input.Descriptive, StringComparison.Ordinal);
+        if (renamed && BudgetValidators.HasSlash(input.Descriptive))
         {
             return Error.Validation(BudgetMessages.DescriptiveWithSlash);
+        }
+
+        if (renamed && budget.Revision == 0 && await RenameFolderAsync(budget, input.Descriptive, cancellationToken) is { } notRenamed)
+        {
+            return notRenamed;
         }
 
         var saved = await budgets.UpdateAsync(budget.Id, new BudgetEdit(author.Id, input.Descriptive, input.PersonInCharge), cancellationToken);
@@ -316,11 +332,70 @@ public sealed partial class BudgetsService(
         return new BudgetDetails(budget, client, author);
     }
 
-    private int CurrentYear()
+    /// <summary>
+    /// The NAS step of create and clone, after everything is saved: <c>null</c> when done, otherwise the legacy 500
+    /// (<see cref="BudgetMessages.FolderNotCreated"/> when the folder is missing afterwards; the Express error page's
+    /// text when a command failed, e.g. the NAS is unreachable).
+    /// </summary>
+    private async Task<Error?> CreateFolderAsync(Budget budget, BusinessEntity client, int year, CancellationToken cancellationToken)
+    {
+        var folder = new BudgetFolder(year, JsText(client.Name), JsText(budget.BudgetNumber), JsText(budget.Descriptive));
+        var result = await nas.CreateBudgetFolderAsync(folder, cancellationToken);
+        if (result == NasResult.Done)
+        {
+            return null;
+        }
+
+        LogFolderNotCreated(budget.Id, budget.BudgetNumber, result);
+        return result == NasResult.FolderMissing
+            ? Error.Failure(BudgetMessages.FolderNotCreated)
+            : new Error(ErrorKind.Failure, LegacyMessages.SomethingFailed) { Reason = "the NAS folder could not be created" };
+    }
+
+    /// <summary>
+    /// The NAS step of the edit, before the save (legacy <c>budget.update</c>): <c>null</c> when done, otherwise the
+    /// 500 (nothing is saved). Legacy reads the client's name from the populated budget, so a budget whose client is
+    /// gone cannot be renamed there (TypeError, 500); with the NAS off there is no folder to rename.
+    /// </summary>
+    private async Task<Error?> RenameFolderAsync(Budget budget, string descriptive, CancellationToken cancellationToken)
+    {
+        var client = budget.ClientId is null ? null : await entities.FindByIdAsync(budget.ClientId, cancellationToken);
+        if (client is null)
+        {
+            if (!nas.IsEnabled)
+            {
+                return null;
+            }
+
+            LogFolderNotRenamed(budget.Id, budget.BudgetNumber, "the budget's client does not exist");
+            return new Error(ErrorKind.Failure, LegacyMessages.SomethingFailed) { Reason = "the budget's client does not exist" };
+        }
+
+        var year = budget.Date is { } date ? YearOf(date) : CurrentYear();
+        var current = new BudgetFolder(year, JsText(client.Name), JsText(budget.BudgetNumber), JsText(budget.Descriptive));
+        var result = await nas.RenameBudgetFolderAsync(current, current with { Descriptive = descriptive }, cancellationToken);
+        if (result == NasResult.Done)
+        {
+            return null;
+        }
+
+        LogFolderNotRenamed(budget.Id, budget.BudgetNumber, "the NAS folder could not be renamed");
+        return new Error(ErrorKind.Failure, LegacyMessages.SomethingFailed) { Reason = "the NAS folder could not be renamed" };
+    }
+
+    /// <summary>A JavaScript template literal's text of a missing value (only with documents legacy would not write).</summary>
+    private static string JsText(string? value) => value ?? "undefined";
+
+    private int CurrentYear() => YearOf(time.GetUtcNow());
+
+    /// <summary>The year in the company's zone (legacy: the server's local time, <c>getFullYear()</c>).</summary>
+    private int YearOf(DateTimeOffset instant)
     {
         var zone = options.Value.FindTimeZone() ?? TimeZoneInfo.Utc;
-        return TimeZoneInfo.ConvertTime(time.GetUtcNow(), zone).Year;
+        return TimeZoneInfo.ConvertTime(instant, zone).Year;
     }
+
+    private int YearOf(DateTime utc) => YearOf(new DateTimeOffset(DateTime.SpecifyKind(utc, DateTimeKind.Utc)));
 
     /// <summary>JavaScript <c>Date.now()</c>: UTC, millisecond precision.</summary>
     private DateTime Now()
@@ -369,6 +444,12 @@ public sealed partial class BudgetsService(
 
     [LoggerMessage(EventId = 78, Level = LogLevel.Warning, Message = "Budget search refused /{Pattern}/i: {Reason}")]
     private partial void LogSearchRefused(string pattern, string reason);
+
+    [LoggerMessage(EventId = 85, Level = LogLevel.Error, Message = "Budget {BudgetId} ({BudgetNumber}) saved, but its NAS folder was not created: {Result}")]
+    private partial void LogFolderNotCreated(string budgetId, string? budgetNumber, NasResult result);
+
+    [LoggerMessage(EventId = 86, Level = LogLevel.Error, Message = "Budget {BudgetId} ({BudgetNumber}) not updated: {Reason}")]
+    private partial void LogFolderNotRenamed(string budgetId, string? budgetNumber, string reason);
 }
 
 /// <summary>

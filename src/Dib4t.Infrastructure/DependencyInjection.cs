@@ -8,6 +8,7 @@ using Dib4t.Infrastructure.Backup;
 using Dib4t.Infrastructure.Logging;
 using Dib4t.Infrastructure.Mongo;
 using Dib4t.Infrastructure.Mongo.Repositories;
+using Dib4t.Infrastructure.Nas;
 using Dib4t.Infrastructure.Pdf;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -32,6 +33,7 @@ public static class DependencyInjection
         services.AddScoped<IBudgetRepository, MongoBudgetRepository>();
         services.AddScoped<IBudgetTaskRepository, MongoBudgetTaskRepository>();
         services.AddSingleton<IBudgetPdfGenerator, PdfsharpBudgetPdfGenerator>();
+        services.AddNas(configuration);
         services.AddAuthAdapters(configuration);
         return services;
     }

@@ -1,0 +1,17 @@
+#!/bin/sh
+# Login shell of the fake NAS user. sshd runs "<shell> -c <command>" for every exec channel: the command is appended
+# to /var/log/nas/commands (one line per command, base64 of its bytes, since a command may contain newlines), then
+# run by the real sh, from the user's home, like on the NAS.
+# With /var/log/nas/hide-folders present, the folder check ("if test -d …") answers 0: a NAS where mkdir succeeds
+# but the folder is not there afterwards (legacy "Erro ao criar pasta"). With /var/log/nas/slow present, every
+# command first sleeps 5 s (command timeouts).
+if [ "$1" = "-c" ]; then
+  printf '%s' "$2" | base64 | tr -d '\n' >> /var/log/nas/commands
+  echo >> /var/log/nas/commands
+  [ -e /var/log/nas/slow ] && sleep 5
+  case "$2" in
+    "if test -d "*) [ -e /var/log/nas/hide-folders ] && { echo 0; exit 0; } ;;
+  esac
+  exec /bin/sh -c "$2"
+fi
+exec /bin/sh "$@"

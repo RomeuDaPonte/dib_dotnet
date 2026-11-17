@@ -2,6 +2,7 @@ using System.Text.Json;
 using Dib4t.Application.Budgets;
 using Dib4t.Application.Common;
 using Dib4t.Application.Entities;
+using Dib4t.Application.Nas;
 using Dib4t.Application.Settings;
 using Dib4t.Domain.Budgets;
 using Dib4t.Domain.Entities;
@@ -16,7 +17,8 @@ namespace Dib4t.Application.Tests.Budgets;
 /// <summary>
 /// Legacy <c>routes/budget.js</c> (list, search, get, revisions, create, clone, new revision, edit): the order of the
 /// checks, the texts and statuses (the supplier's 200 notice included), the values written, the numbering (year in the
-/// configured zone, collision guard), the decided fixes D6, D7, D9, D21, and the log events.
+/// configured zone, collision guard), the NAS folder steps (§5: create, clone, rename; D5, D6), the decided fixes D6,
+/// D7, D9, D21, and the log events.
 /// </summary>
 public sealed class BudgetsServiceTests
 {
@@ -34,6 +36,7 @@ public sealed class BudgetsServiceTests
     private readonly IBudgetTaskRepository _tasks = Substitute.For<IBudgetTaskRepository>();
     private readonly IEntityRepository _entities = Substitute.For<IEntityRepository>();
     private readonly IPricesRepository _prices = Substitute.For<IPricesRepository>();
+    private readonly INasFileShare _nas = Substitute.For<INasFileShare>();
     private readonly FakeTimeProvider _time = new(new DateTimeOffset(2026, 3, 15, 10, 20, 30, 123, TimeSpan.Zero).AddTicks(4567));
     private readonly RecordingLogger<BudgetsService> _logger = new();
     private readonly AppOptions _options = new();
@@ -52,7 +55,7 @@ public sealed class BudgetsServiceTests
     private static CancellationToken Cancellation => TestContext.Current.CancellationToken;
 
     private BudgetsService Service => new(_budgets, _tasks, _entities, _prices, new BudgetNumbering(new RecordingLogger<BudgetNumbering>()),
-        _time, Options.Create(_options), _logger);
+        _nas, _time, Options.Create(_options), _logger);
 
     [Fact]
     public async Task Create_checks_joi_the_slash_the_client_the_supplier_the_author_then_the_prices()
@@ -230,6 +233,97 @@ public sealed class BudgetsServiceTests
         locked.Value.Budget.Descriptive.Should().Be("Máquina de corte");
         await _budgets.Received(1).UpdateAsync(Arg.Any<string>(), Arg.Any<BudgetEdit>(), Arg.Any<CancellationToken>());
         _logger.Entries.Should().Contain(e => e.EventId == 74);
+    }
+
+    [Fact]
+    public async Task Create_and_clone_make_the_nas_folder_under_the_current_year_after_everything_is_saved()
+    {
+        _time.SetUtcNow(new DateTimeOffset(2026, 12, 31, 23, 30, 0, TimeSpan.Zero)); // 2026 in Lisbon (the number's year too)
+        _budgets.CountNumbersSinceAsync(Arg.Any<DateTime>(), Arg.Any<CancellationToken>()).Returns(0);
+
+        var created = await Service.CreateAsync(Body(UserId, ClientId, descriptive: " Molde 'O''Neill' $1 "), Cancellation);
+        var cloned = await Service.CloneAsync(BudgetId, Body(UserId, ClientId, descriptive: "Cópia"), Cancellation);
+
+        created.IsSuccess.Should().BeTrue();
+        cloned.IsSuccess.Should().BeTrue();
+        Received.InOrder(() =>
+        {
+            _tasks.InsertDefaultAsync(Arg.Any<string>(), Arg.Any<double>(), Arg.Any<CancellationToken>());
+            _nas.CreateBudgetFolderAsync(new BudgetFolder(2026, "Metalúrgica", "26-0001", " Molde 'O''Neill' $1 "), Arg.Any<CancellationToken>());
+            _tasks.InsertCopiesAsync(Arg.Any<string>(), Arg.Any<IReadOnlyList<BudgetTask>>(), Arg.Any<CancellationToken>());
+            _nas.CreateBudgetFolderAsync(new BudgetFolder(2026, "Metalúrgica", "26-0001", "Cópia"), Arg.Any<CancellationToken>());
+        });
+        new BudgetFolder(2026, "Metalúrgica", "26-0001", "Cópia").Path.Should().Be("/share/Orçamentos/2026/Metalúrgica/26-0001 - Cópia");
+    }
+
+    [Fact]
+    public async Task A_missing_folder_is_the_legacy_500_and_the_budget_keeps_its_default_task_d6()
+    {
+        _nas.CreateBudgetFolderAsync(Arg.Any<BudgetFolder>(), Arg.Any<CancellationToken>()).Returns(NasResult.FolderMissing);
+        var missing = await Service.CreateAsync(Body(UserId, ClientId), Cancellation);
+        var missingOnClone = await Service.CloneAsync(BudgetId, Body(UserId, ClientId), Cancellation);
+        _nas.CreateBudgetFolderAsync(Arg.Any<BudgetFolder>(), Arg.Any<CancellationToken>()).Returns(NasResult.Failed);
+        var failed = await Service.CreateAsync(Body(UserId, ClientId), Cancellation);
+
+        missing.Error.Should().Be(Error.Failure(BudgetMessages.FolderNotCreated));
+        missingOnClone.Error.Should().Be(Error.Failure(BudgetMessages.FolderNotCreated));
+        failed.Error!.Kind.Should().Be(ErrorKind.Failure);
+        failed.Error.Message.Should().Be(LegacyMessages.SomethingFailed, "legacy: the ssh2-promise rejection reaches Express");
+        await _tasks.Received(2).InsertDefaultAsync(Arg.Any<string>(), Arg.Any<double>(), Arg.Any<CancellationToken>());
+        _logger.Entries.Where(e => e.EventId == 85).Should().HaveCount(3);
+    }
+
+    [Fact]
+    public async Task Renaming_revision_0_moves_its_folder_under_the_year_of_its_date_before_the_save()
+    {
+        _budgets.FindByIdAsync(BudgetId, Arg.Any<CancellationToken>()).Returns(Stored() with { Date = new DateTime(2025, 12, 31, 23, 59, 0, DateTimeKind.Utc) });
+        _budgets.UpdateAsync(BudgetId, Arg.Any<BudgetEdit>(), Arg.Any<CancellationToken>()).Returns(Stored());
+
+        var renamed = await Service.UpdateAsync(BudgetId, Edit(UserId, "Máquina de corte CNC"), Cancellation);
+
+        renamed.IsSuccess.Should().BeTrue();
+        var before = new BudgetFolder(2025, "Metalúrgica", "26-0003", "Máquina de corte");
+        Received.InOrder(() =>
+        {
+            _nas.RenameBudgetFolderAsync(before, before with { Descriptive = "Máquina de corte CNC" }, Arg.Any<CancellationToken>());
+            _budgets.UpdateAsync(BudgetId, Arg.Any<BudgetEdit>(), Arg.Any<CancellationToken>());
+        });
+    }
+
+    [Fact]
+    public async Task Only_revision_0_with_another_descriptive_is_renamed_and_a_failed_rename_saves_nothing()
+    {
+        _budgets.UpdateAsync(BudgetId, Arg.Any<BudgetEdit>(), Arg.Any<CancellationToken>()).Returns(Stored());
+        await Service.UpdateAsync(BudgetId, Edit(UserId, "Máquina de corte"), Cancellation);
+        _budgets.FindByIdAsync(BudgetId, Arg.Any<CancellationToken>()).Returns(Stored() with { Revision = 1 });
+        await Service.UpdateAsync(BudgetId, Edit(UserId, "Outro"), Cancellation);
+        await _nas.DidNotReceiveWithAnyArgs().RenameBudgetFolderAsync(default!, default!, Cancellation);
+
+        _budgets.FindByIdAsync(BudgetId, Arg.Any<CancellationToken>()).Returns(Stored());
+        _nas.RenameBudgetFolderAsync(Arg.Any<BudgetFolder>(), Arg.Any<BudgetFolder>(), Arg.Any<CancellationToken>()).Returns(NasResult.Failed);
+        _budgets.ClearReceivedCalls();
+        var failed = await Service.UpdateAsync(BudgetId, Edit(UserId, "Outro"), Cancellation);
+
+        failed.Error!.Message.Should().Be(LegacyMessages.SomethingFailed);
+        failed.Error.Reason.Should().Contain("renamed");
+        await _budgets.DidNotReceiveWithAnyArgs().UpdateAsync(default!, default!, Cancellation);
+        _logger.Entries.Should().Contain(e => e.EventId == 86);
+    }
+
+    [Fact]
+    public async Task A_budget_whose_client_is_gone_is_not_renamed_a_500_with_the_nas_on_saved_with_it_off()
+    {
+        _budgets.FindByIdAsync(BudgetId, Arg.Any<CancellationToken>()).Returns(Stored() with { ClientId = Unknown });
+        _budgets.UpdateAsync(BudgetId, Arg.Any<BudgetEdit>(), Arg.Any<CancellationToken>()).Returns(Stored());
+
+        var off = await Service.UpdateAsync(BudgetId, Edit(UserId, "Outro"), Cancellation);
+        _nas.IsEnabled.Returns(true);
+        var on = await Service.UpdateAsync(BudgetId, Edit(UserId, "Outro"), Cancellation);
+
+        off.IsSuccess.Should().BeTrue("with the NAS off there is no folder (D5)");
+        on.Error!.Message.Should().Be(LegacyMessages.SomethingFailed, "legacy: TypeError on client.name");
+        await _nas.DidNotReceiveWithAnyArgs().RenameBudgetFolderAsync(default!, default!, Cancellation);
+        await _budgets.Received(1).UpdateAsync(Arg.Any<string>(), Arg.Any<BudgetEdit>(), Arg.Any<CancellationToken>());
     }
 
     [Fact]

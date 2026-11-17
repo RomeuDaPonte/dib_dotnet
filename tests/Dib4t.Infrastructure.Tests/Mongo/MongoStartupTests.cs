@@ -105,6 +105,7 @@ public sealed class MongoStartupTests(MongoFixture mongo) : IClassFixture<MongoF
             ["Mongo:StartupCheckRetryInterval"] = retryInterval,
             ["Logs:Path"] = NewLogStore(),
             ["Jwt:Key"] = new string('k', 32), // validated at startup with the other options
+            ["Nas:Enabled"] = "false", // a Production host: no NAS here (PLAN.md §5.1)
         });
         var recording = new RecordingLoggerProvider();
         builder.Logging.SetMinimumLevel(LogLevel.Trace).AddProvider(recording);
