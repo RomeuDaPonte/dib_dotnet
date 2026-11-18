@@ -49,7 +49,21 @@ public sealed partial class LegacyRunReplayTests(AppWithMongo app) : IClassFixtu
     /// <c>BudgetDetailsGoldenTests</c>); their recorded document changes are written, so the later steps (list,
     /// search) still run on the legacy state.
     /// </summary>
-    private static readonly HashSet<string> LegacyStateOnly = new(StringComparer.Ordinal) { "budget-import", "budget-import-description-only" };
+    /// <remarks>
+    /// <c>blocked-import</c> (05): legacy refuses an import into the open budget because it has a job; with D24 the open
+    /// budget only sends its tasks to the typed number, which a budget with a job may do (tested in
+    /// <c>BudgetDetailsGoldenTests</c>), so the step is not sent either.
+    /// </remarks>
+    private static readonly HashSet<string> LegacyStateOnly = new(StringComparer.Ordinal) { "budget-import", "budget-import-description-only", "blocked-import" };
+
+    /// <summary>
+    /// The steps of <c>05-jobs.json</c> this version implements (job create, Phase 4 step 1, and the budget/task routes
+    /// on the budgets with a job); the other job steps are routes of later steps: their recorded document changes are
+    /// written, so the following steps run on the legacy state.
+    /// </summary>
+    private static bool IsImplementedJobStep(string id) =>
+        id.StartsWith("budget-", StringComparison.Ordinal) || id.StartsWith("job-create", StringComparison.Ordinal)
+        || id.StartsWith("blocked-", StringComparison.Ordinal);
 
     private readonly Dictionary<string, string> _bound = new(StringComparer.Ordinal);
     private readonly Dictionary<string, string> _tokens = new(StringComparer.Ordinal);
@@ -64,7 +78,7 @@ public sealed partial class LegacyRunReplayTests(AppWithMongo app) : IClassFixtu
         await BindSeedAsync();
         var replayed = new List<string>();
         var applied = new List<string>();
-        foreach (var file in new[] { "01-account.json", "02-settings.json", "03-entities.json", "04-budgets.json", "07-account-delete.json" })
+        foreach (var file in new[] { "01-account.json", "02-settings.json", "03-entities.json", "04-budgets.json", "05-jobs.json", "07-account-delete.json" })
         {
             var steps = JsonElement.Parse(await File.ReadAllTextAsync(Fixtures.Characterization(file), Cancellation)).GetProperty("steps");
             foreach (var step in steps.EnumerateArray())
@@ -75,20 +89,20 @@ public sealed partial class LegacyRunReplayTests(AppWithMongo app) : IClassFixtu
                     continue;
                 }
 
-                if (LegacyStateOnly.Contains(id))
+                if (LegacyStateOnly.Contains(id) || (file == "05-jobs.json" && !IsImplementedJobStep(id)))
                 {
                     await ApplyRecordedChangesAsync(step.GetProperty("db"));
                     applied.Add(id);
                     continue;
                 }
 
-                await ReplayAsync(step, ordered: file != "04-budgets.json");
+                await ReplayAsync(step, ordered: file is not ("04-budgets.json" or "05-jobs.json"));
                 replayed.Add(id);
             }
         }
 
-        replayed.Should().HaveCount(122, "every recorded step of the five files but the allow-listed and the D24 ones");
-        applied.Should().HaveCount(2, "the two D24 imports");
+        replayed.Should().HaveCount(136, "every recorded step of the six files but the allow-listed, the D24 ones and the later job routes");
+        applied.Should().HaveCount(66, "the three D24 imports and the 63 steps of later job routes");
     }
 
     private async Task ReplayAsync(JsonElement step, bool ordered)
@@ -224,8 +238,9 @@ public sealed partial class LegacyRunReplayTests(AppWithMongo app) : IClassFixtu
                 foreach (var item in change.Value.EnumerateArray())
                 {
                     var placeholder = item.GetProperty("_id").GetProperty("$oid").GetString()!;
-                    if (Placeholder().Match(placeholder) is { Success: true } match)
+                    foreach (Match match in Placeholder().Matches(item.GetRawText()))
                     {
+                        // The document's id and any new sub-document id (statistics) seen here first.
                         _bound.TryAdd(match.Groups[1].Value, ObjectId.GenerateNewId().ToString());
                     }
 

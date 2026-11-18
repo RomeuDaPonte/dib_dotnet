@@ -1,0 +1,117 @@
+@inject IJobApi JobApi
+@inject ISnackbar Snackbar
+
+@* Legacy budgets/newJobModal.jsx: "Criar obra" with Preço final €, Data de entrega (a date input), Estado inicial,
+   Identificação da encomenda, Identificação oficial; Cancel / Criar. Validated on submit, then on every change.
+   A refused job shows the legacy text as an error toast and the dialog stays open (legacy). *@
+<MudDialog Visible="@(Form is not null)" VisibleChanged="VisibleChanged" Options="Options" Class="settings-dialog" AriaLabel="Criar obra">
+    <TitleContent><h2 class="settings-dialog-title">Criar obra</h2></TitleContent>
+    <DialogContent>
+        @if (Form is not null)
+        {
+            <form id="job-form" novalidate @onsubmit="SubmitAsync">
+                <MudTextField T="string" Value="Form.FinalPrice" ValueChanged="FinalPriceChanged" Immediate="true" Label="Preço final €"
+                              InputId="job-final-price" Margin="Margin.Normal" Error="@(_errors.FinalPrice is not null)" ErrorText="@_errors.FinalPrice" />
+                <MudTextField T="string" @bind-Value="Form.DueDate" @bind-Value:after="Revalidate" Immediate="true" Label="Data de entrega"
+                              InputId="job-due-date" InputType="InputType.Date" Margin="Margin.Normal" ShrinkLabel="true"
+                              Error="@(_errors.DueDate is not null)" ErrorText="@_errors.DueDate" />
+                <LabeledSelect TValue="string" Id="job-initial-state" Label="Estado inicial" Value="Form.State" ValueChanged="StateChanged"
+                               Options="StateOptions" Class="job-initial-state" />
+                <MudTextField T="string" @bind-Value="Form.OrderIdentification" @bind-Value:after="Revalidate" Immediate="true"
+                              Label="Identificação da encomenda" InputId="job-order" Margin="Margin.Normal"
+                              Error="@(_errors.OrderIdentification is not null)" ErrorText="@_errors.OrderIdentification" />
+                <MudCheckBox T="bool" @bind-Value="Form.IsOfficialOrderIdentification" Label="Identificação oficial" Color="Color.Primary"
+                             Class="job-official" />
+            </form>
+        }
+    </DialogContent>
+    <DialogActions>
+        <MudButton Color="Color.Primary" OnClick="CloseAsync">Cancel</MudButton>
+        <MudButton Color="Color.Primary" ButtonType="ButtonType.Submit" form="job-form" Disabled="_saving">Criar</MudButton>
+    </DialogActions>
+</MudDialog>
+
+@code {
+    private static readonly DialogOptions Options = new() { MaxWidth = MaxWidth.ExtraSmall, FullWidth = true, CloseOnEscapeKey = true };
+
+    private static readonly IReadOnlyList<(string Value, string Text)> StateOptions = [.. JobForm.States.Select(s => (s, s))];
+
+    private JobForm? _shown;
+    private JobFormErrors _errors = JobFormErrors.None;
+    private bool _validateOnChange;
+    private bool _saving;
+
+    /// <summary>The form; <c>null</c> = the dialog is closed.</summary>
+    [Parameter]
+    public JobForm? Form { get; set; }
+
+    /// <summary>The new job.</summary>
+    [Parameter]
+    public EventCallback<JobResponse> OnCreated { get; set; }
+
+    [Parameter]
+    public EventCallback OnClosed { get; set; }
+
+    protected override void OnParametersSet()
+    {
+        if (!ReferenceEquals(Form, _shown))
+        {
+            _shown = Form; // a new dialog: no messages until its first submit
+            _errors = JobFormErrors.None;
+            _validateOnChange = false;
+        }
+    }
+
+    private void FinalPriceChanged(string? text)
+    {
+        Form!.FinalPrice = text;
+        Revalidate();
+    }
+
+    private void StateChanged(string? state)
+    {
+        Form!.State = state ?? JobForm.States[0];
+        Revalidate();
+    }
+
+    private void Revalidate()
+    {
+        if (_validateOnChange)
+        {
+            _errors = Form!.Validate();
+        }
+    }
+
+    private async Task SubmitAsync()
+    {
+        var form = Form!;
+        _validateOnChange = true;
+        _errors = form.Validate();
+        if (_errors.Any || _saving)
+        {
+            return;
+        }
+
+        _saving = true;
+        try
+        {
+            var created = await JobApi.CreateAsync(form.ToRequest());
+            if (created.IsSuccess)
+            {
+                await OnCreated.InvokeAsync(created.Value!);
+            }
+            else if (!created.IsUnexpected)
+            {
+                Snackbar.Add(created.ErrorText!, Severity.Error);
+            }
+        }
+        finally
+        {
+            _saving = false;
+        }
+    }
+
+    private Task VisibleChanged(bool visible) => visible ? Task.CompletedTask : CloseAsync();
+
+    private Task CloseAsync() => OnClosed.InvokeAsync();
+}

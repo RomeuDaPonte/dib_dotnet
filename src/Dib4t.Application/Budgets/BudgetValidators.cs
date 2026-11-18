@@ -70,7 +70,7 @@ public static partial class BudgetValidators
     public static bool HasSlash(string descriptive) => descriptive.Contains('/', StringComparison.Ordinal);
 
     /// <summary>joi-objectid 3.0.1: <c>Joi.string().regex(/^[0-9a-fA-F]{24}$/, "valid mongo id").required()</c>.</summary>
-    private static JoiString ObjectIdRule() => JoiString.Create().Regex(MongoId(), "valid mongo id").Required();
+    internal static JoiString ObjectIdRule() => JoiString.Create().Regex(MongoId(), "valid mongo id").Required();
 
     private static string Id(JsonElement value) => value.GetString()!.ToLowerInvariant();
 

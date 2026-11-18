@@ -38,6 +38,26 @@ public sealed class NewBudgetsPage(IPage page) : IBudgetsPage
         await page.GetByRole(AriaRole.Button, new() { Name = $"Opções de {budgetNumber} R{revision + 1}", Exact = true }).WaitForAsync();
     }
 
+    public async Task CreateJobAsync(string budgetNumber, double revision, JobValues job)
+    {
+        await SearchAsync(budgetNumber);
+        await page.GetByRole(AriaRole.Button, new() { Name = $"Opções de {budgetNumber} R{revision}", Exact = true }).ClickAsync();
+        await page.GetByRole(AriaRole.Menuitem, new() { Name = "Criar obra" }).ClickAsync();
+        await page.Locator("#job-form").WaitForAsync();
+        await page.Locator("#job-due-date").FillAsync(job.DueDate);
+        await page.Locator("#job-initial-state").SelectOptionAsync(job.State);
+        await page.Locator("#job-order").FillAsync(job.OrderIdentification);
+        if (job.IsOfficial)
+        {
+            await page.GetByLabel("Identificação oficial").CheckAsync();
+        }
+
+        await page.RunAndWaitForResponseAsync(
+            () => page.GetByRole(AriaRole.Button, new() { Name = "Criar", Exact = true }).ClickAsync(),
+            response => response.Url.EndsWith("/api/job", StringComparison.OrdinalIgnoreCase));
+        await page.Locator("#job-form").WaitForAsync(new() { State = WaitForSelectorState.Detached });
+    }
+
     public async Task<IReadOnlyList<string>> RowAsync(string budgetNumber)
     {
         await SearchAsync(budgetNumber);
@@ -85,7 +105,16 @@ public interface IBudgetsPage
 
     /// <summary>The number, client, descriptive, person in charge and author of the row, after searching the number.</summary>
     Task<IReadOnlyList<string>> RowAsync(string budgetNumber);
+
+    /// <summary>
+    /// Searches the number, the menu of that revision → "Criar obra", the final price as offered, the date, state,
+    /// order and flag typed, "Criar"; returns once the job is saved.
+    /// </summary>
+    Task CreateJobAsync(string budgetNumber, double revision, JobValues job);
 }
+
+/// <summary>The values typed in the "Criar obra" dialog (the final price stays the budget's total).</summary>
+public sealed record JobValues(string DueDate, string State, string OrderIdentification, bool IsOfficial);
 
 /// <summary>The values chosen and typed in a budget dialog.</summary>
 public sealed record BudgetValues(string Client, string Descriptive, string PersonInCharge);

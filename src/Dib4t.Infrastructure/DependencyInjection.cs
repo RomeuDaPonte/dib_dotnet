@@ -2,6 +2,7 @@ using Dib4t.Application.Account;
 using Dib4t.Application.Budgets;
 using Dib4t.Application.Database;
 using Dib4t.Application.Entities;
+using Dib4t.Application.Jobs;
 using Dib4t.Application.Settings;
 using Dib4t.Infrastructure.Auth;
 using Dib4t.Infrastructure.Backup;
@@ -10,6 +11,7 @@ using Dib4t.Infrastructure.Mongo;
 using Dib4t.Infrastructure.Mongo.Repositories;
 using Dib4t.Infrastructure.Nas;
 using Dib4t.Infrastructure.Pdf;
+using Dib4t.Infrastructure.Printing;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -32,8 +34,10 @@ public static class DependencyInjection
         services.AddScoped<IEntityRepository, MongoEntityRepository>();
         services.AddScoped<IBudgetRepository, MongoBudgetRepository>();
         services.AddScoped<IBudgetTaskRepository, MongoBudgetTaskRepository>();
+        services.AddScoped<IJobRepository, MongoJobRepository>();
         services.AddSingleton<IBudgetPdfGenerator, PdfsharpBudgetPdfGenerator>();
         services.AddNas(configuration);
+        services.AddLabelPrinter(configuration);
         services.AddAuthAdapters(configuration);
         return services;
     }

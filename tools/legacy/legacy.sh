@@ -44,6 +44,10 @@
 #                        unchanged legacy task routes, patchProperty and import handlers run in Node with an
 #                        in-memory store, offline (nothing is started) → tests/fixtures/legacy/budget-details/
 #                        (PLAN.md §6, §7.1)
+#   job-golden           write the job create contract golden file (job-golden.js): the unchanged legacy
+#                        POST /api/job handler, Joi validation, Job/Budget models and the label templates run in
+#                        Node with an in-memory store, offline (nothing is started, SSH and telnet replaced by
+#                        recorders) → tests/fixtures/legacy/jobs/ (PLAN.md §6, §7.3)
 #   pdf-samples          write reference budget PDFs (pdf-samples.js) by running the unchanged legacy
 #                        PDF route on the anonymized production fixture, in a throwaway DB
 #                        "dib4t_pdf_samples" → tests/fixtures/legacy/pdf/ (PLAN.md §7.1)
@@ -321,6 +325,12 @@ cmd_budget_details_golden() {
   (cd "$REPO_ROOT" && DIB4T_LEGACY_ROOT="$LEGACY_ROOT" node "$SCRIPT_DIR/budget-details-golden.js")
 }
 
+cmd_job_golden() {
+  ensure_node_modules "$BACKEND_DIR"
+  log "writing the job create contract golden file from the legacy code (offline)"
+  (cd "$REPO_ROOT" && DIB4T_LEGACY_ROOT="$LEGACY_ROOT" node "$SCRIPT_DIR/job-golden.js")
+}
+
 cmd_pdf_golden() {
   ensure_node_modules "$BACKEND_DIR"
   log "writing the budget PDF golden files and assets from the legacy pdfmake (offline, about 90 s)"
@@ -392,10 +402,11 @@ case "${1:-}" in
   entity-golden) cmd_entity_golden ;;
   budget-golden) cmd_budget_golden ;;
   budget-details-golden) cmd_budget_details_golden ;;
+  job-golden) cmd_job_golden ;;
   pdf-golden) cmd_pdf_golden ;;
   pdf-samples) cmd_pdf_samples ;;
   layout)  shift; cmd_layout "$@" ;;
   token)   legacy_token; echo ;;
   logs)    shift; cmd_logs "$@" ;;
-  *) sed -n '2,61p' "$0"; exit 1 ;;
+  *) sed -n '2,65p' "$0"; exit 1 ;;
 esac

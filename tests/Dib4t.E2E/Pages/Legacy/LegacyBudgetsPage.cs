@@ -43,6 +43,28 @@ public sealed class LegacyBudgetsPage(IPage page) : IBudgetsPage
         _ = revision;
     }
 
+    public async Task CreateJobAsync(string budgetNumber, double revision, JobValues job)
+    {
+        await SearchAsync(budgetNumber);
+        _ = revision; // the list row is the latest revision
+        await RowOf(budgetNumber).GetByRole(AriaRole.Button, new() { Name = "more" }).ClickAsync();
+        await page.Locator("#long-menu:visible").GetByRole(AriaRole.Menuitem, new() { Name = "Criar obra" }).ClickAsync();
+        var dialog = page.GetByRole(AriaRole.Dialog).Filter(new() { HasTextString = "Criar obra" });
+        await dialog.Locator("#dueDate").FillAsync(job.DueDate);
+        await dialog.Locator("#initialJobState").ClickAsync();
+        await page.GetByRole(AriaRole.Option, new() { Name = job.State, Exact = true }).ClickAsync();
+        await dialog.Locator("#orderIdentification").FillAsync(job.OrderIdentification);
+        if (job.IsOfficial)
+        {
+            await dialog.Locator("input[name=isOfficialOrderIdentification]").CheckAsync();
+        }
+
+        await page.RunAndWaitForResponseAsync(
+            () => dialog.GetByRole(AriaRole.Button, new() { Name = "Criar", Exact = true }).ClickAsync(),
+            response => response.Url.EndsWith("/api/job/", StringComparison.OrdinalIgnoreCase) || response.Url.EndsWith("/api/job", StringComparison.OrdinalIgnoreCase));
+        await page.WaitForURLAsync("**/landing/job"); // legacy goes to the jobs board
+    }
+
     public async Task<IReadOnlyList<string>> RowAsync(string budgetNumber)
     {
         await SearchAsync(budgetNumber);

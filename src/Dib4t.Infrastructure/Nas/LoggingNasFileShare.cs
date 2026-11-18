@@ -39,6 +39,22 @@ internal sealed partial class LoggingNasFileShare(string reason, ILogger<Logging
         return Task.FromResult(NasResult.Done);
     }
 
+    public Task<NasResult> MoveBudgetFolderToJobAsync(BudgetFolder budget, JobFolder job, CancellationToken cancellationToken)
+    {
+        if (!NasCommands.TryMoveToJob(budget, job, out var commands))
+        {
+            LogNulRefused(job.Path);
+            return Task.FromResult(NasResult.Failed);
+        }
+
+        foreach (var command in commands.All)
+        {
+            LogWouldRun(reason, command);
+        }
+
+        return Task.FromResult(NasResult.Done);
+    }
+
     [LoggerMessage(EventId = 140, Level = LogLevel.Information, Message = "NAS off ({Reason}), would run: {Command}")]
     private partial void LogWouldRun(string reason, string command);
 

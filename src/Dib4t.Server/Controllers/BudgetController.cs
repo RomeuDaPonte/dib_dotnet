@@ -1,8 +1,6 @@
 using Dib4t.Application.Budgets;
 using Dib4t.Contracts.Budgets;
-using Dib4t.Contracts.Entities;
 using Dib4t.Domain.Budgets;
-using Dib4t.Domain.Entities;
 using Dib4t.Server.Http;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -108,22 +106,12 @@ public sealed class BudgetController(BudgetsService budgets, BudgetPdfService pd
             b.Revision, b.Complete, b.WasPdfDownloaded, b.HasGenerateJob, b.Total, b.DaysNeededToDoTheWork);
     }
 
-    private static BudgetResponse ToResponse(BudgetDetails details)
-    {
-        var b = details.Budget;
-        return new BudgetResponse(b.Revision, b.Complete, b.WasPdfDownloaded, b.Margin, b.DaysNeededToDoTheWork, b.Validity, b.HasGenerateJob,
-            b.Id, details.Client is { } client ? ToResponse(client) : null, b.Descriptive, b.PersonInCharge,
-            details.MadeBy is { } author ? ToResponse(author) : null, b.BudgetNumber, b.PaymentMethod, b.Total, b.Description, b.Date, b.Version);
-    }
+    private static BudgetResponse ToResponse(BudgetDetails details) => BudgetResponses.ToResponse(details);
 
     private static BudgetRevisionResponse ToRevisionResponse(Budget b, BudgetAuthor? author) =>
         new(b.Revision, b.Complete, b.WasPdfDownloaded, b.Margin, b.DaysNeededToDoTheWork, b.Validity, b.HasGenerateJob, b.Id, b.ClientId,
             b.Descriptive, b.PersonInCharge, author is null ? null : ToResponse(author), b.BudgetNumber, b.PaymentMethod, b.Total,
             b.Description, b.Date, b.Version);
 
-    private static BudgetAuthorResponse ToResponse(BudgetAuthor author) =>
-        new(author.Roles, author.FieldOfCompetencies, author.Id, author.Name, author.Email, author.Version);
-
-    private static EntityResponse ToResponse(BusinessEntity entity) => new(entity.Id, entity.Name, entity.FiscalNumber, entity.Address,
-        entity.ZipCode, entity.Location, entity.PaymentCondition, entity.Type, entity.Version);
+    private static BudgetAuthorResponse ToResponse(BudgetAuthor author) => BudgetResponses.ToResponse(author);
 }

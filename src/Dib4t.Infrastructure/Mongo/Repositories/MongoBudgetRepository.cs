@@ -198,6 +198,34 @@ internal sealed class MongoBudgetRepository(IMongoDatabase database) : IBudgetRe
     public Task<Budget?> SetPdfDownloadedAsync(string id, CancellationToken cancellationToken) =>
         SaveAsync(id, [("wasPdfDownloaded", true)], cancellationToken);
 
+    public async Task<Budget?> FindWithJobAsync(string? budgetNumber, CancellationToken cancellationToken)
+    {
+        // findOne({ hasGenerateJob: true, budgetNumber }): Mongoose drops an undefined number from the filter.
+        var filter = Builders<BudgetDocument>.Filter.Eq(b => b.HasGenerateJob, true);
+        if (budgetNumber is not null)
+        {
+            filter &= Builders<BudgetDocument>.Filter.Eq(b => b.BudgetNumber, budgetNumber);
+        }
+
+        var document = await _budgets.Find(filter).Limit(1).FirstOrDefaultAsync(cancellationToken);
+        return document is null ? null : ToDomain(document);
+    }
+
+    public async Task<Budget?> FindRevisionZeroAsync(string? budgetNumber, CancellationToken cancellationToken)
+    {
+        var filter = Builders<BsonDocument>.Filter.Eq("revision", 0);
+        if (budgetNumber is not null)
+        {
+            filter &= Builders<BsonDocument>.Filter.Eq("budgetNumber", budgetNumber);
+        }
+
+        var document = await _raw.Find(filter).Limit(1).FirstOrDefaultAsync(cancellationToken);
+        return document is null ? null : ToDomain(BsonSerializer.Deserialize<BudgetDocument>(document));
+    }
+
+    public Task<Budget?> SetHasGenerateJobAsync(string id, CancellationToken cancellationToken) =>
+        SaveAsync(id, [("hasGenerateJob", true)], cancellationToken);
+
     public Task SetIncompleteAsync(string id, CancellationToken cancellationToken) =>
         SaveAsync(id, [("complete", false), ("wasPdfDownloaded", false)], cancellationToken);
 

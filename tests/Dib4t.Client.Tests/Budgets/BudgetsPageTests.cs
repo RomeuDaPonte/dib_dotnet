@@ -6,6 +6,7 @@ using Dib4t.Client.Components.Budgets;
 using Dib4t.Contracts.Account;
 using Dib4t.Contracts.Budgets;
 using Dib4t.Contracts.Entities;
+using Dib4t.Contracts.Jobs;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.Extensions.DependencyInjection;
@@ -32,6 +33,8 @@ public sealed class BudgetsPageTests : IAsyncDisposable
     private readonly ITaskApi _tasks = Substitute.For<ITaskApi>();
     private readonly IPricesApi _prices = Substitute.For<IPricesApi>();
     private readonly IPaymentMethodsApi _paymentMethods = Substitute.For<IPaymentMethodsApi>();
+    private readonly IJobApi _jobs = Substitute.For<IJobApi>();
+    private readonly FixedTime _time = new(new DateTimeOffset(2026, 7, 31, 23, 30, 0, TimeSpan.Zero)); // 1 August in Lisbon
     private IRenderedComponent<MudDialogProvider> _dialogs = null!;
     private IRenderedComponent<MudPopoverProvider> _popovers = null!;
 
@@ -44,6 +47,8 @@ public sealed class BudgetsPageTests : IAsyncDisposable
         _context.Services.AddSingleton(_tasks);
         _context.Services.AddSingleton(_prices);
         _context.Services.AddSingleton(_paymentMethods);
+        _context.Services.AddSingleton(_jobs);
+        _context.Services.AddSingleton<TimeProvider>(_time);
         _context.Services.AddTransient<BudgetDetailsState>();
         _tasks.ListAsync(Arg.Any<string>()).Returns(ApiResult.Success<IReadOnlyList<BudgetTaskResponse>>([]));
         _tasks.ListTypesAsync().Returns(ApiResult.Success<IReadOnlyList<string>>(["automation"]));
@@ -246,7 +251,8 @@ public sealed class BudgetsPageTests : IAsyncDisposable
         BudgetList.Menu(true, false, false, all).Should().Equal(BudgetMenuItem.Pdf, BudgetMenuItem.Clone, BudgetMenuItem.NewRevision);
         BudgetList.Menu(true, true, false, all).Should().Equal(BudgetMenuItem.Pdf, BudgetMenuItem.Clone, BudgetMenuItem.NewRevision, BudgetMenuItem.CreateJob);
         BudgetList.Menu(true, true, true, all).Should().Equal(BudgetMenuItem.Pdf, BudgetMenuItem.JobDetails, BudgetMenuItem.Print, BudgetMenuItem.Clone);
-        BudgetList.Menu(true, true, false).Should().Equal(BudgetMenuItem.Pdf, BudgetMenuItem.Clone, BudgetMenuItem.NewRevision);
+        BudgetList.Menu(true, true, false).Should().Equal(BudgetMenuItem.Pdf, BudgetMenuItem.Clone, BudgetMenuItem.NewRevision, BudgetMenuItem.CreateJob);
+        BudgetList.Menu(true, true, true).Should().Equal([BudgetMenuItem.Pdf, BudgetMenuItem.Clone], "the job items come with the jobs board");
 
         BudgetList.Date(new DateTime(2026, 5, 24, 23, 30, 0, DateTimeKind.Utc), Lisbon).Should().Be("25/05/2026");
         BudgetForm.FilterClients([Metal, Cortica], "cortica").Should().Equal(Cortica);
@@ -283,6 +289,82 @@ public sealed class BudgetsPageTests : IAsyncDisposable
         await _budgets.Received(1).UpdateAsync("b3", new UpdateBudgetRequest(UserId, "Novo", "Eng.ª Maria"));
         page.WaitForAssertion(() => page.Markup.Should().Contain(">Novo<"));
         Snackbar.ShownSnackbars.Should().Contain(s => s.Message == "Orçamento editado com sucesso!");
+    }
+
+    [Fact]
+    public async Task Criar_obra_opens_the_legacy_dialog_with_the_total_and_the_due_date_and_checks_it_like_yup()
+    {
+        var table = await RenderTableAsync();
+
+        await MenuAsync(table, "Opções de 26-0003 R2", "Criar obra");
+        _dialogs.WaitForAssertion(() => _dialogs.Find("#job-form"));
+        _dialogs.Find("#job-final-price").GetAttribute("value").Should().Be("43.5");
+        _dialogs.Find("#job-due-date").GetAttribute("value").Should().Be("2026-09-30", "1 August (Lisbon) + 60 days; legacy shows the UTC date, 29 September");
+        _dialogs.FindAll("#job-initial-state option").Select(o => o.TextContent).Should().Equal(
+            "Desenvolvimento", "Em Aprovação", "Aprovado", "Maquinação", "Montagem", "Para faturação");
+        _dialogs.Markup.Should().Contain("Preço final €").And.Contain("Data de entrega").And.Contain("Estado inicial")
+            .And.Contain("Identificação da encomenda").And.Contain("Identificação oficial");
+
+        await _dialogs.Find("#job-form").SubmitAsync();
+        _dialogs.Markup.Should().Contain("orderIdentification is a required field");
+        await _dialogs.Find("#job-final-price").InputAsync(new ChangeEventArgs { Value = "12,5" });
+        await _dialogs.Find("#job-due-date").InputAsync(new ChangeEventArgs { Value = "" });
+        _dialogs.Markup.Should().Contain("finalPrice must be a `number` type, but the final value was: `NaN` (cast from the value `\"12,5\"`).")
+            .And.Contain("dueDate must be a `date` type, but the final value was: `Invalid Date` (cast from the value `\"\"`).");
+        await _jobs.DidNotReceiveWithAnyArgs().CreateAsync(default!);
+    }
+
+    [Fact]
+    public async Task A_created_job_closes_the_dialog_and_the_row_shows_it_a_refusal_keeps_it_open()
+    {
+        _jobs.CreateAsync(Arg.Any<NewJobRequest>()).Returns(
+            ApiResult.Failure<JobResponse>(HttpStatusCode.BadRequest, "Obra baseada neste orçamento já foi criada anteriormente"),
+            ApiResult.Success(Job("b3")));
+        var table = await RenderTableAsync();
+        await MenuAsync(table, "Opções de 26-0003 R2", "Criar obra");
+        _dialogs.WaitForAssertion(() => _dialogs.Find("#job-form"));
+        await _dialogs.Find("#job-order").InputAsync(new ChangeEventArgs { Value = "PO-7" });
+        await _dialogs.Find("#job-initial-state").ChangeAsync(new ChangeEventArgs { Value = "Montagem" });
+
+        await _dialogs.Find("#job-form").SubmitAsync();
+        Snackbar.ShownSnackbars.Should().Contain(s => s.Message == "Obra baseada neste orçamento já foi criada anteriormente" && s.Severity == Severity.Error);
+        _dialogs.FindAll("#job-form").Should().ContainSingle("a refused job keeps the dialog open");
+        await _dialogs.Find("#job-final-price").InputAsync(new ChangeEventArgs { Value = " 1200.50 " });
+        await _dialogs.Find("#job-form").SubmitAsync();
+
+        await _jobs.Received(1).CreateAsync(Arg.Is<NewJobRequest>(r => Equals(r.FinalPrice, 43.5) && r.State == "Montagem" && r.OrderIdentification == "PO-7"
+            && r.DueDate == "2026-09-30" && !r.IsOfficialOrderIdentification && r.BudgetId == "b3"));
+        await _jobs.Received(1).CreateAsync(Arg.Is<NewJobRequest>(r => Equals(r.FinalPrice, " 1200.50 ")));
+        table.WaitForAssertion(() => _dialogs.FindAll("#job-form").Should().BeEmpty());
+        table.FindAll("[aria-label='contem obra']").Should().HaveCount(2, "26-0003 now has its job");
+        Snackbar.ShownSnackbars.Should().Contain(s => s.Message == "Obra criada com sucesso!");
+        await table.Find("button[aria-label='Opções de 26-0003 R2']").ClickAsync(new MouseEventArgs());
+        _popovers.WaitForAssertion(() => _popovers.FindAll(".mud-menu-item").Select(i => i.TextContent.Trim()).Should().Equal("Obter pdf", "Clonar"));
+    }
+
+    [Fact]
+    public void The_job_form_follows_the_legacy_dialog()
+    {
+        var lisbon = Lisbon;
+        var noTotal = JobForm.For("b", null, 0, new DateTimeOffset(2026, 3, 1, 12, 0, 0, TimeSpan.Zero), lisbon);
+        noTotal.DueDate.Should().Be("2026-03-01", "0 days: today");
+        noTotal.Validate().FinalPrice.Should().Be("finalPrice is a required field");
+        JobForm.For("b", 10, 7.9, new DateTimeOffset(2026, 3, 1, 12, 0, 0, TimeSpan.Zero), lisbon).DueDate.Should().Be("2026-03-08", "setDate truncates");
+        var form = JobForm.For("b", 1e21, 0, new DateTimeOffset(2026, 3, 1, 12, 0, 0, TimeSpan.Zero), lisbon);
+        form.FinalPrice.Should().Be("1e+21");
+        form.ToRequest().FinalPrice.Should().Be(1e21, "untouched: the number");
+        form.FinalPrice = "0x10";
+        form.OrderIdentification = "x";
+        form.Validate().Should().Be(JobFormErrors.None, "yup reads 0x10 as 16 (the server's Joi refuses it)");
+        form.ToRequest().FinalPrice.Should().Be("0x10");
+    }
+
+    private static JobResponse Job(string budgetId) => new(0, 43.5, "Montagem", "PO-7", false, 0, 0, 0, 0, 0, [], "j1",
+        Saved(budgetId, "26-0003", 2, Metal) with { HasGenerateJob = true }, "Ana Administradora", null, null, null, null, null, "Média", 0);
+
+    private sealed class FixedTime(DateTimeOffset now) : TimeProvider
+    {
+        public override DateTimeOffset GetUtcNow() => now;
     }
 
     private static BudgetListItemResponse Row(string id, string number, string client, double revision = 0, bool complete = false, bool pdf = false, bool hasJob = false) =>

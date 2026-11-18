@@ -55,6 +55,22 @@ written to the log (`Registos`, category `Nas`, "would run: …"). Settings (env
 The app refuses to start in Production with the NAS enabled and no host, user or password. Tests use a fake NAS
 container (`tests/fixtures/nas-fake`), never the real one.
 
+## Job folders and label printers (Production only)
+
+Creating a job (`POST /api/job`, "Criar obra") moves the budget's `Documentos` and `Geometria` from
+`/share/Orçamentos/…` into its new folder under `/share/Obras/…` over SSH (the same `Nas__*` settings), then sends the
+two labels (`producao`, then `maquinacao`) to every printer of Settings → Impressoras over raw TCP (PLAN.md §5). As
+with the NAS, this happens **only** with `ASPNETCORE_ENVIRONMENT=Production`; elsewhere the labels are only written
+to the log (`Registos`, category `Printer`, "would send: …").
+
+| Variable | Default | |
+|---|---|---|
+| `LabelPrinter__Enabled` | `true` in Production | `false` runs Production without printing (side-by-side run, PLAN.md §4.7) |
+| `LabelPrinter__ConnectTimeoutMilliseconds`, `LabelPrinter__SendTimeoutMilliseconds` | `1500`, `2000` | |
+
+A printer that cannot be reached is logged as an error and the job is still created (as legacy). Tests use an in-test
+TCP listener, never a real printer.
+
 ## Before every commit
 
 ```sh

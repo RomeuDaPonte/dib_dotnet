@@ -29,6 +29,8 @@ public sealed class DependencyInjectionTests
         services.AddSingleton(Substitute.For<IBudgetTaskRepository>());
         services.AddSingleton(Substitute.For<IBudgetPdfGenerator>());
         services.AddSingleton(Substitute.For<Nas.INasFileShare>());
+        services.AddSingleton(Substitute.For<Dib4t.Application.Jobs.IJobRepository>());
+        services.AddSingleton(Substitute.For<Printing.ILabelPrinter>());
         services.AddSingleton(typeof(ILogger<>), typeof(RecordingLogger<>));
         using var provider = services.BuildServiceProvider(new ServiceProviderOptions { ValidateScopes = true, ValidateOnBuild = true });
 
@@ -45,6 +47,7 @@ public sealed class DependencyInjectionTests
             scope.ServiceProvider.GetRequiredService<EntitiesService>().Should().NotBeNull();
             scope.ServiceProvider.GetRequiredService<BudgetsService>().Should().NotBeNull();
             scope.ServiceProvider.GetRequiredService<BudgetPdfService>().Should().NotBeNull();
+            scope.ServiceProvider.GetRequiredService<Dib4t.Application.Jobs.JobsService>().Should().NotBeNull();
         }
 
         provider.GetRequiredService<DatabaseOperationLock>().Should().BeSameAs(provider.GetRequiredService<DatabaseOperationLock>());

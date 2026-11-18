@@ -59,6 +59,38 @@ internal sealed partial class SshNasFileShare(IOptions<NasOptions> options, ILog
         return RunAsync(async run => await run(command) is null ? NasResult.Failed : NasResult.Done, cancellationToken);
     }
 
+    public Task<NasResult> MoveBudgetFolderToJobAsync(BudgetFolder budget, JobFolder job, CancellationToken cancellationToken)
+    {
+        ArgumentNullException.ThrowIfNull(job);
+        if (!NasCommands.TryMoveToJob(budget, job, out var commands))
+        {
+            LogNulRefused(job.Path);
+            return Task.FromResult(NasResult.Failed);
+        }
+
+        return RunAsync(async run =>
+        {
+            foreach (var command in commands.MakeDirectories.Concat(commands.Moves))
+            {
+                if (await run(command) is null)
+                {
+                    return NasResult.Failed;
+                }
+            }
+
+            // D4: legacy never looks at these checks; here a missing folder is a warning, the outcome stays the same.
+            foreach (var check in commands.Checks)
+            {
+                if (await run(check) is { } stdout && !string.Equals(stdout.Trim(), "1", StringComparison.Ordinal))
+                {
+                    LogMovedFolderMissing(check);
+                }
+            }
+
+            return NasResult.Done;
+        }, cancellationToken);
+    }
+
     /// <summary>Connects, runs <paramref name="body"/> (its <c>run</c> answers stdout, or <c>null</c> when the command failed) and disconnects.</summary>
     private async Task<NasResult> RunAsync(Func<Func<string, Task<string?>>, Task<NasResult>> body, CancellationToken cancellationToken)
     {
@@ -184,6 +216,9 @@ internal sealed partial class SshNasFileShare(IOptions<NasOptions> options, ILog
 
     [LoggerMessage(EventId = 138, Level = LogLevel.Information, Message = "NAS {Host}:{Port}: disconnected after {ElapsedMs} ms")]
     private partial void LogDisconnected(string host, int port, long elapsedMs);
+
+    [LoggerMessage(EventId = 144, Level = LogLevel.Warning, Message = "NAS folder not there after the move (D4, the job is created anyway): {Command}")]
+    private partial void LogMovedFolderMissing(string command);
 
     [LoggerMessage(EventId = 139, Level = LogLevel.Error, Message = "NAS path refused, it contains a NUL character: {Path}")]
     private partial void LogNulRefused(string path);

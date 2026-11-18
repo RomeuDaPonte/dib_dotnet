@@ -72,6 +72,21 @@ public interface IBudgetRepository
     Task SetIncompleteAsync(string id, CancellationToken cancellationToken);
 
     /// <summary>
+    /// Legacy <c>getByNumberAndHasJob</c>: <c>findOne({ hasGenerateJob: true, budgetNumber })</c>, the first in natural
+    /// order (Mongoose leaves out an <c>undefined</c> number, so with <c>null</c> any budget with a job), or <c>null</c>.
+    /// </summary>
+    Task<Budget?> FindWithJobAsync(string? budgetNumber, CancellationToken cancellationToken);
+
+    /// <summary>Legacy <c>getRevisionZero</c>: <c>findOne({ budgetNumber, revision: 0 })</c>, or <c>null</c>.</summary>
+    Task<Budget?> FindRevisionZeroAsync(string? budgetNumber, CancellationToken cancellationToken);
+
+    /// <summary>
+    /// Legacy <c>budget.createJob()</c> + <c>save()</c> (<c>POST /api/job</c>): <c>hasGenerateJob = true</c>, written
+    /// only when it changes. The budget as saved, or <c>null</c> when it does not exist (any more).
+    /// </summary>
+    Task<Budget?> SetHasGenerateJobAsync(string id, CancellationToken cancellationToken);
+
+    /// <summary>
     /// The save of <c>PUT /import/:id</c> on the receiving budget (D24): <c>complete</c> and <c>wasPdfDownloaded</c>
     /// reset, then <c>total</c> and <c>description</c> when given; nothing is removed. Written only where it differs.
     /// The budget as saved, or <c>null</c>.

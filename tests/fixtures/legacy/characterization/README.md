@@ -57,12 +57,14 @@ after every step. Those snapshot calls are not part of the recorded steps.
 
 ## Replay
 
-`Dib4t.Server.Tests/Characterization/LegacyRunReplayTests` replays `01`–`04` and `07` in order on a fresh new app.
+`Dib4t.Server.Tests/Characterization/LegacyRunReplayTests` replays `01`–`05` and `07` in order on a fresh new app
+(`05`: the job create steps, the clones before them, the blocked budget/task routes and the final list; the other job
+routes come with later Phase 4 steps and are applied from the recording).
 Steps of routes that a later feature step implements (`task-*`, `budget-patch-*`, `budget-pdf*`, `budget-import*`) are
 not sent: their recorded document changes are written directly, so the following steps run on exactly the legacy state.
 Remove a prefix from `NotYetImplemented` when its routes exist. Allow-listed (decided differences): `user-me-legacy`,
 D2 (`user-delete-d2`, `users-after-delete`, `budget-list-after-delete`), D7 (`budget-update-missing-user`), D9
-(`budget-search-bad-regex`).
+(`budget-search-bad-regex`); D24 also covers `blocked-import` (05): a budget with a job may send its tasks elsewhere.
 
 ## Normalization (apply the same to the new app's output before comparing)
 

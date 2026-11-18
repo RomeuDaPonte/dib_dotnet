@@ -35,6 +35,12 @@ public static class Fixtures
     public static string BudgetDetailsGolden => Path.Combine(Root, "legacy", "budget-details", "budget-details-golden.json");
 
     /// <summary>
+    /// Job create contract answers of the legacy code (POST /api/job run verbatim: Joi, Mongoose casts and saves) and
+    /// the label payloads (tools/legacy/job-golden.js).
+    /// </summary>
+    public static string JobGolden => Path.Combine(Root, "legacy", "jobs", "job-golden.json");
+
+    /// <summary>
     /// The legacy pdfmake's breaks, shaping and laid-out pages of the budget PDF (tools/legacy/pdf-golden.js): line-breaks,
     /// shaping, layouts (11 reference samples + synthetic budgets), digests (every budget of the anonymized backup).
     /// </summary>

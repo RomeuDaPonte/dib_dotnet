@@ -4,6 +4,7 @@
 @inject AuthSession Session
 @inject ISnackbar Snackbar
 @inject NavigationManager Navigation
+@inject TimeProvider Time
 
 @* Legacy components/budgets/*: "Novo orçamento", the search box ("Filtrar", Enter = server search, empty = the
    list again), the table (latest revision of each number, server order until a column is sorted), revisions per row
@@ -92,6 +93,7 @@
                                                     revision.WasPdfDownloaded, revision.HasGenerateJob, context with
                                                     {
                                                         Id = revision.Id, Descriptive = revision.Descriptive, PersonInCharge = revision.PersonInCharge,
+                                                        Total = revision.Total, DaysNeededToDoTheWork = revision.DaysNeededToDoTheWork,
                                                     }))
                                             </td>
                                         </tr>
@@ -118,6 +120,8 @@
 
 <BudgetDialog Form="_form" OnSaved="Saved" OnClosed="() => _form = null" />
 
+<NewJobDialog Form="_jobForm" OnCreated="JobCreated" OnClosed="() => _jobForm = null" />
+
 @code {
     private static readonly IReadOnlyList<(int Value, string Text)> RowsPerPageOptions = [(5, "5"), (10, "10"), (25, "25")];
 
@@ -132,6 +136,7 @@
     private int _page;
     private int _rowsPerPage = 25;
     private BudgetForm? _form;
+    private JobForm? _jobForm;
 
     /// <summary>The browser's zone (legacy <c>toLocaleDateString</c>); tests set it.</summary>
     [Parameter]
@@ -244,6 +249,9 @@
             case BudgetMenuItem.Clone:
                 _form = BudgetForm.Clone(row.Source, Session.User?.Id ?? string.Empty);
                 break;
+            case BudgetMenuItem.CreateJob:
+                _jobForm = JobForm.For(row.Id, row.Source.Total, row.Source.DaysNeededToDoTheWork, Time.GetUtcNow(), Zone);
+                break;
             case BudgetMenuItem.NewRevision:
                 var revision = await BudgetApi.CreateRevisionAsync(row.Id);
                 if (revision.IsSuccess)
@@ -284,6 +292,24 @@
         }
 
         await Downloads.SaveBase64Async(BudgetList.PdfFileName(row.BudgetNumber, row.Revision), pdf.Value!, "application/pdf");
+    }
+
+    /// <summary>
+    /// A job was created: the dialog closes and the row (or revision) shows its job. Legacy goes to the jobs board
+    /// (<c>/landing/job</c>), which comes with the next step; until then a toast confirms it.
+    /// </summary>
+    private void JobCreated(JobResponse job)
+    {
+        var id = job.Budget?.Id ?? _jobForm!.BudgetId;
+        _rows = BudgetList.WithJob(_rows, id);
+        _persisted = BudgetList.WithJob(_persisted, id);
+        foreach (var (number, revisions) in _revisions.ToList())
+        {
+            _revisions[number] = [.. revisions.Select(r => r.Id == id ? r with { HasGenerateJob = true } : r)];
+        }
+
+        _jobForm = null;
+        Snackbar.Add("Obra criada com sucesso!", Severity.Success);
     }
 
     /// <summary>Legacy <c>updateTable</c>; an open revisions list of that number is read again when reopened.</summary>

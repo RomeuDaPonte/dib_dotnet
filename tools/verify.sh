@@ -87,7 +87,7 @@ if [ "$IMAGE" = 1 ]; then
   # Production needs its own signing key (PLAN.md §4.6): a throwaway one per run.
   docker run -d --name "$SMOKE_CONTAINER" --platform linux/amd64 -p "127.0.0.1:$SMOKE_PORT:3010" \
     -e Mongo__ConnectionString='mongodb://127.0.0.1:1/dib4t?retryWrites=false' \
-    -e Jwt__Key="verify-smoke-$(openssl rand -hex 24)" -e Nas__Enabled=false dib4t-dotnet:verify >/dev/null
+    -e Jwt__Key="verify-smoke-$(openssl rand -hex 24)" -e Nas__Enabled=false -e LabelPrinter__Enabled=false dib4t-dotnet:verify >/dev/null
   for _ in $(seq 1 60); do curl -sf -o /dev/null "http://127.0.0.1:$SMOKE_PORT/" && break; sleep 1; done
   check() { # <path> <expected status>
     local code; code=$(curl -s -o /dev/null -w '%{http_code}' "http://127.0.0.1:$SMOKE_PORT$1")

@@ -4,7 +4,8 @@ using Dib4t.Application.Nas;
 namespace Dib4t.Infrastructure.Nas;
 
 /// <summary>
-/// The shell commands of the NAS folder operations (legacy <c>helpers/pathHlelper.js</c>, <c>models/budget.js</c>).
+/// The shell commands of the NAS folder operations (legacy <c>helpers/pathHlelper.js</c>, <c>models/budget.js</c>,
+/// <c>routes/job.js</c>).
 /// They make the same folders, in the same order, as legacy (the <c>ops</c> of
 /// <c>tests/fixtures/legacy/ssh/ssh-commands.json</c>), but every path is <b>one</b> single-quoted <c>sh</c> word
 /// (PLAN.md §5 "SSH safety", D20): nothing in a name is expanded, and a <c>'</c> no longer breaks the command.
@@ -32,7 +33,7 @@ internal static class NasCommands
             makeDirectories.Add($"mkdir -p {Quote($"{path}/{subfolder}")}");
         }
 
-        commands = new BudgetFolderCommands(makeDirectories, $"if test -d {quoted}; then echo 1; else echo 0; fi");
+        commands = new BudgetFolderCommands(makeDirectories, CheckCommand(path));
         return true;
     }
 
@@ -43,6 +44,33 @@ internal static class NasCommands
         ArgumentNullException.ThrowIfNull(renamed);
         command = TryQuote(current.Path, out var source) && TryQuote(renamed.Path, out var target) ? $"mv {source} {target}" : null;
         return command is not null;
+    }
+
+    /// <summary>The sub-folders made under a job folder, in the legacy order.</summary>
+    public static readonly IReadOnlyList<string> JobSubfolders = ["CAD", "CAD/Equipamento", "CAM"];
+
+    /// <summary>
+    /// Job create (legacy <c>moveBudgetFolderToJobs</c>): the three <c>mkdir -p</c>, the two <c>mv</c> (budget folder's
+    /// <c>Documentos</c> → job folder's <c>Informações Técnicas</c>, <c>Geometria</c> → <c>CAD/Artigo</c>), then the two
+    /// checks (D4: on the <b>absolute</b> paths; legacy tests paths relative to the SSH home and never waits for them).
+    /// </summary>
+    public static bool TryMoveToJob(BudgetFolder budget, JobFolder job, [NotNullWhen(true)] out JobFolderCommands? commands)
+    {
+        ArgumentNullException.ThrowIfNull(budget);
+        ArgumentNullException.ThrowIfNull(job);
+        commands = null;
+        var (from, to) = (budget.Path, job.Path);
+        if (!TryQuote(from, out _) || !TryQuote(to, out _))
+        {
+            return false;
+        }
+
+        var (documents, geometry) = ($"{to}/Informações Técnicas", $"{to}/CAD/Artigo");
+        commands = new JobFolderCommands(
+            [.. JobSubfolders.Select(subfolder => $"mkdir -p {Quote($"{to}/{subfolder}")}")],
+            [$"mv {Quote($"{from}/Documentos")} {Quote(documents)}", $"mv {Quote($"{from}/Geometria")} {Quote(geometry)}"],
+            [CheckCommand(documents), CheckCommand(geometry)]);
+        return true;
     }
 
     /// <summary>
@@ -56,9 +84,17 @@ internal static class NasCommands
         return quoted is not null;
     }
 
+    private static string CheckCommand(string path) => $"if test -d {Quote(path)}; then echo 1; else echo 0; fi";
+
     private static string Quote(string value) =>
         TryQuote(value, out var quoted) ? quoted : throw new ArgumentException("A NUL cannot be passed to sh.", nameof(value));
 }
 
 /// <summary>The commands of one budget folder creation.</summary>
 internal sealed record BudgetFolderCommands(IReadOnlyList<string> MakeDirectories, string Check);
+
+/// <summary>The commands of one job folder move: folders, moves, checks (each check prints <c>1</c> when the folder exists).</summary>
+internal sealed record JobFolderCommands(IReadOnlyList<string> MakeDirectories, IReadOnlyList<string> Moves, IReadOnlyList<string> Checks)
+{
+    public IEnumerable<string> All => MakeDirectories.Concat(Moves).Concat(Checks);
+}

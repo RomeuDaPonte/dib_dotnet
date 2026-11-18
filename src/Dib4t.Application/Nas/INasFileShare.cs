@@ -19,6 +19,18 @@ public sealed record BudgetFolder(int Year, string ClientName, string BudgetNumb
     public string Path => string.Create(CultureInfo.InvariantCulture, $"{BudgetsRoot}/{Year}/{ClientName}/{BudgetNumber} - {Descriptive}");
 }
 
+/// <summary>
+/// The job folder of a budget (legacy <c>moveBudgetFolderToJobs</c>, <c>helpers/pathHlelper.js</c>, PLAN.md §5):
+/// <c>/share/Obras/{year}/{client}/{number} - {descriptive}</c>, names byte for byte as in <see cref="BudgetFolder"/>.
+/// </summary>
+public sealed record JobFolder(int Year, string ClientName, string BudgetNumber, string Descriptive)
+{
+    public const string JobsRoot = "/share/Obras";
+
+    /// <summary>The absolute folder path.</summary>
+    public string Path => string.Create(CultureInfo.InvariantCulture, $"{JobsRoot}/{Year}/{ClientName}/{BudgetNumber} - {Descriptive}");
+}
+
 /// <summary>The outcome of a NAS folder operation; the adapter has logged the details (category <c>Nas</c>).</summary>
 public enum NasResult
 {
@@ -33,7 +45,7 @@ public enum NasResult
 }
 
 /// <summary>
-/// The NAS folder operations of the budget routes (PLAN.md §5, §5.1). In Production with <c>Nas:Enabled</c> they run
+/// The NAS folder operations of the budget and job routes (PLAN.md §5, §5.1). In Production with <c>Nas:Enabled</c> they run
 /// over SSH; everywhere else they only log the commands they would run (§4.7, D5).
 /// </summary>
 public interface INasFileShare
@@ -49,4 +61,12 @@ public interface INasFileShare
 
     /// <summary>Budget edit (revision 0, other descriptive): <c>mv</c> of the folder to its new name.</summary>
     Task<NasResult> RenameBudgetFolderAsync(BudgetFolder current, BudgetFolder renamed, CancellationToken cancellationToken);
+
+    /// <summary>
+    /// Job create: <c>CAD</c>, <c>CAD/Equipamento</c> and <c>CAM</c> under the job folder (<c>mkdir -p</c>), then
+    /// <c>mv</c> of the budget folder's <c>Documentos</c> to the job folder's <c>Informações Técnicas</c> and of its
+    /// <c>Geometria</c> to <c>CAD/Artigo</c>, then the check that both arrived (D4: a missing one is a logged warning,
+    /// not a failure). A failing command stops the operation (<see cref="NasResult.Failed"/>).
+    /// </summary>
+    Task<NasResult> MoveBudgetFolderToJobAsync(BudgetFolder budget, JobFolder job, CancellationToken cancellationToken);
 }

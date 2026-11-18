@@ -3,6 +3,7 @@ using Dib4t.Application.Budgets;
 using Dib4t.Application.Common;
 using Dib4t.Application.Database;
 using Dib4t.Application.Entities;
+using Dib4t.Application.Jobs;
 using Dib4t.Application.Logs;
 using Dib4t.Application.Settings;
 using Microsoft.Extensions.DependencyInjection;
@@ -29,6 +30,7 @@ public static class DependencyInjection
         services.AddScoped<BudgetsService>();
         services.AddScoped<BudgetTasksService>();
         services.AddScoped<BudgetPdfService>();
+        services.AddScoped<JobsService>();
         services.AddScoped<DefaultDataSeeder>();
         services.AddSingleton<DatabaseOperationLock>();
         services.AddScoped<DatabaseRestoreService>();
