@@ -10,6 +10,7 @@ using Dib4t.Domain.Budgets;
 using Dib4t.Domain.Entities;
 using Dib4t.Domain.Jobs;
 using Dib4t.Domain.Settings;
+using Dib4t.SharedKernel;
 using Microsoft.Extensions.Options;
 using Microsoft.Extensions.Time.Testing;
 using NSubstitute;
@@ -229,7 +230,7 @@ public sealed class JobsServiceTests
 
     private static PrinterSettings Printer(string id, string template) => new(id, "192.168.2.32", 9100, template, 0);
 
-    private static Job Inserted(NewJob job) => new("5f1e9a2b3c4d5e6f708500aa", 0, job.FinalPrice, job.State, job.OrderIdentification,
+    private static Job Inserted(NewJob job) => new("5f1e9a2b3c4d5e6f708500aa", Stored<double>.Of(0), job.FinalPrice, job.State, job.OrderIdentification,
         job.IsOfficialOrderIdentification, 0, 0, 0, 0, 0, [], job.BudgetId, job.CreatedBy, job.DueDate, job.StartDate,
         new JobHours(0, job.DevelopmentHours, job.DevelopmentHours, "a"), null, null, "Média", 0);
 }

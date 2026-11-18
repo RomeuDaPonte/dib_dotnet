@@ -42,16 +42,15 @@ internal static class MongooseSave
         {
             if (value is null)
             {
-                if (stored.Contains(field))
+                if (Remove(stored, field))
                 {
                     unset[field] = 1;
-                    stored.Remove(field);
                 }
 
                 continue;
             }
 
-            if (stored.TryGetValue(field, out var current) && JsEquals(current, value))
+            if (TryGet(stored, field, out var current) && JsEquals(current, value))
             {
                 continue;
             }
@@ -68,7 +67,7 @@ internal static class MongooseSave
             }
 
             set[field] = value;
-            stored[field] = value;
+            Set(stored, field, value);
             replacesArray |= value.IsBsonArray;
         }
 
@@ -95,6 +94,68 @@ internal static class MongooseSave
         }
 
         return update;
+    }
+
+    /// <summary>The value at <paramref name="path"/> (<c>parent.child</c> for a field of a sub-document).</summary>
+    public static bool TryGet(BsonDocument document, string path, out BsonValue value)
+    {
+        ArgumentNullException.ThrowIfNull(document);
+        ArgumentNullException.ThrowIfNull(path);
+        var dot = path.IndexOf('.', StringComparison.Ordinal);
+        if (dot < 0)
+        {
+            return document.TryGetValue(path, out value!);
+        }
+
+        value = BsonNull.Value;
+        return document.TryGetValue(path[..dot], out var parent) && parent.IsBsonDocument && TryGet(parent.AsBsonDocument, path[(dot + 1)..], out value);
+    }
+
+    /// <summary>Sets <paramref name="path"/> (a new field is added at the end of its document, as MongoDB does).</summary>
+    public static void Set(BsonDocument document, string path, BsonValue value)
+    {
+        ArgumentNullException.ThrowIfNull(document);
+        ArgumentNullException.ThrowIfNull(path);
+        var dot = path.IndexOf('.', StringComparison.Ordinal);
+        if (dot < 0)
+        {
+            document[path] = value;
+            return;
+        }
+
+        var name = path[..dot];
+        if (!document.TryGetValue(name, out var parent) || !parent.IsBsonDocument)
+        {
+            parent = new BsonDocument();
+            document[name] = parent;
+        }
+
+        Set(parent.AsBsonDocument, path[(dot + 1)..], value);
+    }
+
+    /// <summary>Removes <paramref name="path"/>; <c>false</c> when it is not stored.</summary>
+    public static bool Remove(BsonDocument document, string path)
+    {
+        ArgumentNullException.ThrowIfNull(document);
+        ArgumentNullException.ThrowIfNull(path);
+        var dot = path.IndexOf('.', StringComparison.Ordinal);
+        if (dot < 0)
+        {
+            return RemoveTop(document, path);
+        }
+
+        return document.TryGetValue(path[..dot], out var parent) && parent.IsBsonDocument && Remove(parent.AsBsonDocument, path[(dot + 1)..]);
+    }
+
+    private static bool RemoveTop(BsonDocument document, string name)
+    {
+        if (!document.Contains(name))
+        {
+            return false;
+        }
+
+        document.Remove(name);
+        return true;
     }
 
     /// <summary>Equality of two stored values as JavaScript (Mongoose <c>deepEqual</c>) sees them.</summary>

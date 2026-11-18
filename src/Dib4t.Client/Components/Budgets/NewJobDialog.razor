@@ -47,7 +47,7 @@
 
     /// <summary>The new job.</summary>
     [Parameter]
-    public EventCallback<JobResponse> OnCreated { get; set; }
+    public EventCallback<JobResponse<BudgetResponse>> OnCreated { get; set; }
 
     [Parameter]
     public EventCallback OnClosed { get; set; }

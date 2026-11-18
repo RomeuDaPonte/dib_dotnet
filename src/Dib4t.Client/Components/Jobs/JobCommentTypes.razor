@@ -1,0 +1,15 @@
+@* The six comment types as checkboxes (legacy commentType.js, in its order). *@
+<div class="jobs-comment-types" role="group" aria-label="Tipos de comentário">
+    @foreach (var label in CommentTypes.All)
+    {
+        <MudCheckBox T="bool" Value="@Selected.Contains(label)" ValueChanged="@(c => OnChanged.InvokeAsync((label, c)))" Label="@label" Color="Color.Primary" />
+    }
+</div>
+
+@code {
+    [Parameter]
+    public IReadOnlyList<string> Selected { get; set; } = [];
+
+    [Parameter]
+    public EventCallback<(string Label, bool Checked)> OnChanged { get; set; }
+}

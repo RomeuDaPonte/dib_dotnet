@@ -12,6 +12,10 @@
                 @ref="_buttons[index]" @onclick="() => SelectAsync(index)" @onkeydown="e => KeyAsync(e, index)">
             <MudIcon Icon="@icon" />
             <span>@text</span>
+            @if (Counts is { } counts && index < counts.Count && counts[index] is { } count)
+            {
+                <span class="settings-tab-count">@count</span>
+            }
         </button>
     }
 </div>
@@ -28,6 +32,10 @@
 
     [Parameter]
     public string? Label { get; set; }
+
+    /// <summary>A second line under each label (the jobs board's counters); <c>null</c> entries show nothing.</summary>
+    [Parameter]
+    public IReadOnlyList<string?>? Counts { get; set; }
 
     [Parameter]
     public int Active { get; set; }

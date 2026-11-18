@@ -1,0 +1,75 @@
+@inject IJobApi JobApi
+@inject ISnackbar Snackbar
+
+@* Legacy components/job/jobCommentsModal.jsx: "Comentários - {number}", the comment types and the text; Fechar /
+   Guardar (saved through the statistics route with the job's own state). *@
+<MudDialog Visible="@(Form is not null)" VisibleChanged="VisibleChanged" Options="Options" Class="settings-dialog jobs-comments-dialog"
+           AriaLabel="@($"Comentários - {Number}")">
+    <TitleContent><h2 class="jobs-dialog-title">Comentários - @Number</h2></TitleContent>
+    <DialogContent>
+        @if (Form is { } form)
+        {
+            <JobCommentTypes Selected="form.CommentTypes" OnChanged="(change) => form.SetCommentType(change.Label, change.Checked)" />
+            <MudTextField T="string" @bind-Value="form.Comments" Immediate="true" Label="Comentários" InputId="job-comments-text" Lines="8"
+                          Variant="Variant.Outlined" />
+        }
+    </DialogContent>
+    <DialogActions>
+        <MudButton Color="Color.Primary" OnClick="CloseAsync">Fechar</MudButton>
+        <MudButton Color="Color.Primary" Disabled="_saving" OnClick="SubmitAsync">Guardar</MudButton>
+    </DialogActions>
+</MudDialog>
+
+@code {
+    private static readonly DialogOptions Options = new() { MaxWidth = MaxWidth.Small, FullWidth = true, CloseOnEscapeKey = true };
+
+    private bool _saving;
+
+    [Parameter]
+    public JobCommentsForm? Form { get; set; }
+
+    /// <summary>The budget number of the title.</summary>
+    [Parameter]
+    public string? Number { get; set; }
+
+    [Parameter]
+    public EventCallback<JobResponse<BudgetResponse>> OnSaved { get; set; }
+
+    [Parameter]
+    public EventCallback OnClosed { get; set; }
+
+    private async Task SubmitAsync()
+    {
+        if (Form is not { } form || _saving)
+        {
+            return;
+        }
+
+        _saving = true;
+        try
+        {
+            var saved = await JobApi.SaveStatisticsAsync(form.JobId, form.ToBody());
+            if (saved.Refused is { } refused)
+            {
+                Snackbar.Add(refused.Reason, Severity.Warning);
+                await OnSaved.InvokeAsync(refused.UpdatedJob);
+            }
+            else if (saved.Result.IsSuccess)
+            {
+                await OnSaved.InvokeAsync(saved.Result.Value!);
+            }
+            else if (!saved.Result.IsUnexpected)
+            {
+                Snackbar.Add(saved.Result.ErrorText!, Severity.Error);
+            }
+        }
+        finally
+        {
+            _saving = false;
+        }
+    }
+
+    private Task VisibleChanged(bool visible) => visible ? Task.CompletedTask : CloseAsync();
+
+    private Task CloseAsync() => OnClosed.InvokeAsync();
+}

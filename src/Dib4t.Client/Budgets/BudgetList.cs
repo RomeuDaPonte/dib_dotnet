@@ -124,16 +124,6 @@ public static class BudgetList
         return [.. rows.Select(r => r.Id == id ? r with { WasPdfDownloaded = true } : r)];
     }
 
-    /// <summary>
-    /// After "Criar obra": the row (or revision) the job was made from shows it has a job (its menu changes, the
-    /// "contem obra" icon appears). Legacy goes to the jobs board instead, which comes with the next step.
-    /// </summary>
-    public static List<BudgetListItemResponse> WithJob(IReadOnlyList<BudgetListItemResponse> rows, string id)
-    {
-        ArgumentNullException.ThrowIfNull(rows);
-        return [.. rows.Select(r => r.Id == id ? r with { HasGenerateJob = true } : r)];
-    }
-
     /// <summary>The legacy label of a menu item.</summary>
     public static string Label(BudgetMenuItem item) => item switch
     {

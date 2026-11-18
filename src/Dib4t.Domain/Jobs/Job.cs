@@ -1,4 +1,5 @@
 using Dib4t.Domain.Budgets;
+using Dib4t.SharedKernel;
 using Dib4t.SharedKernel.Vocabulary;
 
 namespace Dib4t.Domain.Jobs;
@@ -9,7 +10,7 @@ namespace Dib4t.Domain.Jobs;
 /// defaults for fields an older document lacks (§4.4).
 /// </summary>
 /// <param name="Id">The <c>_id</c> as 24 lowercase hex digits.</param>
-/// <param name="InvoicedPercent">Billed share in percent ("Ft %").</param>
+/// <param name="InvoicedPercent">Billed share in percent ("Ft %"); missing only after a statistics save without it (legacy unsets it).</param>
 /// <param name="FinalPrice">The agreed price (€).</param>
 /// <param name="State">One of <see cref="JobStates"/>.</param>
 /// <param name="OrderIdentification">The client's order reference ("Por preencher" by default).</param>
@@ -31,7 +32,7 @@ namespace Dib4t.Domain.Jobs;
 /// <param name="Version">Mongoose <c>__v</c>.</param>
 public sealed record Job(
     string Id,
-    double InvoicedPercent,
+    Stored<double> InvoicedPercent,
     double FinalPrice,
     string State,
     string OrderIdentification,
@@ -50,7 +51,52 @@ public sealed record Job(
     JobMachiningStatistic? MachiningStatistic,
     JobAssemblyStatistic? AssemblyStatistic,
     string? Priority,
-    int Version);
+    int Version)
+{
+    /// <summary>Free text of the comments dialog; missing in 139 old jobs, empty in most.</summary>
+    public Stored<string> Comments { get; init; }
+
+    /// <summary>When each state ended; missing in old jobs until their first statistics save.</summary>
+    public JobStatisticsDates? StatisticsDates { get; init; }
+
+    /// <summary>"Data de entrega"; stored <c>null</c> in many imported jobs, missing in others.</summary>
+    public Stored<DateTime> DeliveryDate { get; init; }
+
+    /// <summary>The name of the user who billed it.</summary>
+    public string? InvoicedBy { get; init; }
+
+    /// <summary>Stored fields the legacy schema does not know (e.g. <c>isHightPriority</c> of old jobs), as JSON values.</summary>
+    public IReadOnlyList<KeyValuePair<string, object?>> Extra { get; init; } = [];
+}
+
+/// <summary><c>jobStatisticsDates</c>: when each state ended (a date can be missing or stored <c>null</c>).</summary>
+public sealed record JobStatisticsDates(
+    string Id,
+    Stored<DateTime> DevEndedInDate,
+    Stored<DateTime> OnApprovalEndedInDate,
+    Stored<DateTime> ApprovedEndedInDate,
+    Stored<DateTime> MachiningEndedInDate,
+    Stored<DateTime> AssemblyEndedInDate,
+    Stored<DateTime> ForInvoicingEndedInDate)
+{
+    /// <summary>The element names in the legacy schema order.</summary>
+    public static IReadOnlyList<string> Fields { get; } =
+    [
+        "devEndedInDate", "onApprovalEndedInDate", "approvedEndedInDate", "machiningEndedInDate", "assemblyEndedInDate", "forInvoicingEndedInDate",
+    ];
+
+    /// <summary>The date of an element of <see cref="Fields"/>.</summary>
+    public Stored<DateTime> Get(string field) => field switch
+    {
+        "devEndedInDate" => DevEndedInDate,
+        "onApprovalEndedInDate" => OnApprovalEndedInDate,
+        "approvedEndedInDate" => ApprovedEndedInDate,
+        "machiningEndedInDate" => MachiningEndedInDate,
+        "assemblyEndedInDate" => AssemblyEndedInDate,
+        "forInvoicingEndedInDate" => ForInvoicingEndedInDate,
+        _ => throw new ArgumentOutOfRangeException(nameof(field), field, null),
+    };
+}
 
 /// <summary>Hours of one kind of work.</summary>
 /// <param name="NumberOfHoursUsed">Hours registered so far.</param>

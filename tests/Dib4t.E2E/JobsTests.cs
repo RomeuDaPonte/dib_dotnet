@@ -71,6 +71,98 @@ public sealed class JobsTests(E2EHarness harness) : E2ETest(harness)
         }
     }
 
+    /// <summary>
+    /// Jobs board (PLAN.md §7.3, §10 Phase 4 step 2): in both UIs, on the same seeded development job, "Em Aprovação"
+    /// through the statistics dialog with the hours typed, then "Não prioritária" in the approval tab, leave the same job
+    /// document (its new statistic's id and the end date stamped now aside) and nothing else changed.
+    /// </summary>
+    [Fact]
+    public async Task A_state_change_and_a_priority_in_both_uis_save_the_same_job()
+    {
+        await Harness.LoadSeedAsync(Cancellation);
+        var seeded = Harness.Seed.ToSnapshot();
+        var target = BoardJob(seeded);
+        var number = seeded.Collections["budgets"].Single(b => b["_id"] == target["budget"])["budgetNumber"].AsString;
+        var hours = "1";
+        try
+        {
+            var results = new List<DbSnapshot>();
+            foreach (var app in Harness.Apps)
+            {
+                var session = await OpenAsync(app);
+                IJobsPage jobs = app == Harness.Legacy ? new LegacyJobsPage(session.Page) : new NewJobsPage(session.Page);
+                if (app == Harness.Legacy)
+                {
+                    await new LegacyLoginPage(session.Page).GotoAsync();
+                    await new LegacyLoginPage(session.Page).LoginAsync(FixtureUser, FixturePassword);
+                }
+                else
+                {
+                    await new NewLoginPage(session.Page).GotoAsync();
+                    await new NewLoginPage(session.Page).LoginAsync(FixtureUser, FixturePassword);
+                }
+
+                await jobs.GotoAsync("Desenvolvimento");
+                await jobs.ChangeStateAsync(number, "Em Aprovação", hours);
+                await jobs.GotoAsync("Em aprovação");
+                await jobs.ChangePriorityAsync(number, "Não prioritária");
+                results.Add(await app.SnapshotAsync(Cancellation));
+            }
+
+            var (legacy, ours) = (results[0], results[1]);
+            var saved = ours.Collections["jobs"].Single(j => j["_id"] == target["_id"]);
+            (saved["state"].AsString, saved["priority"].AsString, saved["devStatistic"]["numberOfHoursUsed"].ToDouble()).Should().Be(("Em Aprovação", "Baixa", 1));
+            Board(ours, target).Should().Be(Board(legacy, target));
+            Except(ours, target["_id"]).DiffFrom(Except(legacy, target["_id"])).Should().BeEmpty("every other document is the same in both apps");
+        }
+        finally
+        {
+            await Harness.LoadSeedAsync(Cancellation);
+        }
+    }
+
+    /// <summary>
+    /// A seeded development job on the first page of both tabs it is used in, whose budgeted development hours are its
+    /// budget's (so the deviation the dialog computes is the one the server checks).
+    /// </summary>
+    private static BsonDocument BoardJob(DbSnapshot seed)
+    {
+        var budgets = seed.Collections["budgets"].ToDictionary(b => b["_id"]);
+        var tasks = seed.Collections["tasks"].Where(t => t.GetValue("taskType", "").AsString == "development")
+            .GroupBy(t => t["budgetId"]).ToDictionary(g => g.Key, g => g.Aggregate(0.0, (sum, t) => sum + t["quantity"].ToDouble()));
+        static int Bucket(BsonDocument j) => j.GetValue("priority", BsonNull.Value).ToString() switch { "Alta" => 0, "Média" => 1, _ => 2 };
+        List<BsonDocument> Board(string state) =>
+            [.. seed.Collections["jobs"].Where(j => j.GetValue("state", "").AsString == state).OrderBy(Bucket).ThenBy(j => j["dueDate"].ToUniversalTime())];
+        var development = Board("Desenvolvimento");
+        var approval = Board("Em Aprovação");
+        return development.Take(25).First(j =>
+            j.Contains("devStatistic") && budgets.ContainsKey(j["budget"]) && j.GetValue("priority", "").ToString() != "Baixa"
+            && tasks.TryGetValue(j["budget"], out var sum) && sum > 1 && sum == j["devStatistic"]["budgetedHours"].ToDouble()
+            && approval.Count(a => Bucket(a) < 2 || a["dueDate"].ToUniversalTime() <= j["dueDate"].ToUniversalTime()) < 25);
+    }
+
+    private static DbSnapshot Except(DbSnapshot snapshot, BsonValue jobId) =>
+        DbSnapshot.From(snapshot.Collections.ToDictionary(c => c.Key, c => c.Value.Where(d => c.Key != "jobs" || d["_id"] != jobId)));
+
+    /// <summary>The job without the new statistic's id and the end date stamped now.</summary>
+    private static string Board(DbSnapshot snapshot, BsonDocument target)
+    {
+        var copy = snapshot.Collections["jobs"].Single(j => j["_id"] == target["_id"]).DeepClone().AsBsonDocument;
+        copy["devStatistic"]["_id"] = "{{id}}";
+        if (copy.TryGetValue("jobStatisticsDates", out var dates))
+        {
+            foreach (var field in new[] { "_id", "devEndedInDate" })
+            {
+                if (dates.AsBsonDocument.Contains(field) && (field != "_id" || !target.Contains("jobStatisticsDates")))
+                {
+                    dates[field] = "{{now}}";
+                }
+            }
+        }
+
+        return copy.ToJson(Canonical);
+    }
+
     /// <summary>The new jobs without their generated ids and start date.</summary>
     private static List<string> Jobs(DbSnapshot snapshot, DbSnapshot seed)
     {

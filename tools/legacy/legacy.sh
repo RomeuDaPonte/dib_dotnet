@@ -48,6 +48,9 @@
 #                        POST /api/job handler, Joi validation, Job/Budget models and the label templates run in
 #                        Node with an in-memory store, offline (nothing is started, SSH and telnet replaced by
 #                        recorders) → tests/fixtures/legacy/jobs/ (PLAN.md §6, §7.3)
+#   job-board-golden     write the jobs board contract golden file (job-board-golden.js): the unchanged legacy
+#                        statistics, due date, state, priority and read handlers of routes/job.js, Joi and the Job
+#                        model run in Node with an in-memory store, offline → tests/fixtures/legacy/jobs/ (§7.3)
 #   pdf-samples          write reference budget PDFs (pdf-samples.js) by running the unchanged legacy
 #                        PDF route on the anonymized production fixture, in a throwaway DB
 #                        "dib4t_pdf_samples" → tests/fixtures/legacy/pdf/ (PLAN.md §7.1)
@@ -331,6 +334,12 @@ cmd_job_golden() {
   (cd "$REPO_ROOT" && DIB4T_LEGACY_ROOT="$LEGACY_ROOT" node "$SCRIPT_DIR/job-golden.js")
 }
 
+cmd_job_board_golden() {
+  ensure_node_modules "$BACKEND_DIR"
+  log "writing the jobs board contract golden file from the legacy code (offline)"
+  (cd "$REPO_ROOT" && DIB4T_LEGACY_ROOT="$LEGACY_ROOT" node "$SCRIPT_DIR/job-board-golden.js")
+}
+
 cmd_pdf_golden() {
   ensure_node_modules "$BACKEND_DIR"
   log "writing the budget PDF golden files and assets from the legacy pdfmake (offline, about 90 s)"
@@ -403,6 +412,7 @@ case "${1:-}" in
   budget-golden) cmd_budget_golden ;;
   budget-details-golden) cmd_budget_details_golden ;;
   job-golden) cmd_job_golden ;;
+  job-board-golden) cmd_job_board_golden ;;
   pdf-golden) cmd_pdf_golden ;;
   pdf-samples) cmd_pdf_samples ;;
   layout)  shift; cmd_layout "$@" ;;

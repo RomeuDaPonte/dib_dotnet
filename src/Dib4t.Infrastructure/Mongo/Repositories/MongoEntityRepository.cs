@@ -125,7 +125,7 @@ internal sealed class MongoEntityRepository(IMongoDatabase database) : IEntityRe
 
     private static BusinessEntity ToDomain(BsonDocument document) => ToDomain(BsonSerializer.Deserialize<BusinessEntityDocument>(document));
 
-    private static BusinessEntity ToDomain(BusinessEntityDocument document) => new(
+    internal static BusinessEntity ToDomain(BusinessEntityDocument document) => new(
         document.Id.ToString(),
         document.Name,
         document.FiscalNumber,

@@ -1110,3 +1110,143 @@ body {
 .budget-header-grid dd {
   margin: 0;
 }
+
+/* ---------------------------------------------------------------- Jobs board (/landing/job, PLAN.md §7.3, §8.4)
+   Legacy colors: countdown red / yellow / green, priority up yellow and down blue, a deleted job's state red,
+   order and delivery icons light green, non-conformity red, the comments icon #535bd5. The table scrolls in its
+   own box (rule 5); the tab bar wraps (SettingsTabs). */
+.jobs {
+  min-width: 0;
+  max-width: 100%;
+}
+
+.settings-tab-count {
+  margin-top: -0.2rem;
+}
+
+.jobs-table .mud-table-container {
+  position: relative;
+  overflow-x: auto;
+}
+
+.jobs-table .mud-table-root {
+  min-width: 60rem;
+}
+
+.jobs-number,
+.jobs-due,
+.jobs-actions {
+  white-space: nowrap;
+}
+
+.jobs-due {
+  display: flex;
+  align-items: center;
+}
+
+.jobs-due-input {
+  padding: 0.25rem 0;
+  border: 0;
+  border-bottom: 1px solid var(--mud-palette-lines-inputs);
+  background: transparent;
+  color: var(--mud-palette-text-primary);
+  color-scheme: light dark;
+  font: inherit;
+}
+
+.jobs-due-input:focus {
+  outline: none;
+  border-bottom: 2px solid var(--mud-palette-primary);
+}
+
+.job-countdown-red,
+.job-countdown-yellow,
+.job-countdown-green,
+.job-countdown-hidden {
+  margin-right: 1rem;
+}
+
+.job-countdown-red {
+  color: red;
+}
+
+.job-countdown-yellow {
+  color: yellow;
+}
+
+.job-countdown-green {
+  color: green;
+}
+
+.job-countdown-hidden {
+  opacity: 0;
+}
+
+.jobs-priority,
+.jobs-action {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  width: 3rem;
+  flex-shrink: 0;
+  vertical-align: middle;
+}
+
+.jobs-priority-high {
+  color: yellow;
+}
+
+.jobs-priority-low {
+  color: blue;
+}
+
+.jobs-deleted {
+  color: red;
+}
+
+.jobs-invoiced {
+  font-size: 1.25rem;
+}
+
+.jobs-ok {
+  color: lightgreen;
+}
+
+.jobs-warning {
+  color: red;
+}
+
+.jobs-comments.mud-icon-button {
+  color: #535bd5;
+}
+
+.jobs-dialog-title {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 500;
+}
+
+.jobs-comments-toggle {
+  display: flex;
+  align-items: center;
+  margin-top: 1em;
+}
+
+.jobs-comment-types {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Question, NOk, Ok: a question wraps instead of pushing the boxes out of the dialog. */
+.jobs-questions {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto auto;
+  align-items: center;
+  gap: 0 0.5rem;
+  margin-top: 1rem;
+}
+
+.jobs-question-head {
+  font-weight: 500;
+  text-align: center;
+}

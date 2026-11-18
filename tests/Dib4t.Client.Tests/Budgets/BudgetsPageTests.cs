@@ -7,6 +7,7 @@ using Dib4t.Contracts.Account;
 using Dib4t.Contracts.Budgets;
 using Dib4t.Contracts.Entities;
 using Dib4t.Contracts.Jobs;
+using Dib4t.SharedKernel;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.Extensions.DependencyInjection;
@@ -64,6 +65,7 @@ public sealed class BudgetsPageTests : IAsyncDisposable
         _budgets.ListClientsAsync().Returns(ApiResult.Success<IReadOnlyList<EntityResponse>>([Cortica, Metal]));
         _users.ListAsync().Returns(ApiResult.Failure<IReadOnlyList<UserListItemResponse>>(HttpStatusCode.Unauthorized, "Não tem permissão para concluir esta acção."));
         _clipboard.CopyAsync(Arg.Any<string>()).Returns(true);
+        _jobs.FindByBudgetNumberAsync(Arg.Any<string>()).Returns(ApiResult.Success<JobResponse<BudgetRefsResponse>?>(null));
     }
 
     private ISnackbar Snackbar => _context.Services.GetRequiredService<ISnackbar>();
@@ -315,10 +317,10 @@ public sealed class BudgetsPageTests : IAsyncDisposable
     }
 
     [Fact]
-    public async Task A_created_job_closes_the_dialog_and_the_row_shows_it_a_refusal_keeps_it_open()
+    public async Task A_created_job_goes_to_the_jobs_board_a_refusal_keeps_the_dialog_open()
     {
         _jobs.CreateAsync(Arg.Any<NewJobRequest>()).Returns(
-            ApiResult.Failure<JobResponse>(HttpStatusCode.BadRequest, "Obra baseada neste orçamento já foi criada anteriormente"),
+            ApiResult.Failure<JobResponse<BudgetResponse>>(HttpStatusCode.BadRequest, "Obra baseada neste orçamento já foi criada anteriormente"),
             ApiResult.Success(Job("b3")));
         var table = await RenderTableAsync();
         await MenuAsync(table, "Opções de 26-0003 R2", "Criar obra");
@@ -336,10 +338,7 @@ public sealed class BudgetsPageTests : IAsyncDisposable
             && r.DueDate == "2026-09-30" && !r.IsOfficialOrderIdentification && r.BudgetId == "b3"));
         await _jobs.Received(1).CreateAsync(Arg.Is<NewJobRequest>(r => Equals(r.FinalPrice, " 1200.50 ")));
         table.WaitForAssertion(() => _dialogs.FindAll("#job-form").Should().BeEmpty());
-        table.FindAll("[aria-label='contem obra']").Should().HaveCount(2, "26-0003 now has its job");
-        Snackbar.ShownSnackbars.Should().Contain(s => s.Message == "Obra criada com sucesso!");
-        await table.Find("button[aria-label='Opções de 26-0003 R2']").ClickAsync(new MouseEventArgs());
-        _popovers.WaitForAssertion(() => _popovers.FindAll(".mud-menu-item").Select(i => i.TextContent.Trim()).Should().Equal("Obter pdf", "Clonar"));
+        _context.Services.GetRequiredService<NavigationManager>().Uri.Should().EndWith("/landing/job", "legacy goes to the jobs board");
     }
 
     [Fact]
@@ -359,7 +358,7 @@ public sealed class BudgetsPageTests : IAsyncDisposable
         form.ToRequest().FinalPrice.Should().Be("0x10");
     }
 
-    private static JobResponse Job(string budgetId) => new(0, 43.5, "Montagem", "PO-7", false, 0, 0, 0, 0, 0, [], "j1",
+    private static JobResponse<BudgetResponse> Job(string budgetId) => new(Stored<double>.Of(0), 43.5, "Montagem", "PO-7", false, 0, 0, 0, 0, 0, [], "j1",
         Saved(budgetId, "26-0003", 2, Metal) with { HasGenerateJob = true }, "Ana Administradora", null, null, null, null, null, "Média", 0);
 
     private sealed class FixedTime(DateTimeOffset now) : TimeProvider

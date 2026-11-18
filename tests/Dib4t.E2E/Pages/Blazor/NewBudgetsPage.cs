@@ -55,7 +55,7 @@ public sealed class NewBudgetsPage(IPage page) : IBudgetsPage
         await page.RunAndWaitForResponseAsync(
             () => page.GetByRole(AriaRole.Button, new() { Name = "Criar", Exact = true }).ClickAsync(),
             response => response.Url.EndsWith("/api/job", StringComparison.OrdinalIgnoreCase));
-        await page.Locator("#job-form").WaitForAsync(new() { State = WaitForSelectorState.Detached });
+        await page.WaitForURLAsync("**/landing/job"); // as legacy: the jobs board
     }
 
     public async Task<IReadOnlyList<string>> RowAsync(string budgetNumber)

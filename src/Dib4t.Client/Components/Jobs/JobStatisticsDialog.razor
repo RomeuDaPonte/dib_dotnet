@@ -1,0 +1,161 @@
+@inject IJobApi JobApi
+@inject ISnackbar Snackbar
+
+@* Legacy components/job/jobStatisticsModal.jsx: the fields of the job's current state (hours, components and
+   automation or materials, delivery date, billed percentage, order reference, budgeted hours and deviation read
+   only), the comments (collapsed), the verification questions (NOk / Ok) and "Ensaio válido"; Cancel / Concluir. *@
+<MudDialog Visible="@(Form is not null)" VisibleChanged="VisibleChanged" Options="Options" Class="settings-dialog jobs-statistics" AriaLabel="@Form?.Title">
+    <TitleContent><h2 class="jobs-dialog-title">@Form?.Title</h2></TitleContent>
+    <DialogContent>
+        @if (Form is { } form)
+        {
+            @if (form.ShowsHours)
+            {
+                <MudTextField T="string" Value="@form.Text("numberOfHoursUsed")" ValueChanged="@(v => form.Set("numberOfHoursUsed", v))" Immediate="true"
+                              Label="Nº de horas" InputId="job-hours" InputType="InputType.Number" Margin="Margin.Normal" />
+            }
+            @if (form.ShowsComponentsAndAutomation)
+            {
+                <MudTextField T="string" Value="@form.Text("components")" ValueChanged="@(v => form.Set("components", v))" Immediate="true" Label="Componentes"
+                              InputId="job-components" InputType="InputType.Number" Margin="Margin.Normal" Adornment="Adornment.End" AdornmentText="€" />
+                <MudTextField T="string" Value="@form.Text("automation")" ValueChanged="@(v => form.Set("automation", v))" Immediate="true" Label="Automação"
+                              InputId="job-automation" InputType="InputType.Number" Margin="Margin.Normal" Adornment="Adornment.End" AdornmentText="€" />
+            }
+            @if (form.ShowsMaterials)
+            {
+                <MudTextField T="string" Value="@form.Text("materials")" ValueChanged="@(v => form.Set("materials", v))" Immediate="true" Label="Materiais"
+                              InputId="job-materials" InputType="InputType.Number" Margin="Margin.Normal" Adornment="Adornment.End" AdornmentText="€" />
+            }
+            @if (form.ShowsDeliveryDate)
+            {
+                <MudTextField T="string" Value="@form.Text("deliveryDate")" ValueChanged="@(v => form.Set("deliveryDate", v))" Immediate="true"
+                              Label="Data de entrega" InputId="job-delivery" InputType="InputType.Date" ShrinkLabel="true" Margin="Margin.Normal" />
+            }
+            <MudTextField T="string" Value="@form.Text("invoicedPercent")" ValueChanged="@(v => form.Set("invoicedPercent", v))" Immediate="true"
+                          Label="Percentagem faturada" InputId="job-invoiced" Margin="Margin.Normal" Adornment="Adornment.End" AdornmentText="%"
+                          Error="@(form.InvoicedError is not null)" ErrorText="@form.InvoicedError" />
+            @if (form.ShowsOrderIdentification)
+            {
+                <MudTextField T="string" Value="@form.Text("orderIdentification")" ValueChanged="@(v => form.Set("orderIdentification", v))" Immediate="true"
+                              Label="Identificação da encomenda" InputId="job-order-identification" Margin="Margin.Normal" />
+                <MudCheckBox T="bool" Value="form.IsOfficial" ValueChanged="form.SetOfficial" Label="Identificação oficial" Color="Color.Primary" />
+            }
+            @if (form.ShowsHours)
+            {
+                <MudTextField T="string" Value="@form.Text("budgetedHours")" ReadOnly="true" Label="Horas orçamentadas" InputId="job-budgeted"
+                              Variant="Variant.Outlined" Margin="Margin.Normal" />
+                <MudTextField T="string" Value="@form.Text("deviation")" ReadOnly="true" Label="Desvio" InputId="job-deviation"
+                              Variant="Variant.Outlined" Margin="Margin.Normal" />
+            }
+            <div class="jobs-comments-toggle">
+                <MudIconButton Icon="@(_commentsOpen ? Icons.Material.Filled.KeyboardArrowUp : Icons.Material.Filled.KeyboardArrowDown)" Size="Size.Small"
+                               aria-label="Comentários" aria-expanded="@(_commentsOpen ? "true" : "false")" OnClick="() => _commentsOpen = !_commentsOpen" />
+                <span>Comentários</span>
+            </div>
+            @if (_commentsOpen)
+            {
+                <div class="jobs-comments-box">
+                    <JobCommentTypes Selected="form.CommentTypes" OnChanged="(change) => form.SetCommentType(change.Label, change.Checked)" />
+                    <MudTextField T="string" Value="@form.Text("comments")" ValueChanged="@(v => form.Set("comments", v))" Immediate="true" Label="Comentários"
+                                  InputId="job-comments" Lines="3" Sizing="InputSizing.Auto" />
+                </div>
+            }
+            @if (form.Questions.Count > 0)
+            {
+                <div class="jobs-questions" role="group" aria-label="Verificações">
+                    <span></span><span class="jobs-question-head">NOk</span><span class="jobs-question-head">Ok</span>
+                    @foreach (var (field, label) in form.Questions)
+                    {
+                        var answer = form.Text(field);
+                        <span id="@($"job-q-{field}")">@label</span>
+                        <MudCheckBox T="bool" Value="@(answer == QuestionResponses.NotOk)" Color="Color.Primary"
+                                     ValueChanged="@(c => form.SetAnswer(field, c ? QuestionResponses.NotOk : QuestionResponses.NotApplicable))"
+                                     UserAttributes="@(new Dictionary<string, object> { ["aria-label"] = $"{label}: NOk" })" />
+                        <MudCheckBox T="bool" Value="@(answer == QuestionResponses.Ok)" Color="Color.Primary"
+                                     ValueChanged="@(c => form.SetAnswer(field, c ? QuestionResponses.Ok : QuestionResponses.NotApplicable))"
+                                     UserAttributes="@(new Dictionary<string, object> { ["aria-label"] = $"{label}: Ok" })" />
+                    }
+                </div>
+            }
+            @if (form.ShowsFirstTest)
+            {
+                <LabeledSelect TValue="string" Id="job-first-test" Label="Ensaio válido" Value="@form.Text("validTryOnFirstTest")"
+                               ValueChanged="@(v => form.SetAnswer("validTryOnFirstTest", v ?? QuestionResponses.DefaultFirstTestTry))"
+                               Options="FirstTestOptions" Class="jobs-first-test" />
+            }
+        }
+    </DialogContent>
+    <DialogActions>
+        <MudButton Color="Color.Primary" OnClick="CloseAsync">Cancel</MudButton>
+        <MudButton Color="Color.Primary" Disabled="@(Form?.InvoicedError is not null || _saving)" OnClick="SubmitAsync">Concluir</MudButton>
+    </DialogActions>
+</MudDialog>
+
+@code {
+    private static readonly DialogOptions Options = new() { MaxWidth = MaxWidth.ExtraSmall, FullWidth = true, CloseOnEscapeKey = true };
+
+    private static readonly IReadOnlyList<(string Value, string Text)> FirstTestOptions = [.. QuestionResponses.FirstTestTries.Select(t => (t, t))];
+
+    private JobStatisticsForm? _shown;
+    private bool _commentsOpen;
+    private bool _saving;
+
+    /// <summary>The form; <c>null</c> = the dialog is closed.</summary>
+    [Parameter]
+    public JobStatisticsForm? Form { get; set; }
+
+    /// <summary>The job as saved with the new state.</summary>
+    [Parameter]
+    public EventCallback<JobResponse<BudgetResponse>> OnSaved { get; set; }
+
+    /// <summary>The legacy 405: "Faturada" below 100 % billed (the other values were saved).</summary>
+    [Parameter]
+    public EventCallback<JobStatisticsRefusedResponse> OnRefused { get; set; }
+
+    [Parameter]
+    public EventCallback OnClosed { get; set; }
+
+    protected override void OnParametersSet()
+    {
+        if (!ReferenceEquals(Form, _shown))
+        {
+            _shown = Form;
+            _commentsOpen = false; // legacy: the comments start collapsed
+        }
+    }
+
+    /// <summary>Legacy <c>handleSubmit</c>: a refusal shows the legacy text and keeps the dialog open.</summary>
+    private async Task SubmitAsync()
+    {
+        if (Form is not { } form || _saving)
+        {
+            return;
+        }
+
+        _saving = true;
+        try
+        {
+            var saved = await JobApi.SaveStatisticsAsync(form.JobId, form.ToBody());
+            if (saved.Refused is { } refused)
+            {
+                await OnRefused.InvokeAsync(refused);
+            }
+            else if (saved.Result.IsSuccess)
+            {
+                await OnSaved.InvokeAsync(saved.Result.Value!);
+            }
+            else if (!saved.Result.IsUnexpected)
+            {
+                Snackbar.Add(saved.Result.ErrorText!, Severity.Error);
+            }
+        }
+        finally
+        {
+            _saving = false;
+        }
+    }
+
+    private Task VisibleChanged(bool visible) => visible ? Task.CompletedTask : CloseAsync();
+
+    private Task CloseAsync() => OnClosed.InvokeAsync();
+}

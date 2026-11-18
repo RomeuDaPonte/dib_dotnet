@@ -322,12 +322,13 @@ internal sealed partial class JoiNumber : JoiRule
 /// <summary>
 /// <c>Joi.array()</c> (any items): presence, then the type, where a string that <c>JSON.parse</c>s to an array counts
 /// as that array (Joi's conversion; the route still stores the original string, see <c>MongooseCast</c>), then
-/// <c>.min(n)</c>.
+/// <c>.items(rule)</c> (each element in order, labelled by its index: <c>"0" must be one of […]</c>), then <c>.min(n)</c>.
 /// </summary>
 internal sealed class JoiArray : JoiRule
 {
     private int? _min;
     private bool _required;
+    private JoiRule? _items;
 
     public static JoiArray Create() => new();
 
@@ -340,6 +341,13 @@ internal sealed class JoiArray : JoiRule
     public JoiArray Min(int limit)
     {
         _min = limit;
+        return this;
+    }
+
+    /// <summary><c>.items(rule)</c>: every element must pass <paramref name="rule"/>.</summary>
+    public JoiArray Items(JoiRule rule)
+    {
+        _items = rule;
         return this;
     }
 
@@ -359,6 +367,20 @@ internal sealed class JoiArray : JoiRule
         if (array.ValueKind != JsonValueKind.Array)
         {
             return $"\"{label}\" must be an array";
+        }
+
+        if (_items is not null)
+        {
+            var index = 0;
+            foreach (var item in array.EnumerateArray())
+            {
+                if (_items.Validate(index.ToString(CultureInfo.InvariantCulture), item, parent) is { } error)
+                {
+                    return error;
+                }
+
+                index++;
+            }
         }
 
         return _min is { } min && array.GetArrayLength() < min ? $"\"{label}\" must contain at least {Limit(min)} items" : null;

@@ -1,0 +1,16 @@
+@page "/landing/job"
+@layout LandingLayout
+@inject AuthSession Session
+
+<PageTitle>Dib4t</PageTitle>
+
+@* Legacy components/job/job.jsx. Only for canSeeObras, like the menu entry (the API is open to every signed-in
+   user, as legacy). *@
+@if (Session.User?.HasRole(RoleNames.CanSeeObras) == true)
+{
+    <JobsBoard />
+}
+else
+{
+    <p class="settings-denied">@AuthTexts.NoPermission</p>
+}

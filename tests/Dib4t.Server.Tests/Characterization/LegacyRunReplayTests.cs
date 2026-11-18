@@ -41,6 +41,7 @@ public sealed partial class LegacyRunReplayTests(AppWithMongo app) : IClassFixtu
         "user-delete-d2",             // D2: the new app deletes the requested user, not the first one
         "users-after-delete",         // follows from D2
         "budget-list-after-delete",   // follows from D2 (the deleted user is an author here)
+        "job-state-d1",               // D1: the new app changes the state instead of always answering "Obra não existe"
     };
 
     /// <summary>
@@ -57,13 +58,19 @@ public sealed partial class LegacyRunReplayTests(AppWithMongo app) : IClassFixtu
     private static readonly HashSet<string> LegacyStateOnly = new(StringComparer.Ordinal) { "budget-import", "budget-import-description-only", "blocked-import" };
 
     /// <summary>
-    /// The steps of <c>05-jobs.json</c> this version implements (job create, Phase 4 step 1, and the budget/task routes
-    /// on the budgets with a job); the other job steps are routes of later steps: their recorded document changes are
-    /// written, so the following steps run on the legacy state.
+    /// The steps of <c>05-jobs.json</c> this version implements: job create (Phase 4 step 1), the budget/task routes on
+    /// the budgets with a job, and the jobs board's routes (step 2: statistics, due date, state, priority, the reads);
+    /// the other job steps are routes of later steps (statistics dates, registered values, single property,
+    /// verifications, print, the dashboard counters): their recorded document changes are written, so the following
+    /// steps run on the legacy state.
     /// </summary>
     private static bool IsImplementedJobStep(string id) =>
         id.StartsWith("budget-", StringComparison.Ordinal) || id.StartsWith("job-create", StringComparison.Ordinal)
-        || id.StartsWith("blocked-", StringComparison.Ordinal);
+        || id.StartsWith("blocked-", StringComparison.Ordinal) || id.StartsWith("stats-", StringComparison.Ordinal)
+        || (id.StartsWith("job-", StringComparison.Ordinal) && !LaterJobSteps.Any(p => id.StartsWith(p, StringComparison.Ordinal)));
+
+    private static readonly string[] LaterJobSteps =
+        ["job-statistics-dates", "job-register", "job-single", "job-verifications", "job-print", "job-valid-try"];
 
     private readonly Dictionary<string, string> _bound = new(StringComparer.Ordinal);
     private readonly Dictionary<string, string> _tokens = new(StringComparer.Ordinal);
@@ -101,8 +108,8 @@ public sealed partial class LegacyRunReplayTests(AppWithMongo app) : IClassFixtu
             }
         }
 
-        replayed.Should().HaveCount(136, "every recorded step of the six files but the allow-listed, the D24 ones and the later job routes");
-        applied.Should().HaveCount(66, "the three D24 imports and the 63 steps of later job routes");
+        replayed.Should().HaveCount(173, "every recorded step of the six files but the allow-listed, the D24 ones and the later job routes");
+        applied.Should().HaveCount(28, "the three D24 imports and the 25 steps of later job routes (job details, print, dashboard)");
     }
 
     private async Task ReplayAsync(JsonElement step, bool ordered)
@@ -116,6 +123,13 @@ public sealed partial class LegacyRunReplayTests(AppWithMongo app) : IClassFixtu
             await TokenAsync(request.GetProperty("auth").GetString()!), Cancellation);
 
         await BindInsertedAsync(step.GetProperty("db"), before);
+        if (id == "login-limited" && answer.Status == 200)
+        {
+            // The recording's "limited" token is this login's: issued before the user is renamed, so its name stays
+            // the old one (legacy writes it, e.g. in machiningStatistic.validatedBy).
+            _tokens.TryAdd("limited", answer.Text);
+        }
+
         var expected = step.GetProperty("response");
         answer.Status.Should().Be(expected.GetProperty("status").GetInt32(), $"{id}: {answer.Text}");
         answer.ContentType.Should().Be(expected.GetProperty("contentType").GetString(), id);
@@ -146,7 +160,7 @@ public sealed partial class LegacyRunReplayTests(AppWithMongo app) : IClassFixtu
         {
             var actual = JsonElement.Parse(answer.Text);
             Bind(expected.GetProperty("json"), actual);
-            Comparable(actual, ordered, isExpected: false).Should().Be(Comparable(JsonElement.Parse(Resolve(expected.GetProperty("json").GetRawText())), ordered, isExpected: true), id);
+            Comparable(actual, ordered, isExpected: false).Should().Be(Comparable(JsonElement.Parse(CurrentName(Resolve(expected.GetProperty("json").GetRawText()))), ordered, isExpected: true), id);
         }
 
         await DatabaseShouldMatchAsync(id, step.GetProperty("db"));
@@ -216,13 +230,52 @@ public sealed partial class LegacyRunReplayTests(AppWithMongo app) : IClassFixtu
                         stored["password"] = "{{bcrypt:" + hash.AsString[..7] + "}}"; // the recording's placeholder for a hash of that format
                     }
 
-                    foreach (var element in stored.Where(e => e.Value.IsValidDateTime && IsThisRun(e.Value.ToUniversalTime())).ToList())
-                    {
-                        stored[element.Name] = "{{now}}";
-                    }
+                    MarkThisRun(stored);
 
                     stored.ToJson(Canonical).Should().Be(ParseRecorded(expected).ToJson(Canonical), $"{stepId}: {collection.Name}");
                 }
+            }
+        }
+    }
+
+    /// <summary>
+    /// Known difference (PLAN.md §4.6): the new app takes the signed-in user from the database, so a name the job routes
+    /// write (<c>validatedBy</c>, <c>invoicedBy</c>, <c>createdBy</c>) is the user's current one; legacy writes the name
+    /// inside its token, which for the limited user is the name before the rename of <c>user-update</c>.
+    /// </summary>
+    private static string CurrentName(string json) => StaleName().Replace(json, "$1Bruno Maquinação Silva\"");
+
+    [GeneratedRegex("(\"(?:validatedBy|invoicedBy|createdBy)\"\\s*:\\s*\")Bruno Maquinação\"")]
+    private static partial Regex StaleName();
+
+    /// <summary>Dates of this run (also in sub-documents, e.g. <c>jobStatisticsDates</c>) as the recording's <c>{{now}}</c>.</summary>
+    private void MarkThisRun(BsonDocument document)
+    {
+        foreach (var element in document.ToList())
+        {
+            if (element.Value.IsValidDateTime && IsThisRun(element.Value.ToUniversalTime()))
+            {
+                document[element.Name] = "{{now}}";
+            }
+            else if (element.Value.IsBsonDocument)
+            {
+                MarkThisRun(element.Value.AsBsonDocument);
+            }
+        }
+    }
+
+    /// <summary>A recorded <c>{{now}}</c> (also in sub-documents): the stored date when there is one, else now.</summary>
+    private static void FillNow(BsonDocument document, BsonDocument? stored)
+    {
+        foreach (var element in document.ToList())
+        {
+            if (element.Value.IsString && element.Value.AsString == "{{now}}")
+            {
+                document[element.Name] = stored is not null && stored.TryGetValue(element.Name, out var date) && date.IsValidDateTime ? date : new BsonDateTime(DateTime.UtcNow);
+            }
+            else if (element.Value.IsBsonDocument)
+            {
+                FillNow(element.Value.AsBsonDocument, stored is not null && stored.TryGetValue(element.Name, out var sub) && sub.IsBsonDocument ? sub.AsBsonDocument : null);
             }
         }
     }
@@ -254,10 +307,7 @@ public sealed partial class LegacyRunReplayTests(AppWithMongo app) : IClassFixtu
 
                     var document = ParseRecorded(change.Name == "updated" ? item.GetProperty("after") : item);
                     var stored = await documents.Find(filter).FirstOrDefaultAsync(Cancellation);
-                    foreach (var element in document.Where(e => e.Value.IsString && e.Value.AsString == "{{now}}").ToList())
-                    {
-                        document[element.Name] = stored is not null && stored.TryGetValue(element.Name, out var date) ? date : new BsonDateTime(DateTime.UtcNow);
-                    }
+                    FillNow(document, stored);
 
                     await documents.ReplaceOneAsync(filter, document, new ReplaceOptions { IsUpsert = true }, Cancellation);
                 }
@@ -267,7 +317,7 @@ public sealed partial class LegacyRunReplayTests(AppWithMongo app) : IClassFixtu
 
     /// <summary>A recorded document with this run's ids, years and <c>{{now}}</c> as a plain string.</summary>
     private BsonDocument ParseRecorded(JsonElement recorded) =>
-        BsonDocument.Parse(RecordedNow().Replace(Resolve(recorded.GetRawText()), "\"{{now}}\""));
+        BsonDocument.Parse(RecordedNow().Replace(CurrentName(Resolve(recorded.GetRawText())), "\"{{now}}\""));
 
     /// <summary>
     /// The JSON text to compare: dates of this run as <c>{{now}}</c>; the recording's password hashes left out (the

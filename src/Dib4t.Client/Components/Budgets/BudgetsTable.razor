@@ -1,4 +1,5 @@
 @inject IBudgetApi BudgetApi
+@inject IJobApi JobApi
 @inject IClipboard Clipboard
 @inject IFileDownload Downloads
 @inject AuthSession Session
@@ -232,10 +233,20 @@
         }
     }
 
+    /// <summary>
+    /// Legacy <c>copyToClipboardClicked</c>: a budget with a job takes the job's start year and its folder (CAD/CAM) from
+    /// <c>getByBudgetNumber</c> (the number's year when the job is not found).
+    /// </summary>
     private async Task CopyPathAsync(BudgetListItemResponse row)
     {
-        // A budget with a job: the job's start year and folder (CAD/CAM) come with the jobs API (Phase 4).
-        var copied = await Clipboard.CopyAsync(BudgetList.CopyPath(row, Zone));
+        JobFolder? folder = null;
+        if (row.HasGenerateJob && row.BudgetNumber is { } number)
+        {
+            var job = await JobApi.FindByBudgetNumberAsync(number);
+            folder = job is { IsSuccess: true, Value: { } found } ? new JobFolder(found.StartDate, found.State) : null;
+        }
+
+        var copied = await Clipboard.CopyAsync(BudgetList.CopyPath(row, Zone, folder));
         Snackbar.Add(copied ? "Link copiado!" : "Erro ao copiar!", copied ? Severity.Success : Severity.Error);
     }
 
@@ -294,22 +305,11 @@
         await Downloads.SaveBase64Async(BudgetList.PdfFileName(row.BudgetNumber, row.Revision), pdf.Value!, "application/pdf");
     }
 
-    /// <summary>
-    /// A job was created: the dialog closes and the row (or revision) shows its job. Legacy goes to the jobs board
-    /// (<c>/landing/job</c>), which comes with the next step; until then a toast confirms it.
-    /// </summary>
-    private void JobCreated(JobResponse job)
+    /// <summary>Legacy <c>newJob</c>: a job was created, the app goes to the jobs board (<c>/landing/job</c>).</summary>
+    private void JobCreated(JobResponse<BudgetResponse> job)
     {
-        var id = job.Budget?.Id ?? _jobForm!.BudgetId;
-        _rows = BudgetList.WithJob(_rows, id);
-        _persisted = BudgetList.WithJob(_persisted, id);
-        foreach (var (number, revisions) in _revisions.ToList())
-        {
-            _revisions[number] = [.. revisions.Select(r => r.Id == id ? r with { HasGenerateJob = true } : r)];
-        }
-
         _jobForm = null;
-        Snackbar.Add("Obra criada com sucesso!", Severity.Success);
+        Navigation.NavigateTo("landing/job");
     }
 
     /// <summary>Legacy <c>updateTable</c>; an open revisions list of that number is read again when reopened.</summary>
