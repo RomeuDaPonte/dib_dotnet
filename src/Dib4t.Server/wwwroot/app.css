@@ -1250,3 +1250,215 @@ body {
   font-weight: 500;
   text-align: center;
 }
+
+/* Job details (legacy jobDetais/jobDetails.css): the header boxes wrap onto more rows when space runs out (§8.4
+   rule 3); the cost summary / state dates / table / observations grid is 65 % / 35 % on wide screens and one column
+   below 960 px; the cost table keeps its five columns and scrolls inside itself on a phone (§8.4 rule 5). */
+.job-details {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  min-width: 0;
+}
+
+.job-header {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(9rem, 100%), 1fr));
+  overflow: hidden;
+}
+
+.job-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.25rem;
+  min-width: 0;
+  padding: 0.75rem 0.5rem;
+  box-shadow: -1px 0 0 var(--mud-palette-divider);
+  text-align: center;
+}
+
+.job-box--wide,
+.job-box--order {
+  grid-column: span 2;
+  align-items: flex-start;
+  text-align: left;
+}
+
+@media (max-width: 599.98px) {
+  .job-box--wide,
+  .job-box--order {
+    grid-column: auto;
+  }
+}
+
+.job-number {
+  font-size: 1.25rem;
+  font-weight: 500;
+}
+
+.job-invoice-title {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.job-percent {
+  width: 4.5rem;
+  flex: none;
+}
+
+.job-percent input {
+  text-align: center;
+}
+
+.job-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 65fr) minmax(0, 35fr);
+  gap: 0.5rem;
+}
+
+/* One column when the cost table (42rem) and the side column (about 22rem) do not fit side by side: a container
+   query in rem, so it follows the font size and the zoom, not only the window width. */
+.job-details {
+  container-type: inline-size;
+}
+
+@container (max-width: 66rem) {
+  .job-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.job-order-label {
+  font-size: 0.75rem;
+  color: var(--mud-palette-text-secondary);
+  overflow-wrap: anywhere;
+}
+
+.job-summary,
+.job-dates {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(8rem, 100%), 1fr));
+  padding: 0.5rem;
+}
+
+.job-summary-box,
+.job-date-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-around;
+  gap: 0.25rem;
+  min-width: 0;
+  padding: 0.5rem;
+  text-align: center;
+}
+
+.job-amount {
+  font-size: 1.4rem;
+  font-variant-numeric: tabular-nums;
+  overflow-wrap: anywhere;
+}
+
+.job-small {
+  font-size: 1rem;
+  font-variant-numeric: tabular-nums;
+  overflow-wrap: anywhere;
+}
+
+.job-costs {
+  min-width: 0;
+  overflow-x: auto;
+  padding: 0.5rem;
+}
+
+.job-summary,
+.job-dates,
+.job-box--order .mud-input-control {
+  min-width: 0;
+}
+
+.job-box--order .mud-input-control {
+  width: 100%;
+}
+
+.job-box input[type=date],
+.job-date-box input[type=date] {
+  min-width: 0;
+  max-width: 100%;
+}
+
+.job-cost-row {
+  display: grid;
+  grid-template-columns: minmax(9rem, 1.4fr) repeat(4, minmax(6.5rem, 1fr));
+  align-items: center;
+  justify-items: center;
+  min-width: 42rem;
+  min-height: 3.5rem;
+  font-size: 1.1rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.job-cost-row > :first-child {
+  justify-self: start;
+}
+
+.job-cost-head {
+  font-size: 1.25rem;
+  font-weight: 500;
+}
+
+.job-register {
+  width: 7rem;
+  flex: none;
+}
+
+.job-register input {
+  text-align: center;
+}
+
+.job-side {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  min-width: 0;
+}
+
+.job-verifications {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(16rem, 100%), 1fr));
+  gap: 1rem;
+  padding: 0.5rem;
+}
+
+.job-checks {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.job-checks h3 {
+  margin: 0.5rem 0 0;
+  font-size: 1.15rem;
+  font-weight: 500;
+  text-align: center;
+}
+
+.job-validated-by {
+  margin-top: auto;
+  padding-top: 0.75rem;
+  border-top: 1px solid var(--mud-palette-divider);
+  text-align: right;
+  font-size: 1.15rem;
+  min-height: 2.5rem;
+}
+
+.profit {
+  color: lightgreen;
+}
+
+.loss {
+  color: red;
+}

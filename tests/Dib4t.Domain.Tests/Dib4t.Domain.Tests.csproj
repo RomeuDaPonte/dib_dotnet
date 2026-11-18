@@ -3,5 +3,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\Dib4t.Domain\Dib4t.Domain.csproj" />
+    <Compile Include="..\Shared\Fixtures.cs" LinkBase="Shared" />
   </ItemGroup>
 </Project>

@@ -42,6 +42,8 @@ public sealed partial class LegacyRunReplayTests(AppWithMongo app) : IClassFixtu
         "users-after-delete",         // follows from D2
         "budget-list-after-delete",   // follows from D2 (the deleted user is an author here)
         "job-state-d1",               // D1: the new app changes the state instead of always answering "Obra não existe"
+        "job-statistics-dates-no-dates", // D17: the new app creates the state dates instead of failing (500)
+        "job-register-consultancy",   // D18: the new app registers consultancy hours as development instead of ignoring them
     };
 
     /// <summary>
@@ -53,16 +55,21 @@ public sealed partial class LegacyRunReplayTests(AppWithMongo app) : IClassFixtu
     /// <remarks>
     /// <c>blocked-import</c> (05): legacy refuses an import into the open budget because it has a job; with D24 the open
     /// budget only sends its tasks to the typed number, which a budget with a job may do (tested in
-    /// <c>BudgetDetailsGoldenTests</c>), so the step is not sent either.
+    /// <c>BudgetDetailsGoldenTests</c>), so the step is not sent either. The two verification steps (05) were recorded
+    /// without a <c>validatedBy</c>, which legacy then leaves missing; the new app writes the signed-in user's name
+    /// (PLAN.md §7.3, checked in <c>JobDetailsGoldenTests</c>), so their recorded changes are written instead.
     /// </remarks>
-    private static readonly HashSet<string> LegacyStateOnly = new(StringComparer.Ordinal) { "budget-import", "budget-import-description-only", "blocked-import" };
+    private static readonly HashSet<string> LegacyStateOnly = new(StringComparer.Ordinal)
+    {
+        "budget-import", "budget-import-description-only", "blocked-import", "job-verifications-machining", "job-verifications-assembly",
+    };
 
     /// <summary>
     /// The steps of <c>05-jobs.json</c> this version implements: job create (Phase 4 step 1), the budget/task routes on
-    /// the budgets with a job, and the jobs board's routes (step 2: statistics, due date, state, priority, the reads);
-    /// the other job steps are routes of later steps (statistics dates, registered values, single property,
-    /// verifications, print, the dashboard counters): their recorded document changes are written, so the following
-    /// steps run on the legacy state.
+    /// the budgets with a job, the jobs board's routes (step 2: statistics, due date, state, priority, the reads) and
+    /// the job details page's (step 3: statistics dates, registered values, single property, verifications); the
+    /// other job steps are routes of later steps (print, the dashboard counters): their recorded document changes are
+    /// written, so the following steps run on the legacy state.
     /// </summary>
     private static bool IsImplementedJobStep(string id) =>
         id.StartsWith("budget-", StringComparison.Ordinal) || id.StartsWith("job-create", StringComparison.Ordinal)
@@ -70,7 +77,7 @@ public sealed partial class LegacyRunReplayTests(AppWithMongo app) : IClassFixtu
         || (id.StartsWith("job-", StringComparison.Ordinal) && !LaterJobSteps.Any(p => id.StartsWith(p, StringComparison.Ordinal)));
 
     private static readonly string[] LaterJobSteps =
-        ["job-statistics-dates", "job-register", "job-single", "job-verifications", "job-print", "job-valid-try"];
+        ["job-print", "job-valid-try"];
 
     private readonly Dictionary<string, string> _bound = new(StringComparer.Ordinal);
     private readonly Dictionary<string, string> _tokens = new(StringComparer.Ordinal);
@@ -108,8 +115,8 @@ public sealed partial class LegacyRunReplayTests(AppWithMongo app) : IClassFixtu
             }
         }
 
-        replayed.Should().HaveCount(173, "every recorded step of the six files but the allow-listed, the D24 ones and the later job routes");
-        applied.Should().HaveCount(28, "the three D24 imports and the 25 steps of later job routes (job details, print, dashboard)");
+        replayed.Should().HaveCount(191, "every recorded step of the six files but the allow-listed, the D24 ones, the verifier ones and the later job routes");
+        applied.Should().HaveCount(8, "the three D24 imports, the two verifications without a verifier and the 3 steps of later job routes (print, dashboard)");
     }
 
     private async Task ReplayAsync(JsonElement step, bool ordered)

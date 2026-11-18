@@ -39,6 +39,7 @@ builder.Services.AddScoped<IBudgetApi, BudgetApi>();
 builder.Services.AddScoped<ITaskApi, TaskApi>();
 builder.Services.AddScoped<IJobApi, JobApi>();
 builder.Services.AddTransient<Dib4t.Client.Budgets.BudgetDetailsState>();
+builder.Services.AddTransient<Dib4t.Client.Jobs.JobDetailsState>();
 builder.Services.AddScoped<Dib4t.Client.Budgets.IClipboard, Dib4t.Client.Budgets.Clipboard>();
 builder.Services.AddScoped<Dib4t.Client.Budgets.IFileDownload, Dib4t.Client.Budgets.FileDownload>();
 builder.Services.AddScoped<ILogsApi, LogsApi>();

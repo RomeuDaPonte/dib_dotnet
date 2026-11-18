@@ -206,7 +206,7 @@ public sealed record JobRow(
     {
         ArgumentNullException.ThrowIfNull(job);
         return new(job.Id, job.Budget?.Id, job.Budget?.BudgetNumber, job.Budget?.Revision, job.Budget?.Client?.Name, job.Budget?.Descriptive,
-            job.StartDate, job.DueDate, job.State, job.IsOfficialOrderIdentification, JobBoard.HasNonConformity(job.MachiningStatistic, job.AssemblyStatistic),
+            job.StartDate, job.DueDate, job.State, job.IsOfficialOrderIdentification.OrDefault(), JobBoard.HasNonConformity(job.MachiningStatistic, job.AssemblyStatistic),
             job.Priority, job.DeliveryDate.HasValue, job.InvoicedPercent.HasValue ? job.InvoicedPercent.Value : null, job.Comments.OrDefault());
     }
 
@@ -215,7 +215,7 @@ public sealed record JobRow(
     {
         ArgumentNullException.ThrowIfNull(job);
         return new(job.Id, job.Budget?.Id, job.Budget?.BudgetNumber, job.Budget?.Revision, job.Budget?.Client?.Name, job.Budget?.Descriptive,
-            job.StartDate, job.DueDate, job.State, job.IsOfficialOrderIdentification, JobBoard.HasNonConformity(job.MachiningStatistic, job.AssemblyStatistic),
+            job.StartDate, job.DueDate, job.State, job.IsOfficialOrderIdentification.OrDefault(), JobBoard.HasNonConformity(job.MachiningStatistic, job.AssemblyStatistic),
             job.Priority, job.DeliveryDate.HasValue, job.InvoicedPercent.HasValue ? job.InvoicedPercent.Value : null, job.Comments.OrDefault());
     }
 

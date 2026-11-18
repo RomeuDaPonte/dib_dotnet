@@ -32,12 +32,12 @@ public sealed record JobResponse<TBudget>(
     double FinalPrice,
     string State,
     string OrderIdentification,
-    bool IsOfficialOrderIdentification,
-    double Components,
-    double Automation,
-    double Materials,
-    double Others,
-    double? CostNonQuality,
+    [property: JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)] Stored<bool> IsOfficialOrderIdentification,
+    [property: JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)] Stored<double> Components,
+    [property: JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)] Stored<double> Automation,
+    [property: JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)] Stored<double> Materials,
+    [property: JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)] Stored<double> Others,
+    [property: JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)] Stored<double> CostNonQuality,
     IReadOnlyList<string?> CommentType,
     [property: JsonPropertyName("_id")] string Id,
     TBudget? Budget,
@@ -148,14 +148,14 @@ public sealed record JobPriorityRequest(string Priority);
 
 /// <summary><c>devStatistic</c>.</summary>
 public sealed record JobHoursResponse(
-    double NumberOfHoursUsed,
+    [property: JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)] Stored<double> NumberOfHoursUsed,
     double BudgetedHours,
     double Deviation,
     [property: JsonPropertyName("_id")] string Id);
 
 /// <summary><c>machiningStatistic</c>.</summary>
 public sealed record JobMachiningStatisticResponse(
-    double NumberOfHoursUsed,
+    [property: JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)] Stored<double> NumberOfHoursUsed,
     double BudgetedHours,
     double Deviation,
     string VerificationAndShapeControl,
@@ -166,7 +166,7 @@ public sealed record JobMachiningStatisticResponse(
 
 /// <summary><c>assemblyStatistic</c>.</summary>
 public sealed record JobAssemblyStatisticResponse(
-    double NumberOfHoursUsed,
+    [property: JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)] Stored<double> NumberOfHoursUsed,
     double BudgetedHours,
     double Deviation,
     string PneumaticCircuits,

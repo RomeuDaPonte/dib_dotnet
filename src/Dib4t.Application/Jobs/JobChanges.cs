@@ -10,8 +10,11 @@ namespace Dib4t.Application.Jobs;
 
 /// <summary>
 /// The legacy job model's methods (<c>models/job.js</c>: <c>setStatistics</c>, <c>updateStateDates</c>,
-/// <c>changeState</c>, <c>setNewStatistics</c>, <c>changeDueDate</c>) on a job as read, with Mongoose 5.13's casts of
-/// the <b>original</b> request values, checked against the legacy code (<c>job-board-golden.json</c>). It collects the
+/// <c>changeState</c>, <c>setNewStatistics</c>, <c>changeDueDate</c>, and the details page's
+/// <c>setStatisticsDates</c>, <c>updateRegisteredValue</c>, <c>updateMachiningVerificatons</c>,
+/// <c>updateAssemblyVerifications</c> and the single-property assignment) on a job as read, with Mongoose 5.13's casts
+/// of the <b>original</b> request values, checked against the legacy code (<c>job-board-golden.json</c>,
+/// <c>job-details-golden.json</c>). It collects the
 /// assignments in the legacy order (<see cref="Assignments"/>) and what Mongoose's <c>validate()</c> would refuse at the
 /// save (<see cref="Refusal"/>: the route then answers 500 and nothing is written). A JavaScript <c>TypeError</c> of
 /// the legacy code (e.g. spreading a missing <c>commentType</c>) is a <see cref="JobScriptException"/>: 500, nothing written.
@@ -20,7 +23,7 @@ public sealed class JobChanges
 {
     private readonly List<JobAssignment> _assignments = [];
     private readonly Dictionary<string, Stored<DateTime>> _dates = new(StringComparer.Ordinal);
-    private readonly List<string> _newDates = [];
+    private readonly List<KeyValuePair<string, StoredValue>> _newDates = [];
     private readonly DateTime _now;
     private bool _datesExist;
     private bool _datesCreated;
@@ -59,7 +62,7 @@ public sealed class JobChanges
             }
 
             var fields = new List<KeyValuePair<string, StoredValue>> { new("_id", StoredValue.NewId) };
-            fields.AddRange(_newDates.Select(f => new KeyValuePair<string, StoredValue>(f, StoredValue.Date(_now))));
+            fields.AddRange(_newDates);
             return [.. _assignments, new JobAssignment("jobStatisticsDates", StoredValue.Document(fields))];
         }
     }
@@ -211,6 +214,171 @@ public sealed class JobChanges
     public void SetPriority(string priority) => Assign("priority", StoredValue.Text(priority));
 
     /// <summary>
+    /// <c>setStatisticsDates(forJobState, newDate)</c> (<c>PATCH statisticsDates</c>): the end date as Mongoose casts it
+    /// (<c>""</c> and <c>null</c> are stored <c>null</c>; missing removes it; invalid is refused). <b>D17 fixed</b>: a job
+    /// without <c>jobStatisticsDates</c> gets a new one with this date, as <c>setStatistics</c> does (legacy: a
+    /// <c>TypeError</c>, 500).
+    /// </summary>
+    public void SetStatisticsDate(string field, JsonElement? newDate)
+    {
+        ArgumentNullException.ThrowIfNull(field);
+        EnsureDates();
+        SetDate(field, CastDate(newDate, "jobStatisticsDates." + field));
+    }
+
+    /// <summary>
+    /// <c>updateRegisteredValue(newRegisteredValue, taskType)</c> (<c>PATCH register</c>, the cost table's "Registo"):
+    /// development → <c>devStatistic.numberOfHoursUsed</c>, assembly and machining → their statistic's hours,
+    /// automation/components/others → the cost, <c>custoNaoQualidade</c> → <c>costNonQuality</c>, <c>materials</c>;
+    /// Mongoose's number cast; any other type (also a non-string) changes nothing. <b>D18 fixed</b>: consultancy is
+    /// development (legacy: nothing). A missing statistic is the legacy <c>TypeError</c> (500).
+    /// </summary>
+    public void SetRegisteredValue(JsonElement? newValue, JsonElement? taskType)
+    {
+        switch (Text(taskType))
+        {
+            case TaskTypes.Development or TaskTypes.Consultancy:
+                SetHours("devStatistic", Job.DevStatistic is not null, newValue);
+                break;
+            case TaskTypes.Assembly:
+                SetHours("assemblyStatistic", Job.AssemblyStatistic is not null, newValue);
+                break;
+            case TaskTypes.Machining:
+                SetHours("machiningStatistic", Job.MachiningStatistic is not null, newValue);
+                break;
+            case TaskTypes.Automation:
+                Assign("automation", CastNumber(newValue));
+                break;
+            case TaskTypes.Components:
+                Assign("components", CastNumber(newValue));
+                break;
+            case TaskTypes.Others:
+                Assign("others", CastNumber(newValue));
+                break;
+            case NonQualityCostType:
+                Assign("costNonQuality", CastNumber(newValue));
+                break;
+            case MaterialsType:
+                Assign("materials", CastNumber(newValue));
+                break;
+        }
+    }
+
+    /// <summary>The <c>taskType</c> of <c>PATCH register</c> for the non-quality cost (legacy name).</summary>
+    public const string NonQualityCostType = "custoNaoQualidade";
+
+    /// <summary>The <c>taskType</c> of <c>PATCH register</c> for the materials cost.</summary>
+    public const string MaterialsType = "materials";
+
+    /// <summary>
+    /// <c>job[propertyName] = value</c> (<c>PATCH singleProperty</c>, one of <see cref="JobValidators.SingleProperties"/>)
+    /// with Mongoose's cast of the path; an empty, <c>null</c> or missing order identification fails its required check.
+    /// </summary>
+    public void SetSingleProperty(string propertyName, JsonElement? value)
+    {
+        switch (propertyName)
+        {
+            case "deliveryDate":
+                Assign("deliveryDate", CastDate(value, "deliveryDate"));
+                break;
+            case "orderIdentification":
+                var text = CastString(value);
+                Assign("orderIdentification", text);
+                if (text is StoredValue.UndefinedValue or StoredValue.NullValue or StoredValue.TextValue { Value.Length: 0 })
+                {
+                    Refuse("orderIdentification: Path `orderIdentification` is required.");
+                }
+
+                break;
+            case "isOfficialOrderIdentification":
+                Assign("isOfficialOrderIdentification", CastBoolean(value));
+                break;
+            case "comments":
+                Assign("comments", CastString(value));
+                break;
+            case "invoicedPercent":
+                SetInvoicedPercent(value);
+                break;
+            default:
+                throw new ArgumentOutOfRangeException(nameof(propertyName), propertyName, null);
+        }
+    }
+
+    /// <summary>
+    /// <c>req.body.updateMachiningVerificatons == true</c> (JavaScript loose equality: <c>true</c>, <c>1</c>,
+    /// <c>"1"</c>, <c>[1]</c>; not <c>"true"</c>).
+    /// </summary>
+    public static bool IsMachiningVerification(JsonElement? flag) => flag?.ValueKind switch
+    {
+        JsonValueKind.True => true,
+        JsonValueKind.Number => flag.Value.GetDouble() == 1,
+        JsonValueKind.String => JsNumber.FromText(flag.Value.GetString()) == 1,
+        JsonValueKind.Array => JsNumber.FromText(ArrayText(flag.Value)) == 1,
+        _ => false,
+    };
+
+    /// <summary>
+    /// <c>this.machiningStatistic = { ...requestBody.machiningStatistic }</c> (<c>PATCH updateVerifications</c>): a
+    /// sub-document of the sent values for the schema's paths (defaults for missing ones; the sent <c>_id</c> kept, else
+    /// a new one), <c>validatedBy</c> = the signed-in user's name (PLAN.md §7.3: legacy stores the name the client sends).
+    /// </summary>
+    public void ReplaceMachiningStatistic(JsonElement? statistic, string? userName)
+    {
+        var values = SpreadObject(statistic);
+        Assign("machiningStatistic", Statistic(values, MachiningChecks, userName, SentId(values)));
+    }
+
+    /// <summary><c>this.assemblyStatistic = { ...requestBody.assemblyStatistic }</c>, as <see cref="ReplaceMachiningStatistic"/>.</summary>
+    public void ReplaceAssemblyStatistic(JsonElement? statistic, string? userName)
+    {
+        var values = SpreadObject(statistic);
+        Assign("assemblyStatistic", Statistic(values, AssemblyChecks, userName, SentId(values)));
+    }
+
+    private void SetHours(string statistic, bool exists, JsonElement? newValue)
+    {
+        if (!exists)
+        {
+            throw new JobScriptException("TypeError: Cannot set properties of undefined (setting 'numberOfHoursUsed')");
+        }
+
+        Assign(statistic + ".numberOfHoursUsed", CastNumber(newValue));
+    }
+
+    /// <summary><c>{ ...value }</c> for the schema's paths: an object's own keys; anything else has none.</summary>
+    private static IReadOnlyDictionary<string, JsonElement> SpreadObject(JsonElement? value) =>
+        value is { ValueKind: JsonValueKind.Object } element ? JsObject.Properties(element) : new Dictionary<string, JsonElement>(StringComparer.Ordinal);
+
+    /// <summary>The sent <c>_id</c> cast to an ObjectId (a cast failure is refused); none → a new one.</summary>
+    private StoredValue SentId(IReadOnlyDictionary<string, JsonElement> values)
+    {
+        if (!values.TryGetValue("_id", out var id))
+        {
+            return StoredValue.NewId;
+        }
+
+        if (id.ValueKind == JsonValueKind.String && LegacyObjectId.Cast(id.GetString()!) is { } hex)
+        {
+            return StoredValue.ObjectId(hex);
+        }
+
+        Refuse($"_id: Cast to ObjectId failed for value {id.GetRawText()}");
+        return StoredValue.NewId;
+    }
+
+    private static string ArrayText(JsonElement array) =>
+        string.Join(',', array.EnumerateArray().Select(e => e.ValueKind switch
+        {
+            JsonValueKind.Null => string.Empty,
+            JsonValueKind.String => e.GetString(),
+            JsonValueKind.Number => JsNumber.ToString(e.GetDouble()),
+            JsonValueKind.True => "true",
+            JsonValueKind.False => "false",
+            JsonValueKind.Array => ArrayText(e),
+            _ => "[object Object]",
+        }));
+
+    /// <summary>
     /// Legacy <c>confirmDeviation(tasks, numberOfHoursUsed, deviation)</c>: no tasks of the state's type → true; else
     /// <c>Σ quantity − numberOfHoursUsed == deviation</c> with JavaScript's addition, subtraction and loose equality
     /// on the original values (<c>"18"</c> is 18).
@@ -254,7 +422,7 @@ public sealed class JobChanges
     /// <c>this.xStatistic = { ...newStatistics }</c>: a new sub-document of the body's values for the schema's paths
     /// (hours, then the checks; a missing one its default), a new <c>_id</c>, then <c>validatedBy</c>.
     /// </summary>
-    private StoredValue Statistic(IReadOnlyDictionary<string, JsonElement> values, string[] checks, string? validatedBy)
+    private StoredValue Statistic(IReadOnlyDictionary<string, JsonElement> values, string[] checks, string? validatedBy, StoredValue? id = null)
     {
         var fields = new List<KeyValuePair<string, StoredValue>>();
         foreach (var hours in new[] { "numberOfHoursUsed", "budgetedHours", "deviation" })
@@ -275,7 +443,7 @@ public sealed class JobChanges
             }
         }
 
-        fields.Add(new("_id", StoredValue.NewId));
+        fields.Add(new("_id", id ?? StoredValue.NewId));
         if (validatedBy is not null)
         {
             fields.Add(new("validatedBy", StoredValue.Text(validatedBy)));
@@ -321,19 +489,35 @@ public sealed class JobChanges
         }
     }
 
-    private void SetDate(string field)
+    private void SetDate(string field) => SetDate(field, StoredValue.Date(_now));
+
+    /// <summary>
+    /// <c>this.jobStatisticsDates[field] = value</c>: a field of an existing sub-document is a dotted path; in a
+    /// sub-document this request creates, the field takes its place in assignment order (<c>undefined</c> leaves it out).
+    /// </summary>
+    private void SetDate(string field, StoredValue value)
     {
-        _dates[field] = Stored<DateTime>.Of(_now);
+        _dates[field] = value switch
+        {
+            StoredValue.DateValue date => Stored<DateTime>.Of(date.Value),
+            StoredValue.NullValue => Stored<DateTime>.Null,
+            _ => Stored<DateTime>.Missing,
+        };
         if (_datesCreated)
         {
-            if (!_newDates.Contains(field))
+            var index = _newDates.FindIndex(f => f.Key == field);
+            if (index >= 0)
             {
-                _newDates.Add(field);
+                _newDates[index] = new(field, value);
+            }
+            else
+            {
+                _newDates.Add(new(field, value));
             }
         }
         else
         {
-            _assignments.Add(new JobAssignment("jobStatisticsDates." + field, StoredValue.Date(_now)));
+            _assignments.Add(new JobAssignment("jobStatisticsDates." + field, value));
         }
     }
 

@@ -254,7 +254,7 @@ public sealed class BudgetsPageTests : IAsyncDisposable
         BudgetList.Menu(true, true, false, all).Should().Equal(BudgetMenuItem.Pdf, BudgetMenuItem.Clone, BudgetMenuItem.NewRevision, BudgetMenuItem.CreateJob);
         BudgetList.Menu(true, true, true, all).Should().Equal(BudgetMenuItem.Pdf, BudgetMenuItem.JobDetails, BudgetMenuItem.Print, BudgetMenuItem.Clone);
         BudgetList.Menu(true, true, false).Should().Equal(BudgetMenuItem.Pdf, BudgetMenuItem.Clone, BudgetMenuItem.NewRevision, BudgetMenuItem.CreateJob);
-        BudgetList.Menu(true, true, true).Should().Equal([BudgetMenuItem.Pdf, BudgetMenuItem.Clone], "the job items come with the jobs board");
+        BudgetList.Menu(true, true, true).Should().Equal([BudgetMenuItem.Pdf, BudgetMenuItem.JobDetails, BudgetMenuItem.Clone], "\"Imprimir\" comes with Phase 4 step 4");
 
         BudgetList.Date(new DateTime(2026, 5, 24, 23, 30, 0, DateTimeKind.Utc), Lisbon).Should().Be("25/05/2026");
         BudgetForm.FilterClients([Metal, Cortica], "cortica").Should().Equal(Cortica);
@@ -342,6 +342,21 @@ public sealed class BudgetsPageTests : IAsyncDisposable
     }
 
     [Fact]
+    public async Task Detalhes_obra_opens_the_job_of_the_budget_and_shows_the_servers_text_without_one()
+    {
+        _jobs.FindIdByBudgetIdAsync("b2").Returns(
+            ApiResult.Failure<string>(HttpStatusCode.BadRequest, "Não há obra corresponde a esse orçamento"),
+            ApiResult.Success("5f1e9a2b3c4d5e6f70860001"));
+        var table = await RenderTableAsync();
+
+        await MenuAsync(table, "Opções de 26-0002 R0", "Detalhes obra");
+        Snackbar.ShownSnackbars.Should().Contain(s => s.Message == "Não há obra corresponde a esse orçamento" && s.Severity == Severity.Error);
+        await MenuAsync(table, "Opções de 26-0002 R0", "Detalhes obra");
+
+        _context.Services.GetRequiredService<NavigationManager>().Uri.Should().EndWith("/landing/job/5f1e9a2b3c4d5e6f70860001");
+    }
+
+    [Fact]
     public void The_job_form_follows_the_legacy_dialog()
     {
         var lisbon = Lisbon;
@@ -358,7 +373,9 @@ public sealed class BudgetsPageTests : IAsyncDisposable
         form.ToRequest().FinalPrice.Should().Be("0x10");
     }
 
-    private static JobResponse<BudgetResponse> Job(string budgetId) => new(Stored<double>.Of(0), 43.5, "Montagem", "PO-7", false, 0, 0, 0, 0, 0, [], "j1",
+    private static readonly Stored<double> Zero = Stored<double>.Of(0);
+
+    private static JobResponse<BudgetResponse> Job(string budgetId) => new(Stored<double>.Of(0), 43.5, "Montagem", "PO-7", Stored<bool>.Of(false), Zero, Zero, Zero, Zero, Zero, [], "j1",
         Saved(budgetId, "26-0003", 2, Metal) with { HasGenerateJob = true }, "Ana Administradora", null, null, null, null, null, "Média", 0);
 
     private sealed class FixedTime(DateTimeOffset now) : TimeProvider

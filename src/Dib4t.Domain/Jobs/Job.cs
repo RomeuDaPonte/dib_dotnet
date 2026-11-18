@@ -14,11 +14,11 @@ namespace Dib4t.Domain.Jobs;
 /// <param name="FinalPrice">The agreed price (€).</param>
 /// <param name="State">One of <see cref="JobStates"/>.</param>
 /// <param name="OrderIdentification">The client's order reference ("Por preencher" by default).</param>
-/// <param name="IsOfficialOrderIdentification">The order reference is the official one.</param>
-/// <param name="Components">Registered cost of components (€).</param>
-/// <param name="Automation">Registered cost of automation (€).</param>
-/// <param name="Materials">Registered cost of materials (€).</param>
-/// <param name="Others">Registered other costs (€).</param>
+/// <param name="IsOfficialOrderIdentification">The order reference is the official one (stored <c>null</c> or missing after a legacy <c>singleProperty</c> without a value).</param>
+/// <param name="Components">Registered cost of components (€); stored <c>null</c> or missing after an emptied input (legacy <c>register</c>).</param>
+/// <param name="Automation">Registered cost of automation (€), as <paramref name="Components"/>.</param>
+/// <param name="Materials">Registered cost of materials (€), as <paramref name="Components"/>.</param>
+/// <param name="Others">Registered other costs (€), as <paramref name="Components"/>.</param>
 /// <param name="CostNonQuality">Registered non-quality cost (€); <c>null</c> in one production job.</param>
 /// <param name="CommentType">Comment categories (<c>CommentTypes</c>).</param>
 /// <param name="BudgetId">→ <c>budgets._id</c>: the revision the job was made from.</param>
@@ -36,12 +36,12 @@ public sealed record Job(
     double FinalPrice,
     string State,
     string OrderIdentification,
-    bool IsOfficialOrderIdentification,
-    double Components,
-    double Automation,
-    double Materials,
-    double Others,
-    double? CostNonQuality,
+    Stored<bool> IsOfficialOrderIdentification,
+    Stored<double> Components,
+    Stored<double> Automation,
+    Stored<double> Materials,
+    Stored<double> Others,
+    Stored<double> CostNonQuality,
     IReadOnlyList<string?> CommentType,
     string? BudgetId,
     string? CreatedBy,
@@ -99,11 +99,11 @@ public sealed record JobStatisticsDates(
 }
 
 /// <summary>Hours of one kind of work.</summary>
-/// <param name="NumberOfHoursUsed">Hours registered so far.</param>
+/// <param name="NumberOfHoursUsed">Hours registered so far (stored <c>null</c> or missing after an emptied input).</param>
 /// <param name="BudgetedHours">The quantities of the budget's tasks of this kind.</param>
 /// <param name="Deviation">Budgeted − used (sent by the client, checked by the server).</param>
 /// <param name="Id">The embedded document's <c>_id</c>.</param>
-public sealed record JobHours(double NumberOfHoursUsed, double BudgetedHours, double Deviation, string Id);
+public sealed record JobHours(Stored<double> NumberOfHoursUsed, double BudgetedHours, double Deviation, string Id);
 
 /// <summary><c>machiningStatistic</c>: the hours and the three checks (<c>QuestionResponses</c>).</summary>
 public sealed record JobMachiningStatistic(

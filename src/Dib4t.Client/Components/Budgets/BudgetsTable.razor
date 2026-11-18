@@ -260,6 +260,19 @@
             case BudgetMenuItem.Clone:
                 _form = BudgetForm.Clone(row.Source, Session.User?.Id ?? string.Empty);
                 break;
+            case BudgetMenuItem.JobDetails:
+                // legacy goToJobDetails: the job of this budget revision, else the server's text
+                var jobId = await JobApi.FindIdByBudgetIdAsync(row.Id);
+                if (jobId.IsSuccess)
+                {
+                    Navigation.NavigateTo("landing/job/" + jobId.Value);
+                }
+                else if (!jobId.IsUnexpected)
+                {
+                    Snackbar.Add(jobId.ErrorText!, Severity.Error);
+                }
+
+                break;
             case BudgetMenuItem.CreateJob:
                 _jobForm = JobForm.For(row.Id, row.Source.Total, row.Source.DaysNeededToDoTheWork, Time.GetUtcNow(), Zone);
                 break;

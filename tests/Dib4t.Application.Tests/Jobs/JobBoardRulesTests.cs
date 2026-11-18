@@ -151,11 +151,13 @@ public sealed class JobBoardRulesTests
     private static string StateOf(string jobName) =>
         Golden.GetProperty("jobs").EnumerateArray().Single(j => j.GetProperty("_id").GetProperty("$oid").GetString() == jobName).GetProperty("state").GetString()!;
 
+    private static readonly Stored<double> Zero = Stored<double>.Of(0);
+
     private static JobChanges Changes(Job job) => new(job, Now);
 
-    private static Job Job(string state, Stored<double> invoiced) => new("5f1e9a2b3c4d5e6f70860001", invoiced, 1, state, "x", false, 0, 0, 0, 0, 0, [],
-        "5f1e9a2b3c4d5e6f70810001", "Ana", Now, Now, new JobHours(0, 0, 0, "a"),
-        new JobMachiningStatistic(new JobHours(0, 0, 0, "b"), "n/a", "n/a", "n/a", null), null, "Média", 0);
+    private static Job Job(string state, Stored<double> invoiced) => new("5f1e9a2b3c4d5e6f70860001", invoiced, 1, state, "x", Stored<bool>.Of(false), Zero, Zero, Zero, Zero, Zero, [],
+        "5f1e9a2b3c4d5e6f70810001", "Ana", Now, Now, new JobHours(Zero, 0, 0, "a"),
+        new JobMachiningStatistic(new JobHours(Zero, 0, 0, "b"), "n/a", "n/a", "n/a", null), null, "Média", 0);
 
     private static BudgetTask Task(double quantity) => new(Guid.NewGuid().ToString("N")[..24], "b", TaskTypes.Development, "", 30, quantity, 0);
 

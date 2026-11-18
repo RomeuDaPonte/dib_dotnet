@@ -35,6 +35,22 @@ public static class JobValidators
 
     private static readonly JoiObjectSchema PrioritySchema = new(("priority", JoiString.Create().Valid(JobPriorities.All).Required()));
 
+    /// <summary>The end dates the details page's state column may change (<c>validateStateDateName</c>: not "Para faturação").</summary>
+    public static IReadOnlyList<string> EditableStateDates { get; } =
+        ["devEndedInDate", "onApprovalEndedInDate", "approvedEndedInDate", "machiningEndedInDate", "assemblyEndedInDate"];
+
+    /// <summary>The fields <c>PATCH singleProperty</c> may change (<c>validateUpdateSingleProperty</c>, in its order).</summary>
+    public static IReadOnlyList<string> SingleProperties { get; } =
+        ["deliveryDate", "orderIdentification", "isOfficialOrderIdentification", "comments", "invoicedPercent"];
+
+    private static readonly JoiObjectSchema StateDateNameSchema = new(
+        ("forJobState", JoiString.Create().Valid(EditableStateDates).Required()),
+        ("newDate", JoiAny.Create()));
+
+    private static readonly JoiObjectSchema SinglePropertySchema = new(
+        ("propertyName", JoiString.Create().Valid(SingleProperties).Required()),
+        ("value", JoiAny.Create()));
+
     private static readonly JoiObjectSchema DevelopmentStatisticsSchema = new(
         ("commentType", CommentTypeRule()),
         ("numberOfHoursUsed", JoiNumber.Create().Min(0).Required()),
@@ -107,6 +123,14 @@ public static class JobValidators
     /// <summary><c>validateJobPriority</c>: the priority.</summary>
     public static Result<string> ValidatePriority(JsonElement body) =>
         PrioritySchema.Validate(body) is { } message ? Error.Validation(message) : body.GetProperty("priority").GetString()!;
+
+    /// <summary><c>validateStateDateName</c> (<c>PATCH statisticsDates</c>): the end date's field name.</summary>
+    public static Result<string> ValidateStateDateName(JsonElement body) =>
+        StateDateNameSchema.Validate(body) is { } message ? Error.Validation(message) : body.GetProperty("forJobState").GetString()!;
+
+    /// <summary><c>validateUpdateSingleProperty</c> (<c>PATCH singleProperty</c>): the field name.</summary>
+    public static Result<string> ValidateSingleProperty(JsonElement body) =>
+        SinglePropertySchema.Validate(body) is { } message ? Error.Validation(message) : body.GetProperty("propertyName").GetString()!;
 
     /// <summary>
     /// <c>validateStatistics(req, currentJob.state)</c>: the schema of the job's <b>current</b> state (development,

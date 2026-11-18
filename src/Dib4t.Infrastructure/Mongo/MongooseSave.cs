@@ -8,7 +8,7 @@ namespace Dib4t.Infrastructure.Mongo;
 /// <c>$__delta</c> of the legacy models in <c>settings-golden.json</c>): a path is written only when the assigned
 /// value differs from the stored one or the field is not stored at all (a default Mongoose applied on read is not
 /// stored); numbers compare as JavaScript numbers (<c>Int32 10</c> equals <c>10.0</c>, so the stored type is kept);
-/// arrays element by element. Assigning <c>undefined</c> removes a stored field (<c>$unset</c>). Replacing an array
+/// arrays element by element, sub-documents key by key. Assigning <c>undefined</c> removes a stored field (<c>$unset</c>). Replacing an array
 /// adds <c>$inc: { __v: 1 }</c> (also when <c>__v</c> is missing: <c>$inc</c> then creates it). The filter is the
 /// <c>_id</c> only, like Mongoose without a versioned array operation.
 /// </summary>
@@ -173,6 +173,15 @@ internal static class MongooseSave
             var a = left.AsBsonArray;
             var b = right.AsBsonArray;
             return a.Count == b.Count && a.Zip(b).All(pair => JsEquals(pair.First, pair.Second));
+        }
+
+        if (left.IsBsonDocument && right.IsBsonDocument)
+        {
+            // Mongoose deepEqual: the same keys (in any order), each value equal (a replaced sub-document with the
+            // stored values writes nothing; checked in job-details-golden.json)
+            var a = left.AsBsonDocument;
+            var b = right.AsBsonDocument;
+            return a.ElementCount == b.ElementCount && a.All(e => b.TryGetValue(e.Name, out var other) && JsEquals(e.Value, other));
         }
 
         return left.Equals(right);

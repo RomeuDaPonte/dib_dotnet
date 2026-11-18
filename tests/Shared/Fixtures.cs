@@ -46,6 +46,11 @@ public static class Fixtures
     /// </summary>
     public static string JobBoardGolden => Path.Combine(Root, "legacy", "jobs", "job-board-golden.json");
 
+    public static string JobDetailsGolden => Path.Combine(Root, "legacy", "jobs", "job-details-golden.json");
+
+    /// <summary>The job details page's cost summary and table by the legacy front-end code (tools/legacy/job-costs-golden.js).</summary>
+    public static string JobCostsGolden => Path.Combine(Root, "legacy", "jobs", "job-costs-golden.json");
+
     /// <summary>
     /// The legacy pdfmake's breaks, shaping and laid-out pages of the budget PDF (tools/legacy/pdf-golden.js): line-breaks,
     /// shaping, layouts (11 reference samples + synthetic budgets), digests (every budget of the anonymized backup).

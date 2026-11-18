@@ -50,7 +50,7 @@ public sealed class JobsBoardTests : IAsyncDisposable
         [
             Listed("j3", "26-0003", JobStates.ForInvoicing, new DateTime(2029, 12, 20, 0, 0, 0, DateTimeKind.Utc), JobPriorities.Medium) with
             {
-                IsOfficialOrderIdentification = true, InvoicedPercent = Stored<double>.Of(60), DeliveryDate = Stored<DateTime>.Of(new DateTime(2030, 1, 2, 0, 0, 0, DateTimeKind.Utc)),
+                IsOfficialOrderIdentification = Stored<bool>.Of(true), InvoicedPercent = Stored<double>.Of(60), DeliveryDate = Stored<DateTime>.Of(new DateTime(2030, 1, 2, 0, 0, 0, DateTimeKind.Utc)),
             },
         ]));
         _clipboard.CopyAsync(Arg.Any<string>()).Returns(true);
@@ -224,22 +224,24 @@ public sealed class JobsBoardTests : IAsyncDisposable
         return _context.Render<JobsBoard>(p => p.Add(c => c.Zone, Lisbon));
     }
 
-    private static JobAssemblyStatisticResponse Assembly(string tries) => new(0, 10, 10, "n/a", "n/a", "n/a", "n/a", "n/a", "n/a", tries, "a", null);
+    private static readonly Stored<double> Zero = Stored<double>.Of(0);
+
+    private static JobAssemblyStatisticResponse Assembly(string tries) => new(Zero, 10, 10, "n/a", "n/a", "n/a", "n/a", "n/a", "n/a", tries, "a", null);
 
     private static JobResponse<JobListBudgetResponse> Listed(string id, string number, string state, DateTime due, string priority) =>
-        new(Stored<double>.Of(0), 15000.5, state, "PO", false, 0, 0, 0, 0, 0, [], id,
+        new(Stored<double>.Of(0), 15000.5, state, "PO", Stored<bool>.Of(false), Zero, Zero, Zero, Zero, Zero, [], id,
             new JobListBudgetResponse(0, true, true, 35, 45, 30, true, "b-" + id, Metal, "Máquina " + number, "Eng.ª", "u1", number, "30 dias", 1, null,
                 new DateTime(2026, 2, 1, 0, 0, 0, DateTimeKind.Utc), 0),
-            "Ana", due, new DateTime(2026, 2, 2, 0, 0, 0, DateTimeKind.Utc), new JobHoursResponse(0, 20.5, 20.5, "d"), null, null, priority, 0);
+            "Ana", due, new DateTime(2026, 2, 2, 0, 0, 0, DateTimeKind.Utc), new JobHoursResponse(Zero, 20.5, 20.5, "d"), null, null, priority, 0);
 
     private static JobResponse<BudgetResponse> Detailed(string id, string state)
     {
         var number = "26-000" + id[^1];
-        return new(Stored<double>.Of(0), 15000.5, state, "PO", true, 0, 0, 0, 0, 0, [], id,
+        return new(Stored<double>.Of(0), 15000.5, state, "PO", Stored<bool>.Of(true), Zero, Zero, Zero, Zero, Zero, [], id,
             new BudgetResponse(0, true, true, 35, 45, 30, true, "b-" + id, Metal, "Máquina " + number, "Eng.ª", null, number, "30 dias", 1, null,
                 new DateTime(2026, 2, 1, 0, 0, 0, DateTimeKind.Utc), 0),
-            "Ana", new DateTime(2030, 1, 12, 0, 0, 0, DateTimeKind.Utc), new DateTime(2026, 2, 2, 0, 0, 0, DateTimeKind.Utc), new JobHoursResponse(0, 20.5, 20.5, "d"),
-            new JobMachiningStatisticResponse(0, 15, 15, "n/a", "n/a", "n/a", "m", null), Assembly("1"), JobPriorities.Medium, 0);
+            "Ana", new DateTime(2030, 1, 12, 0, 0, 0, DateTimeKind.Utc), new DateTime(2026, 2, 2, 0, 0, 0, DateTimeKind.Utc), new JobHoursResponse(Zero, 20.5, 20.5, "d"),
+            new JobMachiningStatisticResponse(Zero, 15, 15, "n/a", "n/a", "n/a", "m", null), Assembly("1"), JobPriorities.Medium, 0);
     }
 
     private sealed class FixedTime(DateTimeOffset now) : TimeProvider

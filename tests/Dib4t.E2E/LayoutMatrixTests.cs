@@ -152,6 +152,16 @@ public sealed class LayoutMatrixTests(E2EHarness harness) : E2ETest(harness)
             await page.Locator("#budget-description").WaitForAsync();
             await page.Mouse.MoveAsync(0, 0); // off the icon: its tooltip would be open during the checks
         }),
+        new("job-details", "/landing/budgets", SignedIn: true, Ready: ".budgets-table tbody tr td", page =>
+        [
+            ("Data de entrega", page.Locator("#job-delivery-date")),
+            ("Percentagem faturada", page.Locator("#job-invoiced-percent")),
+            ("Identificação da encomenda", page.Locator("#job-order-identification")),
+            ("Desenvolvimento: fim", page.Locator("#job-devEndedInDate")),
+            ("Registo", page.Locator("#job-register-development")),
+            ("Observações", page.Locator("#job-comments")),
+            ("Controlo de produto", page.Locator(".job-checks").First.Locator("input[type=checkbox]").First),
+        ], Open: OpenJobDetailsAsync),
         new("budget-details-import", "/landing/budgets", SignedIn: true, Ready: ".budgets-table tbody tr td", page =>
         [
             ("Nª Orçamento", page.Locator("#import-number")),
@@ -175,6 +185,16 @@ public sealed class LayoutMatrixTests(E2EHarness harness) : E2ETest(harness)
             .GetByRole(AriaRole.Button, new() { Name = "Editar" }).ClickAsync();
         await page.Locator(".budget-task").First.WaitForAsync();
         await page.Mouse.MoveAsync(0, 0); // the pointer would rest on a header icon and open its tooltip during the checks
+    }
+
+    /// <summary>The details of a job, opened from the budget list's "Detalhes obra" (the first budget with a job).</summary>
+    private static async Task OpenJobDetailsAsync(IPage page)
+    {
+        await page.Locator(".budgets-table tbody tr").Filter(new() { Has = page.Locator(".budgets-has-job") }).First
+            .Locator("button[aria-label^='Opções de']").ClickAsync();
+        await page.GetByRole(AriaRole.Menuitem, new() { Name = "Detalhes obra" }).ClickAsync();
+        await page.Locator(".job-cost-row input").First.WaitForAsync();
+        await page.Mouse.MoveAsync(0, 0);
     }
 
     /// <summary>

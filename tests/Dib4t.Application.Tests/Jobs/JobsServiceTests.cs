@@ -231,6 +231,6 @@ public sealed class JobsServiceTests
     private static PrinterSettings Printer(string id, string template) => new(id, "192.168.2.32", 9100, template, 0);
 
     private static Job Inserted(NewJob job) => new("5f1e9a2b3c4d5e6f708500aa", Stored<double>.Of(0), job.FinalPrice, job.State, job.OrderIdentification,
-        job.IsOfficialOrderIdentification, 0, 0, 0, 0, 0, [], job.BudgetId, job.CreatedBy, job.DueDate, job.StartDate,
-        new JobHours(0, job.DevelopmentHours, job.DevelopmentHours, "a"), null, null, "Média", 0);
+        Stored<bool>.Of(job.IsOfficialOrderIdentification), Stored<double>.Of(0), Stored<double>.Of(0), Stored<double>.Of(0), Stored<double>.Of(0), Stored<double>.Of(0), [],
+        job.BudgetId, job.CreatedBy, job.DueDate, job.StartDate, new JobHours(Stored<double>.Of(0), job.DevelopmentHours, job.DevelopmentHours, "a"), null, null, "Média", 0);
 }

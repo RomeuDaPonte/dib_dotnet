@@ -24,6 +24,9 @@ public abstract record StoredValue
     /// <summary>A new <c>ObjectId</c> (the <c>_id</c> of a new sub-document).</summary>
     public static StoredValue NewId { get; } = new NewIdValue();
 
+    /// <summary>An existing <c>ObjectId</c> (24 lowercase hex digits).</summary>
+    public static StoredValue ObjectId(string hex) => new ObjectIdValue(hex);
+
     public static StoredValue Number(double value) => new NumberValue(value);
 
     public static StoredValue Text(string value) => new TextValue(value);
@@ -43,6 +46,8 @@ public abstract record StoredValue
     public sealed record NullValue : StoredValue;
 
     public sealed record NewIdValue : StoredValue;
+
+    public sealed record ObjectIdValue(string Hex) : StoredValue;
 
     public sealed record NumberValue(double Value) : StoredValue;
 

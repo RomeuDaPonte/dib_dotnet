@@ -38,6 +38,12 @@ internal sealed class MongoJobRepository(IMongoDatabase database) : IJobReposito
         ["commentType"] = new BsonArray(),
     };
 
+    private static readonly string[] StatisticFields = ["devStatistic", "machiningStatistic", "assemblyStatistic"];
+
+    /// <summary>The defaults Mongoose applies on read (top level and the statistics' hours): assigning one to a field that is not stored writes nothing.</summary>
+    private static readonly Dictionary<string, BsonValue> UpdateDefaults = new(
+        SchemaDefaults.Concat(StatisticFields.Select(s => KeyValuePair.Create<string, BsonValue>(s + ".numberOfHoursUsed", 0))), StringComparer.Ordinal);
+
     private static readonly HashSet<string> KnownFields = new(StringComparer.Ordinal)
     {
         "_id", "invoicedPercent", "finalPrice", "state", "orderIdentification", "isOfficialOrderIdentification", "components", "automation",
@@ -154,7 +160,7 @@ internal sealed class MongoJobRepository(IMongoDatabase database) : IJobReposito
         }
 
         var written = stored.DeepClone().AsBsonDocument;
-        var update = MongooseSave.Update(written, bson, SchemaDefaults);
+        var update = MongooseSave.Update(written, bson, UpdateDefaults);
         if (update is not null)
         {
             await _raw.UpdateOneAsync(filter, update, cancellationToken: cancellationToken);
@@ -244,6 +250,16 @@ internal sealed class MongoJobRepository(IMongoDatabase database) : IJobReposito
             }
         }
 
+        // the statistics' own default (numberOfHoursUsed: 0), applied by Mongoose on read; a request that removes it
+        // leaves it out of the answer, as legacy
+        foreach (var statistic in StatisticFields)
+        {
+            if (document.TryGetValue(statistic, out var sub) && sub.IsBsonDocument && !sub.AsBsonDocument.Contains("numberOfHoursUsed"))
+            {
+                sub.AsBsonDocument["numberOfHoursUsed"] = 0;
+            }
+        }
+
         return document;
     }
 
@@ -253,6 +269,7 @@ internal sealed class MongoJobRepository(IMongoDatabase database) : IJobReposito
         StoredValue.UndefinedValue => null,
         StoredValue.NullValue => BsonNull.Value,
         StoredValue.NewIdValue => ObjectId.GenerateNewId(),
+        StoredValue.ObjectIdValue id => ObjectId.Parse(id.Hex),
         StoredValue.NumberValue number => JsNumberSerializer.ToBsonValue(number.Value),
         StoredValue.TextValue text => text.Value,
         StoredValue.BooleanValue flag => flag.Value,
@@ -272,12 +289,13 @@ internal sealed class MongoJobRepository(IMongoDatabase database) : IJobReposito
         Number(d, "finalPrice", 1),
         Text(d, "state") ?? JobStates.Development,
         Text(d, "orderIdentification") ?? "Por preencher",
-        d.TryGetValue("isOfficialOrderIdentification", out var official) && official.IsBoolean && official.AsBoolean,
-        Number(d, "components", 0),
-        Number(d, "automation", 0),
-        Number(d, "materials", 0),
-        Number(d, "others", 0),
-        d.TryGetValue("costNonQuality", out var cost) ? (cost.IsNumeric ? cost.ToDouble() : null) : 0,
+        !d.TryGetValue("isOfficialOrderIdentification", out var official) ? Stored<bool>.Missing
+            : official.IsBoolean ? Stored<bool>.Of(official.AsBoolean) : Stored<bool>.Null,
+        StoredNumber(d, "components"),
+        StoredNumber(d, "automation"),
+        StoredNumber(d, "materials"),
+        StoredNumber(d, "others"),
+        StoredNumber(d, "costNonQuality"),
         d.TryGetValue("commentType", out var types) && types.IsBsonArray ? [.. types.AsBsonArray.Select(t => t.IsString ? t.AsString : null)] : [],
         d.TryGetValue("budget", out var budget) && budget.IsObjectId ? budget.AsObjectId.ToString() : null,
         Text(d, "createdBy"),
@@ -308,7 +326,7 @@ internal sealed class MongoJobRepository(IMongoDatabase database) : IJobReposito
     };
 
     private static JobHours Hours(BsonDocument s) =>
-        new(Number(s, "numberOfHoursUsed", 0), Number(s, "budgetedHours", 0), Number(s, "deviation", 0), SubId(s));
+        new(StoredNumber(s, "numberOfHoursUsed"), Number(s, "budgetedHours", 0), Number(s, "deviation", 0), SubId(s));
 
     private static string Check(BsonDocument s, string field) => Text(s, field) ?? QuestionResponses.NotApplicable;
 

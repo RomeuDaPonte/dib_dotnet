@@ -155,8 +155,8 @@ public sealed class JobStatisticsForm
                 var m = job.MachiningStatistic;
                 return new()
                 {
-                    ["numberOfHoursUsed"] = m?.NumberOfHoursUsed ?? 0,
-                    ["materials"] = job.Materials,
+                    ["numberOfHoursUsed"] = JobValues.HoursOrZero(m?.NumberOfHoursUsed),
+                    ["materials"] = JobValues.Raw(job.Materials),
                     ["budgetedHours"] = m?.BudgetedHours ?? 0,
                     ["deviation"] = m?.Deviation ?? 0,
                     ["invoicedPercent"] = invoiced,
@@ -170,9 +170,9 @@ public sealed class JobStatisticsForm
                 var a = job.AssemblyStatistic;
                 return new()
                 {
-                    ["numberOfHoursUsed"] = a?.NumberOfHoursUsed ?? 0,
-                    ["components"] = job.Components,
-                    ["automation"] = job.Automation,
+                    ["numberOfHoursUsed"] = JobValues.HoursOrZero(a?.NumberOfHoursUsed),
+                    ["components"] = JobValues.Raw(job.Components),
+                    ["automation"] = JobValues.Raw(job.Automation),
                     ["budgetedHours"] = a?.BudgetedHours ?? 0,
                     ["deviation"] = a?.Deviation ?? 0,
                     ["deliveryDate"] = JobBoard.DateInput(job.DeliveryDate.HasValue ? job.DeliveryDate.Value : null),
@@ -191,7 +191,7 @@ public sealed class JobStatisticsForm
                 return new()
                 {
                     ["orderIdentification"] = job.OrderIdentification,
-                    ["isOfficialOrderIdentification"] = job.IsOfficialOrderIdentification,
+                    ["isOfficialOrderIdentification"] = JobValues.Raw(job.IsOfficialOrderIdentification),
                     ["deliveryDate"] = JobBoard.DateInput(job.DeliveryDate.HasValue ? job.DeliveryDate.Value : null),
                     ["invoicedPercent"] = job.InvoicedPercent.OrDefault() is > 0 and var billed ? billed : 100,
                     ["comments"] = comments,
@@ -201,9 +201,9 @@ public sealed class JobStatisticsForm
                 var dev = job.DevStatistic;
                 return new()
                 {
-                    ["numberOfHoursUsed"] = dev?.NumberOfHoursUsed ?? 0,
-                    ["components"] = job.Components,
-                    ["automation"] = job.Automation,
+                    ["numberOfHoursUsed"] = JobValues.HoursOrZero(dev?.NumberOfHoursUsed),
+                    ["components"] = JobValues.Raw(job.Components),
+                    ["automation"] = JobValues.Raw(job.Automation),
                     ["invoicedPercent"] = invoiced,
                     ["budgetedHours"] = dev?.BudgetedHours ?? 0,
                     ["deviation"] = dev?.Deviation ?? 0,
@@ -266,9 +266,9 @@ public sealed class JobCommentsForm
         var body = new Dictionary<string, object?>
         {
             ["state"] = j.State,
-            ["numberOfHoursUsed"] = j.DevStatistic?.NumberOfHoursUsed ?? 0,
-            ["components"] = j.Components,
-            ["automation"] = j.Automation,
+            ["numberOfHoursUsed"] = JobValues.HoursOrZero(j.DevStatistic?.NumberOfHoursUsed),
+            ["components"] = JobValues.Raw(j.Components),
+            ["automation"] = JobValues.Raw(j.Automation),
             ["budgetedHours"] = j.DevStatistic?.BudgetedHours ?? 0,
             ["deviation"] = j.DevStatistic?.Deviation ?? 0,
             ["comments"] = Comments,
@@ -280,8 +280,8 @@ public sealed class JobCommentsForm
         {
             case JobStates.Machining:
                 var m = j.MachiningStatistic;
-                body["numberOfHoursUsed"] = m?.NumberOfHoursUsed ?? 0;
-                body["materials"] = j.Materials;
+                body["numberOfHoursUsed"] = JobValues.HoursOrZero(m?.NumberOfHoursUsed);
+                body["materials"] = JobValues.Raw(j.Materials);
                 body["budgetedHours"] = m?.BudgetedHours ?? 0;
                 body["deviation"] = m?.Deviation ?? 0;
                 body["verificationAndShapeControl"] = m?.VerificationAndShapeControl ?? QuestionResponses.NotApplicable;
@@ -292,7 +292,7 @@ public sealed class JobCommentsForm
                 break;
             case JobStates.Assembly:
                 var a = j.AssemblyStatistic;
-                body["numberOfHoursUsed"] = a?.NumberOfHoursUsed ?? 0;
+                body["numberOfHoursUsed"] = JobValues.HoursOrZero(a?.NumberOfHoursUsed);
                 body["budgetedHours"] = a?.BudgetedHours ?? 0;
                 body["deviation"] = a?.Deviation ?? 0;
                 body["deliveryDate"] = delivery;
@@ -306,7 +306,7 @@ public sealed class JobCommentsForm
                 break;
             case JobStates.ForInvoicing:
                 body["orderIdentification"] = j.OrderIdentification;
-                body["isOfficialOrderIdentification"] = j.IsOfficialOrderIdentification;
+                body["isOfficialOrderIdentification"] = JobValues.Raw(j.IsOfficialOrderIdentification);
                 body["deliveryDate"] = delivery;
                 foreach (var key in new[] { "numberOfHoursUsed", "components", "automation", "budgetedHours", "deviation" })
                 {
@@ -318,4 +318,17 @@ public sealed class JobCommentsForm
 
         return body;
     }
+}
+
+/// <summary>Job values as the legacy page's JavaScript reads them.</summary>
+internal static class JobValues
+{
+    /// <summary><c>statistic?.numberOfHoursUsed ?? 0</c>.</summary>
+    public static double HoursOrZero(Stored<double>? hours) => hours is { HasValue: true } value ? value.Value : 0;
+
+    /// <summary>A stored cost as the legacy body sends it (<c>job.components</c>: the number, or <c>null</c>).</summary>
+    public static double? Raw(Stored<double> value) => value.HasValue ? value.Value : null;
+
+    /// <summary>A stored flag as the legacy body sends it (the flag, or <c>null</c>).</summary>
+    public static bool? Raw(Stored<bool> value) => value.HasValue ? value.Value : null;
 }

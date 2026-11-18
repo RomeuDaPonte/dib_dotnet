@@ -5,7 +5,7 @@ using Dib4t.Contracts.Jobs;
 
 namespace Dib4t.Client.Api;
 
-/// <summary>The job routes of <c>/api/job</c> (PLAN.md §6, §8.2): create and the jobs board's routes.</summary>
+/// <summary>The job routes of <c>/api/job</c> (PLAN.md §6, §8.2): create, the jobs board's and the job details page's routes.</summary>
 public interface IJobApi
 {
     /// <summary><c>POST /api/job</c>: the new job, with the budget it was made from.</summary>
@@ -40,6 +40,21 @@ public interface IJobApi
 
     /// <summary><c>PATCH changeJobPriority/:jobId</c>.</summary>
     Task<ApiResult<JobResponse<BudgetResponse>>> ChangePriorityAsync(string jobId, string priority);
+
+    /// <summary><c>GET getByBudgetId/:budgetId</c>: the id of the budget's job ("Detalhes obra").</summary>
+    Task<ApiResult<string>> FindIdByBudgetIdAsync(string budgetId);
+
+    /// <summary><c>PATCH statisticsDates/:jobId</c> <c>{ forJobState, newDate }</c>: one state's end date (<c>yyyy-MM-dd</c>, or empty).</summary>
+    Task<ApiResult<JobResponse<BudgetResponse>>> ChangeStatisticsDateAsync(string jobId, string forJobState, string newDate);
+
+    /// <summary><c>PATCH register/:jobId</c> <c>{ newRegisteredValue, taskType }</c>: a registered cost or hours, as the input holds it.</summary>
+    Task<ApiResult<JobResponse<BudgetResponse>>> RegisterValueAsync(string jobId, object? newRegisteredValue, string taskType);
+
+    /// <summary><c>PATCH singleProperty/:jobId</c> <c>{ propertyName, value }</c>.</summary>
+    Task<ApiResult<JobResponse<BudgetResponse>>> ChangeSinglePropertyAsync(string jobId, string propertyName, object? value);
+
+    /// <summary><c>PATCH updateVerifications/:jobId</c> <c>{ machiningStatistic, assemblyStatistic, updateMachiningVerificatons }</c>.</summary>
+    Task<ApiResult<JobResponse<BudgetResponse>>> UpdateVerificationsAsync(string jobId, IReadOnlyDictionary<string, object?> body);
 }
 
 /// <summary>A statistics save: the answer, and the 405's reason and saved job.</summary>
@@ -102,4 +117,22 @@ public sealed class JobApi(HttpClient http) : IJobApi
     public Task<ApiResult<JobResponse<BudgetResponse>>> ChangePriorityAsync(string jobId, string priority) =>
         ApiCalls.SendAsync<JobResponse<BudgetResponse>>(http, HttpMethod.Patch, "api/job/changeJobPriority/" + Uri.EscapeDataString(jobId),
             new JobPriorityRequest(priority));
+
+    public Task<ApiResult<string>> FindIdByBudgetIdAsync(string budgetId) =>
+        ApiCalls.SendAsync<string>(http, HttpMethod.Get, "api/job/getByBudgetId/" + Uri.EscapeDataString(budgetId));
+
+    public Task<ApiResult<JobResponse<BudgetResponse>>> ChangeStatisticsDateAsync(string jobId, string forJobState, string newDate) =>
+        Patch("statisticsDates", jobId, new Dictionary<string, object?> { ["forJobState"] = forJobState, ["newDate"] = newDate });
+
+    public Task<ApiResult<JobResponse<BudgetResponse>>> RegisterValueAsync(string jobId, object? newRegisteredValue, string taskType) =>
+        Patch("register", jobId, new Dictionary<string, object?> { ["newRegisteredValue"] = newRegisteredValue, ["taskType"] = taskType });
+
+    public Task<ApiResult<JobResponse<BudgetResponse>>> ChangeSinglePropertyAsync(string jobId, string propertyName, object? value) =>
+        Patch("singleProperty", jobId, new Dictionary<string, object?> { ["propertyName"] = propertyName, ["value"] = value });
+
+    public Task<ApiResult<JobResponse<BudgetResponse>>> UpdateVerificationsAsync(string jobId, IReadOnlyDictionary<string, object?> body) =>
+        Patch("updateVerifications", jobId, body);
+
+    private Task<ApiResult<JobResponse<BudgetResponse>>> Patch(string route, string jobId, IReadOnlyDictionary<string, object?> body) =>
+        ApiCalls.SendAsync<JobResponse<BudgetResponse>>(http, HttpMethod.Patch, $"api/job/{route}/" + Uri.EscapeDataString(jobId), body);
 }

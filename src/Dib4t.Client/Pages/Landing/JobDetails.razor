@@ -1,0 +1,274 @@
+@page "/landing/job/{JobId}"
+@layout LandingLayout
+@implements IDisposable
+@inject AuthSession Session
+@inject JobDetailsState State
+
+<PageTitle>Dib4t</PageTitle>
+
+@* Legacy jobDetais/indexJobDetails.jsx: the header (jobDetailsHead.jsx), then the cost summary (costsTableHeade.jsx), the
+   state end dates (jobStateChangeDetails.jsx), the cost table (table/*.jsx), the observations and the verifications.
+   Reached from "Detalhes obra" of the budget list (Orçamentos) and by its address: open to the users of either list
+   (legacy has no check here). The behavior lives in JobDetailsState. Fixed legacy UI defect: the "Registo" input stays
+   visible with a negative value (legacy removes it until the page is reloaded). *@
+@if (Session.User is not { } user || !(user.HasRole(RoleNames.CanSeeObras) || user.HasRole(RoleNames.CanSeeOrcamentos)))
+{
+    <p class="settings-denied">@AuthTexts.NoPermission</p>
+}
+else if (State.Job is { } job)
+{
+    var budget = job.Budget;
+    var costs = State.Costs;
+    <div class="job-details">
+        <MudPaper Elevation="1" Class="job-header">
+            <section class="job-box" aria-label="Obra">
+                <span>Obra</span>
+                <span class="job-number">@budget?.BudgetNumber</span>
+            </section>
+            <section class="job-box job-box--wide" aria-label="Orçamento">
+                <span class="settings-wrap">Cliente: @budget?.Client?.Name</span>
+                <span class="settings-wrap">Descritivo: @budget?.Descriptive</span>
+                <span class="settings-wrap">ATT: @budget?.PersonInCharge</span>
+            </section>
+            <section class="job-box" aria-label="ORC">
+                <span>ORC</span>
+                <span>@budget?.MadeBy?.Name</span>
+                <span class="job-date" data-testid="job-budget-date">@State.DateText(budget?.Date)</span>
+            </section>
+            <section class="job-box" aria-label="Criação">
+                <span>Obra</span>
+                <span>@(job.CreatedBy ?? "_")</span>
+                <span class="job-date" data-testid="job-start-date">@State.DateText(job.StartDate)</span>
+            </section>
+            <section class="job-box" aria-label="Entrega">
+                <span>Entrega</span>
+                <span>@(job.AssemblyStatistic?.ValidatedBy ?? "_")</span>
+                <input type="date" class="jobs-due-input" id="job-delivery-date" aria-label="Data de entrega" value="@State.DeliveryDate"
+                       @onchange="e => State.DeliveryDateChanged(e.Value?.ToString())" @onblur="State.DeliveryDateBlurAsync" />
+            </section>
+            <section class="job-box" aria-label="Fatura">
+                <span class="job-invoice-title">
+                    Fatura
+                    <MudTextField T="string" InputId="job-invoiced-percent" InputType="InputType.Number" Immediate="true" Class="job-percent"
+                                  Value="@State.InvoicedPercentText" ValueChanged="State.InvoicedPercentChanged" OnBlur="_ => State.InvoicedPercentBlurAsync()"
+                                  Adornment="Adornment.End" AdornmentText="%" Underline="false"
+                                  UserAttributes="@(new Dictionary<string, object> { ["aria-label"] = "Percentagem faturada" })" />
+                </span>
+                <span>@(job.InvoicedBy ?? "_")</span>
+                <span class="job-date" data-testid="job-invoiced-date">@State.DateText(job.JobStatisticsDates?.ForInvoicingEndedInDate is { HasValue: true } invoiced ? invoiced.Value : null)</span>
+            </section>
+            <section class="job-box job-box--order" aria-label="Encomenda">
+                <label class="job-order-label" for="job-order-identification">Identificação da encomenda</label>
+                <MudTextField T="string" InputId="job-order-identification" Placeholder="Identificação da encomenda"
+                              Immediate="true" Value="@State.OrderIdentification" ValueChanged="State.OrderIdentificationChanged"
+                              OnBlur="_ => State.OrderIdentificationBlurAsync()" />
+                <MudCheckBox T="bool" Value="State.IsOfficialOrderIdentification" ValueChanged="State.OfficialChangedAsync" Label="Identificação oficial" Color="Color.Primary" />
+            </section>
+            <section class="job-box" aria-label="Estado">
+                @if (StateIcon(job.State) is { } icon)
+                {
+                    <MudIcon Icon="@icon" />
+                }
+                <span class="job-state">@job.State</span>
+            </section>
+        </MudPaper>
+
+        <div class="job-grid">
+            <MudPaper Elevation="0" Class="job-summary" aria-label="Resumo de custos">
+                <div class="job-summary-box"><MudIcon Icon="@Icons.Material.TwoTone.Description" Size="Size.Large" /><span class="job-amount" data-testid="job-tasks-total">@costs.Summary.TasksTotal</span></div>
+                <div class="job-summary-box"><MudIcon Icon="@Icons.Material.TwoTone.Description" Size="Size.Large" /><span class="job-amount" data-testid="job-budget-total">@costs.Summary.BudgetTotal</span></div>
+                <div class="job-summary-box"><MudIcon Icon="@Icons.Material.Filled.Build" Size="Size.Large" /><span class="job-amount" data-testid="job-registered">@costs.Summary.Registered</span></div>
+                <div class="job-summary-box">
+                    <span class="job-small @costs.Summary.PreviewedProfit.CssClass" data-testid="job-previewed-profit">@costs.Summary.PreviewedProfit.Text</span>
+                    <span class="job-small @costs.Summary.Deviation.CssClass" data-testid="job-deviation">@costs.Summary.Deviation.Text</span>
+                    <MudIcon Icon="@Icons.Material.Filled.Euro" Size="Size.Large" />
+                    <span class="job-amount @costs.Summary.TotalProfit.CssClass" data-testid="job-total-profit">@costs.Summary.TotalProfit.Text</span>
+                </div>
+                <div class="job-summary-box">
+                    <span class="job-small @costs.Summary.Margin.CssClass" data-testid="job-margin">@costs.Summary.Margin.Text</span>
+                    <span class="job-small @costs.Summary.DeviationPercent.CssClass" data-testid="job-deviation-percent">@costs.Summary.DeviationPercent.Text</span>
+                    <MudIcon Icon="@Icons.Material.Filled.SsidChart" Size="Size.Large" />
+                    <span class="job-amount @costs.Summary.TotalPercent.CssClass" data-testid="job-total-percent">@costs.Summary.TotalPercent.Text</span>
+                </div>
+            </MudPaper>
+
+            <MudPaper Elevation="0" Class="job-dates" aria-label="Datas de estado">
+                @foreach (var (field, label, state) in JobDetailsState.StateDates)
+                {
+                    <div class="job-date-box">
+                        @if (StateIcon(state) is { } icon)
+                        {
+                            <MudIcon Icon="@icon" />
+                        }
+                        <span>@label</span>
+                        <input type="date" class="jobs-due-input" id="@($"job-{field}")" aria-label="@($"{label}: fim")" value="@State.StateDate(field)"
+                               @onchange="e => State.StateDateChanged(field, e.Value?.ToString())" @onblur="() => State.StateDateBlurAsync(field)" />
+                    </div>
+                }
+            </MudPaper>
+
+            <MudPaper Elevation="0" Class="job-costs" aria-label="Custos">
+                <div class="job-cost-row job-cost-head">
+                    <span></span><span>Orçamento</span><span>Registo</span><span>Desvio</span><span>Margem</span>
+                </div>
+                @foreach (var row in costs.Rows)
+                {
+                    var type = TypeOf(row.Label);
+                    <div class="job-cost-row" data-testid="@($"job-row-{type}")">
+                        <span>@row.Label</span>
+                        <span>@row.Budgeted</span>
+                        <MudTextField T="string" InputId="@($"job-register-{type}")" InputType="InputType.Number" Immediate="true" Class="job-register"
+                                      Value="@State.Input(type)" ValueChanged="v => State.ValueChanged(type, v)" OnBlur="_ => State.ValueBlurAsync(type)"
+                                      Adornment="Adornment.End" AdornmentText="@(IsHours(type) ? "H" : "€")"
+                                      UserAttributes="@(new Dictionary<string, object> { ["aria-label"] = $"{row.Label}: registo" })" />
+                        <span>@row.Deviation</span>
+                        <span class="@row.Percent.CssClass">@row.Percent.Text</span>
+                    </div>
+                    @if (type == TaskTypes.Machining)
+                    {
+                        @MoneyOnlyRow("Materiais", "materials")
+                    }
+                }
+                @MoneyOnlyRow("Custo não qualidade", "custoNaoQualidade")
+            </MudPaper>
+
+            <div class="job-side">
+                <MudTextField T="string" InputId="job-comments" Label="Observações" Variant="Variant.Outlined" Lines="7" Immediate="true"
+                              Value="@State.Comments" ValueChanged="State.CommentsChanged" OnBlur="_ => State.CommentsBlurAsync()" />
+                <MudPaper Elevation="0" Class="job-verifications">
+                    <section class="job-checks" aria-label="Controlo de produto">
+                        <h3>Controlo de produto</h3>
+                        @Questions(MachiningQuestions, p => Answer(job.MachiningStatistic, p))
+                        <div class="job-validated-by" data-testid="job-machining-validated-by">@job.MachiningStatistic?.ValidatedBy</div>
+                    </section>
+                    <section class="job-checks" aria-label="Verificação de equipamento">
+                        <h3>Verificação de equipamento</h3>
+                        @Questions(AssemblyQuestions, p => Answer(job.AssemblyStatistic, p))
+                        @if (!string.IsNullOrEmpty(job.AssemblyStatistic?.ValidTryOnFirstTest))
+                        {
+                            <LabeledSelect TValue="string" Id="job-first-test" Label="Ensaio válido" Value="@job.AssemblyStatistic.ValidTryOnFirstTest"
+                                           ValueChanged="@(v => State.VerificationChangedAsync("validTryOnFirstTest", v ?? QuestionResponses.DefaultFirstTestTry))"
+                                           Options="FirstTestOptions" Class="jobs-first-test" />
+                        }
+                        <div class="job-validated-by" data-testid="job-assembly-validated-by">@job.AssemblyStatistic?.ValidatedBy</div>
+                    </section>
+                </MudPaper>
+            </div>
+        </div>
+    </div>
+}
+else if (State.NotFound)
+{
+    <p class="settings-denied">Obra não existe</p>
+}
+
+@code {
+    private static readonly IReadOnlyList<(string Value, string Text)> FirstTestOptions = [.. QuestionResponses.FirstTestTries.Select(t => (t, t))];
+
+    private static readonly IReadOnlyList<(string Property, string Label)> MachiningQuestions =
+    [
+        ("verificationAndShapeControl", "Verificação e controlo de forma"),
+        ("dimensionalVerificationAndControl", "Verificação e controlo dimencional"),
+        ("analysisOfTheDegreeOfFinish", "Análise ao grau de acabamento"),
+    ];
+
+    private static readonly IReadOnlyList<(string Property, string Label)> AssemblyQuestions =
+    [
+        ("pneumaticCircuits", "Circuitos pneumáticos"),
+        ("electricalBoardsAndCircuits", "Quadros e circuitos elétricos"),
+        ("kinematics", "Cinemática"),
+        ("programmingFeaturesPLC", "Funcionalidades no âmbito da programação"),
+        ("operator_equipmentSafetyConditions", "Condições de segurança operador/equipamento"),
+        ("visualInspection", "Inspeção visual"),
+    ];
+
+    [Parameter]
+    public string JobId { get; set; } = string.Empty;
+
+    /// <summary>The browser's zone (legacy dates); tests set it.</summary>
+    [Parameter]
+    public TimeZoneInfo Zone { get; set; } = TimeZoneInfo.Local;
+
+    protected override void OnInitialized() => State.Changed += Refresh;
+
+    protected override async Task OnParametersSetAsync()
+    {
+        State.Zone = Zone;
+        if (Session.User is { } user && (user.HasRole(RoleNames.CanSeeObras) || user.HasRole(RoleNames.CanSeeOrcamentos)))
+        {
+            await State.LoadAsync(JobId);
+        }
+    }
+
+    public void Dispose() => State.Changed -= Refresh;
+
+    private void Refresh() => _ = InvokeAsync(StateHasChanged);
+
+    private static bool IsHours(string type) => type is TaskTypes.Development or TaskTypes.Assembly or TaskTypes.Machining;
+
+    private static string TypeOf(string label) => label switch
+    {
+        "Desenvolvimento" => TaskTypes.Development,
+        "Componentes" => TaskTypes.Components,
+        "Automação" => TaskTypes.Automation,
+        "Montagem" => TaskTypes.Assembly,
+        "Maquinação" => TaskTypes.Machining,
+        _ => TaskTypes.Others,
+    };
+
+    private static string? StateIcon(string state) => state switch
+    {
+        JobStates.Development => JobIcons.Development,
+        JobStates.OnApproval => JobIcons.OnApproval,
+        JobStates.Approved => JobIcons.Approved,
+        JobStates.Machining => JobIcons.Machining,
+        JobStates.Assembly => JobIcons.Assembly,
+        JobStates.ForInvoicing => JobIcons.ForInvoicing,
+        JobStates.Billed => JobIcons.Billed,
+        _ => null,
+    };
+
+    private static string? Answer(object? statistic, string property) => (statistic, property) switch
+    {
+        (JobMachiningStatisticResponse m, "verificationAndShapeControl") => m.VerificationAndShapeControl,
+        (JobMachiningStatisticResponse m, "dimensionalVerificationAndControl") => m.DimensionalVerificationAndControl,
+        (JobMachiningStatisticResponse m, "analysisOfTheDegreeOfFinish") => m.AnalysisOfTheDegreeOfFinish,
+        (JobAssemblyStatisticResponse a, "pneumaticCircuits") => a.PneumaticCircuits,
+        (JobAssemblyStatisticResponse a, "electricalBoardsAndCircuits") => a.ElectricalBoardsAndCircuits,
+        (JobAssemblyStatisticResponse a, "kinematics") => a.Kinematics,
+        (JobAssemblyStatisticResponse a, "programmingFeaturesPLC") => a.ProgrammingFeaturesPlc,
+        (JobAssemblyStatisticResponse a, "operator_equipmentSafetyConditions") => a.OperatorEquipmentSafetyConditions,
+        (JobAssemblyStatisticResponse a, "visualInspection") => a.VisualInspection,
+        _ => null,
+    };
+
+    /// <summary>Materials and the non-quality cost: only the input ("-" for the budget, deviation and margin).</summary>
+    private RenderFragment MoneyOnlyRow(string label, string type) =>
+        @<div class="job-cost-row" data-testid="@($"job-row-{type}")">
+            <span>@label</span>
+            <span>-</span>
+            <MudTextField T="string" InputId="@($"job-register-{type}")" InputType="InputType.Number" Immediate="true" Class="job-register"
+                          Value="@State.Input(type)" ValueChanged="v => State.ValueChanged(type, v)" OnBlur="_ => State.ValueBlurAsync(type)"
+                          Adornment="Adornment.End" AdornmentText="€"
+                          UserAttributes="@(new Dictionary<string, object> { ["aria-label"] = $"{label}: registo" })" />
+            <span>-</span>
+            <span>-</span>
+        </div>;
+
+    /// <summary>Legacy jobStatisticsQuestion.jsx: NOK / OK; unticking the ticked one is "n/a".</summary>
+    private RenderFragment Questions(IReadOnlyList<(string Property, string Label)> questions, Func<string, string?> answer) =>
+        @<div class="jobs-questions" role="group">
+            <span></span><span class="jobs-question-head">NOK</span><span class="jobs-question-head">OK</span>
+            @foreach (var (property, label) in questions)
+            {
+                var current = answer(property);
+                <span>@label</span>
+                <MudCheckBox T="bool" Value="@(current == QuestionResponses.NotOk)" Color="Color.Primary"
+                             ValueChanged="@(c => State.VerificationChangedAsync(property, c ? QuestionResponses.NotOk : QuestionResponses.NotApplicable))"
+                             UserAttributes="@(new Dictionary<string, object> { ["aria-label"] = $"{label}: NOK" })" />
+                <MudCheckBox T="bool" Value="@(current == QuestionResponses.Ok)" Color="Color.Primary"
+                             ValueChanged="@(c => State.VerificationChangedAsync(property, c ? QuestionResponses.Ok : QuestionResponses.NotApplicable))"
+                             UserAttributes="@(new Dictionary<string, object> { ["aria-label"] = $"{label}: OK" })" />
+            }
+        </div>;
+}

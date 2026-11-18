@@ -9,8 +9,9 @@ namespace Dib4t.Server.Controllers;
 
 /// <summary>
 /// <c>/api/job</c> (legacy <c>routes/job.js</c>, PLAN.md §6), every route T (any signed-in user; legacy checks no role
-/// here). Create (with the production NAS move and labels, §5) and the jobs board's routes: the statistics transition,
-/// due date, state (D1 fixed), priority and the reads. Paths are case-insensitive, as in Express.
+/// here). Create (with the production NAS move and labels, §5), the jobs board's routes (the statistics transition,
+/// due date, state (D1 fixed), priority, the reads) and the details page's (state dates (D17 fixed), registered values
+/// (D18 fixed), single property, verifications). Paths are case-insensitive, as in Express.
 /// </summary>
 [Route("api/job")]
 [Authorize]
@@ -70,6 +71,38 @@ public sealed class JobController(JobsService jobs) : LegacyControllerBase
     {
         var (body, error) = await ReadJsonBodyAsync();
         return error ?? Answer(await jobs.ChangePriorityAsync(jobId, body, cancellationToken), JobResponses.Detailed);
+    }
+
+    /// <summary><c>PATCH statisticsDates/:jobId</c> (the details page's state dates; D17 fixed).</summary>
+    [HttpPatch("statisticsDates/{jobId}")]
+    public async Task<IActionResult> ChangeStatisticsDate(string jobId, CancellationToken cancellationToken)
+    {
+        var (body, error) = await ReadJsonBodyAsync();
+        return error ?? Answer(await jobs.ChangeStatisticsDateAsync(jobId, body, cancellationToken), JobResponses.Detailed);
+    }
+
+    /// <summary><c>PATCH register/:jobId</c> (the cost table's registered values; D18 fixed).</summary>
+    [HttpPatch("register/{jobId}")]
+    public async Task<IActionResult> RegisterValue(string jobId, CancellationToken cancellationToken)
+    {
+        var (body, error) = await ReadJsonBodyAsync();
+        return error ?? Answer(await jobs.RegisterValueAsync(jobId, body, cancellationToken), JobResponses.Detailed);
+    }
+
+    /// <summary><c>PATCH singleProperty/:jobId</c> (the details header and observations).</summary>
+    [HttpPatch("singleProperty/{jobId}")]
+    public async Task<IActionResult> ChangeSingleProperty(string jobId, CancellationToken cancellationToken)
+    {
+        var (body, error) = await ReadJsonBodyAsync();
+        return error ?? Answer(await jobs.ChangeSinglePropertyAsync(jobId, body, cancellationToken), JobResponses.Detailed);
+    }
+
+    /// <summary><c>PATCH updateVerifications/:jobId</c>: <c>validatedBy</c> is the signed-in user's name.</summary>
+    [HttpPatch("updateVerifications/{jobId}")]
+    public async Task<IActionResult> UpdateVerifications(string jobId, CancellationToken cancellationToken)
+    {
+        var (body, error) = await ReadJsonBodyAsync();
+        return error ?? Answer(await jobs.UpdateVerificationsAsync(jobId, body, UserName, cancellationToken), JobResponses.Detailed);
     }
 
     /// <summary><c>GET getById/:jobId</c>: the job, or an empty 200 (legacy <c>res.send(null)</c>).</summary>
