@@ -11,7 +11,8 @@ namespace Dib4t.Server.Controllers;
 /// <c>/api/job</c> (legacy <c>routes/job.js</c>, PLAN.md §6), every route T (any signed-in user; legacy checks no role
 /// here). Create (with the production NAS move and labels, §5), the jobs board's routes (the statistics transition,
 /// due date, state (D1 fixed), priority, the reads) and the details page's (state dates (D17 fixed), registered values
-/// (D18 fixed), single property, verifications) and the labels of the print dialog (Production only, §5). Paths are case-insensitive, as in Express.
+/// (D18 fixed), single property, verifications), the labels of the print dialog (Production only, §5) and the
+/// dashboard counters (D10 fixed). Paths are case-insensitive, as in Express.
 /// </summary>
 [Route("api/job")]
 [Authorize]
@@ -132,6 +133,11 @@ public sealed class JobController(JobsService jobs, IHostEnvironment environment
 
     [HttpGet("getCounts")]
     public async Task<IActionResult> Counts(CancellationToken cancellationToken) => Ok(JobResponses.ToResponse(await jobs.CountAsync(cancellationToken)));
+
+    /// <summary><c>GET getValidTryOnFirstTestCountersByYear/:year</c> (the dashboard; D10 fixed: the whole year in Europe/Lisbon).</summary>
+    [HttpGet("getValidTryOnFirstTestCountersByYear/{year}")]
+    public async Task<IActionResult> ValidTryOnFirstTestCounters(string year, CancellationToken cancellationToken) =>
+        Answer(await jobs.CountValidTryOnFirstTestAsync(year, cancellationToken), c => new ValidTryCountersResponse(c.One, c.Two, c.Three));
 
     [HttpGet("getUnfinished")]
     public async Task<IActionResult> Unfinished(CancellationToken cancellationToken) =>

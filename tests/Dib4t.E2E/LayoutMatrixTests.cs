@@ -176,6 +176,11 @@ public sealed class LayoutMatrixTests(E2EHarness harness) : E2ETest(harness)
             await page.Locator(".jobs-print-row").First.WaitForAsync();
             await page.Mouse.MoveAsync(0, 0);
         }, Scope: ".mud-dialog"),
+        new("dashboard", "/landing/dashboard", SignedIn: true, Ready: ".mud-chart-legend-item", page =>
+        [
+            ("Gráfico", page.Locator("[data-testid=dashboard-chart] svg").First),
+            ("1º teste", page.Locator(".mud-chart-legend-item").Filter(new() { HasTextString = "1º teste" })),
+        ]),
         new("budget-details-import", "/landing/budgets", SignedIn: true, Ready: ".budgets-table tbody tr td", page =>
         [
             ("Nª Orçamento", page.Locator("#import-number")),

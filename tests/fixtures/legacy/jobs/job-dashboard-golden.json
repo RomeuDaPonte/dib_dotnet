@@ -1,0 +1,5891 @@
+{
+  "generatedBy": "tools/legacy/job-dashboard-golden.js",
+  "versions": {
+    "bson": "1.1.6",
+    "express": "4.18.2",
+    "joi": "14.3.1",
+    "joi-objectid": "3.0.1",
+    "mongoose": "5.13.20",
+    "node": "v16.20.2"
+  },
+  "clock": "2026-03-15T10:20:30.123Z (TZ=UTC)",
+  "requestUser": {
+    "name": "Ana Administradora"
+  },
+  "ids": {
+    "{{client}}": "5f1e9a2b3c4d5e6f70820001",
+    "{{user}}": "5f1e9a2b3c4d5e6f70830001",
+    "{{missing-budget}}": "5f1e9a2b3c4d5e6f708100ff",
+    "{{missing}}": "5f1e9a2b3c4d5e6f708600ff",
+    "{{job-dev}}": "5f1e9a2b3c4d5e6f70860001",
+    "{{budget-dev}}": "5f1e9a2b3c4d5e6f70810001",
+    "{{dev-dev}}": "5f1e9a2b3c4d5e6f70870001",
+    "{{mach-dev}}": "5f1e9a2b3c4d5e6f70880001",
+    "{{asm-dev}}": "5f1e9a2b3c4d5e6f70890001",
+    "{{dates-dev}}": "5f1e9a2b3c4d5e6f708a0001",
+    "{{job-onapproval}}": "5f1e9a2b3c4d5e6f70860002",
+    "{{budget-onapproval}}": "5f1e9a2b3c4d5e6f70810002",
+    "{{dev-onapproval}}": "5f1e9a2b3c4d5e6f70870002",
+    "{{mach-onapproval}}": "5f1e9a2b3c4d5e6f70880002",
+    "{{asm-onapproval}}": "5f1e9a2b3c4d5e6f70890002",
+    "{{dates-onapproval}}": "5f1e9a2b3c4d5e6f708a0002",
+    "{{job-approved}}": "5f1e9a2b3c4d5e6f70860003",
+    "{{budget-approved}}": "5f1e9a2b3c4d5e6f70810003",
+    "{{dev-approved}}": "5f1e9a2b3c4d5e6f70870003",
+    "{{mach-approved}}": "5f1e9a2b3c4d5e6f70880003",
+    "{{asm-approved}}": "5f1e9a2b3c4d5e6f70890003",
+    "{{dates-approved}}": "5f1e9a2b3c4d5e6f708a0003",
+    "{{job-machining}}": "5f1e9a2b3c4d5e6f70860004",
+    "{{budget-machining}}": "5f1e9a2b3c4d5e6f70810004",
+    "{{dev-machining}}": "5f1e9a2b3c4d5e6f70870004",
+    "{{mach-machining}}": "5f1e9a2b3c4d5e6f70880004",
+    "{{asm-machining}}": "5f1e9a2b3c4d5e6f70890004",
+    "{{dates-machining}}": "5f1e9a2b3c4d5e6f708a0004",
+    "{{job-assembly}}": "5f1e9a2b3c4d5e6f70860005",
+    "{{budget-assembly}}": "5f1e9a2b3c4d5e6f70810005",
+    "{{dev-assembly}}": "5f1e9a2b3c4d5e6f70870005",
+    "{{mach-assembly}}": "5f1e9a2b3c4d5e6f70880005",
+    "{{asm-assembly}}": "5f1e9a2b3c4d5e6f70890005",
+    "{{dates-assembly}}": "5f1e9a2b3c4d5e6f708a0005",
+    "{{job-invoicing}}": "5f1e9a2b3c4d5e6f70860006",
+    "{{budget-invoicing}}": "5f1e9a2b3c4d5e6f70810006",
+    "{{dev-invoicing}}": "5f1e9a2b3c4d5e6f70870006",
+    "{{mach-invoicing}}": "5f1e9a2b3c4d5e6f70880006",
+    "{{asm-invoicing}}": "5f1e9a2b3c4d5e6f70890006",
+    "{{dates-invoicing}}": "5f1e9a2b3c4d5e6f708a0006",
+    "{{job-billed}}": "5f1e9a2b3c4d5e6f70860007",
+    "{{budget-billed}}": "5f1e9a2b3c4d5e6f70810007",
+    "{{dev-billed}}": "5f1e9a2b3c4d5e6f70870007",
+    "{{mach-billed}}": "5f1e9a2b3c4d5e6f70880007",
+    "{{asm-billed}}": "5f1e9a2b3c4d5e6f70890007",
+    "{{dates-billed}}": "5f1e9a2b3c4d5e6f708a0007",
+    "{{job-deleted}}": "5f1e9a2b3c4d5e6f70860008",
+    "{{budget-deleted}}": "5f1e9a2b3c4d5e6f70810008",
+    "{{dev-deleted}}": "5f1e9a2b3c4d5e6f70870008",
+    "{{mach-deleted}}": "5f1e9a2b3c4d5e6f70880008",
+    "{{asm-deleted}}": "5f1e9a2b3c4d5e6f70890008",
+    "{{dates-deleted}}": "5f1e9a2b3c4d5e6f708a0008",
+    "{{job-old}}": "5f1e9a2b3c4d5e6f70860009",
+    "{{budget-old}}": "5f1e9a2b3c4d5e6f70810009",
+    "{{dev-old}}": "5f1e9a2b3c4d5e6f70870009",
+    "{{mach-old}}": "5f1e9a2b3c4d5e6f70880009",
+    "{{asm-old}}": "5f1e9a2b3c4d5e6f70890009",
+    "{{dates-old}}": "5f1e9a2b3c4d5e6f708a0009",
+    "{{job-no-stats}}": "5f1e9a2b3c4d5e6f7086000a",
+    "{{budget-no-stats}}": "5f1e9a2b3c4d5e6f7081000a",
+    "{{dev-no-stats}}": "5f1e9a2b3c4d5e6f7087000a",
+    "{{mach-no-stats}}": "5f1e9a2b3c4d5e6f7088000a",
+    "{{asm-no-stats}}": "5f1e9a2b3c4d5e6f7089000a",
+    "{{dates-no-stats}}": "5f1e9a2b3c4d5e6f708a000a",
+    "{{job-dates-null}}": "5f1e9a2b3c4d5e6f7086000b",
+    "{{budget-dates-null}}": "5f1e9a2b3c4d5e6f7081000b",
+    "{{dev-dates-null}}": "5f1e9a2b3c4d5e6f7087000b",
+    "{{mach-dates-null}}": "5f1e9a2b3c4d5e6f7088000b",
+    "{{asm-dates-null}}": "5f1e9a2b3c4d5e6f7089000b",
+    "{{dates-dates-null}}": "5f1e9a2b3c4d5e6f708a000b",
+    "{{job-no-budget}}": "5f1e9a2b3c4d5e6f7086000c",
+    "{{budget-no-budget}}": "5f1e9a2b3c4d5e6f7081000c",
+    "{{dev-no-budget}}": "5f1e9a2b3c4d5e6f7087000c",
+    "{{mach-no-budget}}": "5f1e9a2b3c4d5e6f7088000c",
+    "{{asm-no-budget}}": "5f1e9a2b3c4d5e6f7089000c",
+    "{{dates-no-budget}}": "5f1e9a2b3c4d5e6f708a000c",
+    "{{job-machining-no-stat}}": "5f1e9a2b3c4d5e6f7086000d",
+    "{{budget-machining-no-stat}}": "5f1e9a2b3c4d5e6f7081000d",
+    "{{dev-machining-no-stat}}": "5f1e9a2b3c4d5e6f7087000d",
+    "{{mach-machining-no-stat}}": "5f1e9a2b3c4d5e6f7088000d",
+    "{{asm-machining-no-stat}}": "5f1e9a2b3c4d5e6f7089000d",
+    "{{dates-machining-no-stat}}": "5f1e9a2b3c4d5e6f708a000d",
+    "{{job-assembly-fraction}}": "5f1e9a2b3c4d5e6f7086000e",
+    "{{budget-assembly-fraction}}": "5f1e9a2b3c4d5e6f7081000e",
+    "{{dev-assembly-fraction}}": "5f1e9a2b3c4d5e6f7087000e",
+    "{{mach-assembly-fraction}}": "5f1e9a2b3c4d5e6f7088000e",
+    "{{asm-assembly-fraction}}": "5f1e9a2b3c4d5e6f7089000e",
+    "{{dates-assembly-fraction}}": "5f1e9a2b3c4d5e6f708a000e",
+    "{{job-invoicing-full}}": "5f1e9a2b3c4d5e6f7086000f",
+    "{{budget-invoicing-full}}": "5f1e9a2b3c4d5e6f7081000f",
+    "{{dev-invoicing-full}}": "5f1e9a2b3c4d5e6f7087000f",
+    "{{mach-invoicing-full}}": "5f1e9a2b3c4d5e6f7088000f",
+    "{{asm-invoicing-full}}": "5f1e9a2b3c4d5e6f7089000f",
+    "{{dates-invoicing-full}}": "5f1e9a2b3c4d5e6f708a000f",
+    "{{task-1}}": "5f1e9a2b3c4d5e6f70840001",
+    "{{task-2}}": "5f1e9a2b3c4d5e6f70840002",
+    "{{task-3}}": "5f1e9a2b3c4d5e6f70840003",
+    "{{task-4}}": "5f1e9a2b3c4d5e6f70840004",
+    "{{task-5}}": "5f1e9a2b3c4d5e6f70840005",
+    "{{task-6}}": "5f1e9a2b3c4d5e6f70840006",
+    "{{task-7}}": "5f1e9a2b3c4d5e6f70840007",
+    "{{task-8}}": "5f1e9a2b3c4d5e6f70840008",
+    "{{task-9}}": "5f1e9a2b3c4d5e6f70840009",
+    "{{task-10}}": "5f1e9a2b3c4d5e6f7084000a",
+    "{{task-11}}": "5f1e9a2b3c4d5e6f7084000b",
+    "{{task-12}}": "5f1e9a2b3c4d5e6f7084000c",
+    "{{task-13}}": "5f1e9a2b3c4d5e6f7084000d",
+    "{{task-14}}": "5f1e9a2b3c4d5e6f7084000e",
+    "{{task-15}}": "5f1e9a2b3c4d5e6f7084000f",
+    "{{task-16}}": "5f1e9a2b3c4d5e6f70840010",
+    "{{task-17}}": "5f1e9a2b3c4d5e6f70840011",
+    "{{task-18}}": "5f1e9a2b3c4d5e6f70840012",
+    "{{task-19}}": "5f1e9a2b3c4d5e6f70840013",
+    "{{task-20}}": "5f1e9a2b3c4d5e6f70840014",
+    "{{task-21}}": "5f1e9a2b3c4d5e6f70840015",
+    "{{task-22}}": "5f1e9a2b3c4d5e6f70840016",
+    "{{task-23}}": "5f1e9a2b3c4d5e6f70840017",
+    "{{task-24}}": "5f1e9a2b3c4d5e6f70840018",
+    "{{task-25}}": "5f1e9a2b3c4d5e6f70840019",
+    "{{task-26}}": "5f1e9a2b3c4d5e6f7084001a",
+    "{{task-27}}": "5f1e9a2b3c4d5e6f7084001b",
+    "{{task-28}}": "5f1e9a2b3c4d5e6f7084001c",
+    "{{task-29}}": "5f1e9a2b3c4d5e6f7084001d",
+    "{{task-30}}": "5f1e9a2b3c4d5e6f7084001e",
+    "{{task-31}}": "5f1e9a2b3c4d5e6f7084001f",
+    "{{task-32}}": "5f1e9a2b3c4d5e6f70840020",
+    "{{task-33}}": "5f1e9a2b3c4d5e6f70840021",
+    "{{task-34}}": "5f1e9a2b3c4d5e6f70840022",
+    "{{task-35}}": "5f1e9a2b3c4d5e6f70840023",
+    "{{task-36}}": "5f1e9a2b3c4d5e6f70840024",
+    "{{task-37}}": "5f1e9a2b3c4d5e6f70840025",
+    "{{task-38}}": "5f1e9a2b3c4d5e6f70840026",
+    "{{task-39}}": "5f1e9a2b3c4d5e6f70840027",
+    "{{task-40}}": "5f1e9a2b3c4d5e6f70840028",
+    "{{task-41}}": "5f1e9a2b3c4d5e6f70840029",
+    "{{task-42}}": "5f1e9a2b3c4d5e6f7084002a",
+    "{{task-43}}": "5f1e9a2b3c4d5e6f7084002b",
+    "{{task-44}}": "5f1e9a2b3c4d5e6f7084002c",
+    "{{task-45}}": "5f1e9a2b3c4d5e6f7084002d",
+    "{{task-46}}": "5f1e9a2b3c4d5e6f7084002e",
+    "{{task-47}}": "5f1e9a2b3c4d5e6f7084002f",
+    "{{task-48}}": "5f1e9a2b3c4d5e6f70840030",
+    "{{task-49}}": "5f1e9a2b3c4d5e6f70840031",
+    "{{task-50}}": "5f1e9a2b3c4d5e6f70840032",
+    "{{task-51}}": "5f1e9a2b3c4d5e6f70840033",
+    "{{task-52}}": "5f1e9a2b3c4d5e6f70840034",
+    "{{task-53}}": "5f1e9a2b3c4d5e6f70840035",
+    "{{task-54}}": "5f1e9a2b3c4d5e6f70840036",
+    "{{task-55}}": "5f1e9a2b3c4d5e6f70840037",
+    "{{task-56}}": "5f1e9a2b3c4d5e6f70840038",
+    "{{task-57}}": "5f1e9a2b3c4d5e6f70840039",
+    "{{task-58}}": "5f1e9a2b3c4d5e6f7084003a",
+    "{{task-59}}": "5f1e9a2b3c4d5e6f7084003b",
+    "{{task-60}}": "5f1e9a2b3c4d5e6f7084003c",
+    "{{task-61}}": "5f1e9a2b3c4d5e6f7084003d",
+    "{{task-62}}": "5f1e9a2b3c4d5e6f7084003e",
+    "{{task-63}}": "5f1e9a2b3c4d5e6f7084003f",
+    "{{task-64}}": "5f1e9a2b3c4d5e6f70840040",
+    "{{task-65}}": "5f1e9a2b3c4d5e6f70840041",
+    "{{task-66}}": "5f1e9a2b3c4d5e6f70840042",
+    "{{task-67}}": "5f1e9a2b3c4d5e6f70840043",
+    "{{task-68}}": "5f1e9a2b3c4d5e6f70840044",
+    "{{task-69}}": "5f1e9a2b3c4d5e6f70840045",
+    "{{task-70}}": "5f1e9a2b3c4d5e6f70840046",
+    "{{task-71}}": "5f1e9a2b3c4d5e6f70840047",
+    "{{task-72}}": "5f1e9a2b3c4d5e6f70840048",
+    "{{task-73}}": "5f1e9a2b3c4d5e6f70840049",
+    "{{task-74}}": "5f1e9a2b3c4d5e6f7084004a",
+    "{{task-75}}": "5f1e9a2b3c4d5e6f7084004b",
+    "{{task-76}}": "5f1e9a2b3c4d5e6f7084004c",
+    "{{task-77}}": "5f1e9a2b3c4d5e6f7084004d",
+    "{{task-78}}": "5f1e9a2b3c4d5e6f7084004e",
+    "{{task-79}}": "5f1e9a2b3c4d5e6f7084004f",
+    "{{task-80}}": "5f1e9a2b3c4d5e6f70840050",
+    "{{task-81}}": "5f1e9a2b3c4d5e6f70840051",
+    "{{task-82}}": "5f1e9a2b3c4d5e6f70840052",
+    "{{task-83}}": "5f1e9a2b3c4d5e6f70840053",
+    "{{task-84}}": "5f1e9a2b3c4d5e6f70840054",
+    "{{task-85}}": "5f1e9a2b3c4d5e6f70840055",
+    "{{task-86}}": "5f1e9a2b3c4d5e6f70840056",
+    "{{task-87}}": "5f1e9a2b3c4d5e6f70840057",
+    "{{task-88}}": "5f1e9a2b3c4d5e6f70840058",
+    "{{task-89}}": "5f1e9a2b3c4d5e6f70840059",
+    "{{task-90}}": "5f1e9a2b3c4d5e6f7084005a",
+    "{{task-91}}": "5f1e9a2b3c4d5e6f7084005b",
+    "{{task-92}}": "5f1e9a2b3c4d5e6f7084005c",
+    "{{task-93}}": "5f1e9a2b3c4d5e6f7084005d",
+    "{{task-94}}": "5f1e9a2b3c4d5e6f7084005e",
+    "{{task-95}}": "5f1e9a2b3c4d5e6f7084005f",
+    "{{task-96}}": "5f1e9a2b3c4d5e6f70840060",
+    "{{task-97}}": "5f1e9a2b3c4d5e6f70840061",
+    "{{task-98}}": "5f1e9a2b3c4d5e6f70840062",
+    "{{dash-inv-feb}}": "5f1e9a2b3c4d5e6f708b0001",
+    "{{dash-dev-inv-feb}}": "5f1e9a2b3c4d5e6f708c0001",
+    "{{dash-mach-inv-feb}}": "5f1e9a2b3c4d5e6f708d0001",
+    "{{dash-asm-inv-feb}}": "5f1e9a2b3c4d5e6f708e0001",
+    "{{dash-billed-jun}}": "5f1e9a2b3c4d5e6f708b0002",
+    "{{dash-dev-billed-jun}}": "5f1e9a2b3c4d5e6f708c0002",
+    "{{dash-mach-billed-jun}}": "5f1e9a2b3c4d5e6f708d0002",
+    "{{dash-asm-billed-jun}}": "5f1e9a2b3c4d5e6f708e0002",
+    "{{dash-billed-aug}}": "5f1e9a2b3c4d5e6f708b0003",
+    "{{dash-dev-billed-aug}}": "5f1e9a2b3c4d5e6f708c0003",
+    "{{dash-mach-billed-aug}}": "5f1e9a2b3c4d5e6f708d0003",
+    "{{dash-asm-billed-aug}}": "5f1e9a2b3c4d5e6f708e0003",
+    "{{dash-inv-jan1}}": "5f1e9a2b3c4d5e6f708b0004",
+    "{{dash-dev-inv-jan1}}": "5f1e9a2b3c4d5e6f708c0004",
+    "{{dash-mach-inv-jan1}}": "5f1e9a2b3c4d5e6f708d0004",
+    "{{dash-asm-inv-jan1}}": "5f1e9a2b3c4d5e6f708e0004",
+    "{{dash-billed-dec31-midnight}}": "5f1e9a2b3c4d5e6f708b0005",
+    "{{dash-dev-billed-dec31-midnight}}": "5f1e9a2b3c4d5e6f708c0005",
+    "{{dash-mach-billed-dec31-midnight}}": "5f1e9a2b3c4d5e6f708d0005",
+    "{{dash-asm-billed-dec31-midnight}}": "5f1e9a2b3c4d5e6f708e0005",
+    "{{dash-billed-dec31-noon}}": "5f1e9a2b3c4d5e6f708b0006",
+    "{{dash-dev-billed-dec31-noon}}": "5f1e9a2b3c4d5e6f708c0006",
+    "{{dash-mach-billed-dec31-noon}}": "5f1e9a2b3c4d5e6f708d0006",
+    "{{dash-asm-billed-dec31-noon}}": "5f1e9a2b3c4d5e6f708e0006",
+    "{{dash-inv-dec31-late}}": "5f1e9a2b3c4d5e6f708b0007",
+    "{{dash-dev-inv-dec31-late}}": "5f1e9a2b3c4d5e6f708c0007",
+    "{{dash-mach-inv-dec31-late}}": "5f1e9a2b3c4d5e6f708d0007",
+    "{{dash-asm-inv-dec31-late}}": "5f1e9a2b3c4d5e6f708e0007",
+    "{{dash-billed-2027}}": "5f1e9a2b3c4d5e6f708b0008",
+    "{{dash-dev-billed-2027}}": "5f1e9a2b3c4d5e6f708c0008",
+    "{{dash-mach-billed-2027}}": "5f1e9a2b3c4d5e6f708d0008",
+    "{{dash-asm-billed-2027}}": "5f1e9a2b3c4d5e6f708e0008",
+    "{{dash-billed-2025-last-ms}}": "5f1e9a2b3c4d5e6f708b0009",
+    "{{dash-dev-billed-2025-last-ms}}": "5f1e9a2b3c4d5e6f708c0009",
+    "{{dash-mach-billed-2025-last-ms}}": "5f1e9a2b3c4d5e6f708d0009",
+    "{{dash-asm-billed-2025-last-ms}}": "5f1e9a2b3c4d5e6f708e0009",
+    "{{dash-assembly}}": "5f1e9a2b3c4d5e6f708b000a",
+    "{{dash-dev-assembly}}": "5f1e9a2b3c4d5e6f708c000a",
+    "{{dash-mach-assembly}}": "5f1e9a2b3c4d5e6f708d000a",
+    "{{dash-asm-assembly}}": "5f1e9a2b3c4d5e6f708e000a",
+    "{{dash-deleted}}": "5f1e9a2b3c4d5e6f708b000b",
+    "{{dash-dev-deleted}}": "5f1e9a2b3c4d5e6f708c000b",
+    "{{dash-mach-deleted}}": "5f1e9a2b3c4d5e6f708d000b",
+    "{{dash-asm-deleted}}": "5f1e9a2b3c4d5e6f708e000b",
+    "{{dash-dev}}": "5f1e9a2b3c4d5e6f708b000c",
+    "{{dash-dev-dev}}": "5f1e9a2b3c4d5e6f708c000c",
+    "{{dash-mach-dev}}": "5f1e9a2b3c4d5e6f708d000c",
+    "{{dash-asm-dev}}": "5f1e9a2b3c4d5e6f708e000c",
+    "{{dash-lower-state}}": "5f1e9a2b3c4d5e6f708b000d",
+    "{{dash-dev-lower-state}}": "5f1e9a2b3c4d5e6f708c000d",
+    "{{dash-mach-lower-state}}": "5f1e9a2b3c4d5e6f708d000d",
+    "{{dash-asm-lower-state}}": "5f1e9a2b3c4d5e6f708e000d",
+    "{{dash-number-1}}": "5f1e9a2b3c4d5e6f708b000e",
+    "{{dash-dev-number-1}}": "5f1e9a2b3c4d5e6f708c000e",
+    "{{dash-mach-number-1}}": "5f1e9a2b3c4d5e6f708d000e",
+    "{{dash-asm-number-1}}": "5f1e9a2b3c4d5e6f708e000e",
+    "{{dash-value-4}}": "5f1e9a2b3c4d5e6f708b000f",
+    "{{dash-dev-value-4}}": "5f1e9a2b3c4d5e6f708c000f",
+    "{{dash-mach-value-4}}": "5f1e9a2b3c4d5e6f708d000f",
+    "{{dash-asm-value-4}}": "5f1e9a2b3c4d5e6f708e000f",
+    "{{dash-no-assembly}}": "5f1e9a2b3c4d5e6f708b0010",
+    "{{dash-dev-no-assembly}}": "5f1e9a2b3c4d5e6f708c0010",
+    "{{dash-mach-no-assembly}}": "5f1e9a2b3c4d5e6f708d0010",
+    "{{dash-asm-no-assembly}}": "5f1e9a2b3c4d5e6f708e0010",
+    "{{dash-no-stats}}": "5f1e9a2b3c4d5e6f708b0011",
+    "{{dash-dev-no-stats}}": "5f1e9a2b3c4d5e6f708c0011",
+    "{{dash-mach-no-stats}}": "5f1e9a2b3c4d5e6f708d0011",
+    "{{dash-asm-no-stats}}": "5f1e9a2b3c4d5e6f708e0011",
+    "{{dash-start-null}}": "5f1e9a2b3c4d5e6f708b0012",
+    "{{dash-dev-start-null}}": "5f1e9a2b3c4d5e6f708c0012",
+    "{{dash-mach-start-null}}": "5f1e9a2b3c4d5e6f708d0012",
+    "{{dash-asm-start-null}}": "5f1e9a2b3c4d5e6f708e0012",
+    "{{dash-start-missing}}": "5f1e9a2b3c4d5e6f708b0013",
+    "{{dash-dev-start-missing}}": "5f1e9a2b3c4d5e6f708c0013",
+    "{{dash-mach-start-missing}}": "5f1e9a2b3c4d5e6f708d0013",
+    "{{dash-asm-start-missing}}": "5f1e9a2b3c4d5e6f708e0013",
+    "{{dash-start-text}}": "5f1e9a2b3c4d5e6f708b0014",
+    "{{dash-dev-start-text}}": "5f1e9a2b3c4d5e6f708c0014",
+    "{{dash-mach-start-text}}": "5f1e9a2b3c4d5e6f708d0014",
+    "{{dash-asm-start-text}}": "5f1e9a2b3c4d5e6f708e0014",
+    "{{dash-billed-1995-lisbon-new-year}}": "5f1e9a2b3c4d5e6f708b0015",
+    "{{dash-dev-billed-1995-lisbon-new-year}}": "5f1e9a2b3c4d5e6f708c0015",
+    "{{dash-mach-billed-1995-lisbon-new-year}}": "5f1e9a2b3c4d5e6f708d0015",
+    "{{dash-asm-billed-1995-lisbon-new-year}}": "5f1e9a2b3c4d5e6f708e0015",
+    "{{dash-billed-1995-jun}}": "5f1e9a2b3c4d5e6f708b0016",
+    "{{dash-dev-billed-1995-jun}}": "5f1e9a2b3c4d5e6f708c0016",
+    "{{dash-mach-billed-1995-jun}}": "5f1e9a2b3c4d5e6f708d0016",
+    "{{dash-asm-billed-1995-jun}}": "5f1e9a2b3c4d5e6f708e0016",
+    "{{dash-billed-1995-dec31}}": "5f1e9a2b3c4d5e6f708b0017",
+    "{{dash-dev-billed-1995-dec31}}": "5f1e9a2b3c4d5e6f708c0017",
+    "{{dash-mach-billed-1995-dec31}}": "5f1e9a2b3c4d5e6f708d0017",
+    "{{dash-asm-billed-1995-dec31}}": "5f1e9a2b3c4d5e6f708e0017",
+    "{{dash-billed-1996-lisbon-new-year}}": "5f1e9a2b3c4d5e6f708b0018",
+    "{{dash-dev-billed-1996-lisbon-new-year}}": "5f1e9a2b3c4d5e6f708c0018",
+    "{{dash-mach-billed-1996-lisbon-new-year}}": "5f1e9a2b3c4d5e6f708d0018",
+    "{{dash-asm-billed-1996-lisbon-new-year}}": "5f1e9a2b3c4d5e6f708e0018"
+  },
+  "jobs": [
+    {
+      "_id": {
+        "$oid": "{{dash-inv-feb}}"
+      },
+      "invoicedPercent": {
+        "$numberInt": "0"
+      },
+      "finalPrice": {
+        "$numberDouble": "15000.5"
+      },
+      "state": "Para faturação",
+      "orderIdentification": "ENC-2030/001",
+      "isOfficialOrderIdentification": false,
+      "components": {
+        "$numberInt": "0"
+      },
+      "automation": {
+        "$numberInt": "0"
+      },
+      "materials": {
+        "$numberInt": "0"
+      },
+      "others": {
+        "$numberInt": "0"
+      },
+      "costNonQuality": {
+        "$numberInt": "0"
+      },
+      "commentType": [],
+      "budget": {
+        "$oid": "{{budget-dev}}"
+      },
+      "createdBy": "Ana Administradora",
+      "dueDate": {
+        "$date": "2030-02-10T00:00:00.000Z"
+      },
+      "startDate": {
+        "$date": "2026-02-02T08:00:00.000Z"
+      },
+      "devStatistic": {
+        "numberOfHoursUsed": {
+          "$numberInt": "0"
+        },
+        "budgetedHours": {
+          "$numberDouble": "20.5"
+        },
+        "deviation": {
+          "$numberDouble": "20.5"
+        },
+        "_id": {
+          "$oid": "{{dash-dev-inv-feb}}"
+        }
+      },
+      "machiningStatistic": {
+        "numberOfHoursUsed": {
+          "$numberInt": "0"
+        },
+        "budgetedHours": {
+          "$numberInt": "15"
+        },
+        "deviation": {
+          "$numberInt": "15"
+        },
+        "verificationAndShapeControl": "n/a",
+        "dimensionalVerificationAndControl": "n/a",
+        "analysisOfTheDegreeOfFinish": "n/a",
+        "_id": {
+          "$oid": "{{dash-mach-inv-feb}}"
+        }
+      },
+      "assemblyStatistic": {
+        "numberOfHoursUsed": {
+          "$numberInt": "0"
+        },
+        "budgetedHours": {
+          "$numberInt": "10"
+        },
+        "deviation": {
+          "$numberInt": "10"
+        },
+        "pneumaticCircuits": "n/a",
+        "electricalBoardsAndCircuits": "n/a",
+        "kinematics": "n/a",
+        "programmingFeaturesPLC": "n/a",
+        "operator_equipmentSafetyConditions": "n/a",
+        "visualInspection": "n/a",
+        "validTryOnFirstTest": "1",
+        "_id": {
+          "$oid": "{{dash-asm-inv-feb}}"
+        }
+      },
+      "priority": "Média",
+      "__v": {
+        "$numberInt": "0"
+      }
+    },
+    {
+      "_id": {
+        "$oid": "{{dash-billed-jun}}"
+      },
+      "invoicedPercent": {
+        "$numberInt": "100"
+      },
+      "finalPrice": {
+        "$numberDouble": "15000.5"
+      },
+      "state": "Faturada",
+      "orderIdentification": "ENC-2030/001",
+      "isOfficialOrderIdentification": false,
+      "components": {
+        "$numberInt": "0"
+      },
+      "automation": {
+        "$numberInt": "0"
+      },
+      "materials": {
+        "$numberInt": "0"
+      },
+      "others": {
+        "$numberInt": "0"
+      },
+      "costNonQuality": {
+        "$numberInt": "0"
+      },
+      "commentType": [],
+      "budget": {
+        "$oid": "{{budget-dev}}"
+      },
+      "createdBy": "Ana Administradora",
+      "dueDate": {
+        "$date": "2030-02-10T00:00:00.000Z"
+      },
+      "startDate": {
+        "$date": "2026-06-15T10:00:00.000Z"
+      },
+      "devStatistic": {
+        "numberOfHoursUsed": {
+          "$numberInt": "0"
+        },
+        "budgetedHours": {
+          "$numberDouble": "20.5"
+        },
+        "deviation": {
+          "$numberDouble": "20.5"
+        },
+        "_id": {
+          "$oid": "{{dash-dev-billed-jun}}"
+        }
+      },
+      "machiningStatistic": {
+        "numberOfHoursUsed": {
+          "$numberInt": "0"
+        },
+        "budgetedHours": {
+          "$numberInt": "15"
+        },
+        "deviation": {
+          "$numberInt": "15"
+        },
+        "verificationAndShapeControl": "n/a",
+        "dimensionalVerificationAndControl": "n/a",
+        "analysisOfTheDegreeOfFinish": "n/a",
+        "_id": {
+          "$oid": "{{dash-mach-billed-jun}}"
+        }
+      },
+      "assemblyStatistic": {
+        "numberOfHoursUsed": {
+          "$numberInt": "0"
+        },
+        "budgetedHours": {
+          "$numberInt": "10"
+        },
+        "deviation": {
+          "$numberInt": "10"
+        },
+        "pneumaticCircuits": "n/a",
+        "electricalBoardsAndCircuits": "n/a",
+        "kinematics": "n/a",
+        "programmingFeaturesPLC": "n/a",
+        "operator_equipmentSafetyConditions": "n/a",
+        "visualInspection": "n/a",
+        "validTryOnFirstTest": "2",
+        "_id": {
+          "$oid": "{{dash-asm-billed-jun}}"
+        }
+      },
+      "priority": "Média",
+      "__v": {
+        "$numberInt": "0"
+      }
+    },
+    {
+      "_id": {
+        "$oid": "{{dash-billed-aug}}"
+      },
+      "invoicedPercent": {
+        "$numberInt": "100"
+      },
+      "finalPrice": {
+        "$numberDouble": "15000.5"
+      },
+      "state": "Faturada",
+      "orderIdentification": "ENC-2030/001",
+      "isOfficialOrderIdentification": false,
+      "components": {
+        "$numberInt": "0"
+      },
+      "automation": {
+        "$numberInt": "0"
+      },
+      "materials": {
+        "$numberInt": "0"
+      },
+      "others": {
+        "$numberInt": "0"
+      },
+      "costNonQuality": {
+        "$numberInt": "0"
+      },
+      "commentType": [],
+      "budget": {
+        "$oid": "{{budget-dev}}"
+      },
+      "createdBy": "Ana Administradora",
+      "dueDate": {
+        "$date": "2030-02-10T00:00:00.000Z"
+      },
+      "startDate": {
+        "$date": "2026-08-01T00:30:00.000Z"
+      },
+      "devStatistic": {
+        "numberOfHoursUsed": {
+          "$numberInt": "0"
+        },
+        "budgetedHours": {
+          "$numberDouble": "20.5"
+        },
+        "deviation": {
+          "$numberDouble": "20.5"
+        },
+        "_id": {
+          "$oid": "{{dash-dev-billed-aug}}"
+        }
+      },
+      "machiningStatistic": {
+        "numberOfHoursUsed": {
+          "$numberInt": "0"
+        },
+        "budgetedHours": {
+          "$numberInt": "15"
+        },
+        "deviation": {
+          "$numberInt": "15"
+        },
+        "verificationAndShapeControl": "n/a",
+        "dimensionalVerificationAndControl": "n/a",
+        "analysisOfTheDegreeOfFinish": "n/a",
+        "_id": {
+          "$oid": "{{dash-mach-billed-aug}}"
+        }
+      },
+      "assemblyStatistic": {
+        "numberOfHoursUsed": {
+          "$numberInt": "0"
+        },
+        "budgetedHours": {
+          "$numberInt": "10"
+        },
+        "deviation": {
+          "$numberInt": "10"
+        },
+        "pneumaticCircuits": "n/a",
+        "electricalBoardsAndCircuits": "n/a",
+        "kinematics": "n/a",
+        "programmingFeaturesPLC": "n/a",
+        "operator_equipmentSafetyConditions": "n/a",
+        "visualInspection": "n/a",
+        "validTryOnFirstTest": "3",
+        "_id": {
+          "$oid": "{{dash-asm-billed-aug}}"
+        }
+      },
+      "priority": "Média",
+      "__v": {
+        "$numberInt": "0"
+      }
+    },
+    {
+      "_id": {
+        "$oid": "{{dash-inv-jan1}}"
+      },
+      "invoicedPercent": {
+        "$numberInt": "0"
+      },
+      "finalPrice": {
+        "$numberDouble": "15000.5"
+      },
+      "state": "Para faturação",
+      "orderIdentification": "ENC-2030/001",
+      "isOfficialOrderIdentification": false,
+      "components": {
+        "$numberInt": "0"
+      },
+      "automation": {
+        "$numberInt": "0"
+      },
+      "materials": {
+        "$numberInt": "0"
+      },
+      "others": {
+        "$numberInt": "0"
+      },
+      "costNonQuality": {
+        "$numberInt": "0"
+      },
+      "commentType": [],
+      "budget": {
+        "$oid": "{{budget-dev}}"
+      },
+      "createdBy": "Ana Administradora",
+      "dueDate": {
+        "$date": "2030-02-10T00:00:00.000Z"
+      },
+      "startDate": {
+        "$date": "2026-01-01T00:00:00.000Z"
+      },
+      "devStatistic": {
+        "numberOfHoursUsed": {
+          "$numberInt": "0"
+        },
+        "budgetedHours": {
+          "$numberDouble": "20.5"
+        },
+        "deviation": {
+          "$numberDouble": "20.5"
+        },
+        "_id": {
+          "$oid": "{{dash-dev-inv-jan1}}"
+        }
+      },
+      "machiningStatistic": {
+        "numberOfHoursUsed": {
+          "$numberInt": "0"
+        },
+        "budgetedHours": {
+          "$numberInt": "15"
+        },
+        "deviation": {
+          "$numberInt": "15"
+        },
+        "verificationAndShapeControl": "n/a",
+        "dimensionalVerificationAndControl": "n/a",
+        "analysisOfTheDegreeOfFinish": "n/a",
+        "_id": {
+          "$oid": "{{dash-mach-inv-jan1}}"
+        }
+      },
+      "assemblyStatistic": {
+        "numberOfHoursUsed": {
+          "$numberInt": "0"
+        },
+        "budgetedHours": {
+          "$numberInt": "10"
+        },
+        "deviation": {
+          "$numberInt": "10"
+        },
+        "pneumaticCircuits": "n/a",
+        "electricalBoardsAndCircuits": "n/a",
+        "kinematics": "n/a",
+        "programmingFeaturesPLC": "n/a",
+        "operator_equipmentSafetyConditions": "n/a",
+        "visualInspection": "n/a",
+        "validTryOnFirstTest": "2",
+        "_id": {
+          "$oid": "{{dash-asm-inv-jan1}}"
+        }
+      },
+      "priority": "Média",
+      "__v": {
+        "$numberInt": "0"
+      }
+    },
+    {
+      "_id": {
+        "$oid": "{{dash-billed-dec31-midnight}}"
+      },
+      "invoicedPercent": {
+        "$numberInt": "100"
+      },
+      "finalPrice": {
+        "$numberDouble": "15000.5"
+      },
+      "state": "Faturada",
+      "orderIdentification": "ENC-2030/001",
+      "isOfficialOrderIdentification": false,
+      "components": {
+        "$numberInt": "0"
+      },
+      "automation": {
+        "$numberInt": "0"
+      },
+      "materials": {
+        "$numberInt": "0"
+      },
+      "others": {
+        "$numberInt": "0"
+      },
+      "costNonQuality": {
+        "$numberInt": "0"
+      },
+      "commentType": [],
+      "budget": {
+        "$oid": "{{budget-dev}}"
+      },
+      "createdBy": "Ana Administradora",
+      "dueDate": {
+        "$date": "2030-02-10T00:00:00.000Z"
+      },
+      "startDate": {
+        "$date": "2026-12-31T00:00:00.000Z"
+      },
+      "devStatistic": {
+        "numberOfHoursUsed": {
+          "$numberInt": "0"
+        },
+        "budgetedHours": {
+          "$numberDouble": "20.5"
+        },
+        "deviation": {
+          "$numberDouble": "20.5"
+        },
+        "_id": {
+          "$oid": "{{dash-dev-billed-dec31-midnight}}"
+        }
+      },
+      "machiningStatistic": {
+        "numberOfHoursUsed": {
+          "$numberInt": "0"
+        },
+        "budgetedHours": {
+          "$numberInt": "15"
+        },
+        "deviation": {
+          "$numberInt": "15"
+        },
+        "verificationAndShapeControl": "n/a",
+        "dimensionalVerificationAndControl": "n/a",
+        "analysisOfTheDegreeOfFinish": "n/a",
+        "_id": {
+          "$oid": "{{dash-mach-billed-dec31-midnight}}"
+        }
+      },
+      "assemblyStatistic": {
+        "numberOfHoursUsed": {
+          "$numberInt": "0"
+        },
+        "budgetedHours": {
+          "$numberInt": "10"
+        },
+        "deviation": {
+          "$numberInt": "10"
+        },
+        "pneumaticCircuits": "n/a",
+        "electricalBoardsAndCircuits": "n/a",
+        "kinematics": "n/a",
+        "programmingFeaturesPLC": "n/a",
+        "operator_equipmentSafetyConditions": "n/a",
+        "visualInspection": "n/a",
+        "validTryOnFirstTest": "3",
+        "_id": {
+          "$oid": "{{dash-asm-billed-dec31-midnight}}"
+        }
+      },
+      "priority": "Média",
+      "__v": {
+        "$numberInt": "0"
+      }
+    },
+    {
+      "_id": {
+        "$oid": "{{dash-billed-dec31-noon}}"
+      },
+      "invoicedPercent": {
+        "$numberInt": "100"
+      },
+      "finalPrice": {
+        "$numberDouble": "15000.5"
+      },
+      "state": "Faturada",
+      "orderIdentification": "ENC-2030/001",
+      "isOfficialOrderIdentification": false,
+      "components": {
+        "$numberInt": "0"
+      },
+      "automation": {
+        "$numberInt": "0"
+      },
+      "materials": {
+        "$numberInt": "0"
+      },
+      "others": {
+        "$numberInt": "0"
+      },
+      "costNonQuality": {
+        "$numberInt": "0"
+      },
+      "commentType": [],
+      "budget": {
+        "$oid": "{{budget-dev}}"
+      },
+      "createdBy": "Ana Administradora",
+      "dueDate": {
+        "$date": "2030-02-10T00:00:00.000Z"
+      },
+      "startDate": {
+        "$date": "2026-12-31T12:00:00.000Z"
+      },
+      "devStatistic": {
+        "numberOfHoursUsed": {
+          "$numberInt": "0"
+        },
+        "budgetedHours": {
+          "$numberDouble": "20.5"
+        },
+        "deviation": {
+          "$numberDouble": "20.5"
+        },
+        "_id": {
+          "$oid": "{{dash-dev-billed-dec31-noon}}"
+        }
+      },
+      "machiningStatistic": {
+        "numberOfHoursUsed": {
+          "$numberInt": "0"
+        },
+        "budgetedHours": {
+          "$numberInt": "15"
+        },
+        "deviation": {
+          "$numberInt": "15"
+        },
+        "verificationAndShapeControl": "n/a",
+        "dimensionalVerificationAndControl": "n/a",
+        "analysisOfTheDegreeOfFinish": "n/a",
+        "_id": {
+          "$oid": "{{dash-mach-billed-dec31-noon}}"
+        }
+      },
+      "assemblyStatistic": {
+        "numberOfHoursUsed": {
+          "$numberInt": "0"
+        },
+        "budgetedHours": {
+          "$numberInt": "10"
+        },
+        "deviation": {
+          "$numberInt": "10"
+        },
+        "pneumaticCircuits": "n/a",
+        "electricalBoardsAndCircuits": "n/a",
+        "kinematics": "n/a",
+        "programmingFeaturesPLC": "n/a",
+        "operator_equipmentSafetyConditions": "n/a",
+        "visualInspection": "n/a",
+        "validTryOnFirstTest": "1",
+        "_id": {
+          "$oid": "{{dash-asm-billed-dec31-noon}}"
+        }
+      },
+      "priority": "Média",
+      "__v": {
+        "$numberInt": "0"
+      }
+    },
+    {
+      "_id": {
+        "$oid": "{{dash-inv-dec31-late}}"
+      },
+      "invoicedPercent": {
+        "$numberInt": "0"
+      },
+      "finalPrice": {
+        "$numberDouble": "15000.5"
+      },
+      "state": "Para faturação",
+      "orderIdentification": "ENC-2030/001",
+      "isOfficialOrderIdentification": false,
+      "components": {
+        "$numberInt": "0"
+      },
+      "automation": {
+        "$numberInt": "0"
+      },
+      "materials": {
+        "$numberInt": "0"
+      },
+      "others": {
+        "$numberInt": "0"
+      },
+      "costNonQuality": {
+        "$numberInt": "0"
+      },
+      "commentType": [],
+      "budget": {
+        "$oid": "{{budget-dev}}"
+      },
+      "createdBy": "Ana Administradora",
+      "dueDate": {
+        "$date": "2030-02-10T00:00:00.000Z"
+      },
+      "startDate": {
+        "$date": "2026-12-31T23:59:59.999Z"
+      },
+      "devStatistic": {
+        "numberOfHoursUsed": {
+          "$numberInt": "0"
+        },
+        "budgetedHours": {
+          "$numberDouble": "20.5"
+        },
+        "deviation": {
+          "$numberDouble": "20.5"
+        },
+        "_id": {
+          "$oid": "{{dash-dev-inv-dec31-late}}"
+        }
+      },
+      "machiningStatistic": {
+        "numberOfHoursUsed": {
+          "$numberInt": "0"
+        },
+        "budgetedHours": {
+          "$numberInt": "15"
+        },
+        "deviation": {
+          "$numberInt": "15"
+        },
+        "verificationAndShapeControl": "n/a",
+        "dimensionalVerificationAndControl": "n/a",
+        "analysisOfTheDegreeOfFinish": "n/a",
+        "_id": {
+          "$oid": "{{dash-mach-inv-dec31-late}}"
+        }
+      },
+      "assemblyStatistic": {
+        "numberOfHoursUsed": {
+          "$numberInt": "0"
+        },
+        "budgetedHours": {
+          "$numberInt": "10"
+        },
+        "deviation": {
+          "$numberInt": "10"
+        },
+        "pneumaticCircuits": "n/a",
+        "electricalBoardsAndCircuits": "n/a",
+        "kinematics": "n/a",
+        "programmingFeaturesPLC": "n/a",
+        "operator_equipmentSafetyConditions": "n/a",
+        "visualInspection": "n/a",
+        "validTryOnFirstTest": "2",
+        "_id": {
+          "$oid": "{{dash-asm-inv-dec31-late}}"
+        }
+      },
+      "priority": "Média",
+      "__v": {
+        "$numberInt": "0"
+      }
+    },
+    {
+      "_id": {
+        "$oid": "{{dash-billed-2027}}"
+      },
+      "invoicedPercent": {
+        "$numberInt": "100"
+      },
+      "finalPrice": {
+        "$numberDouble": "15000.5"
+      },
+      "state": "Faturada",
+      "orderIdentification": "ENC-2030/001",
+      "isOfficialOrderIdentification": false,
+      "components": {
+        "$numberInt": "0"
+      },
+      "automation": {
+        "$numberInt": "0"
+      },
+      "materials": {
+        "$numberInt": "0"
+      },
+      "others": {
+        "$numberInt": "0"
+      },
+      "costNonQuality": {
+        "$numberInt": "0"
+      },
+      "commentType": [],
+      "budget": {
+        "$oid": "{{budget-dev}}"
+      },
+      "createdBy": "Ana Administradora",
+      "dueDate": {
+        "$date": "2030-02-10T00:00:00.000Z"
+      },
+      "startDate": {
+        "$date": "2027-01-01T00:00:00.000Z"
+      },
+      "devStatistic": {
+        "numberOfHoursUsed": {
+          "$numberInt": "0"
+        },
+        "budgetedHours": {
+          "$numberDouble": "20.5"
+        },
+        "deviation": {
+          "$numberDouble": "20.5"
+        },
+        "_id": {
+          "$oid": "{{dash-dev-billed-2027}}"
+        }
+      },
+      "machiningStatistic": {
+        "numberOfHoursUsed": {
+          "$numberInt": "0"
+        },
+        "budgetedHours": {
+          "$numberInt": "15"
+        },
+        "deviation": {
+          "$numberInt": "15"
+        },
+        "verificationAndShapeControl": "n/a",
+        "dimensionalVerificationAndControl": "n/a",
+        "analysisOfTheDegreeOfFinish": "n/a",
+        "_id": {
+          "$oid": "{{dash-mach-billed-2027}}"
+        }
+      },
+      "assemblyStatistic": {
+        "numberOfHoursUsed": {
+          "$numberInt": "0"
+        },
+        "budgetedHours": {
+          "$numberInt": "10"
+        },
+        "deviation": {
+          "$numberInt": "10"
+        },
+        "pneumaticCircuits": "n/a",
+        "electricalBoardsAndCircuits": "n/a",
+        "kinematics": "n/a",
+        "programmingFeaturesPLC": "n/a",
+        "operator_equipmentSafetyConditions": "n/a",
+        "visualInspection": "n/a",
+        "validTryOnFirstTest": "3",
+        "_id": {
+          "$oid": "{{dash-asm-billed-2027}}"
+        }
+      },
+      "priority": "Média",
+      "__v": {
+        "$numberInt": "0"
+      }
+    },
+    {
+      "_id": {
+        "$oid": "{{dash-billed-2025-last-ms}}"
+      },
+      "invoicedPercent": {
+        "$numberInt": "100"
+      },
+      "finalPrice": {
+        "$numberDouble": "15000.5"
+      },
+      "state": "Faturada",
+      "orderIdentification": "ENC-2030/001",
+      "isOfficialOrderIdentification": false,
+      "components": {
+        "$numberInt": "0"
+      },
+      "automation": {
+        "$numberInt": "0"
+      },
+      "materials": {
+        "$numberInt": "0"
+      },
+      "others": {
+        "$numberInt": "0"
+      },
+      "costNonQuality": {
+        "$numberInt": "0"
+      },
+      "commentType": [],
+      "budget": {
+        "$oid": "{{budget-dev}}"
+      },
+      "createdBy": "Ana Administradora",
+      "dueDate": {
+        "$date": "2030-02-10T00:00:00.000Z"
+      },
+      "startDate": {
+        "$date": "2025-12-31T23:59:59.999Z"
+      },
+      "devStatistic": {
+        "numberOfHoursUsed": {
+          "$numberInt": "0"
+        },
+        "budgetedHours": {
+          "$numberDouble": "20.5"
+        },
+        "deviation": {
+          "$numberDouble": "20.5"
+        },
+        "_id": {
+          "$oid": "{{dash-dev-billed-2025-last-ms}}"
+        }
+      },
+      "machiningStatistic": {
+        "numberOfHoursUsed": {
+          "$numberInt": "0"
+        },
+        "budgetedHours": {
+          "$numberInt": "15"
+        },
+        "deviation": {
+          "$numberInt": "15"
+        },
+        "verificationAndShapeControl": "n/a",
+        "dimensionalVerificationAndControl": "n/a",
+        "analysisOfTheDegreeOfFinish": "n/a",
+        "_id": {
+          "$oid": "{{dash-mach-billed-2025-last-ms}}"
+        }
+      },
+      "assemblyStatistic": {
+        "numberOfHoursUsed": {
+          "$numberInt": "0"
+        },
+        "budgetedHours": {
+          "$numberInt": "10"
+        },
+        "deviation": {
+          "$numberInt": "10"
+        },
+        "pneumaticCircuits": "n/a",
+        "electricalBoardsAndCircuits": "n/a",
+        "kinematics": "n/a",
+        "programmingFeaturesPLC": "n/a",
+        "operator_equipmentSafetyConditions": "n/a",
+        "visualInspection": "n/a",
+        "validTryOnFirstTest": "1",
+        "_id": {
+          "$oid": "{{dash-asm-billed-2025-last-ms}}"
+        }
+      },
+      "priority": "Média",
+      "__v": {
+        "$numberInt": "0"
+      }
+    },
+    {
+      "_id": {
+        "$oid": "{{dash-assembly}}"
+      },
+      "invoicedPercent": {
+        "$numberInt": "0"
+      },
+      "finalPrice": {
+        "$numberDouble": "15000.5"
+      },
+      "state": "Montagem",
+      "orderIdentification": "ENC-2030/001",
+      "isOfficialOrderIdentification": false,
+      "components": {
+        "$numberInt": "0"
+      },
+      "automation": {
+        "$numberInt": "0"
+      },
+      "materials": {
+        "$numberInt": "0"
+      },
+      "others": {
+        "$numberInt": "0"
+      },
+      "costNonQuality": {
+        "$numberInt": "0"
+      },
+      "commentType": [],
+      "budget": {
+        "$oid": "{{budget-dev}}"
+      },
+      "createdBy": "Ana Administradora",
+      "dueDate": {
+        "$date": "2030-02-10T00:00:00.000Z"
+      },
+      "startDate": {
+        "$date": "2026-03-01T00:00:00.000Z"
+      },
+      "devStatistic": {
+        "numberOfHoursUsed": {
+          "$numberInt": "0"
+        },
+        "budgetedHours": {
+          "$numberDouble": "20.5"
+        },
+        "deviation": {
+          "$numberDouble": "20.5"
+        },
+        "_id": {
+          "$oid": "{{dash-dev-assembly}}"
+        }
+      },
+      "machiningStatistic": {
+        "numberOfHoursUsed": {
+          "$numberInt": "0"
+        },
+        "budgetedHours": {
+          "$numberInt": "15"
+        },
+        "deviation": {
+          "$numberInt": "15"
+        },
+        "verificationAndShapeControl": "n/a",
+        "dimensionalVerificationAndControl": "n/a",
+        "analysisOfTheDegreeOfFinish": "n/a",
+        "_id": {
+          "$oid": "{{dash-mach-assembly}}"
+        }
+      },
+      "assemblyStatistic": {
+        "numberOfHoursUsed": {
+          "$numberInt": "0"
+        },
+        "budgetedHours": {
+          "$numberInt": "10"
+        },
+        "deviation": {
+          "$numberInt": "10"
+        },
+        "pneumaticCircuits": "n/a",
+        "electricalBoardsAndCircuits": "n/a",
+        "kinematics": "n/a",
+        "programmingFeaturesPLC": "n/a",
+        "operator_equipmentSafetyConditions": "n/a",
+        "visualInspection": "n/a",
+        "validTryOnFirstTest": "1",
+        "_id": {
+          "$oid": "{{dash-asm-assembly}}"
+        }
+      },
+      "priority": "Média",
+      "__v": {
+        "$numberInt": "0"
+      }
+    },
+    {
+      "_id": {
+        "$oid": "{{dash-deleted}}"
+      },
+      "invoicedPercent": {
+        "$numberInt": "0"
+      },
+      "finalPrice": {
+        "$numberDouble": "15000.5"
+      },
+      "state": "Apagada",
+      "orderIdentification": "ENC-2030/001",
+      "isOfficialOrderIdentification": false,
+      "components": {
+        "$numberInt": "0"
+      },
+      "automation": {
+        "$numberInt": "0"
+      },
+      "materials": {
+        "$numberInt": "0"
+      },
+      "others": {
+        "$numberInt": "0"
+      },
+      "costNonQuality": {
+        "$numberInt": "0"
+      },
+      "commentType": [],
+      "budget": {
+        "$oid": "{{budget-dev}}"
+      },
+      "createdBy": "Ana Administradora",
+      "dueDate": {
+        "$date": "2030-02-10T00:00:00.000Z"
+      },
+      "startDate": {
+        "$date": "2026-03-01T00:00:00.000Z"
+      },
+      "devStatistic": {
+        "numberOfHoursUsed": {
+          "$numberInt": "0"
+        },
+        "budgetedHours": {
+          "$numberDouble": "20.5"
+        },
+        "deviation": {
+          "$numberDouble": "20.5"
+        },
+        "_id": {
+          "$oid": "{{dash-dev-deleted}}"
+        }
+      },
+      "machiningStatistic": {
+        "numberOfHoursUsed": {
+          "$numberInt": "0"
+        },
+        "budgetedHours": {
+          "$numberInt": "15"
+        },
+        "deviation": {
+          "$numberInt": "15"
+        },
+        "verificationAndShapeControl": "n/a",
+        "dimensionalVerificationAndControl": "n/a",
+        "analysisOfTheDegreeOfFinish": "n/a",
+        "_id": {
+          "$oid": "{{dash-mach-deleted}}"
+        }
+      },
+      "assemblyStatistic": {
+        "numberOfHoursUsed": {
+          "$numberInt": "0"
+        },
+        "budgetedHours": {
+          "$numberInt": "10"
+        },
+        "deviation": {
+          "$numberInt": "10"
+        },
+        "pneumaticCircuits": "n/a",
+        "electricalBoardsAndCircuits": "n/a",
+        "kinematics": "n/a",
+        "programmingFeaturesPLC": "n/a",
+        "operator_equipmentSafetyConditions": "n/a",
+        "visualInspection": "n/a",
+        "validTryOnFirstTest": "2",
+        "_id": {
+          "$oid": "{{dash-asm-deleted}}"
+        }
+      },
+      "priority": "Média",
+      "__v": {
+        "$numberInt": "0"
+      }
+    },
+    {
+      "_id": {
+        "$oid": "{{dash-dev}}"
+      },
+      "invoicedPercent": {
+        "$numberInt": "0"
+      },
+      "finalPrice": {
+        "$numberDouble": "15000.5"
+      },
+      "state": "Desenvolvimento",
+      "orderIdentification": "ENC-2030/001",
+      "isOfficialOrderIdentification": false,
+      "components": {
+        "$numberInt": "0"
+      },
+      "automation": {
+        "$numberInt": "0"
+      },
+      "materials": {
+        "$numberInt": "0"
+      },
+      "others": {
+        "$numberInt": "0"
+      },
+      "costNonQuality": {
+        "$numberInt": "0"
+      },
+      "commentType": [],
+      "budget": {
+        "$oid": "{{budget-dev}}"
+      },
+      "createdBy": "Ana Administradora",
+      "dueDate": {
+        "$date": "2030-02-10T00:00:00.000Z"
+      },
+      "startDate": {
+        "$date": "2026-03-01T00:00:00.000Z"
+      },
+      "devStatistic": {
+        "numberOfHoursUsed": {
+          "$numberInt": "0"
+        },
+        "budgetedHours": {
+          "$numberDouble": "20.5"
+        },
+        "deviation": {
+          "$numberDouble": "20.5"
+        },
+        "_id": {
+          "$oid": "{{dash-dev-dev}}"
+        }
+      },
+      "machiningStatistic": {
+        "numberOfHoursUsed": {
+          "$numberInt": "0"
+        },
+        "budgetedHours": {
+          "$numberInt": "15"
+        },
+        "deviation": {
+          "$numberInt": "15"
+        },
+        "verificationAndShapeControl": "n/a",
+        "dimensionalVerificationAndControl": "n/a",
+        "analysisOfTheDegreeOfFinish": "n/a",
+        "_id": {
+          "$oid": "{{dash-mach-dev}}"
+        }
+      },
+      "assemblyStatistic": {
+        "numberOfHoursUsed": {
+          "$numberInt": "0"
+        },
+        "budgetedHours": {
+          "$numberInt": "10"
+        },
+        "deviation": {
+          "$numberInt": "10"
+        },
+        "pneumaticCircuits": "n/a",
+        "electricalBoardsAndCircuits": "n/a",
+        "kinematics": "n/a",
+        "programmingFeaturesPLC": "n/a",
+        "operator_equipmentSafetyConditions": "n/a",
+        "visualInspection": "n/a",
+        "validTryOnFirstTest": "3",
+        "_id": {
+          "$oid": "{{dash-asm-dev}}"
+        }
+      },
+      "priority": "Média",
+      "__v": {
+        "$numberInt": "0"
+      }
+    },
+    {
+      "_id": {
+        "$oid": "{{dash-lower-state}}"
+      },
+      "invoicedPercent": {
+        "$numberInt": "0"
+      },
+      "finalPrice": {
+        "$numberDouble": "15000.5"
+      },
+      "state": "faturada",
+      "orderIdentification": "ENC-2030/001",
+      "isOfficialOrderIdentification": false,
+      "components": {
+        "$numberInt": "0"
+      },
+      "automation": {
+        "$numberInt": "0"
+      },
+      "materials": {
+        "$numberInt": "0"
+      },
+      "others": {
+        "$numberInt": "0"
+      },
+      "costNonQuality": {
+        "$numberInt": "0"
+      },
+      "commentType": [],
+      "budget": {
+        "$oid": "{{budget-dev}}"
+      },
+      "createdBy": "Ana Administradora",
+      "dueDate": {
+        "$date": "2030-02-10T00:00:00.000Z"
+      },
+      "startDate": {
+        "$date": "2026-03-01T00:00:00.000Z"
+      },
+      "devStatistic": {
+        "numberOfHoursUsed": {
+          "$numberInt": "0"
+        },
+        "budgetedHours": {
+          "$numberDouble": "20.5"
+        },
+        "deviation": {
+          "$numberDouble": "20.5"
+        },
+        "_id": {
+          "$oid": "{{dash-dev-lower-state}}"
+        }
+      },
+      "machiningStatistic": {
+        "numberOfHoursUsed": {
+          "$numberInt": "0"
+        },
+        "budgetedHours": {
+          "$numberInt": "15"
+        },
+        "deviation": {
+          "$numberInt": "15"
+        },
+        "verificationAndShapeControl": "n/a",
+        "dimensionalVerificationAndControl": "n/a",
+        "analysisOfTheDegreeOfFinish": "n/a",
+        "_id": {
+          "$oid": "{{dash-mach-lower-state}}"
+        }
+      },
+      "assemblyStatistic": {
+        "numberOfHoursUsed": {
+          "$numberInt": "0"
+        },
+        "budgetedHours": {
+          "$numberInt": "10"
+        },
+        "deviation": {
+          "$numberInt": "10"
+        },
+        "pneumaticCircuits": "n/a",
+        "electricalBoardsAndCircuits": "n/a",
+        "kinematics": "n/a",
+        "programmingFeaturesPLC": "n/a",
+        "operator_equipmentSafetyConditions": "n/a",
+        "visualInspection": "n/a",
+        "validTryOnFirstTest": "1",
+        "_id": {
+          "$oid": "{{dash-asm-lower-state}}"
+        }
+      },
+      "priority": "Média",
+      "__v": {
+        "$numberInt": "0"
+      }
+    },
+    {
+      "_id": {
+        "$oid": "{{dash-number-1}}"
+      },
+      "invoicedPercent": {
+        "$numberInt": "100"
+      },
+      "finalPrice": {
+        "$numberDouble": "15000.5"
+      },
+      "state": "Faturada",
+      "orderIdentification": "ENC-2030/001",
+      "isOfficialOrderIdentification": false,
+      "components": {
+        "$numberInt": "0"
+      },
+      "automation": {
+        "$numberInt": "0"
+      },
+      "materials": {
+        "$numberInt": "0"
+      },
+      "others": {
+        "$numberInt": "0"
+      },
+      "costNonQuality": {
+        "$numberInt": "0"
+      },
+      "commentType": [],
+      "budget": {
+        "$oid": "{{budget-dev}}"
+      },
+      "createdBy": "Ana Administradora",
+      "dueDate": {
+        "$date": "2030-02-10T00:00:00.000Z"
+      },
+      "startDate": {
+        "$date": "2026-04-01T00:00:00.000Z"
+      },
+      "devStatistic": {
+        "numberOfHoursUsed": {
+          "$numberInt": "0"
+        },
+        "budgetedHours": {
+          "$numberDouble": "20.5"
+        },
+        "deviation": {
+          "$numberDouble": "20.5"
+        },
+        "_id": {
+          "$oid": "{{dash-dev-number-1}}"
+        }
+      },
+      "machiningStatistic": {
+        "numberOfHoursUsed": {
+          "$numberInt": "0"
+        },
+        "budgetedHours": {
+          "$numberInt": "15"
+        },
+        "deviation": {
+          "$numberInt": "15"
+        },
+        "verificationAndShapeControl": "n/a",
+        "dimensionalVerificationAndControl": "n/a",
+        "analysisOfTheDegreeOfFinish": "n/a",
+        "_id": {
+          "$oid": "{{dash-mach-number-1}}"
+        }
+      },
+      "assemblyStatistic": {
+        "numberOfHoursUsed": {
+          "$numberInt": "0"
+        },
+        "budgetedHours": {
+          "$numberInt": "10"
+        },
+        "deviation": {
+          "$numberInt": "10"
+        },
+        "pneumaticCircuits": "n/a",
+        "electricalBoardsAndCircuits": "n/a",
+        "kinematics": "n/a",
+        "programmingFeaturesPLC": "n/a",
+        "operator_equipmentSafetyConditions": "n/a",
+        "visualInspection": "n/a",
+        "validTryOnFirstTest": {
+          "$numberInt": "1"
+        },
+        "_id": {
+          "$oid": "{{dash-asm-number-1}}"
+        }
+      },
+      "priority": "Média",
+      "__v": {
+        "$numberInt": "0"
+      }
+    },
+    {
+      "_id": {
+        "$oid": "{{dash-value-4}}"
+      },
+      "invoicedPercent": {
+        "$numberInt": "0"
+      },
+      "finalPrice": {
+        "$numberDouble": "15000.5"
+      },
+      "state": "Para faturação",
+      "orderIdentification": "ENC-2030/001",
+      "isOfficialOrderIdentification": false,
+      "components": {
+        "$numberInt": "0"
+      },
+      "automation": {
+        "$numberInt": "0"
+      },
+      "materials": {
+        "$numberInt": "0"
+      },
+      "others": {
+        "$numberInt": "0"
+      },
+      "costNonQuality": {
+        "$numberInt": "0"
+      },
+      "commentType": [],
+      "budget": {
+        "$oid": "{{budget-dev}}"
+      },
+      "createdBy": "Ana Administradora",
+      "dueDate": {
+        "$date": "2030-02-10T00:00:00.000Z"
+      },
+      "startDate": {
+        "$date": "2026-04-01T00:00:00.000Z"
+      },
+      "devStatistic": {
+        "numberOfHoursUsed": {
+          "$numberInt": "0"
+        },
+        "budgetedHours": {
+          "$numberDouble": "20.5"
+        },
+        "deviation": {
+          "$numberDouble": "20.5"
+        },
+        "_id": {
+          "$oid": "{{dash-dev-value-4}}"
+        }
+      },
+      "machiningStatistic": {
+        "numberOfHoursUsed": {
+          "$numberInt": "0"
+        },
+        "budgetedHours": {
+          "$numberInt": "15"
+        },
+        "deviation": {
+          "$numberInt": "15"
+        },
+        "verificationAndShapeControl": "n/a",
+        "dimensionalVerificationAndControl": "n/a",
+        "analysisOfTheDegreeOfFinish": "n/a",
+        "_id": {
+          "$oid": "{{dash-mach-value-4}}"
+        }
+      },
+      "assemblyStatistic": {
+        "numberOfHoursUsed": {
+          "$numberInt": "0"
+        },
+        "budgetedHours": {
+          "$numberInt": "10"
+        },
+        "deviation": {
+          "$numberInt": "10"
+        },
+        "pneumaticCircuits": "n/a",
+        "electricalBoardsAndCircuits": "n/a",
+        "kinematics": "n/a",
+        "programmingFeaturesPLC": "n/a",
+        "operator_equipmentSafetyConditions": "n/a",
+        "visualInspection": "n/a",
+        "validTryOnFirstTest": "4",
+        "_id": {
+          "$oid": "{{dash-asm-value-4}}"
+        }
+      },
+      "priority": "Média",
+      "__v": {
+        "$numberInt": "0"
+      }
+    },
+    {
+      "_id": {
+        "$oid": "{{dash-no-assembly}}"
+      },
+      "invoicedPercent": {
+        "$numberInt": "100"
+      },
+      "finalPrice": {
+        "$numberDouble": "15000.5"
+      },
+      "state": "Faturada",
+      "orderIdentification": "ENC-2030/001",
+      "isOfficialOrderIdentification": false,
+      "components": {
+        "$numberInt": "0"
+      },
+      "automation": {
+        "$numberInt": "0"
+      },
+      "materials": {
+        "$numberInt": "0"
+      },
+      "others": {
+        "$numberInt": "0"
+      },
+      "costNonQuality": {
+        "$numberInt": "0"
+      },
+      "commentType": [],
+      "budget": {
+        "$oid": "{{budget-dev}}"
+      },
+      "createdBy": "Ana Administradora",
+      "dueDate": {
+        "$date": "2030-02-10T00:00:00.000Z"
+      },
+      "startDate": {
+        "$date": "2026-04-01T00:00:00.000Z"
+      },
+      "devStatistic": {
+        "numberOfHoursUsed": {
+          "$numberInt": "0"
+        },
+        "budgetedHours": {
+          "$numberDouble": "20.5"
+        },
+        "deviation": {
+          "$numberDouble": "20.5"
+        },
+        "_id": {
+          "$oid": "{{dash-dev-no-assembly}}"
+        }
+      },
+      "machiningStatistic": {
+        "numberOfHoursUsed": {
+          "$numberInt": "0"
+        },
+        "budgetedHours": {
+          "$numberInt": "15"
+        },
+        "deviation": {
+          "$numberInt": "15"
+        },
+        "verificationAndShapeControl": "n/a",
+        "dimensionalVerificationAndControl": "n/a",
+        "analysisOfTheDegreeOfFinish": "n/a",
+        "_id": {
+          "$oid": "{{dash-mach-no-assembly}}"
+        }
+      },
+      "priority": "Média",
+      "__v": {
+        "$numberInt": "0"
+      }
+    },
+    {
+      "_id": {
+        "$oid": "{{dash-no-stats}}"
+      },
+      "invoicedPercent": {
+        "$numberInt": "0"
+      },
+      "finalPrice": {
+        "$numberDouble": "15000.5"
+      },
+      "state": "Para faturação",
+      "orderIdentification": "ENC-2030/001",
+      "isOfficialOrderIdentification": false,
+      "components": {
+        "$numberInt": "0"
+      },
+      "automation": {
+        "$numberInt": "0"
+      },
+      "materials": {
+        "$numberInt": "0"
+      },
+      "others": {
+        "$numberInt": "0"
+      },
+      "costNonQuality": {
+        "$numberInt": "0"
+      },
+      "commentType": [],
+      "budget": {
+        "$oid": "{{budget-dev}}"
+      },
+      "createdBy": "Ana Administradora",
+      "dueDate": {
+        "$date": "2030-02-10T00:00:00.000Z"
+      },
+      "startDate": {
+        "$date": "2026-04-01T00:00:00.000Z"
+      },
+      "priority": "Média",
+      "__v": {
+        "$numberInt": "0"
+      }
+    },
+    {
+      "_id": {
+        "$oid": "{{dash-start-null}}"
+      },
+      "invoicedPercent": {
+        "$numberInt": "0"
+      },
+      "finalPrice": {
+        "$numberDouble": "15000.5"
+      },
+      "state": "Para faturação",
+      "orderIdentification": "ENC-2030/001",
+      "isOfficialOrderIdentification": false,
+      "components": {
+        "$numberInt": "0"
+      },
+      "automation": {
+        "$numberInt": "0"
+      },
+      "materials": {
+        "$numberInt": "0"
+      },
+      "others": {
+        "$numberInt": "0"
+      },
+      "costNonQuality": {
+        "$numberInt": "0"
+      },
+      "commentType": [],
+      "budget": {
+        "$oid": "{{budget-dev}}"
+      },
+      "createdBy": "Ana Administradora",
+      "dueDate": {
+        "$date": "2030-02-10T00:00:00.000Z"
+      },
+      "startDate": null,
+      "devStatistic": {
+        "numberOfHoursUsed": {
+          "$numberInt": "0"
+        },
+        "budgetedHours": {
+          "$numberDouble": "20.5"
+        },
+        "deviation": {
+          "$numberDouble": "20.5"
+        },
+        "_id": {
+          "$oid": "{{dash-dev-start-null}}"
+        }
+      },
+      "machiningStatistic": {
+        "numberOfHoursUsed": {
+          "$numberInt": "0"
+        },
+        "budgetedHours": {
+          "$numberInt": "15"
+        },
+        "deviation": {
+          "$numberInt": "15"
+        },
+        "verificationAndShapeControl": "n/a",
+        "dimensionalVerificationAndControl": "n/a",
+        "analysisOfTheDegreeOfFinish": "n/a",
+        "_id": {
+          "$oid": "{{dash-mach-start-null}}"
+        }
+      },
+      "assemblyStatistic": {
+        "numberOfHoursUsed": {
+          "$numberInt": "0"
+        },
+        "budgetedHours": {
+          "$numberInt": "10"
+        },
+        "deviation": {
+          "$numberInt": "10"
+        },
+        "pneumaticCircuits": "n/a",
+        "electricalBoardsAndCircuits": "n/a",
+        "kinematics": "n/a",
+        "programmingFeaturesPLC": "n/a",
+        "operator_equipmentSafetyConditions": "n/a",
+        "visualInspection": "n/a",
+        "validTryOnFirstTest": "1",
+        "_id": {
+          "$oid": "{{dash-asm-start-null}}"
+        }
+      },
+      "priority": "Média",
+      "__v": {
+        "$numberInt": "0"
+      }
+    },
+    {
+      "_id": {
+        "$oid": "{{dash-start-missing}}"
+      },
+      "invoicedPercent": {
+        "$numberInt": "0"
+      },
+      "finalPrice": {
+        "$numberDouble": "15000.5"
+      },
+      "state": "Para faturação",
+      "orderIdentification": "ENC-2030/001",
+      "isOfficialOrderIdentification": false,
+      "components": {
+        "$numberInt": "0"
+      },
+      "automation": {
+        "$numberInt": "0"
+      },
+      "materials": {
+        "$numberInt": "0"
+      },
+      "others": {
+        "$numberInt": "0"
+      },
+      "costNonQuality": {
+        "$numberInt": "0"
+      },
+      "commentType": [],
+      "budget": {
+        "$oid": "{{budget-dev}}"
+      },
+      "createdBy": "Ana Administradora",
+      "dueDate": {
+        "$date": "2030-02-10T00:00:00.000Z"
+      },
+      "devStatistic": {
+        "numberOfHoursUsed": {
+          "$numberInt": "0"
+        },
+        "budgetedHours": {
+          "$numberDouble": "20.5"
+        },
+        "deviation": {
+          "$numberDouble": "20.5"
+        },
+        "_id": {
+          "$oid": "{{dash-dev-start-missing}}"
+        }
+      },
+      "machiningStatistic": {
+        "numberOfHoursUsed": {
+          "$numberInt": "0"
+        },
+        "budgetedHours": {
+          "$numberInt": "15"
+        },
+        "deviation": {
+          "$numberInt": "15"
+        },
+        "verificationAndShapeControl": "n/a",
+        "dimensionalVerificationAndControl": "n/a",
+        "analysisOfTheDegreeOfFinish": "n/a",
+        "_id": {
+          "$oid": "{{dash-mach-start-missing}}"
+        }
+      },
+      "assemblyStatistic": {
+        "numberOfHoursUsed": {
+          "$numberInt": "0"
+        },
+        "budgetedHours": {
+          "$numberInt": "10"
+        },
+        "deviation": {
+          "$numberInt": "10"
+        },
+        "pneumaticCircuits": "n/a",
+        "electricalBoardsAndCircuits": "n/a",
+        "kinematics": "n/a",
+        "programmingFeaturesPLC": "n/a",
+        "operator_equipmentSafetyConditions": "n/a",
+        "visualInspection": "n/a",
+        "validTryOnFirstTest": "1",
+        "_id": {
+          "$oid": "{{dash-asm-start-missing}}"
+        }
+      },
+      "priority": "Média",
+      "__v": {
+        "$numberInt": "0"
+      }
+    },
+    {
+      "_id": {
+        "$oid": "{{dash-start-text}}"
+      },
+      "invoicedPercent": {
+        "$numberInt": "100"
+      },
+      "finalPrice": {
+        "$numberDouble": "15000.5"
+      },
+      "state": "Faturada",
+      "orderIdentification": "ENC-2030/001",
+      "isOfficialOrderIdentification": false,
+      "components": {
+        "$numberInt": "0"
+      },
+      "automation": {
+        "$numberInt": "0"
+      },
+      "materials": {
+        "$numberInt": "0"
+      },
+      "others": {
+        "$numberInt": "0"
+      },
+      "costNonQuality": {
+        "$numberInt": "0"
+      },
+      "commentType": [],
+      "budget": {
+        "$oid": "{{budget-dev}}"
+      },
+      "createdBy": "Ana Administradora",
+      "dueDate": {
+        "$date": "2030-02-10T00:00:00.000Z"
+      },
+      "startDate": "2026-05-01T00:00:00.000Z",
+      "devStatistic": {
+        "numberOfHoursUsed": {
+          "$numberInt": "0"
+        },
+        "budgetedHours": {
+          "$numberDouble": "20.5"
+        },
+        "deviation": {
+          "$numberDouble": "20.5"
+        },
+        "_id": {
+          "$oid": "{{dash-dev-start-text}}"
+        }
+      },
+      "machiningStatistic": {
+        "numberOfHoursUsed": {
+          "$numberInt": "0"
+        },
+        "budgetedHours": {
+          "$numberInt": "15"
+        },
+        "deviation": {
+          "$numberInt": "15"
+        },
+        "verificationAndShapeControl": "n/a",
+        "dimensionalVerificationAndControl": "n/a",
+        "analysisOfTheDegreeOfFinish": "n/a",
+        "_id": {
+          "$oid": "{{dash-mach-start-text}}"
+        }
+      },
+      "assemblyStatistic": {
+        "numberOfHoursUsed": {
+          "$numberInt": "0"
+        },
+        "budgetedHours": {
+          "$numberInt": "10"
+        },
+        "deviation": {
+          "$numberInt": "10"
+        },
+        "pneumaticCircuits": "n/a",
+        "electricalBoardsAndCircuits": "n/a",
+        "kinematics": "n/a",
+        "programmingFeaturesPLC": "n/a",
+        "operator_equipmentSafetyConditions": "n/a",
+        "visualInspection": "n/a",
+        "validTryOnFirstTest": "2",
+        "_id": {
+          "$oid": "{{dash-asm-start-text}}"
+        }
+      },
+      "priority": "Média",
+      "__v": {
+        "$numberInt": "0"
+      }
+    },
+    {
+      "_id": {
+        "$oid": "{{dash-billed-1995-lisbon-new-year}}"
+      },
+      "invoicedPercent": {
+        "$numberInt": "100"
+      },
+      "finalPrice": {
+        "$numberDouble": "15000.5"
+      },
+      "state": "Faturada",
+      "orderIdentification": "ENC-2030/001",
+      "isOfficialOrderIdentification": false,
+      "components": {
+        "$numberInt": "0"
+      },
+      "automation": {
+        "$numberInt": "0"
+      },
+      "materials": {
+        "$numberInt": "0"
+      },
+      "others": {
+        "$numberInt": "0"
+      },
+      "costNonQuality": {
+        "$numberInt": "0"
+      },
+      "commentType": [],
+      "budget": {
+        "$oid": "{{budget-dev}}"
+      },
+      "createdBy": "Ana Administradora",
+      "dueDate": {
+        "$date": "2030-02-10T00:00:00.000Z"
+      },
+      "startDate": {
+        "$date": "1994-12-31T23:30:00.000Z"
+      },
+      "devStatistic": {
+        "numberOfHoursUsed": {
+          "$numberInt": "0"
+        },
+        "budgetedHours": {
+          "$numberDouble": "20.5"
+        },
+        "deviation": {
+          "$numberDouble": "20.5"
+        },
+        "_id": {
+          "$oid": "{{dash-dev-billed-1995-lisbon-new-year}}"
+        }
+      },
+      "machiningStatistic": {
+        "numberOfHoursUsed": {
+          "$numberInt": "0"
+        },
+        "budgetedHours": {
+          "$numberInt": "15"
+        },
+        "deviation": {
+          "$numberInt": "15"
+        },
+        "verificationAndShapeControl": "n/a",
+        "dimensionalVerificationAndControl": "n/a",
+        "analysisOfTheDegreeOfFinish": "n/a",
+        "_id": {
+          "$oid": "{{dash-mach-billed-1995-lisbon-new-year}}"
+        }
+      },
+      "assemblyStatistic": {
+        "numberOfHoursUsed": {
+          "$numberInt": "0"
+        },
+        "budgetedHours": {
+          "$numberInt": "10"
+        },
+        "deviation": {
+          "$numberInt": "10"
+        },
+        "pneumaticCircuits": "n/a",
+        "electricalBoardsAndCircuits": "n/a",
+        "kinematics": "n/a",
+        "programmingFeaturesPLC": "n/a",
+        "operator_equipmentSafetyConditions": "n/a",
+        "visualInspection": "n/a",
+        "validTryOnFirstTest": "2",
+        "_id": {
+          "$oid": "{{dash-asm-billed-1995-lisbon-new-year}}"
+        }
+      },
+      "priority": "Média",
+      "__v": {
+        "$numberInt": "0"
+      }
+    },
+    {
+      "_id": {
+        "$oid": "{{dash-billed-1995-jun}}"
+      },
+      "invoicedPercent": {
+        "$numberInt": "100"
+      },
+      "finalPrice": {
+        "$numberDouble": "15000.5"
+      },
+      "state": "Faturada",
+      "orderIdentification": "ENC-2030/001",
+      "isOfficialOrderIdentification": false,
+      "components": {
+        "$numberInt": "0"
+      },
+      "automation": {
+        "$numberInt": "0"
+      },
+      "materials": {
+        "$numberInt": "0"
+      },
+      "others": {
+        "$numberInt": "0"
+      },
+      "costNonQuality": {
+        "$numberInt": "0"
+      },
+      "commentType": [],
+      "budget": {
+        "$oid": "{{budget-dev}}"
+      },
+      "createdBy": "Ana Administradora",
+      "dueDate": {
+        "$date": "2030-02-10T00:00:00.000Z"
+      },
+      "startDate": {
+        "$date": "1995-06-01T00:00:00.000Z"
+      },
+      "devStatistic": {
+        "numberOfHoursUsed": {
+          "$numberInt": "0"
+        },
+        "budgetedHours": {
+          "$numberDouble": "20.5"
+        },
+        "deviation": {
+          "$numberDouble": "20.5"
+        },
+        "_id": {
+          "$oid": "{{dash-dev-billed-1995-jun}}"
+        }
+      },
+      "machiningStatistic": {
+        "numberOfHoursUsed": {
+          "$numberInt": "0"
+        },
+        "budgetedHours": {
+          "$numberInt": "15"
+        },
+        "deviation": {
+          "$numberInt": "15"
+        },
+        "verificationAndShapeControl": "n/a",
+        "dimensionalVerificationAndControl": "n/a",
+        "analysisOfTheDegreeOfFinish": "n/a",
+        "_id": {
+          "$oid": "{{dash-mach-billed-1995-jun}}"
+        }
+      },
+      "assemblyStatistic": {
+        "numberOfHoursUsed": {
+          "$numberInt": "0"
+        },
+        "budgetedHours": {
+          "$numberInt": "10"
+        },
+        "deviation": {
+          "$numberInt": "10"
+        },
+        "pneumaticCircuits": "n/a",
+        "electricalBoardsAndCircuits": "n/a",
+        "kinematics": "n/a",
+        "programmingFeaturesPLC": "n/a",
+        "operator_equipmentSafetyConditions": "n/a",
+        "visualInspection": "n/a",
+        "validTryOnFirstTest": "1",
+        "_id": {
+          "$oid": "{{dash-asm-billed-1995-jun}}"
+        }
+      },
+      "priority": "Média",
+      "__v": {
+        "$numberInt": "0"
+      }
+    },
+    {
+      "_id": {
+        "$oid": "{{dash-billed-1995-dec31}}"
+      },
+      "invoicedPercent": {
+        "$numberInt": "100"
+      },
+      "finalPrice": {
+        "$numberDouble": "15000.5"
+      },
+      "state": "Faturada",
+      "orderIdentification": "ENC-2030/001",
+      "isOfficialOrderIdentification": false,
+      "components": {
+        "$numberInt": "0"
+      },
+      "automation": {
+        "$numberInt": "0"
+      },
+      "materials": {
+        "$numberInt": "0"
+      },
+      "others": {
+        "$numberInt": "0"
+      },
+      "costNonQuality": {
+        "$numberInt": "0"
+      },
+      "commentType": [],
+      "budget": {
+        "$oid": "{{budget-dev}}"
+      },
+      "createdBy": "Ana Administradora",
+      "dueDate": {
+        "$date": "2030-02-10T00:00:00.000Z"
+      },
+      "startDate": {
+        "$date": "1995-12-31T22:00:00.000Z"
+      },
+      "devStatistic": {
+        "numberOfHoursUsed": {
+          "$numberInt": "0"
+        },
+        "budgetedHours": {
+          "$numberDouble": "20.5"
+        },
+        "deviation": {
+          "$numberDouble": "20.5"
+        },
+        "_id": {
+          "$oid": "{{dash-dev-billed-1995-dec31}}"
+        }
+      },
+      "machiningStatistic": {
+        "numberOfHoursUsed": {
+          "$numberInt": "0"
+        },
+        "budgetedHours": {
+          "$numberInt": "15"
+        },
+        "deviation": {
+          "$numberInt": "15"
+        },
+        "verificationAndShapeControl": "n/a",
+        "dimensionalVerificationAndControl": "n/a",
+        "analysisOfTheDegreeOfFinish": "n/a",
+        "_id": {
+          "$oid": "{{dash-mach-billed-1995-dec31}}"
+        }
+      },
+      "assemblyStatistic": {
+        "numberOfHoursUsed": {
+          "$numberInt": "0"
+        },
+        "budgetedHours": {
+          "$numberInt": "10"
+        },
+        "deviation": {
+          "$numberInt": "10"
+        },
+        "pneumaticCircuits": "n/a",
+        "electricalBoardsAndCircuits": "n/a",
+        "kinematics": "n/a",
+        "programmingFeaturesPLC": "n/a",
+        "operator_equipmentSafetyConditions": "n/a",
+        "visualInspection": "n/a",
+        "validTryOnFirstTest": "3",
+        "_id": {
+          "$oid": "{{dash-asm-billed-1995-dec31}}"
+        }
+      },
+      "priority": "Média",
+      "__v": {
+        "$numberInt": "0"
+      }
+    },
+    {
+      "_id": {
+        "$oid": "{{dash-billed-1996-lisbon-new-year}}"
+      },
+      "invoicedPercent": {
+        "$numberInt": "100"
+      },
+      "finalPrice": {
+        "$numberDouble": "15000.5"
+      },
+      "state": "Faturada",
+      "orderIdentification": "ENC-2030/001",
+      "isOfficialOrderIdentification": false,
+      "components": {
+        "$numberInt": "0"
+      },
+      "automation": {
+        "$numberInt": "0"
+      },
+      "materials": {
+        "$numberInt": "0"
+      },
+      "others": {
+        "$numberInt": "0"
+      },
+      "costNonQuality": {
+        "$numberInt": "0"
+      },
+      "commentType": [],
+      "budget": {
+        "$oid": "{{budget-dev}}"
+      },
+      "createdBy": "Ana Administradora",
+      "dueDate": {
+        "$date": "2030-02-10T00:00:00.000Z"
+      },
+      "startDate": {
+        "$date": "1995-12-31T23:30:00.000Z"
+      },
+      "devStatistic": {
+        "numberOfHoursUsed": {
+          "$numberInt": "0"
+        },
+        "budgetedHours": {
+          "$numberDouble": "20.5"
+        },
+        "deviation": {
+          "$numberDouble": "20.5"
+        },
+        "_id": {
+          "$oid": "{{dash-dev-billed-1996-lisbon-new-year}}"
+        }
+      },
+      "machiningStatistic": {
+        "numberOfHoursUsed": {
+          "$numberInt": "0"
+        },
+        "budgetedHours": {
+          "$numberInt": "15"
+        },
+        "deviation": {
+          "$numberInt": "15"
+        },
+        "verificationAndShapeControl": "n/a",
+        "dimensionalVerificationAndControl": "n/a",
+        "analysisOfTheDegreeOfFinish": "n/a",
+        "_id": {
+          "$oid": "{{dash-mach-billed-1996-lisbon-new-year}}"
+        }
+      },
+      "assemblyStatistic": {
+        "numberOfHoursUsed": {
+          "$numberInt": "0"
+        },
+        "budgetedHours": {
+          "$numberInt": "10"
+        },
+        "deviation": {
+          "$numberInt": "10"
+        },
+        "pneumaticCircuits": "n/a",
+        "electricalBoardsAndCircuits": "n/a",
+        "kinematics": "n/a",
+        "programmingFeaturesPLC": "n/a",
+        "operator_equipmentSafetyConditions": "n/a",
+        "visualInspection": "n/a",
+        "validTryOnFirstTest": "3",
+        "_id": {
+          "$oid": "{{dash-asm-billed-1996-lisbon-new-year}}"
+        }
+      },
+      "priority": "Média",
+      "__v": {
+        "$numberInt": "0"
+      }
+    }
+  ],
+  "budgets": [
+    {
+      "_id": {
+        "$oid": "{{budget-dev}}"
+      },
+      "revision": {
+        "$numberInt": "0"
+      },
+      "complete": true,
+      "wasPdfDownloaded": true,
+      "margin": {
+        "$numberInt": "35"
+      },
+      "daysNeededToDoTheWork": {
+        "$numberInt": "45"
+      },
+      "validity": {
+        "$numberInt": "30"
+      },
+      "hasGenerateJob": true,
+      "client": {
+        "$oid": "{{client}}"
+      },
+      "descriptive": "Máquina dev",
+      "personInCharge": "Eng.ª Maria",
+      "madeBy": {
+        "$oid": "{{user}}"
+      },
+      "budgetNumber": "26-0001",
+      "paymentMethod": "30 dias",
+      "total": {
+        "$numberDouble": "12345.67"
+      },
+      "date": {
+        "$date": "2026-02-01T09:00:00.000Z"
+      },
+      "__v": {
+        "$numberInt": "0"
+      },
+      "description": "Fornecimento conforme especificação."
+    },
+    {
+      "_id": {
+        "$oid": "{{budget-onapproval}}"
+      },
+      "revision": {
+        "$numberInt": "0"
+      },
+      "complete": true,
+      "wasPdfDownloaded": true,
+      "margin": {
+        "$numberInt": "35"
+      },
+      "daysNeededToDoTheWork": {
+        "$numberInt": "45"
+      },
+      "validity": {
+        "$numberInt": "30"
+      },
+      "hasGenerateJob": true,
+      "client": {
+        "$oid": "{{client}}"
+      },
+      "descriptive": "Máquina onapproval",
+      "personInCharge": "Eng.ª Maria",
+      "madeBy": {
+        "$oid": "{{user}}"
+      },
+      "budgetNumber": "26-0002",
+      "paymentMethod": "30 dias",
+      "total": {
+        "$numberDouble": "12345.67"
+      },
+      "date": {
+        "$date": "2026-02-01T09:00:00.000Z"
+      },
+      "__v": {
+        "$numberInt": "0"
+      },
+      "description": "Fornecimento conforme especificação."
+    },
+    {
+      "_id": {
+        "$oid": "{{budget-approved}}"
+      },
+      "revision": {
+        "$numberInt": "2"
+      },
+      "complete": true,
+      "wasPdfDownloaded": true,
+      "margin": {
+        "$numberInt": "35"
+      },
+      "daysNeededToDoTheWork": {
+        "$numberInt": "45"
+      },
+      "validity": {
+        "$numberInt": "30"
+      },
+      "hasGenerateJob": true,
+      "client": {
+        "$oid": "{{client}}"
+      },
+      "descriptive": "Máquina approved",
+      "personInCharge": "Eng.ª Maria",
+      "madeBy": {
+        "$oid": "{{user}}"
+      },
+      "budgetNumber": "26-0003",
+      "paymentMethod": "30 dias",
+      "total": {
+        "$numberDouble": "12345.67"
+      },
+      "date": {
+        "$date": "2026-02-01T09:00:00.000Z"
+      },
+      "__v": {
+        "$numberInt": "0"
+      },
+      "description": "Fornecimento conforme especificação."
+    },
+    {
+      "_id": {
+        "$oid": "{{budget-machining}}"
+      },
+      "revision": {
+        "$numberInt": "0"
+      },
+      "complete": true,
+      "wasPdfDownloaded": true,
+      "margin": {
+        "$numberInt": "35"
+      },
+      "daysNeededToDoTheWork": {
+        "$numberInt": "45"
+      },
+      "validity": {
+        "$numberInt": "30"
+      },
+      "hasGenerateJob": true,
+      "client": {
+        "$oid": "{{client}}"
+      },
+      "descriptive": "Máquina machining",
+      "personInCharge": "Eng.ª Maria",
+      "madeBy": {
+        "$oid": "{{user}}"
+      },
+      "budgetNumber": "26-0004",
+      "paymentMethod": "30 dias",
+      "total": {
+        "$numberDouble": "12345.67"
+      },
+      "date": {
+        "$date": "2026-02-01T09:00:00.000Z"
+      },
+      "__v": {
+        "$numberInt": "0"
+      },
+      "description": "Fornecimento conforme especificação."
+    },
+    {
+      "_id": {
+        "$oid": "{{budget-assembly}}"
+      },
+      "revision": {
+        "$numberInt": "0"
+      },
+      "complete": true,
+      "wasPdfDownloaded": true,
+      "margin": {
+        "$numberInt": "35"
+      },
+      "daysNeededToDoTheWork": {
+        "$numberInt": "45"
+      },
+      "validity": {
+        "$numberInt": "30"
+      },
+      "hasGenerateJob": true,
+      "client": {
+        "$oid": "{{client}}"
+      },
+      "descriptive": "Máquina assembly",
+      "personInCharge": "Eng.ª Maria",
+      "madeBy": {
+        "$oid": "{{user}}"
+      },
+      "budgetNumber": "26-0005",
+      "paymentMethod": "30 dias",
+      "total": {
+        "$numberDouble": "12345.67"
+      },
+      "date": {
+        "$date": "2026-02-01T09:00:00.000Z"
+      },
+      "__v": {
+        "$numberInt": "0"
+      },
+      "description": "Fornecimento conforme especificação."
+    },
+    {
+      "_id": {
+        "$oid": "{{budget-invoicing}}"
+      },
+      "revision": {
+        "$numberInt": "0"
+      },
+      "complete": true,
+      "wasPdfDownloaded": true,
+      "margin": {
+        "$numberInt": "35"
+      },
+      "daysNeededToDoTheWork": {
+        "$numberInt": "45"
+      },
+      "validity": {
+        "$numberInt": "30"
+      },
+      "hasGenerateJob": true,
+      "client": {
+        "$oid": "{{client}}"
+      },
+      "descriptive": "Máquina invoicing",
+      "personInCharge": "Eng.ª Maria",
+      "madeBy": {
+        "$oid": "{{user}}"
+      },
+      "budgetNumber": "26-0006",
+      "paymentMethod": "30 dias",
+      "total": {
+        "$numberDouble": "12345.67"
+      },
+      "date": {
+        "$date": "2026-02-01T09:00:00.000Z"
+      },
+      "__v": {
+        "$numberInt": "0"
+      },
+      "description": "Fornecimento conforme especificação."
+    },
+    {
+      "_id": {
+        "$oid": "{{budget-billed}}"
+      },
+      "revision": {
+        "$numberInt": "0"
+      },
+      "complete": true,
+      "wasPdfDownloaded": true,
+      "margin": {
+        "$numberInt": "35"
+      },
+      "daysNeededToDoTheWork": {
+        "$numberInt": "45"
+      },
+      "validity": {
+        "$numberInt": "30"
+      },
+      "hasGenerateJob": true,
+      "client": {
+        "$oid": "{{client}}"
+      },
+      "descriptive": "Máquina billed",
+      "personInCharge": "Eng.ª Maria",
+      "madeBy": {
+        "$oid": "{{user}}"
+      },
+      "budgetNumber": "26-0007",
+      "paymentMethod": "30 dias",
+      "total": {
+        "$numberDouble": "12345.67"
+      },
+      "date": {
+        "$date": "2026-02-01T09:00:00.000Z"
+      },
+      "__v": {
+        "$numberInt": "0"
+      },
+      "description": "Fornecimento conforme especificação."
+    },
+    {
+      "_id": {
+        "$oid": "{{budget-deleted}}"
+      },
+      "revision": {
+        "$numberInt": "0"
+      },
+      "complete": true,
+      "wasPdfDownloaded": true,
+      "margin": {
+        "$numberInt": "35"
+      },
+      "daysNeededToDoTheWork": {
+        "$numberInt": "45"
+      },
+      "validity": {
+        "$numberInt": "30"
+      },
+      "hasGenerateJob": true,
+      "client": {
+        "$oid": "{{client}}"
+      },
+      "descriptive": "Máquina deleted",
+      "personInCharge": "Eng.ª Maria",
+      "madeBy": {
+        "$oid": "{{user}}"
+      },
+      "budgetNumber": "26-0008",
+      "paymentMethod": "30 dias",
+      "total": {
+        "$numberDouble": "12345.67"
+      },
+      "date": {
+        "$date": "2026-02-01T09:00:00.000Z"
+      },
+      "__v": {
+        "$numberInt": "0"
+      },
+      "description": "Fornecimento conforme especificação."
+    },
+    {
+      "_id": {
+        "$oid": "{{budget-old}}"
+      },
+      "revision": {
+        "$numberInt": "0"
+      },
+      "complete": true,
+      "wasPdfDownloaded": true,
+      "margin": {
+        "$numberInt": "35"
+      },
+      "daysNeededToDoTheWork": {
+        "$numberInt": "45"
+      },
+      "validity": {
+        "$numberInt": "30"
+      },
+      "hasGenerateJob": true,
+      "client": {
+        "$oid": "{{client}}"
+      },
+      "descriptive": "Máquina old",
+      "personInCharge": "Eng.ª Maria",
+      "madeBy": {
+        "$oid": "{{user}}"
+      },
+      "budgetNumber": "26-0009",
+      "paymentMethod": "30 dias",
+      "total": {
+        "$numberDouble": "12345.67"
+      },
+      "date": {
+        "$date": "2026-02-01T09:00:00.000Z"
+      },
+      "__v": {
+        "$numberInt": "0"
+      },
+      "description": "Fornecimento conforme especificação."
+    },
+    {
+      "_id": {
+        "$oid": "{{budget-no-stats}}"
+      },
+      "revision": {
+        "$numberInt": "0"
+      },
+      "complete": true,
+      "wasPdfDownloaded": true,
+      "margin": {
+        "$numberInt": "35"
+      },
+      "daysNeededToDoTheWork": {
+        "$numberInt": "45"
+      },
+      "validity": {
+        "$numberInt": "30"
+      },
+      "hasGenerateJob": true,
+      "client": {
+        "$oid": "{{client}}"
+      },
+      "descriptive": "Máquina no-stats",
+      "personInCharge": "Eng.ª Maria",
+      "madeBy": {
+        "$oid": "{{user}}"
+      },
+      "budgetNumber": "26-0010",
+      "paymentMethod": "30 dias",
+      "total": {
+        "$numberDouble": "12345.67"
+      },
+      "date": {
+        "$date": "2026-02-01T09:00:00.000Z"
+      },
+      "__v": {
+        "$numberInt": "0"
+      },
+      "description": "Fornecimento conforme especificação."
+    },
+    {
+      "_id": {
+        "$oid": "{{budget-dates-null}}"
+      },
+      "revision": {
+        "$numberInt": "0"
+      },
+      "complete": true,
+      "wasPdfDownloaded": true,
+      "margin": {
+        "$numberInt": "35"
+      },
+      "daysNeededToDoTheWork": {
+        "$numberInt": "45"
+      },
+      "validity": {
+        "$numberInt": "30"
+      },
+      "hasGenerateJob": true,
+      "client": {
+        "$oid": "{{client}}"
+      },
+      "descriptive": "Máquina dates-null",
+      "personInCharge": "Eng.ª Maria",
+      "madeBy": {
+        "$oid": "{{user}}"
+      },
+      "budgetNumber": "26-0011",
+      "paymentMethod": "30 dias",
+      "total": {
+        "$numberDouble": "12345.67"
+      },
+      "date": {
+        "$date": "2026-02-01T09:00:00.000Z"
+      },
+      "__v": {
+        "$numberInt": "0"
+      },
+      "description": "Fornecimento conforme especificação."
+    },
+    {
+      "_id": {
+        "$oid": "{{budget-machining-no-stat}}"
+      },
+      "revision": {
+        "$numberInt": "0"
+      },
+      "complete": true,
+      "wasPdfDownloaded": true,
+      "margin": {
+        "$numberInt": "35"
+      },
+      "daysNeededToDoTheWork": {
+        "$numberInt": "45"
+      },
+      "validity": {
+        "$numberInt": "30"
+      },
+      "hasGenerateJob": true,
+      "client": {
+        "$oid": "{{client}}"
+      },
+      "descriptive": "Máquina machining-no-stat",
+      "personInCharge": "Eng.ª Maria",
+      "madeBy": {
+        "$oid": "{{user}}"
+      },
+      "budgetNumber": "26-0012",
+      "paymentMethod": "30 dias",
+      "total": {
+        "$numberDouble": "12345.67"
+      },
+      "date": {
+        "$date": "2026-02-01T09:00:00.000Z"
+      },
+      "__v": {
+        "$numberInt": "0"
+      },
+      "description": "Fornecimento conforme especificação."
+    },
+    {
+      "_id": {
+        "$oid": "{{budget-assembly-fraction}}"
+      },
+      "revision": {
+        "$numberInt": "0"
+      },
+      "complete": true,
+      "wasPdfDownloaded": true,
+      "margin": {
+        "$numberInt": "35"
+      },
+      "daysNeededToDoTheWork": {
+        "$numberInt": "45"
+      },
+      "validity": {
+        "$numberInt": "30"
+      },
+      "hasGenerateJob": true,
+      "client": {
+        "$oid": "{{client}}"
+      },
+      "descriptive": "Máquina assembly-fraction",
+      "personInCharge": "Eng.ª Maria",
+      "madeBy": {
+        "$oid": "{{user}}"
+      },
+      "budgetNumber": "26-0013",
+      "paymentMethod": "30 dias",
+      "total": {
+        "$numberDouble": "12345.67"
+      },
+      "date": {
+        "$date": "2026-02-01T09:00:00.000Z"
+      },
+      "__v": {
+        "$numberInt": "0"
+      },
+      "description": "Fornecimento conforme especificação."
+    },
+    {
+      "_id": {
+        "$oid": "{{budget-invoicing-full}}"
+      },
+      "revision": {
+        "$numberInt": "0"
+      },
+      "complete": true,
+      "wasPdfDownloaded": true,
+      "margin": {
+        "$numberInt": "35"
+      },
+      "daysNeededToDoTheWork": {
+        "$numberInt": "45"
+      },
+      "validity": {
+        "$numberInt": "30"
+      },
+      "hasGenerateJob": true,
+      "client": {
+        "$oid": "{{client}}"
+      },
+      "descriptive": "Máquina invoicing-full",
+      "personInCharge": "Eng.ª Maria",
+      "madeBy": {
+        "$oid": "{{user}}"
+      },
+      "budgetNumber": "26-0014",
+      "paymentMethod": "30 dias",
+      "total": {
+        "$numberDouble": "12345.67"
+      },
+      "date": {
+        "$date": "2026-02-01T09:00:00.000Z"
+      },
+      "__v": {
+        "$numberInt": "0"
+      },
+      "description": "Fornecimento conforme especificação."
+    }
+  ],
+  "tasks": [
+    {
+      "_id": {
+        "$oid": "{{task-1}}"
+      },
+      "budgetId": {
+        "$oid": "{{budget-dev}}"
+      },
+      "taskType": "automation",
+      "description": "",
+      "unitPrice": {
+        "$numberInt": "30"
+      },
+      "quantity": {
+        "$numberInt": "1"
+      },
+      "__v": {
+        "$numberInt": "0"
+      }
+    },
+    {
+      "_id": {
+        "$oid": "{{task-2}}"
+      },
+      "budgetId": {
+        "$oid": "{{budget-dev}}"
+      },
+      "taskType": "development",
+      "description": "",
+      "unitPrice": {
+        "$numberInt": "30"
+      },
+      "quantity": {
+        "$numberInt": "20"
+      },
+      "__v": {
+        "$numberInt": "0"
+      }
+    },
+    {
+      "_id": {
+        "$oid": "{{task-3}}"
+      },
+      "budgetId": {
+        "$oid": "{{budget-dev}}"
+      },
+      "taskType": "development",
+      "description": "",
+      "unitPrice": {
+        "$numberInt": "30"
+      },
+      "quantity": {
+        "$numberDouble": "0.5"
+      },
+      "__v": {
+        "$numberInt": "0"
+      }
+    },
+    {
+      "_id": {
+        "$oid": "{{task-4}}"
+      },
+      "budgetId": {
+        "$oid": "{{budget-dev}}"
+      },
+      "taskType": "machining",
+      "description": "",
+      "unitPrice": {
+        "$numberInt": "30"
+      },
+      "quantity": {
+        "$numberInt": "15"
+      },
+      "__v": {
+        "$numberInt": "0"
+      }
+    },
+    {
+      "_id": {
+        "$oid": "{{task-5}}"
+      },
+      "budgetId": {
+        "$oid": "{{budget-dev}}"
+      },
+      "taskType": "assembly",
+      "description": "",
+      "unitPrice": {
+        "$numberInt": "30"
+      },
+      "quantity": {
+        "$numberInt": "10"
+      },
+      "__v": {
+        "$numberInt": "0"
+      }
+    },
+    {
+      "_id": {
+        "$oid": "{{task-6}}"
+      },
+      "budgetId": {
+        "$oid": "{{budget-dev}}"
+      },
+      "taskType": "consultancy",
+      "description": "",
+      "unitPrice": {
+        "$numberInt": "30"
+      },
+      "quantity": {
+        "$numberInt": "3"
+      },
+      "__v": {
+        "$numberInt": "0"
+      }
+    },
+    {
+      "_id": {
+        "$oid": "{{task-7}}"
+      },
+      "budgetId": {
+        "$oid": "{{budget-dev}}"
+      },
+      "taskType": "components",
+      "description": "",
+      "unitPrice": {
+        "$numberInt": "30"
+      },
+      "quantity": {
+        "$numberDouble": "1.5"
+      },
+      "__v": {
+        "$numberInt": "0"
+      }
+    },
+    {
+      "_id": {
+        "$oid": "{{task-8}}"
+      },
+      "budgetId": {
+        "$oid": "{{budget-onapproval}}"
+      },
+      "taskType": "automation",
+      "description": "",
+      "unitPrice": {
+        "$numberInt": "30"
+      },
+      "quantity": {
+        "$numberInt": "1"
+      },
+      "__v": {
+        "$numberInt": "0"
+      }
+    },
+    {
+      "_id": {
+        "$oid": "{{task-9}}"
+      },
+      "budgetId": {
+        "$oid": "{{budget-onapproval}}"
+      },
+      "taskType": "development",
+      "description": "",
+      "unitPrice": {
+        "$numberInt": "30"
+      },
+      "quantity": {
+        "$numberInt": "20"
+      },
+      "__v": {
+        "$numberInt": "0"
+      }
+    },
+    {
+      "_id": {
+        "$oid": "{{task-10}}"
+      },
+      "budgetId": {
+        "$oid": "{{budget-onapproval}}"
+      },
+      "taskType": "development",
+      "description": "",
+      "unitPrice": {
+        "$numberInt": "30"
+      },
+      "quantity": {
+        "$numberDouble": "0.5"
+      },
+      "__v": {
+        "$numberInt": "0"
+      }
+    },
+    {
+      "_id": {
+        "$oid": "{{task-11}}"
+      },
+      "budgetId": {
+        "$oid": "{{budget-onapproval}}"
+      },
+      "taskType": "machining",
+      "description": "",
+      "unitPrice": {
+        "$numberInt": "30"
+      },
+      "quantity": {
+        "$numberInt": "15"
+      },
+      "__v": {
+        "$numberInt": "0"
+      }
+    },
+    {
+      "_id": {
+        "$oid": "{{task-12}}"
+      },
+      "budgetId": {
+        "$oid": "{{budget-onapproval}}"
+      },
+      "taskType": "assembly",
+      "description": "",
+      "unitPrice": {
+        "$numberInt": "30"
+      },
+      "quantity": {
+        "$numberInt": "10"
+      },
+      "__v": {
+        "$numberInt": "0"
+      }
+    },
+    {
+      "_id": {
+        "$oid": "{{task-13}}"
+      },
+      "budgetId": {
+        "$oid": "{{budget-onapproval}}"
+      },
+      "taskType": "consultancy",
+      "description": "",
+      "unitPrice": {
+        "$numberInt": "30"
+      },
+      "quantity": {
+        "$numberInt": "3"
+      },
+      "__v": {
+        "$numberInt": "0"
+      }
+    },
+    {
+      "_id": {
+        "$oid": "{{task-14}}"
+      },
+      "budgetId": {
+        "$oid": "{{budget-onapproval}}"
+      },
+      "taskType": "components",
+      "description": "",
+      "unitPrice": {
+        "$numberInt": "30"
+      },
+      "quantity": {
+        "$numberDouble": "1.5"
+      },
+      "__v": {
+        "$numberInt": "0"
+      }
+    },
+    {
+      "_id": {
+        "$oid": "{{task-15}}"
+      },
+      "budgetId": {
+        "$oid": "{{budget-approved}}"
+      },
+      "taskType": "automation",
+      "description": "",
+      "unitPrice": {
+        "$numberInt": "30"
+      },
+      "quantity": {
+        "$numberInt": "1"
+      },
+      "__v": {
+        "$numberInt": "0"
+      }
+    },
+    {
+      "_id": {
+        "$oid": "{{task-16}}"
+      },
+      "budgetId": {
+        "$oid": "{{budget-approved}}"
+      },
+      "taskType": "development",
+      "description": "",
+      "unitPrice": {
+        "$numberInt": "30"
+      },
+      "quantity": {
+        "$numberInt": "20"
+      },
+      "__v": {
+        "$numberInt": "0"
+      }
+    },
+    {
+      "_id": {
+        "$oid": "{{task-17}}"
+      },
+      "budgetId": {
+        "$oid": "{{budget-approved}}"
+      },
+      "taskType": "development",
+      "description": "",
+      "unitPrice": {
+        "$numberInt": "30"
+      },
+      "quantity": {
+        "$numberDouble": "0.5"
+      },
+      "__v": {
+        "$numberInt": "0"
+      }
+    },
+    {
+      "_id": {
+        "$oid": "{{task-18}}"
+      },
+      "budgetId": {
+        "$oid": "{{budget-approved}}"
+      },
+      "taskType": "machining",
+      "description": "",
+      "unitPrice": {
+        "$numberInt": "30"
+      },
+      "quantity": {
+        "$numberInt": "15"
+      },
+      "__v": {
+        "$numberInt": "0"
+      }
+    },
+    {
+      "_id": {
+        "$oid": "{{task-19}}"
+      },
+      "budgetId": {
+        "$oid": "{{budget-approved}}"
+      },
+      "taskType": "assembly",
+      "description": "",
+      "unitPrice": {
+        "$numberInt": "30"
+      },
+      "quantity": {
+        "$numberInt": "10"
+      },
+      "__v": {
+        "$numberInt": "0"
+      }
+    },
+    {
+      "_id": {
+        "$oid": "{{task-20}}"
+      },
+      "budgetId": {
+        "$oid": "{{budget-approved}}"
+      },
+      "taskType": "consultancy",
+      "description": "",
+      "unitPrice": {
+        "$numberInt": "30"
+      },
+      "quantity": {
+        "$numberInt": "3"
+      },
+      "__v": {
+        "$numberInt": "0"
+      }
+    },
+    {
+      "_id": {
+        "$oid": "{{task-21}}"
+      },
+      "budgetId": {
+        "$oid": "{{budget-approved}}"
+      },
+      "taskType": "components",
+      "description": "",
+      "unitPrice": {
+        "$numberInt": "30"
+      },
+      "quantity": {
+        "$numberDouble": "1.5"
+      },
+      "__v": {
+        "$numberInt": "0"
+      }
+    },
+    {
+      "_id": {
+        "$oid": "{{task-22}}"
+      },
+      "budgetId": {
+        "$oid": "{{budget-machining}}"
+      },
+      "taskType": "automation",
+      "description": "",
+      "unitPrice": {
+        "$numberInt": "30"
+      },
+      "quantity": {
+        "$numberInt": "1"
+      },
+      "__v": {
+        "$numberInt": "0"
+      }
+    },
+    {
+      "_id": {
+        "$oid": "{{task-23}}"
+      },
+      "budgetId": {
+        "$oid": "{{budget-machining}}"
+      },
+      "taskType": "development",
+      "description": "",
+      "unitPrice": {
+        "$numberInt": "30"
+      },
+      "quantity": {
+        "$numberInt": "20"
+      },
+      "__v": {
+        "$numberInt": "0"
+      }
+    },
+    {
+      "_id": {
+        "$oid": "{{task-24}}"
+      },
+      "budgetId": {
+        "$oid": "{{budget-machining}}"
+      },
+      "taskType": "development",
+      "description": "",
+      "unitPrice": {
+        "$numberInt": "30"
+      },
+      "quantity": {
+        "$numberDouble": "0.5"
+      },
+      "__v": {
+        "$numberInt": "0"
+      }
+    },
+    {
+      "_id": {
+        "$oid": "{{task-25}}"
+      },
+      "budgetId": {
+        "$oid": "{{budget-machining}}"
+      },
+      "taskType": "machining",
+      "description": "",
+      "unitPrice": {
+        "$numberInt": "30"
+      },
+      "quantity": {
+        "$numberInt": "15"
+      },
+      "__v": {
+        "$numberInt": "0"
+      }
+    },
+    {
+      "_id": {
+        "$oid": "{{task-26}}"
+      },
+      "budgetId": {
+        "$oid": "{{budget-machining}}"
+      },
+      "taskType": "assembly",
+      "description": "",
+      "unitPrice": {
+        "$numberInt": "30"
+      },
+      "quantity": {
+        "$numberInt": "10"
+      },
+      "__v": {
+        "$numberInt": "0"
+      }
+    },
+    {
+      "_id": {
+        "$oid": "{{task-27}}"
+      },
+      "budgetId": {
+        "$oid": "{{budget-machining}}"
+      },
+      "taskType": "consultancy",
+      "description": "",
+      "unitPrice": {
+        "$numberInt": "30"
+      },
+      "quantity": {
+        "$numberInt": "3"
+      },
+      "__v": {
+        "$numberInt": "0"
+      }
+    },
+    {
+      "_id": {
+        "$oid": "{{task-28}}"
+      },
+      "budgetId": {
+        "$oid": "{{budget-machining}}"
+      },
+      "taskType": "components",
+      "description": "",
+      "unitPrice": {
+        "$numberInt": "30"
+      },
+      "quantity": {
+        "$numberDouble": "1.5"
+      },
+      "__v": {
+        "$numberInt": "0"
+      }
+    },
+    {
+      "_id": {
+        "$oid": "{{task-29}}"
+      },
+      "budgetId": {
+        "$oid": "{{budget-assembly}}"
+      },
+      "taskType": "automation",
+      "description": "",
+      "unitPrice": {
+        "$numberInt": "30"
+      },
+      "quantity": {
+        "$numberInt": "1"
+      },
+      "__v": {
+        "$numberInt": "0"
+      }
+    },
+    {
+      "_id": {
+        "$oid": "{{task-30}}"
+      },
+      "budgetId": {
+        "$oid": "{{budget-assembly}}"
+      },
+      "taskType": "development",
+      "description": "",
+      "unitPrice": {
+        "$numberInt": "30"
+      },
+      "quantity": {
+        "$numberInt": "20"
+      },
+      "__v": {
+        "$numberInt": "0"
+      }
+    },
+    {
+      "_id": {
+        "$oid": "{{task-31}}"
+      },
+      "budgetId": {
+        "$oid": "{{budget-assembly}}"
+      },
+      "taskType": "development",
+      "description": "",
+      "unitPrice": {
+        "$numberInt": "30"
+      },
+      "quantity": {
+        "$numberDouble": "0.5"
+      },
+      "__v": {
+        "$numberInt": "0"
+      }
+    },
+    {
+      "_id": {
+        "$oid": "{{task-32}}"
+      },
+      "budgetId": {
+        "$oid": "{{budget-assembly}}"
+      },
+      "taskType": "machining",
+      "description": "",
+      "unitPrice": {
+        "$numberInt": "30"
+      },
+      "quantity": {
+        "$numberInt": "15"
+      },
+      "__v": {
+        "$numberInt": "0"
+      }
+    },
+    {
+      "_id": {
+        "$oid": "{{task-33}}"
+      },
+      "budgetId": {
+        "$oid": "{{budget-assembly}}"
+      },
+      "taskType": "assembly",
+      "description": "",
+      "unitPrice": {
+        "$numberInt": "30"
+      },
+      "quantity": {
+        "$numberInt": "10"
+      },
+      "__v": {
+        "$numberInt": "0"
+      }
+    },
+    {
+      "_id": {
+        "$oid": "{{task-34}}"
+      },
+      "budgetId": {
+        "$oid": "{{budget-assembly}}"
+      },
+      "taskType": "consultancy",
+      "description": "",
+      "unitPrice": {
+        "$numberInt": "30"
+      },
+      "quantity": {
+        "$numberInt": "3"
+      },
+      "__v": {
+        "$numberInt": "0"
+      }
+    },
+    {
+      "_id": {
+        "$oid": "{{task-35}}"
+      },
+      "budgetId": {
+        "$oid": "{{budget-assembly}}"
+      },
+      "taskType": "components",
+      "description": "",
+      "unitPrice": {
+        "$numberInt": "30"
+      },
+      "quantity": {
+        "$numberDouble": "1.5"
+      },
+      "__v": {
+        "$numberInt": "0"
+      }
+    },
+    {
+      "_id": {
+        "$oid": "{{task-36}}"
+      },
+      "budgetId": {
+        "$oid": "{{budget-invoicing}}"
+      },
+      "taskType": "automation",
+      "description": "",
+      "unitPrice": {
+        "$numberInt": "30"
+      },
+      "quantity": {
+        "$numberInt": "1"
+      },
+      "__v": {
+        "$numberInt": "0"
+      }
+    },
+    {
+      "_id": {
+        "$oid": "{{task-37}}"
+      },
+      "budgetId": {
+        "$oid": "{{budget-invoicing}}"
+      },
+      "taskType": "development",
+      "description": "",
+      "unitPrice": {
+        "$numberInt": "30"
+      },
+      "quantity": {
+        "$numberInt": "20"
+      },
+      "__v": {
+        "$numberInt": "0"
+      }
+    },
+    {
+      "_id": {
+        "$oid": "{{task-38}}"
+      },
+      "budgetId": {
+        "$oid": "{{budget-invoicing}}"
+      },
+      "taskType": "development",
+      "description": "",
+      "unitPrice": {
+        "$numberInt": "30"
+      },
+      "quantity": {
+        "$numberDouble": "0.5"
+      },
+      "__v": {
+        "$numberInt": "0"
+      }
+    },
+    {
+      "_id": {
+        "$oid": "{{task-39}}"
+      },
+      "budgetId": {
+        "$oid": "{{budget-invoicing}}"
+      },
+      "taskType": "machining",
+      "description": "",
+      "unitPrice": {
+        "$numberInt": "30"
+      },
+      "quantity": {
+        "$numberInt": "15"
+      },
+      "__v": {
+        "$numberInt": "0"
+      }
+    },
+    {
+      "_id": {
+        "$oid": "{{task-40}}"
+      },
+      "budgetId": {
+        "$oid": "{{budget-invoicing}}"
+      },
+      "taskType": "assembly",
+      "description": "",
+      "unitPrice": {
+        "$numberInt": "30"
+      },
+      "quantity": {
+        "$numberInt": "10"
+      },
+      "__v": {
+        "$numberInt": "0"
+      }
+    },
+    {
+      "_id": {
+        "$oid": "{{task-41}}"
+      },
+      "budgetId": {
+        "$oid": "{{budget-invoicing}}"
+      },
+      "taskType": "consultancy",
+      "description": "",
+      "unitPrice": {
+        "$numberInt": "30"
+      },
+      "quantity": {
+        "$numberInt": "3"
+      },
+      "__v": {
+        "$numberInt": "0"
+      }
+    },
+    {
+      "_id": {
+        "$oid": "{{task-42}}"
+      },
+      "budgetId": {
+        "$oid": "{{budget-invoicing}}"
+      },
+      "taskType": "components",
+      "description": "",
+      "unitPrice": {
+        "$numberInt": "30"
+      },
+      "quantity": {
+        "$numberDouble": "1.5"
+      },
+      "__v": {
+        "$numberInt": "0"
+      }
+    },
+    {
+      "_id": {
+        "$oid": "{{task-43}}"
+      },
+      "budgetId": {
+        "$oid": "{{budget-billed}}"
+      },
+      "taskType": "automation",
+      "description": "",
+      "unitPrice": {
+        "$numberInt": "30"
+      },
+      "quantity": {
+        "$numberInt": "1"
+      },
+      "__v": {
+        "$numberInt": "0"
+      }
+    },
+    {
+      "_id": {
+        "$oid": "{{task-44}}"
+      },
+      "budgetId": {
+        "$oid": "{{budget-billed}}"
+      },
+      "taskType": "development",
+      "description": "",
+      "unitPrice": {
+        "$numberInt": "30"
+      },
+      "quantity": {
+        "$numberInt": "20"
+      },
+      "__v": {
+        "$numberInt": "0"
+      }
+    },
+    {
+      "_id": {
+        "$oid": "{{task-45}}"
+      },
+      "budgetId": {
+        "$oid": "{{budget-billed}}"
+      },
+      "taskType": "development",
+      "description": "",
+      "unitPrice": {
+        "$numberInt": "30"
+      },
+      "quantity": {
+        "$numberDouble": "0.5"
+      },
+      "__v": {
+        "$numberInt": "0"
+      }
+    },
+    {
+      "_id": {
+        "$oid": "{{task-46}}"
+      },
+      "budgetId": {
+        "$oid": "{{budget-billed}}"
+      },
+      "taskType": "machining",
+      "description": "",
+      "unitPrice": {
+        "$numberInt": "30"
+      },
+      "quantity": {
+        "$numberInt": "15"
+      },
+      "__v": {
+        "$numberInt": "0"
+      }
+    },
+    {
+      "_id": {
+        "$oid": "{{task-47}}"
+      },
+      "budgetId": {
+        "$oid": "{{budget-billed}}"
+      },
+      "taskType": "assembly",
+      "description": "",
+      "unitPrice": {
+        "$numberInt": "30"
+      },
+      "quantity": {
+        "$numberInt": "10"
+      },
+      "__v": {
+        "$numberInt": "0"
+      }
+    },
+    {
+      "_id": {
+        "$oid": "{{task-48}}"
+      },
+      "budgetId": {
+        "$oid": "{{budget-billed}}"
+      },
+      "taskType": "consultancy",
+      "description": "",
+      "unitPrice": {
+        "$numberInt": "30"
+      },
+      "quantity": {
+        "$numberInt": "3"
+      },
+      "__v": {
+        "$numberInt": "0"
+      }
+    },
+    {
+      "_id": {
+        "$oid": "{{task-49}}"
+      },
+      "budgetId": {
+        "$oid": "{{budget-billed}}"
+      },
+      "taskType": "components",
+      "description": "",
+      "unitPrice": {
+        "$numberInt": "30"
+      },
+      "quantity": {
+        "$numberDouble": "1.5"
+      },
+      "__v": {
+        "$numberInt": "0"
+      }
+    },
+    {
+      "_id": {
+        "$oid": "{{task-50}}"
+      },
+      "budgetId": {
+        "$oid": "{{budget-deleted}}"
+      },
+      "taskType": "automation",
+      "description": "",
+      "unitPrice": {
+        "$numberInt": "30"
+      },
+      "quantity": {
+        "$numberInt": "1"
+      },
+      "__v": {
+        "$numberInt": "0"
+      }
+    },
+    {
+      "_id": {
+        "$oid": "{{task-51}}"
+      },
+      "budgetId": {
+        "$oid": "{{budget-deleted}}"
+      },
+      "taskType": "development",
+      "description": "",
+      "unitPrice": {
+        "$numberInt": "30"
+      },
+      "quantity": {
+        "$numberInt": "20"
+      },
+      "__v": {
+        "$numberInt": "0"
+      }
+    },
+    {
+      "_id": {
+        "$oid": "{{task-52}}"
+      },
+      "budgetId": {
+        "$oid": "{{budget-deleted}}"
+      },
+      "taskType": "development",
+      "description": "",
+      "unitPrice": {
+        "$numberInt": "30"
+      },
+      "quantity": {
+        "$numberDouble": "0.5"
+      },
+      "__v": {
+        "$numberInt": "0"
+      }
+    },
+    {
+      "_id": {
+        "$oid": "{{task-53}}"
+      },
+      "budgetId": {
+        "$oid": "{{budget-deleted}}"
+      },
+      "taskType": "machining",
+      "description": "",
+      "unitPrice": {
+        "$numberInt": "30"
+      },
+      "quantity": {
+        "$numberInt": "15"
+      },
+      "__v": {
+        "$numberInt": "0"
+      }
+    },
+    {
+      "_id": {
+        "$oid": "{{task-54}}"
+      },
+      "budgetId": {
+        "$oid": "{{budget-deleted}}"
+      },
+      "taskType": "assembly",
+      "description": "",
+      "unitPrice": {
+        "$numberInt": "30"
+      },
+      "quantity": {
+        "$numberInt": "10"
+      },
+      "__v": {
+        "$numberInt": "0"
+      }
+    },
+    {
+      "_id": {
+        "$oid": "{{task-55}}"
+      },
+      "budgetId": {
+        "$oid": "{{budget-deleted}}"
+      },
+      "taskType": "consultancy",
+      "description": "",
+      "unitPrice": {
+        "$numberInt": "30"
+      },
+      "quantity": {
+        "$numberInt": "3"
+      },
+      "__v": {
+        "$numberInt": "0"
+      }
+    },
+    {
+      "_id": {
+        "$oid": "{{task-56}}"
+      },
+      "budgetId": {
+        "$oid": "{{budget-deleted}}"
+      },
+      "taskType": "components",
+      "description": "",
+      "unitPrice": {
+        "$numberInt": "30"
+      },
+      "quantity": {
+        "$numberDouble": "1.5"
+      },
+      "__v": {
+        "$numberInt": "0"
+      }
+    },
+    {
+      "_id": {
+        "$oid": "{{task-57}}"
+      },
+      "budgetId": {
+        "$oid": "{{budget-old}}"
+      },
+      "taskType": "automation",
+      "description": "",
+      "unitPrice": {
+        "$numberInt": "30"
+      },
+      "quantity": {
+        "$numberInt": "1"
+      },
+      "__v": {
+        "$numberInt": "0"
+      }
+    },
+    {
+      "_id": {
+        "$oid": "{{task-58}}"
+      },
+      "budgetId": {
+        "$oid": "{{budget-old}}"
+      },
+      "taskType": "development",
+      "description": "",
+      "unitPrice": {
+        "$numberInt": "30"
+      },
+      "quantity": {
+        "$numberInt": "20"
+      },
+      "__v": {
+        "$numberInt": "0"
+      }
+    },
+    {
+      "_id": {
+        "$oid": "{{task-59}}"
+      },
+      "budgetId": {
+        "$oid": "{{budget-old}}"
+      },
+      "taskType": "development",
+      "description": "",
+      "unitPrice": {
+        "$numberInt": "30"
+      },
+      "quantity": {
+        "$numberDouble": "0.5"
+      },
+      "__v": {
+        "$numberInt": "0"
+      }
+    },
+    {
+      "_id": {
+        "$oid": "{{task-60}}"
+      },
+      "budgetId": {
+        "$oid": "{{budget-old}}"
+      },
+      "taskType": "machining",
+      "description": "",
+      "unitPrice": {
+        "$numberInt": "30"
+      },
+      "quantity": {
+        "$numberInt": "15"
+      },
+      "__v": {
+        "$numberInt": "0"
+      }
+    },
+    {
+      "_id": {
+        "$oid": "{{task-61}}"
+      },
+      "budgetId": {
+        "$oid": "{{budget-old}}"
+      },
+      "taskType": "assembly",
+      "description": "",
+      "unitPrice": {
+        "$numberInt": "30"
+      },
+      "quantity": {
+        "$numberInt": "10"
+      },
+      "__v": {
+        "$numberInt": "0"
+      }
+    },
+    {
+      "_id": {
+        "$oid": "{{task-62}}"
+      },
+      "budgetId": {
+        "$oid": "{{budget-old}}"
+      },
+      "taskType": "consultancy",
+      "description": "",
+      "unitPrice": {
+        "$numberInt": "30"
+      },
+      "quantity": {
+        "$numberInt": "3"
+      },
+      "__v": {
+        "$numberInt": "0"
+      }
+    },
+    {
+      "_id": {
+        "$oid": "{{task-63}}"
+      },
+      "budgetId": {
+        "$oid": "{{budget-old}}"
+      },
+      "taskType": "components",
+      "description": "",
+      "unitPrice": {
+        "$numberInt": "30"
+      },
+      "quantity": {
+        "$numberDouble": "1.5"
+      },
+      "__v": {
+        "$numberInt": "0"
+      }
+    },
+    {
+      "_id": {
+        "$oid": "{{task-64}}"
+      },
+      "budgetId": {
+        "$oid": "{{budget-no-stats}}"
+      },
+      "taskType": "automation",
+      "description": "",
+      "unitPrice": {
+        "$numberInt": "30"
+      },
+      "quantity": {
+        "$numberInt": "1"
+      },
+      "__v": {
+        "$numberInt": "0"
+      }
+    },
+    {
+      "_id": {
+        "$oid": "{{task-65}}"
+      },
+      "budgetId": {
+        "$oid": "{{budget-no-stats}}"
+      },
+      "taskType": "development",
+      "description": "",
+      "unitPrice": {
+        "$numberInt": "30"
+      },
+      "quantity": {
+        "$numberInt": "20"
+      },
+      "__v": {
+        "$numberInt": "0"
+      }
+    },
+    {
+      "_id": {
+        "$oid": "{{task-66}}"
+      },
+      "budgetId": {
+        "$oid": "{{budget-no-stats}}"
+      },
+      "taskType": "development",
+      "description": "",
+      "unitPrice": {
+        "$numberInt": "30"
+      },
+      "quantity": {
+        "$numberDouble": "0.5"
+      },
+      "__v": {
+        "$numberInt": "0"
+      }
+    },
+    {
+      "_id": {
+        "$oid": "{{task-67}}"
+      },
+      "budgetId": {
+        "$oid": "{{budget-no-stats}}"
+      },
+      "taskType": "machining",
+      "description": "",
+      "unitPrice": {
+        "$numberInt": "30"
+      },
+      "quantity": {
+        "$numberInt": "15"
+      },
+      "__v": {
+        "$numberInt": "0"
+      }
+    },
+    {
+      "_id": {
+        "$oid": "{{task-68}}"
+      },
+      "budgetId": {
+        "$oid": "{{budget-no-stats}}"
+      },
+      "taskType": "assembly",
+      "description": "",
+      "unitPrice": {
+        "$numberInt": "30"
+      },
+      "quantity": {
+        "$numberInt": "10"
+      },
+      "__v": {
+        "$numberInt": "0"
+      }
+    },
+    {
+      "_id": {
+        "$oid": "{{task-69}}"
+      },
+      "budgetId": {
+        "$oid": "{{budget-no-stats}}"
+      },
+      "taskType": "consultancy",
+      "description": "",
+      "unitPrice": {
+        "$numberInt": "30"
+      },
+      "quantity": {
+        "$numberInt": "3"
+      },
+      "__v": {
+        "$numberInt": "0"
+      }
+    },
+    {
+      "_id": {
+        "$oid": "{{task-70}}"
+      },
+      "budgetId": {
+        "$oid": "{{budget-no-stats}}"
+      },
+      "taskType": "components",
+      "description": "",
+      "unitPrice": {
+        "$numberInt": "30"
+      },
+      "quantity": {
+        "$numberDouble": "1.5"
+      },
+      "__v": {
+        "$numberInt": "0"
+      }
+    },
+    {
+      "_id": {
+        "$oid": "{{task-71}}"
+      },
+      "budgetId": {
+        "$oid": "{{budget-dates-null}}"
+      },
+      "taskType": "automation",
+      "description": "",
+      "unitPrice": {
+        "$numberInt": "30"
+      },
+      "quantity": {
+        "$numberInt": "1"
+      },
+      "__v": {
+        "$numberInt": "0"
+      }
+    },
+    {
+      "_id": {
+        "$oid": "{{task-72}}"
+      },
+      "budgetId": {
+        "$oid": "{{budget-dates-null}}"
+      },
+      "taskType": "development",
+      "description": "",
+      "unitPrice": {
+        "$numberInt": "30"
+      },
+      "quantity": {
+        "$numberInt": "20"
+      },
+      "__v": {
+        "$numberInt": "0"
+      }
+    },
+    {
+      "_id": {
+        "$oid": "{{task-73}}"
+      },
+      "budgetId": {
+        "$oid": "{{budget-dates-null}}"
+      },
+      "taskType": "development",
+      "description": "",
+      "unitPrice": {
+        "$numberInt": "30"
+      },
+      "quantity": {
+        "$numberDouble": "0.5"
+      },
+      "__v": {
+        "$numberInt": "0"
+      }
+    },
+    {
+      "_id": {
+        "$oid": "{{task-74}}"
+      },
+      "budgetId": {
+        "$oid": "{{budget-dates-null}}"
+      },
+      "taskType": "machining",
+      "description": "",
+      "unitPrice": {
+        "$numberInt": "30"
+      },
+      "quantity": {
+        "$numberInt": "15"
+      },
+      "__v": {
+        "$numberInt": "0"
+      }
+    },
+    {
+      "_id": {
+        "$oid": "{{task-75}}"
+      },
+      "budgetId": {
+        "$oid": "{{budget-dates-null}}"
+      },
+      "taskType": "assembly",
+      "description": "",
+      "unitPrice": {
+        "$numberInt": "30"
+      },
+      "quantity": {
+        "$numberInt": "10"
+      },
+      "__v": {
+        "$numberInt": "0"
+      }
+    },
+    {
+      "_id": {
+        "$oid": "{{task-76}}"
+      },
+      "budgetId": {
+        "$oid": "{{budget-dates-null}}"
+      },
+      "taskType": "consultancy",
+      "description": "",
+      "unitPrice": {
+        "$numberInt": "30"
+      },
+      "quantity": {
+        "$numberInt": "3"
+      },
+      "__v": {
+        "$numberInt": "0"
+      }
+    },
+    {
+      "_id": {
+        "$oid": "{{task-77}}"
+      },
+      "budgetId": {
+        "$oid": "{{budget-dates-null}}"
+      },
+      "taskType": "components",
+      "description": "",
+      "unitPrice": {
+        "$numberInt": "30"
+      },
+      "quantity": {
+        "$numberDouble": "1.5"
+      },
+      "__v": {
+        "$numberInt": "0"
+      }
+    },
+    {
+      "_id": {
+        "$oid": "{{task-78}}"
+      },
+      "budgetId": {
+        "$oid": "{{budget-machining-no-stat}}"
+      },
+      "taskType": "automation",
+      "description": "",
+      "unitPrice": {
+        "$numberInt": "30"
+      },
+      "quantity": {
+        "$numberInt": "1"
+      },
+      "__v": {
+        "$numberInt": "0"
+      }
+    },
+    {
+      "_id": {
+        "$oid": "{{task-79}}"
+      },
+      "budgetId": {
+        "$oid": "{{budget-machining-no-stat}}"
+      },
+      "taskType": "development",
+      "description": "",
+      "unitPrice": {
+        "$numberInt": "30"
+      },
+      "quantity": {
+        "$numberInt": "20"
+      },
+      "__v": {
+        "$numberInt": "0"
+      }
+    },
+    {
+      "_id": {
+        "$oid": "{{task-80}}"
+      },
+      "budgetId": {
+        "$oid": "{{budget-machining-no-stat}}"
+      },
+      "taskType": "development",
+      "description": "",
+      "unitPrice": {
+        "$numberInt": "30"
+      },
+      "quantity": {
+        "$numberDouble": "0.5"
+      },
+      "__v": {
+        "$numberInt": "0"
+      }
+    },
+    {
+      "_id": {
+        "$oid": "{{task-81}}"
+      },
+      "budgetId": {
+        "$oid": "{{budget-machining-no-stat}}"
+      },
+      "taskType": "machining",
+      "description": "",
+      "unitPrice": {
+        "$numberInt": "30"
+      },
+      "quantity": {
+        "$numberInt": "15"
+      },
+      "__v": {
+        "$numberInt": "0"
+      }
+    },
+    {
+      "_id": {
+        "$oid": "{{task-82}}"
+      },
+      "budgetId": {
+        "$oid": "{{budget-machining-no-stat}}"
+      },
+      "taskType": "assembly",
+      "description": "",
+      "unitPrice": {
+        "$numberInt": "30"
+      },
+      "quantity": {
+        "$numberInt": "10"
+      },
+      "__v": {
+        "$numberInt": "0"
+      }
+    },
+    {
+      "_id": {
+        "$oid": "{{task-83}}"
+      },
+      "budgetId": {
+        "$oid": "{{budget-machining-no-stat}}"
+      },
+      "taskType": "consultancy",
+      "description": "",
+      "unitPrice": {
+        "$numberInt": "30"
+      },
+      "quantity": {
+        "$numberInt": "3"
+      },
+      "__v": {
+        "$numberInt": "0"
+      }
+    },
+    {
+      "_id": {
+        "$oid": "{{task-84}}"
+      },
+      "budgetId": {
+        "$oid": "{{budget-machining-no-stat}}"
+      },
+      "taskType": "components",
+      "description": "",
+      "unitPrice": {
+        "$numberInt": "30"
+      },
+      "quantity": {
+        "$numberDouble": "1.5"
+      },
+      "__v": {
+        "$numberInt": "0"
+      }
+    },
+    {
+      "_id": {
+        "$oid": "{{task-85}}"
+      },
+      "budgetId": {
+        "$oid": "{{budget-assembly-fraction}}"
+      },
+      "taskType": "automation",
+      "description": "",
+      "unitPrice": {
+        "$numberInt": "30"
+      },
+      "quantity": {
+        "$numberInt": "1"
+      },
+      "__v": {
+        "$numberInt": "0"
+      }
+    },
+    {
+      "_id": {
+        "$oid": "{{task-86}}"
+      },
+      "budgetId": {
+        "$oid": "{{budget-assembly-fraction}}"
+      },
+      "taskType": "development",
+      "description": "",
+      "unitPrice": {
+        "$numberInt": "30"
+      },
+      "quantity": {
+        "$numberInt": "20"
+      },
+      "__v": {
+        "$numberInt": "0"
+      }
+    },
+    {
+      "_id": {
+        "$oid": "{{task-87}}"
+      },
+      "budgetId": {
+        "$oid": "{{budget-assembly-fraction}}"
+      },
+      "taskType": "development",
+      "description": "",
+      "unitPrice": {
+        "$numberInt": "30"
+      },
+      "quantity": {
+        "$numberDouble": "0.5"
+      },
+      "__v": {
+        "$numberInt": "0"
+      }
+    },
+    {
+      "_id": {
+        "$oid": "{{task-88}}"
+      },
+      "budgetId": {
+        "$oid": "{{budget-assembly-fraction}}"
+      },
+      "taskType": "machining",
+      "description": "",
+      "unitPrice": {
+        "$numberInt": "30"
+      },
+      "quantity": {
+        "$numberInt": "15"
+      },
+      "__v": {
+        "$numberInt": "0"
+      }
+    },
+    {
+      "_id": {
+        "$oid": "{{task-89}}"
+      },
+      "budgetId": {
+        "$oid": "{{budget-assembly-fraction}}"
+      },
+      "taskType": "assembly",
+      "description": "",
+      "unitPrice": {
+        "$numberInt": "30"
+      },
+      "quantity": {
+        "$numberDouble": "10.5"
+      },
+      "__v": {
+        "$numberInt": "0"
+      }
+    },
+    {
+      "_id": {
+        "$oid": "{{task-90}}"
+      },
+      "budgetId": {
+        "$oid": "{{budget-assembly-fraction}}"
+      },
+      "taskType": "consultancy",
+      "description": "",
+      "unitPrice": {
+        "$numberInt": "30"
+      },
+      "quantity": {
+        "$numberInt": "3"
+      },
+      "__v": {
+        "$numberInt": "0"
+      }
+    },
+    {
+      "_id": {
+        "$oid": "{{task-91}}"
+      },
+      "budgetId": {
+        "$oid": "{{budget-assembly-fraction}}"
+      },
+      "taskType": "components",
+      "description": "",
+      "unitPrice": {
+        "$numberInt": "30"
+      },
+      "quantity": {
+        "$numberDouble": "1.5"
+      },
+      "__v": {
+        "$numberInt": "0"
+      }
+    },
+    {
+      "_id": {
+        "$oid": "{{task-92}}"
+      },
+      "budgetId": {
+        "$oid": "{{budget-invoicing-full}}"
+      },
+      "taskType": "automation",
+      "description": "",
+      "unitPrice": {
+        "$numberInt": "30"
+      },
+      "quantity": {
+        "$numberInt": "1"
+      },
+      "__v": {
+        "$numberInt": "0"
+      }
+    },
+    {
+      "_id": {
+        "$oid": "{{task-93}}"
+      },
+      "budgetId": {
+        "$oid": "{{budget-invoicing-full}}"
+      },
+      "taskType": "development",
+      "description": "",
+      "unitPrice": {
+        "$numberInt": "30"
+      },
+      "quantity": {
+        "$numberInt": "20"
+      },
+      "__v": {
+        "$numberInt": "0"
+      }
+    },
+    {
+      "_id": {
+        "$oid": "{{task-94}}"
+      },
+      "budgetId": {
+        "$oid": "{{budget-invoicing-full}}"
+      },
+      "taskType": "development",
+      "description": "",
+      "unitPrice": {
+        "$numberInt": "30"
+      },
+      "quantity": {
+        "$numberDouble": "0.5"
+      },
+      "__v": {
+        "$numberInt": "0"
+      }
+    },
+    {
+      "_id": {
+        "$oid": "{{task-95}}"
+      },
+      "budgetId": {
+        "$oid": "{{budget-invoicing-full}}"
+      },
+      "taskType": "machining",
+      "description": "",
+      "unitPrice": {
+        "$numberInt": "30"
+      },
+      "quantity": {
+        "$numberInt": "15"
+      },
+      "__v": {
+        "$numberInt": "0"
+      }
+    },
+    {
+      "_id": {
+        "$oid": "{{task-96}}"
+      },
+      "budgetId": {
+        "$oid": "{{budget-invoicing-full}}"
+      },
+      "taskType": "assembly",
+      "description": "",
+      "unitPrice": {
+        "$numberInt": "30"
+      },
+      "quantity": {
+        "$numberInt": "10"
+      },
+      "__v": {
+        "$numberInt": "0"
+      }
+    },
+    {
+      "_id": {
+        "$oid": "{{task-97}}"
+      },
+      "budgetId": {
+        "$oid": "{{budget-invoicing-full}}"
+      },
+      "taskType": "consultancy",
+      "description": "",
+      "unitPrice": {
+        "$numberInt": "30"
+      },
+      "quantity": {
+        "$numberInt": "3"
+      },
+      "__v": {
+        "$numberInt": "0"
+      }
+    },
+    {
+      "_id": {
+        "$oid": "{{task-98}}"
+      },
+      "budgetId": {
+        "$oid": "{{budget-invoicing-full}}"
+      },
+      "taskType": "components",
+      "description": "",
+      "unitPrice": {
+        "$numberInt": "30"
+      },
+      "quantity": {
+        "$numberDouble": "1.5"
+      },
+      "__v": {
+        "$numberInt": "0"
+      }
+    }
+  ],
+  "entity": {
+    "_id": {
+      "$oid": "{{client}}"
+    },
+    "name": "Metalúrgica Exemplo, Lda.",
+    "fiscalNumber": "509999990",
+    "address": "Rua das Flores, 12",
+    "zipCode": "4000-123",
+    "location": "Porto",
+    "paymentCondition": "30 dias",
+    "type": "Cliente",
+    "__v": {
+      "$numberInt": "0"
+    }
+  },
+  "user": {
+    "_id": {
+      "$oid": "{{user}}"
+    },
+    "roles": [
+      "canSeeObras",
+      null,
+      "canSeeDefinicoes"
+    ],
+    "fieldOfCompetencies": "Montagem",
+    "name": "Ana Administradora",
+    "email": "ana.admin@dib4t.local",
+    "password": "$2a$10$abcdefghijklmnopqrstuuabcdefghijklmnopqrstuvwxyz01234",
+    "__v": {
+      "$numberInt": "0"
+    }
+  },
+  "cases": [
+    {
+      "section": "counters",
+      "year": "2026",
+      "method": "GET",
+      "path": "/api/job/getValidTryOnFirstTestCountersByYear/2026",
+      "body": null,
+      "legacy": {
+        "status": 200,
+        "json": {
+          "oneCounter": 1,
+          "twoCounter": 2,
+          "threeCounter": 2
+        },
+        "effects": [],
+        "startDate": {
+          "$gte": {
+            "$date": "2026-01-01T00:00:00.000Z"
+          },
+          "$lte": {
+            "$date": "2026-12-31T00:00:00.000Z"
+          }
+        }
+      },
+      "fixed": {
+        "status": 200,
+        "json": {
+          "oneCounter": 2,
+          "twoCounter": 3,
+          "threeCounter": 2
+        },
+        "effects": [],
+        "startDate": {
+          "$gte": {
+            "$date": "2026-01-01T00:00:00.000Z"
+          },
+          "$lt": {
+            "$date": "2027-01-01T00:00:00.000Z"
+          }
+        }
+      }
+    },
+    {
+      "section": "counters",
+      "year": "2025",
+      "method": "GET",
+      "path": "/api/job/getValidTryOnFirstTestCountersByYear/2025",
+      "body": null,
+      "legacy": {
+        "status": 200,
+        "json": {
+          "oneCounter": 0,
+          "twoCounter": 0,
+          "threeCounter": 0
+        },
+        "effects": [],
+        "startDate": {
+          "$gte": {
+            "$date": "2025-01-01T00:00:00.000Z"
+          },
+          "$lte": {
+            "$date": "2025-12-31T00:00:00.000Z"
+          }
+        }
+      },
+      "fixed": {
+        "status": 200,
+        "json": {
+          "oneCounter": 1,
+          "twoCounter": 0,
+          "threeCounter": 0
+        },
+        "effects": [],
+        "startDate": {
+          "$gte": {
+            "$date": "2025-01-01T00:00:00.000Z"
+          },
+          "$lt": {
+            "$date": "2026-01-01T00:00:00.000Z"
+          }
+        }
+      }
+    },
+    {
+      "section": "counters",
+      "year": "2027",
+      "method": "GET",
+      "path": "/api/job/getValidTryOnFirstTestCountersByYear/2027",
+      "body": null,
+      "legacy": {
+        "status": 200,
+        "json": {
+          "oneCounter": 0,
+          "twoCounter": 0,
+          "threeCounter": 1
+        },
+        "effects": [],
+        "startDate": {
+          "$gte": {
+            "$date": "2027-01-01T00:00:00.000Z"
+          },
+          "$lte": {
+            "$date": "2027-12-31T00:00:00.000Z"
+          }
+        }
+      },
+      "fixed": {
+        "status": 200,
+        "json": {
+          "oneCounter": 0,
+          "twoCounter": 0,
+          "threeCounter": 1
+        },
+        "effects": [],
+        "startDate": {
+          "$gte": {
+            "$date": "2027-01-01T00:00:00.000Z"
+          },
+          "$lt": {
+            "$date": "2028-01-01T00:00:00.000Z"
+          }
+        }
+      }
+    },
+    {
+      "section": "counters",
+      "year": "1995",
+      "method": "GET",
+      "path": "/api/job/getValidTryOnFirstTestCountersByYear/1995",
+      "body": null,
+      "legacy": {
+        "status": 200,
+        "json": {
+          "oneCounter": 1,
+          "twoCounter": 0,
+          "threeCounter": 0
+        },
+        "effects": [],
+        "startDate": {
+          "$gte": {
+            "$date": "1995-01-01T00:00:00.000Z"
+          },
+          "$lte": {
+            "$date": "1995-12-31T00:00:00.000Z"
+          }
+        }
+      },
+      "fixed": {
+        "status": 200,
+        "json": {
+          "oneCounter": 1,
+          "twoCounter": 1,
+          "threeCounter": 1
+        },
+        "effects": [],
+        "startDate": {
+          "$gte": {
+            "$date": "1994-12-31T23:00:00.000Z"
+          },
+          "$lt": {
+            "$date": "1995-12-31T23:00:00.000Z"
+          }
+        }
+      }
+    },
+    {
+      "section": "counters",
+      "year": "1996",
+      "method": "GET",
+      "path": "/api/job/getValidTryOnFirstTestCountersByYear/1996",
+      "body": null,
+      "legacy": {
+        "status": 200,
+        "json": {
+          "oneCounter": 0,
+          "twoCounter": 0,
+          "threeCounter": 0
+        },
+        "effects": [],
+        "startDate": {
+          "$gte": {
+            "$date": "1996-01-01T00:00:00.000Z"
+          },
+          "$lte": {
+            "$date": "1996-12-31T00:00:00.000Z"
+          }
+        }
+      },
+      "fixed": {
+        "status": 200,
+        "json": {
+          "oneCounter": 0,
+          "twoCounter": 0,
+          "threeCounter": 1
+        },
+        "effects": [],
+        "startDate": {
+          "$gte": {
+            "$date": "1995-12-31T23:00:00.000Z"
+          },
+          "$lt": {
+            "$date": "1997-01-01T00:00:00.000Z"
+          }
+        }
+      }
+    },
+    {
+      "section": "counters",
+      "year": "1994",
+      "method": "GET",
+      "path": "/api/job/getValidTryOnFirstTestCountersByYear/1994",
+      "body": null,
+      "legacy": {
+        "status": 200,
+        "json": {
+          "oneCounter": 0,
+          "twoCounter": 0,
+          "threeCounter": 0
+        },
+        "effects": [],
+        "startDate": {
+          "$gte": {
+            "$date": "1994-01-01T00:00:00.000Z"
+          },
+          "$lte": {
+            "$date": "1994-12-31T00:00:00.000Z"
+          }
+        }
+      },
+      "fixed": {
+        "status": 200,
+        "json": {
+          "oneCounter": 0,
+          "twoCounter": 0,
+          "threeCounter": 0
+        },
+        "effects": [],
+        "startDate": {
+          "$gte": {
+            "$date": "1993-12-31T23:00:00.000Z"
+          },
+          "$lt": {
+            "$date": "1994-12-31T23:00:00.000Z"
+          }
+        }
+      }
+    },
+    {
+      "section": "counters",
+      "year": "2001",
+      "method": "GET",
+      "path": "/api/job/getValidTryOnFirstTestCountersByYear/2001",
+      "body": null,
+      "legacy": {
+        "status": 200,
+        "json": {
+          "oneCounter": 0,
+          "twoCounter": 0,
+          "threeCounter": 0
+        },
+        "effects": [],
+        "startDate": {
+          "$gte": {
+            "$date": "2001-01-01T00:00:00.000Z"
+          },
+          "$lte": {
+            "$date": "2001-12-31T00:00:00.000Z"
+          }
+        }
+      },
+      "fixed": {
+        "status": 200,
+        "json": {
+          "oneCounter": 0,
+          "twoCounter": 0,
+          "threeCounter": 0
+        },
+        "effects": [],
+        "startDate": {
+          "$gte": {
+            "$date": "2001-01-01T00:00:00.000Z"
+          },
+          "$lt": {
+            "$date": "2002-01-01T00:00:00.000Z"
+          }
+        }
+      }
+    },
+    {
+      "section": "counters",
+      "year": "1912",
+      "method": "GET",
+      "path": "/api/job/getValidTryOnFirstTestCountersByYear/1912",
+      "body": null,
+      "legacy": {
+        "status": 200,
+        "json": {
+          "oneCounter": 0,
+          "twoCounter": 0,
+          "threeCounter": 0
+        },
+        "effects": [],
+        "startDate": {
+          "$gte": {
+            "$date": "1912-01-01T00:00:00.000Z"
+          },
+          "$lte": {
+            "$date": "1912-12-31T00:00:00.000Z"
+          }
+        }
+      },
+      "fixed": {
+        "status": 200,
+        "json": {
+          "oneCounter": 0,
+          "twoCounter": 0,
+          "threeCounter": 0
+        },
+        "effects": [],
+        "startDate": {
+          "$gte": {
+            "$date": "1912-01-01T00:00:00.000Z"
+          },
+          "$lt": {
+            "$date": "1913-01-01T00:00:00.000Z"
+          }
+        }
+      }
+    },
+    {
+      "section": "counters",
+      "year": "9998",
+      "method": "GET",
+      "path": "/api/job/getValidTryOnFirstTestCountersByYear/9998",
+      "body": null,
+      "legacy": {
+        "status": 200,
+        "json": {
+          "oneCounter": 0,
+          "twoCounter": 0,
+          "threeCounter": 0
+        },
+        "effects": [],
+        "startDate": {
+          "$gte": {
+            "$date": "9998-01-01T00:00:00.000Z"
+          },
+          "$lte": {
+            "$date": "9998-12-31T00:00:00.000Z"
+          }
+        }
+      },
+      "fixed": {
+        "status": 200,
+        "json": {
+          "oneCounter": 0,
+          "twoCounter": 0,
+          "threeCounter": 0
+        },
+        "effects": [],
+        "startDate": {
+          "$gte": {
+            "$date": "9998-01-01T00:00:00.000Z"
+          },
+          "$lt": {
+            "$date": "9999-01-01T00:00:00.000Z"
+          }
+        }
+      }
+    },
+    {
+      "section": "counters",
+      "year": "9999",
+      "method": "GET",
+      "path": "/api/job/getValidTryOnFirstTestCountersByYear/9999",
+      "body": null,
+      "legacy": {
+        "status": 200,
+        "json": {
+          "oneCounter": 0,
+          "twoCounter": 0,
+          "threeCounter": 0
+        },
+        "effects": [],
+        "startDate": {
+          "$gte": {
+            "$date": "9999-01-01T00:00:00.000Z"
+          },
+          "$lte": {
+            "$date": "9999-12-31T00:00:00.000Z"
+          }
+        }
+      },
+      "fixed": {
+        "status": 200,
+        "json": {
+          "oneCounter": 0,
+          "twoCounter": 0,
+          "threeCounter": 0
+        },
+        "effects": [],
+        "startDate": {
+          "$gte": {
+            "$date": "9999-01-01T00:00:00.000Z"
+          },
+          "$lt": {
+            "$date": "+010000-01-01T00:00:00.000Z"
+          }
+        }
+      }
+    },
+    {
+      "section": "counters",
+      "year": "+002026",
+      "method": "GET",
+      "path": "/api/job/getValidTryOnFirstTestCountersByYear/+002026",
+      "body": null,
+      "legacy": {
+        "status": 200,
+        "json": {
+          "oneCounter": 1,
+          "twoCounter": 2,
+          "threeCounter": 2
+        },
+        "effects": [],
+        "startDate": {
+          "$gte": {
+            "$date": "2026-01-01T00:00:00.000Z"
+          },
+          "$lte": {
+            "$date": "2026-12-31T00:00:00.000Z"
+          }
+        }
+      },
+      "fixed": {
+        "status": 200,
+        "json": {
+          "oneCounter": 2,
+          "twoCounter": 3,
+          "threeCounter": 2
+        },
+        "effects": [],
+        "startDate": {
+          "$gte": {
+            "$date": "2026-01-01T00:00:00.000Z"
+          },
+          "$lt": {
+            "$date": "2027-01-01T00:00:00.000Z"
+          }
+        }
+      }
+    },
+    {
+      "section": "counters",
+      "year": "0000",
+      "method": "GET",
+      "path": "/api/job/getValidTryOnFirstTestCountersByYear/0000",
+      "body": null,
+      "legacy": {
+        "status": 200,
+        "json": {
+          "oneCounter": 0,
+          "twoCounter": 0,
+          "threeCounter": 0
+        },
+        "effects": [],
+        "startDate": {
+          "$gte": {
+            "$date": "0000-01-01T00:00:00.000Z"
+          },
+          "$lte": {
+            "$date": "0000-12-31T00:00:00.000Z"
+          }
+        }
+      },
+      "fixed": {
+        "status": 200,
+        "json": {
+          "oneCounter": 0,
+          "twoCounter": 0,
+          "threeCounter": 0
+        },
+        "effects": [],
+        "startDate": {
+          "$gte": {
+            "$date": "0000-01-01T00:36:45.000Z"
+          },
+          "$lt": {
+            "$date": "0001-01-01T00:36:45.000Z"
+          }
+        }
+      }
+    },
+    {
+      "section": "counters",
+      "year": "-000001",
+      "method": "GET",
+      "path": "/api/job/getValidTryOnFirstTestCountersByYear/-000001",
+      "body": null,
+      "legacy": {
+        "status": 200,
+        "json": {
+          "oneCounter": 0,
+          "twoCounter": 0,
+          "threeCounter": 0
+        },
+        "effects": [],
+        "startDate": {
+          "$gte": {
+            "$date": "-000001-01-01T00:00:00.000Z"
+          },
+          "$lte": {
+            "$date": "-000001-12-31T00:00:00.000Z"
+          }
+        }
+      },
+      "fixed": {
+        "status": 200,
+        "json": {
+          "oneCounter": 0,
+          "twoCounter": 0,
+          "threeCounter": 0
+        },
+        "effects": [],
+        "startDate": {
+          "$gte": {
+            "$date": "-000001-01-01T00:36:45.000Z"
+          },
+          "$lt": {
+            "$date": "0000-01-01T00:36:45.000Z"
+          }
+        }
+      }
+    },
+    {
+      "section": "counters",
+      "year": "+010000",
+      "method": "GET",
+      "path": "/api/job/getValidTryOnFirstTestCountersByYear/+010000",
+      "body": null,
+      "legacy": {
+        "status": 200,
+        "json": {
+          "oneCounter": 0,
+          "twoCounter": 0,
+          "threeCounter": 0
+        },
+        "effects": [],
+        "startDate": {
+          "$gte": {
+            "$date": "+010000-01-01T00:00:00.000Z"
+          },
+          "$lte": {
+            "$date": "+010000-12-31T00:00:00.000Z"
+          }
+        }
+      },
+      "fixed": {
+        "status": 200,
+        "json": {
+          "oneCounter": 0,
+          "twoCounter": 0,
+          "threeCounter": 0
+        },
+        "effects": [],
+        "startDate": {
+          "$gte": {
+            "$date": "+010000-01-01T00:00:00.000Z"
+          },
+          "$lt": {
+            "$date": "+010001-01-01T00:00:00.000Z"
+          }
+        }
+      }
+    },
+    {
+      "section": "counters",
+      "year": "26",
+      "method": "GET",
+      "path": "/api/job/getValidTryOnFirstTestCountersByYear/26",
+      "body": null,
+      "legacy": {
+        "status": 500,
+        "error": "CastError: Cast to date failed for value \"Invalid Date\" (type Date) at path \"startDate\" for model \"Job\"",
+        "effects": []
+      },
+      "fixed": {
+        "status": 500,
+        "error": "CastError: Cast to date failed for value \"Invalid Date\" (type Date) at path \"startDate\" for model \"Job\"",
+        "effects": []
+      }
+    },
+    {
+      "section": "counters",
+      "year": "2026x",
+      "method": "GET",
+      "path": "/api/job/getValidTryOnFirstTestCountersByYear/2026x",
+      "body": null,
+      "legacy": {
+        "status": 500,
+        "error": "CastError: Cast to date failed for value \"Invalid Date\" (type Date) at path \"startDate\" for model \"Job\"",
+        "effects": []
+      },
+      "fixed": {
+        "status": 500,
+        "error": "CastError: Cast to date failed for value \"Invalid Date\" (type Date) at path \"startDate\" for model \"Job\"",
+        "effects": []
+      }
+    },
+    {
+      "section": "counters",
+      "year": "2026 ",
+      "method": "GET",
+      "path": "/api/job/getValidTryOnFirstTestCountersByYear/2026 ",
+      "body": null,
+      "legacy": {
+        "status": 500,
+        "error": "CastError: Cast to date failed for value \"Invalid Date\" (type Date) at path \"startDate\" for model \"Job\"",
+        "effects": []
+      },
+      "fixed": {
+        "status": 500,
+        "error": "CastError: Cast to date failed for value \"Invalid Date\" (type Date) at path \"startDate\" for model \"Job\"",
+        "effects": []
+      }
+    },
+    {
+      "section": "counters",
+      "year": "2026.5",
+      "method": "GET",
+      "path": "/api/job/getValidTryOnFirstTestCountersByYear/2026.5",
+      "body": null,
+      "legacy": {
+        "status": 500,
+        "error": "CastError: Cast to date failed for value \"Invalid Date\" (type Date) at path \"startDate\" for model \"Job\"",
+        "effects": []
+      },
+      "fixed": {
+        "status": 500,
+        "error": "CastError: Cast to date failed for value \"Invalid Date\" (type Date) at path \"startDate\" for model \"Job\"",
+        "effects": []
+      }
+    },
+    {
+      "section": "counters",
+      "year": "2026-01",
+      "method": "GET",
+      "path": "/api/job/getValidTryOnFirstTestCountersByYear/2026-01",
+      "body": null,
+      "legacy": {
+        "status": 500,
+        "error": "CastError: Cast to date failed for value \"Invalid Date\" (type Date) at path \"startDate\" for model \"Job\"",
+        "effects": []
+      },
+      "fixed": {
+        "status": 500,
+        "error": "CastError: Cast to date failed for value \"Invalid Date\" (type Date) at path \"startDate\" for model \"Job\"",
+        "effects": []
+      }
+    },
+    {
+      "section": "counters",
+      "year": "+275760",
+      "method": "GET",
+      "path": "/api/job/getValidTryOnFirstTestCountersByYear/+275760",
+      "body": null,
+      "legacy": {
+        "status": 500,
+        "error": "CastError: Cast to date failed for value \"Invalid Date\" (type Date) at path \"startDate\" for model \"Job\"",
+        "effects": []
+      },
+      "fixed": {
+        "status": 500,
+        "error": "CastError: Cast to date failed for value \"Invalid Date\" (type Date) at path \"startDate\" for model \"Job\"",
+        "effects": []
+      }
+    },
+    {
+      "section": "counters",
+      "year": "275760",
+      "method": "GET",
+      "path": "/api/job/getValidTryOnFirstTestCountersByYear/275760",
+      "body": null,
+      "legacy": {
+        "status": 500,
+        "error": "CastError: Cast to date failed for value \"Invalid Date\" (type Date) at path \"startDate\" for model \"Job\"",
+        "effects": []
+      },
+      "fixed": {
+        "status": 500,
+        "error": "CastError: Cast to date failed for value \"Invalid Date\" (type Date) at path \"startDate\" for model \"Job\"",
+        "effects": []
+      }
+    },
+    {
+      "section": "counters",
+      "year": "abc",
+      "method": "GET",
+      "path": "/api/job/getValidTryOnFirstTestCountersByYear/abc",
+      "body": null,
+      "legacy": {
+        "status": 200,
+        "json": {
+          "oneCounter": 0,
+          "twoCounter": 0,
+          "threeCounter": 0
+        },
+        "effects": [],
+        "startDate": {
+          "$gte": {
+            "$date": "2001-01-01T00:00:00.000Z"
+          },
+          "$lte": {
+            "$date": "2001-12-31T00:00:00.000Z"
+          }
+        }
+      },
+      "fixed": {
+        "status": 200,
+        "json": {
+          "oneCounter": 0,
+          "twoCounter": 0,
+          "threeCounter": 0
+        },
+        "effects": [],
+        "startDate": {
+          "$gte": {
+            "$date": "2001-01-01T00:00:00.000Z"
+          },
+          "$lt": {
+            "$date": "2002-01-01T00:00:00.000Z"
+          }
+        }
+      }
+    },
+    {
+      "section": "counters",
+      "year": "0",
+      "method": "GET",
+      "path": "/api/job/getValidTryOnFirstTestCountersByYear/0",
+      "body": null,
+      "legacy": {
+        "status": 200,
+        "json": {
+          "oneCounter": 0,
+          "twoCounter": 0,
+          "threeCounter": 0
+        },
+        "effects": [],
+        "startDate": {
+          "$gte": {
+            "$date": "2000-01-01T00:00:00.000Z"
+          },
+          "$lte": {
+            "$date": "2000-12-31T00:00:00.000Z"
+          }
+        }
+      },
+      "fixed": {
+        "status": 200,
+        "json": {
+          "oneCounter": 0,
+          "twoCounter": 0,
+          "threeCounter": 0
+        },
+        "effects": [],
+        "startDate": {
+          "$gte": {
+            "$date": "2000-01-01T00:00:00.000Z"
+          },
+          "$lt": {
+            "$date": "2001-01-01T00:00:00.000Z"
+          }
+        }
+      }
+    },
+    {
+      "section": "counters",
+      "year": " 2026",
+      "method": "GET",
+      "path": "/api/job/getValidTryOnFirstTestCountersByYear/ 2026",
+      "body": null,
+      "legacy": {
+        "status": 200,
+        "json": {
+          "oneCounter": 1,
+          "twoCounter": 2,
+          "threeCounter": 2
+        },
+        "effects": [],
+        "startDate": {
+          "$gte": {
+            "$date": "2026-01-01T00:00:00.000Z"
+          },
+          "$lte": {
+            "$date": "2026-12-31T00:00:00.000Z"
+          }
+        }
+      },
+      "fixed": {
+        "status": 200,
+        "json": {
+          "oneCounter": 2,
+          "twoCounter": 3,
+          "threeCounter": 2
+        },
+        "effects": [],
+        "startDate": {
+          "$gte": {
+            "$date": "2026-01-01T00:00:00.000Z"
+          },
+          "$lt": {
+            "$date": "2027-01-01T00:00:00.000Z"
+          }
+        }
+      }
+    },
+    {
+      "section": "counters",
+      "year": "10000",
+      "method": "GET",
+      "path": "/api/job/getValidTryOnFirstTestCountersByYear/10000",
+      "body": null,
+      "legacy": {
+        "status": 200,
+        "json": {
+          "oneCounter": 0,
+          "twoCounter": 0,
+          "threeCounter": 0
+        },
+        "effects": [],
+        "startDate": {
+          "$gte": {
+            "$date": "+010000-01-01T00:00:00.000Z"
+          },
+          "$lte": {
+            "$date": "+010000-12-31T00:00:00.000Z"
+          }
+        }
+      },
+      "fixed": {
+        "status": 200,
+        "json": {
+          "oneCounter": 0,
+          "twoCounter": 0,
+          "threeCounter": 0
+        },
+        "effects": [],
+        "startDate": {
+          "$gte": {
+            "$date": "+010000-01-01T00:00:00.000Z"
+          },
+          "$lt": {
+            "$date": "+010001-01-01T00:00:00.000Z"
+          }
+        }
+      }
+    },
+    {
+      "section": "counters",
+      "year": "-000000",
+      "method": "GET",
+      "path": "/api/job/getValidTryOnFirstTestCountersByYear/-000000",
+      "body": null,
+      "legacy": {
+        "status": 200,
+        "json": {
+          "oneCounter": 0,
+          "twoCounter": 0,
+          "threeCounter": 0
+        },
+        "effects": [],
+        "startDate": {
+          "$gte": {
+            "$date": "2001-01-01T00:00:00.000Z"
+          },
+          "$lte": {
+            "$date": "2001-12-31T00:00:00.000Z"
+          }
+        }
+      },
+      "fixed": {
+        "status": 200,
+        "json": {
+          "oneCounter": 0,
+          "twoCounter": 0,
+          "threeCounter": 0
+        },
+        "effects": [],
+        "startDate": {
+          "$gte": {
+            "$date": "2001-01-01T00:00:00.000Z"
+          },
+          "$lt": {
+            "$date": "2002-01-01T00:00:00.000Z"
+          }
+        }
+      }
+    }
+  ]
+}

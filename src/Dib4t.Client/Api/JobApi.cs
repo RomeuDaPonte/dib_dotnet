@@ -20,6 +20,9 @@ public interface IJobApi
     /// <summary><c>GET getCounts</c>: the tab counters.</summary>
     Task<ApiResult<JobCountsResponse>> CountsAsync();
 
+    /// <summary><c>GET getValidTryOnFirstTestCountersByYear/:year</c>: the dashboard's counters of <paramref name="year"/>.</summary>
+    Task<ApiResult<ValidTryCountersResponse>> ValidTryOnFirstTestCountersAsync(int year);
+
     /// <summary><c>GET getById/:jobId</c>: the job (a missing one is an unexpected error).</summary>
     Task<ApiResult<JobResponse<BudgetResponse>>> GetByIdAsync(string jobId);
 
@@ -76,6 +79,9 @@ public sealed class JobApi(HttpClient http) : IJobApi
         ApiCalls.SendAsync<IReadOnlyList<JobResponse<JobListBudgetResponse>>>(http, HttpMethod.Get, "api/job/getbystate/" + Uri.EscapeDataString(state));
 
     public Task<ApiResult<JobCountsResponse>> CountsAsync() => ApiCalls.SendAsync<JobCountsResponse>(http, HttpMethod.Get, "api/job/getCounts");
+
+    public Task<ApiResult<ValidTryCountersResponse>> ValidTryOnFirstTestCountersAsync(int year) =>
+        ApiCalls.SendAsync<ValidTryCountersResponse>(http, HttpMethod.Get, "api/job/getValidTryOnFirstTestCountersByYear/" + year.ToString(System.Globalization.CultureInfo.InvariantCulture));
 
     public Task<ApiResult<JobResponse<BudgetResponse>>> GetByIdAsync(string jobId) =>
         ApiCalls.SendAsync<JobResponse<BudgetResponse>>(http, HttpMethod.Get, "api/job/getById/" + Uri.EscapeDataString(jobId));

@@ -1,0 +1,58 @@
+@page "/landing/dashboard"
+@layout LandingLayout
+@inject AuthSession Session
+@inject IJobApi Jobs
+@inject TimeProvider Time
+
+<PageTitle>Dib4t</PageTitle>
+
+@* Legacy components/dashboard/dashboardIndex.jsx: the pie chart of the current year's counters (react-google-charts
+   PieChart; here MudChart, PLAN.md §2). Same slices, order and colors ("3º teste" red, "2º teste" orange, "1º teste"
+   green), transparent background. Only for canSeeDashboard, like the menu entry (the API is open to every signed-in
+   user, as legacy). The year is the browser's (legacy new Date().getFullYear()); the pie scales to the page width,
+   its legend goes below it when narrow (§8.4; legacy: a fixed 600px). Nothing is shown until the counters are loaded,
+   as legacy. *@
+@if (Session.User?.HasRole(RoleNames.CanSeeDashboard) != true)
+{
+    <p class="settings-denied">@AuthTexts.NoPermission</p>
+}
+else if (_counters is { } counters)
+{
+    <div class="dashboard-chart" data-testid="dashboard-chart" data-counters="@($"{counters.ThreeCounter},{counters.TwoCounter},{counters.OneCounter}")">
+        @* Google Charts draws nothing for a pie of only zeros (no slice, legend or text): neither does this page. *@
+        @if (counters.OneCounter + counters.TwoCounter + counters.ThreeCounter > 0)
+        {
+            <MudChart T="double" ChartType="ChartType.Pie" ChartSeries="@_series" ChartLabels="@Labels" ChartOptions="@_options"
+                      LegendPosition="Position.Right" Width="100%" Height="100%" MatchBoundsToSize="true" />
+        }
+    </div>
+}
+
+@code {
+    /// <summary>The slices in the legacy data order (rows of the google chart's table).</summary>
+    public static readonly string[] Labels = ["3º teste", "2º teste", "1º teste"];
+
+    /// <summary>The legacy <c>colors</c> option, per slice.</summary>
+    public static readonly string[] Palette = ["#ff0000", "#ffa500", "#008000"];
+
+    private readonly PieChartOptions _options = new() { ChartPalette = Palette, ShowLegend = true, ShowToolTips = true };
+
+    private ValidTryCountersResponse? _counters;
+
+    private List<ChartSeries<double>> _series = [];
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (Session.User?.HasRole(RoleNames.CanSeeDashboard) != true)
+        {
+            return;
+        }
+
+        var answer = await Jobs.ValidTryOnFirstTestCountersAsync(Time.GetLocalNow().Year);
+        if (answer is { IsSuccess: true, Value: { } counters })
+        {
+            _counters = counters;
+            _series = [new() { Name = "Valida no primeiro teste", Data = new double[] { counters.ThreeCounter, counters.TwoCounter, counters.OneCounter } }];
+        }
+    }
+}

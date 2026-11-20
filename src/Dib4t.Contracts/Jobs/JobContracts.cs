@@ -137,6 +137,9 @@ public sealed record JobCountsResponse(
     int AssemblyCount,
     int ForInvoicingCount);
 
+/// <summary><c>GET /api/job/getValidTryOnFirstTestCountersByYear/:year</c>: the dashboard's pie chart.</summary>
+public sealed record ValidTryCountersResponse(int OneCounter, int TwoCounter, int ThreeCounter);
+
 /// <summary><c>PATCH /api/job/dueDate/:jobId</c> body (the date input's <c>yyyy-MM-dd</c>).</summary>
 public sealed record JobDueDateRequest(string DueDate);
 

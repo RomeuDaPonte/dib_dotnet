@@ -31,6 +31,14 @@ public interface IJobRepository
     Task<int> CountAsync(JobFilter filter, CancellationToken cancellationToken);
 
     /// <summary>
+    /// Legacy <c>getValidTryOnFirstTestCountersByYear</c>'s three counts: the jobs in "Para faturação" or "Faturada"
+    /// whose <c>startDate</c> is a date in <c>[fromTime, toTime)</c> (JavaScript time values) and whose
+    /// <c>assemblyStatistic.validTryOnFirstTest</c> is the text "1", "2" or "3" (MongoDB equality: a number 1 is not
+    /// "1"; a missing, <c>null</c> or text <c>startDate</c> is in no range).
+    /// </summary>
+    Task<ValidTryCounters> CountValidTryOnFirstTestAsync(long fromTime, long toTime, CancellationToken cancellationToken);
+
+    /// <summary>
     /// Legacy <c>getByBudgetNumber</c>: the first job (natural order) whose budget has <paramref name="budgetNumber"/>,
     /// with its budget (not its client or author); <c>null</c> when none.
     /// </summary>
@@ -66,6 +74,9 @@ public enum JobPopulation
     /// <summary><c>populate({ path: "budget", populate: [client, madeBy] })</c>: <c>getById</c>.</summary>
     BudgetClientAndAuthor,
 }
+
+/// <summary>The dashboard's counters: jobs whose assembly was valid on the first, second or third test.</summary>
+public sealed record ValidTryCounters(int One, int Two, int Three);
 
 /// <summary>Which jobs a list or count reads.</summary>
 /// <param name="States">Only these states; <c>null</c> = every state.</param>

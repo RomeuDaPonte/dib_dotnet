@@ -54,6 +54,12 @@ public static class Fixtures
     /// </summary>
     public static string JobPrintGolden => Path.Combine(Root, "legacy", "jobs", "job-print-golden.json");
 
+    /// <summary>
+    /// The dashboard counters of the legacy code (<c>getValidTryOnFirstTestCountersByYear</c> run verbatim with Mongoose's
+    /// cast of its filter, as is and with D10 fixed; tools/legacy/job-dashboard-golden.js).
+    /// </summary>
+    public static string JobDashboardGolden => Path.Combine(Root, "legacy", "jobs", "job-dashboard-golden.json");
+
     /// <summary>The job details page's cost summary and table by the legacy front-end code (tools/legacy/job-costs-golden.js).</summary>
     public static string JobCostsGolden => Path.Combine(Root, "legacy", "jobs", "job-costs-golden.json");
 

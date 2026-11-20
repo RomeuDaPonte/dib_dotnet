@@ -57,6 +57,9 @@
 #   job-print-golden     write the job label print contract golden file (job-print-golden.js): the unchanged legacy
 #                        POST print/:budgetId handler and PrinterSettings.print with a telnet recorder (and with D23
 #                        applied), offline → tests/fixtures/legacy/jobs/ (PLAN.md §5, §6)
+#   job-dashboard-golden write the dashboard counters golden file (job-dashboard-golden.js): the unchanged legacy
+#                        getValidTryOnFirstTestCountersByYear handler with Mongoose's cast of its filter (and with
+#                        D10 applied), offline → tests/fixtures/legacy/jobs/ (PLAN.md §6, §7.3)
 #   job-costs-golden     write the job cost table golden file (job-costs-golden.js): the unchanged legacy front-end
 #                        taskHelper.js and row hook run in Node on 135 scenarios, offline → tests/fixtures/legacy/jobs/
 #   pdf-samples          write reference budget PDFs (pdf-samples.js) by running the unchanged legacy
@@ -360,6 +363,12 @@ cmd_job_print_golden() {
   (cd "$REPO_ROOT" && DIB4T_LEGACY_ROOT="$LEGACY_ROOT" node "$SCRIPT_DIR/job-print-golden.js")
 }
 
+cmd_job_dashboard_golden() {
+  ensure_node_modules "$BACKEND_DIR"
+  log "writing the dashboard counters golden file from the legacy code (offline)"
+  (cd "$REPO_ROOT" && DIB4T_LEGACY_ROOT="$LEGACY_ROOT" node "$SCRIPT_DIR/job-dashboard-golden.js")
+}
+
 cmd_job_costs_golden() {
   ensure_node_modules "$FRONTEND_DIR"
   log "writing the job cost table golden file from the legacy front-end code (offline)"
@@ -441,6 +450,7 @@ case "${1:-}" in
   job-board-golden) cmd_job_board_golden ;;
   job-details-golden) cmd_job_details_golden ;;
   job-print-golden) cmd_job_print_golden ;;
+  job-dashboard-golden) cmd_job_dashboard_golden ;;
   job-costs-golden) cmd_job_costs_golden ;;
   pdf-golden) cmd_pdf_golden ;;
   pdf-samples) cmd_pdf_samples ;;

@@ -118,6 +118,16 @@ public static partial class JsDate
             $"{yearText}-{month:00}-{day:00}T{rest / 3_600_000:00}:{rest / 60_000 % 60:00}:{rest / 1000 % 60:00}.{rest % 1000:000}Z");
     }
 
+    /// <summary>JavaScript <c>getUTCFullYear()</c> of a time value (any year a time value can hold).</summary>
+    public static long UtcYear(long time)
+    {
+        var days = Math.DivRem(time, MillisecondsPerDay, out var rest);
+        return CivilFromDays(rest < 0 ? days - 1 : days).Year;
+    }
+
+    /// <summary>JavaScript <c>Date.UTC(year, 0)</c>: 1 January 00:00 UTC of <paramref name="year"/> as a time value.</summary>
+    public static long StartOfUtcYear(long year) => DaysFromCivil(year, 1) * MillisecondsPerDay;
+
     /// <summary>The time value as a UTC <see cref="DateTime"/>, or <c>null</c> outside the years 1–9999 .NET can hold.</summary>
     public static DateTime? ToDateTime(long time)
     {

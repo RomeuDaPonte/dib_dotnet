@@ -65,19 +65,15 @@ public sealed partial class LegacyRunReplayTests(AppWithMongo app) : IClassFixtu
     };
 
     /// <summary>
-    /// The steps of <c>05-jobs.json</c> this version implements: job create (Phase 4 step 1), the budget/task routes on
-    /// the budgets with a job, the jobs board's routes (step 2: statistics, due date, state, priority, the reads) and
-    /// the job details page's (step 3: statistics dates, registered values, single property, verifications) and the
-    /// label print (step 4: outside Production, the legacy 400); the other job steps are routes of later steps (the
-    /// dashboard counters): their recorded document changes are written, so the following steps run on the legacy state.
+    /// The steps of <c>05-jobs.json</c>: job create (Phase 4 step 1), the budget/task routes on the budgets with a job,
+    /// the jobs board's routes (step 2: statistics, due date, state, priority, the reads), the job details page's
+    /// (step 3: statistics dates, registered values, single property, verifications), the label print (step 4: outside
+    /// Production, the legacy 400) and the dashboard counters (Phase 5 step 1; D10 changes nothing here: the recorded
+    /// jobs start today, not on 31 December): every step of the file is a route of this version.
     /// </summary>
     private static bool IsImplementedJobStep(string id) =>
-        id.StartsWith("budget-", StringComparison.Ordinal) || id.StartsWith("job-create", StringComparison.Ordinal)
-        || id.StartsWith("blocked-", StringComparison.Ordinal) || id.StartsWith("stats-", StringComparison.Ordinal)
-        || (id.StartsWith("job-", StringComparison.Ordinal) && !LaterJobSteps.Any(p => id.StartsWith(p, StringComparison.Ordinal)));
-
-    private static readonly string[] LaterJobSteps =
-        ["job-valid-try"];
+        id.StartsWith("budget-", StringComparison.Ordinal) || id.StartsWith("job-", StringComparison.Ordinal)
+        || id.StartsWith("blocked-", StringComparison.Ordinal) || id.StartsWith("stats-", StringComparison.Ordinal);
 
     private readonly Dictionary<string, string> _bound = new(StringComparer.Ordinal);
     private readonly Dictionary<string, string> _tokens = new(StringComparer.Ordinal);
@@ -115,8 +111,8 @@ public sealed partial class LegacyRunReplayTests(AppWithMongo app) : IClassFixtu
             }
         }
 
-        replayed.Should().HaveCount(192, "every recorded step of the six files but the allow-listed, the D24 ones, the verifier ones and the later job routes");
-        applied.Should().HaveCount(7, "the three D24 imports, the two verifications without a verifier and the 2 steps of the dashboard counters");
+        replayed.Should().HaveCount(194, "every recorded step of the six files but the allow-listed, the D24 ones and the verifier ones");
+        applied.Should().HaveCount(5, "the three D24 imports and the two verifications without a verifier");
     }
 
     private async Task ReplayAsync(JsonElement step, bool ordered)

@@ -111,6 +111,25 @@ internal sealed class MongoJobRepository(IMongoDatabase database) : IJobReposito
         return (int)await _raw.CountDocumentsAsync(Filter(filter), cancellationToken: cancellationToken);
     }
 
+    public async Task<ValidTryCounters> CountValidTryOnFirstTestAsync(long fromTime, long toTime, CancellationToken cancellationToken)
+    {
+        // Legacy: three Job.find({ state: { $in }, startDate: { $gte, $lte }, "assemblyStatistic.validTryOnFirstTest": "n" })
+        // .countDocuments(), the range being D10's [from, to) here.
+        var counts = new int[3];
+        for (var i = 0; i < counts.Length; i++)
+        {
+            var filter = new BsonDocument
+            {
+                { "state", new BsonDocument("$in", new BsonArray { JobStates.ForInvoicing, JobStates.Billed }) },
+                { "startDate", new BsonDocument { { "$gte", new BsonDateTime(fromTime) }, { "$lt", new BsonDateTime(toTime) } } },
+                { "assemblyStatistic.validTryOnFirstTest", (i + 1).ToString(System.Globalization.CultureInfo.InvariantCulture) },
+            };
+            counts[i] = (int)await _raw.CountDocumentsAsync(filter, cancellationToken: cancellationToken);
+        }
+
+        return new ValidTryCounters(counts[0], counts[1], counts[2]);
+    }
+
     public async Task<PopulatedJob?> FindByBudgetNumberAsync(string budgetNumber, CancellationToken cancellationToken)
     {
         // Legacy: Job.find().populate("budget") and the first job (natural order) whose budget has the number.

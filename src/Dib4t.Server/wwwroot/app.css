@@ -1476,3 +1476,24 @@ body {
 .loss {
   color: red;
 }
+
+/* Dashboard (legacy dashboardIndex.jsx: a fixed height of 600px): the pie scales to the page width (its SVG keeps
+   its aspect ratio) within MudChart's 350px box (PLAN.md §8.4 rule 8). The legend is on the right as legacy, below the
+   pie when the chart is narrow (phones, zoom), so nothing scrolls sideways. */
+.dashboard-chart {
+  container-type: inline-size;
+  width: 100%;
+  max-width: 960px;
+  margin: 0 auto;
+}
+
+@container (max-width: 36rem) {
+  .dashboard-chart .mud-chart-legend-right {
+    flex-direction: column;
+  }
+
+  .dashboard-chart .mud-chart-legend-right .mud-chart-legend {
+    flex-direction: row;
+    margin-left: 0;
+  }
+}
