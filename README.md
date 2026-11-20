@@ -68,8 +68,13 @@ to the log (`Registos`, category `Printer`, "would send: …").
 | `LabelPrinter__Enabled` | `true` in Production | `false` runs Production without printing (side-by-side run, PLAN.md §4.7) |
 | `LabelPrinter__ConnectTimeoutMilliseconds`, `LabelPrinter__SendTimeoutMilliseconds` | `1500`, `2000` | |
 
-A printer that cannot be reached is logged as an error and the job is still created (as legacy). Tests use an in-test
-TCP listener, never a real printer.
+"Imprimir" (budget row menu and jobs board options menu, `POST /api/job/print/:budgetId`) prints the labels of a
+job again: the ticked templates (Produção, Maquinação) on every printer of that template. As legacy, it works only in
+Production; elsewhere it answers "Só funciona em produção!". With `LabelPrinter__Enabled=false` it answers as usual and
+only logs the labels.
+
+A printer that cannot be reached is logged as an error and the job is still created (as legacy); "Imprimir" goes on
+with the other printers. Tests use an in-test TCP listener, never a real printer.
 
 ## Before every commit
 

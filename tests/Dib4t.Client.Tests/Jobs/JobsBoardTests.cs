@@ -167,11 +167,39 @@ public sealed class JobsBoardTests : IAsyncDisposable
         var board = await RenderBoardAsync();
         board.WaitForAssertion(() => Numbers(board).Should().Equal("26-0001", "26-0002"));
 
-        await MenuAsync(board, "Opções de 26-0002", "Prioritária", expected: ["Prioritária", "Intermédia", "Não prioritária"]);
+        await MenuAsync(board, "Opções de 26-0002", "Prioritária", expected: ["Prioritária", "Intermédia", "Não prioritária", "Imprimir"]);
         board.WaitForAssertion(() => Numbers(board).Should().Equal(["26-0001", "26-0002"], "both high now: by due date"));
         await board.Find("button[aria-label='Copiar caminho de 26-0001']").ClickAsync(new MouseEventArgs());
 
         await _clipboard.Received(1).CopyAsync(@"D:\NAS\Obras\2026\Metalúrgica do Ave\26-0001 - Máquina 26-0001\CAD");
+    }
+
+    [Fact]
+    public async Task Imprimir_sends_the_ticked_templates_for_the_rows_budget_and_closes()
+    {
+        _jobs.PrintLabelsAsync("b-j2", Arg.Any<PrintLabelsRequest>()).Returns(
+            ApiResult.Failure<string>(HttpStatusCode.BadRequest, "Configurações de impressora para maquinação não encontradas"),
+            ApiResult.Success("ok"));
+        var board = await RenderBoardAsync();
+        board.WaitForAssertion(() => Numbers(board).Should().HaveCount(2));
+
+        await MenuAsync(board, "Opções de 26-0002", "Imprimir");
+        _dialogs.WaitForAssertion(() => _dialogs.Markup.Should().Contain("Imprimir etiquetas"));
+        _dialogs.FindAll(".jobs-print-row").Select(r => r.TextContent.Trim()).Should().Equal("Produção", "Maquinação");
+        _dialogs.FindAll(".jobs-print-row input[type=checkbox]").Should().AllSatisfy(i => i.HasAttribute("checked").Should().BeTrue("both ticked (legacy)"));
+        await _dialogs.FindAll(".jobs-print-row input[type=checkbox]")[0].ChangeAsync(new ChangeEventArgs { Value = false });
+        await _dialogs.FindAll("button").First(b => b.TextContent.Trim() == "Imprimir").ClickAsync(new MouseEventArgs());
+
+        await _jobs.Received(1).PrintLabelsAsync("b-j2", new PrintLabelsRequest(Maquinacao: true, Producao: false));
+        Snackbar.ShownSnackbars.Should().Contain(s => s.Message == "Configurações de impressora para maquinação não encontradas" && s.Severity == Severity.Error);
+        _dialogs.WaitForAssertion(() => _dialogs.Markup.Should().NotContain("Imprimir etiquetas", "legacy closes the dialog after a refusal too"));
+
+        await MenuAsync(board, "Opções de 26-0002", "Imprimir");
+        _dialogs.WaitForAssertion(() => _dialogs.Markup.Should().Contain("Imprimir etiquetas"));
+        await _dialogs.FindAll("button").First(b => b.TextContent.Trim() == "Imprimir").ClickAsync(new MouseEventArgs());
+
+        await _jobs.Received(1).PrintLabelsAsync("b-j2", new PrintLabelsRequest(Maquinacao: true, Producao: true));
+        Snackbar.ShownSnackbars.Should().Contain(s => s.Message == "A imprimir..");
     }
 
     [Fact]

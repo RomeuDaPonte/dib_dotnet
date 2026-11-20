@@ -254,7 +254,7 @@ public sealed class BudgetsPageTests : IAsyncDisposable
         BudgetList.Menu(true, true, false, all).Should().Equal(BudgetMenuItem.Pdf, BudgetMenuItem.Clone, BudgetMenuItem.NewRevision, BudgetMenuItem.CreateJob);
         BudgetList.Menu(true, true, true, all).Should().Equal(BudgetMenuItem.Pdf, BudgetMenuItem.JobDetails, BudgetMenuItem.Print, BudgetMenuItem.Clone);
         BudgetList.Menu(true, true, false).Should().Equal(BudgetMenuItem.Pdf, BudgetMenuItem.Clone, BudgetMenuItem.NewRevision, BudgetMenuItem.CreateJob);
-        BudgetList.Menu(true, true, true).Should().Equal([BudgetMenuItem.Pdf, BudgetMenuItem.JobDetails, BudgetMenuItem.Clone], "\"Imprimir\" comes with Phase 4 step 4");
+        BudgetList.Menu(true, true, true).Should().Equal(BudgetMenuItem.Pdf, BudgetMenuItem.JobDetails, BudgetMenuItem.Print, BudgetMenuItem.Clone);
 
         BudgetList.Date(new DateTime(2026, 5, 24, 23, 30, 0, DateTimeKind.Utc), Lisbon).Should().Be("25/05/2026");
         BudgetForm.FilterClients([Metal, Cortica], "cortica").Should().Equal(Cortica);
@@ -354,6 +354,21 @@ public sealed class BudgetsPageTests : IAsyncDisposable
         await MenuAsync(table, "Opções de 26-0002 R0", "Detalhes obra");
 
         _context.Services.GetRequiredService<NavigationManager>().Uri.Should().EndWith("/landing/job/5f1e9a2b3c4d5e6f70860001");
+    }
+
+    [Fact]
+    public async Task Imprimir_opens_the_label_dialog_for_the_rows_budget()
+    {
+        _jobs.PrintLabelsAsync("b2", Arg.Any<PrintLabelsRequest>()).Returns(ApiResult.Success("ok"));
+        var table = await RenderTableAsync();
+
+        await MenuAsync(table, "Opções de 26-0002 R0", "Imprimir");
+        _dialogs.WaitForAssertion(() => _dialogs.Markup.Should().Contain("Imprimir etiquetas"));
+        await _dialogs.FindAll("button").First(b => b.TextContent.Trim() == "Imprimir").ClickAsync(new MouseEventArgs());
+
+        await _jobs.Received(1).PrintLabelsAsync("b2", new PrintLabelsRequest(Maquinacao: true, Producao: true));
+        Snackbar.ShownSnackbars.Should().Contain(s => s.Message == "A imprimir.." && s.Severity == Severity.Success);
+        _dialogs.WaitForAssertion(() => _dialogs.Markup.Should().NotContain("Imprimir etiquetas"));
     }
 
     [Fact]

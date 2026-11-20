@@ -77,8 +77,8 @@ public static class BudgetList
     /// <summary>
     /// The row menu (legacy <c>budgetOptions.jsx</c>), in its order: "Obter pdf" (complete), "Detalhes obra" and
     /// "Imprimir" (has a job), "Clonar" (always), "Nova revisão" (complete, no job), "Criar obra" (complete, PDF
-    /// downloaded, no job). <paramref name="available"/> leaves out the actions of later steps ("Imprimir": Phase 4
-    /// step 4) until they exist.
+    /// downloaded, no job). <paramref name="available"/> leaves out actions this version of the app does not have
+    /// (none since Phase 4 step 4).
     /// </summary>
     public static IReadOnlyList<BudgetMenuItem> Menu(bool complete, bool wasPdfDownloaded, bool hasJob, ISet<BudgetMenuItem>? available = null)
     {
@@ -111,7 +111,7 @@ public static class BudgetList
 
     /// <summary>The menu actions this version of the app has.</summary>
     public static ISet<BudgetMenuItem> Available { get; } =
-        new HashSet<BudgetMenuItem> { BudgetMenuItem.Pdf, BudgetMenuItem.JobDetails, BudgetMenuItem.Clone, BudgetMenuItem.NewRevision, BudgetMenuItem.CreateJob };
+        new HashSet<BudgetMenuItem> { BudgetMenuItem.Pdf, BudgetMenuItem.JobDetails, BudgetMenuItem.Print, BudgetMenuItem.Clone, BudgetMenuItem.NewRevision, BudgetMenuItem.CreateJob };
 
     /// <summary>Legacy <c>generatePdff</c>: <c>Prop - {number}.pdf</c>, <c>Prop - {number} R{revision}.pdf</c> for a revision.</summary>
     public static string PdfFileName(string? budgetNumber, double revision) =>

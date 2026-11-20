@@ -93,6 +93,9 @@
                                     {
                                         <MudMenuItem Icon="@icon" OnClick="@(() => ChangePriorityAsync(context, priority))">@label</MudMenuItem>
                                     }
+                                    <MudDivider />
+                                    @* legacy: budgetId = the row's budget._id; a job without its budget sends "undefined" (the server's 400 text) *@
+                                    <MudMenuItem Icon="@Icons.Material.Filled.LocalPrintshop" OnClick="@(() => _printBudgetId = context.BudgetId ?? "undefined")">Imprimir</MudMenuItem>
                                 </MudMenu>
                             </MudTooltip>
                         }
@@ -136,6 +139,7 @@
 <JobStatisticsDialog Form="_statistics" OnSaved="StatisticsSavedAsync" OnRefused="StatisticsRefusedAsync" OnClosed="() => _statistics = null" />
 
 <JobCommentsDialog Form="_comments" Number="@_commentsNumber" OnSaved="CommentsSavedAsync" OnClosed="() => _comments = null" />
+<PrintLabelsDialog BudgetId="@_printBudgetId" OnClosed="() => _printBudgetId = null" />
 
 @code {
     private static readonly IReadOnlyList<(int Value, string Text)> RowsPerPageOptions = [(5, "5"), (10, "10"), (25, "25")];
@@ -147,6 +151,7 @@
     private JobCountsResponse? _counts;
     private JobStatisticsForm? _statistics;
     private JobCommentsForm? _comments;
+    private string? _printBudgetId;
     private string? _commentsNumber;
     private int _tab;
     private bool _dense = true;

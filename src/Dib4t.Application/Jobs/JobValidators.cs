@@ -31,6 +31,10 @@ public static class JobValidators
     public static IReadOnlyList<string> StatisticsStates { get; } =
         [JobStates.Development, JobStates.OnApproval, JobStates.Approved, JobStates.Machining, JobStates.Assembly, JobStates.ForInvoicing, JobStates.Billed];
 
+    private static readonly JoiObjectSchema PrintSchema = new(
+        ("maquinacao", JoiBoolean.Create().Required()),
+        ("producao", JoiBoolean.Create().Required()));
+
     private static readonly JoiObjectSchema StatesSchema = new(("state", JoiString.Create().Valid(JobStates.All).Required()));
 
     private static readonly JoiObjectSchema PrioritySchema = new(("priority", JoiString.Create().Valid(JobPriorities.All).Required()));
@@ -114,6 +118,26 @@ public static class JobValidators
         var schema = new JoiObjectSchema((name, BudgetValidators.ObjectIdRule()));
         var parameters = JsonSerializer.SerializeToElement(new Dictionary<string, string?> { [name] = value });
         return schema.Validate(parameters) is { } message ? Error.Validation(message) : value!.ToLowerInvariant();
+    }
+
+    /// <summary>
+    /// <c>validatePrint</c> (both keys required, Joi booleans: <c>true</c>/<c>false</c> or those texts in any case), then
+    /// what the route reads from the <b>original</b> body (Joi's conversion is not kept): "Escolhe um template" only when
+    /// both are the JSON <c>false</c>, and each template by JavaScript truthiness, so the text <c>"false"</c> prints.
+    /// </summary>
+    public static Result<LabelSelection> ValidatePrint(JsonElement body)
+    {
+        if (PrintSchema.Validate(body) is { } message)
+        {
+            return Error.Validation(message);
+        }
+
+        var properties = JsObject.Properties(body);
+        var (machining, production) = (properties["maquinacao"], properties["producao"]);
+        return new LabelSelection(
+            Production: MongooseCast.IsTruthy(production),
+            Machining: MongooseCast.IsTruthy(machining),
+            NoneChosen: machining.ValueKind == JsonValueKind.False && production.ValueKind == JsonValueKind.False);
     }
 
     /// <summary><c>validateStates</c> of a body (<c>PATCH state</c>) or of the route (<c>getByState/:state</c>): the state.</summary>
@@ -216,3 +240,9 @@ public sealed record NewJobInput(
     /// <summary>Why the legacy save would refuse the job (D26), or <c>null</c>.</summary>
     public string? Refusal { get; init; }
 }
+
+/// <summary>The templates <c>POST print/:budgetId</c> prints (<see cref="JobValidators.ValidatePrint"/>).</summary>
+/// <param name="Production">Print on every <c>producao</c> printer.</param>
+/// <param name="Machining">Then on every <c>maquinacao</c> printer.</param>
+/// <param name="NoneChosen">Both sent as <c>false</c> ("Escolhe um template").</param>
+public sealed record LabelSelection(bool Production, bool Machining, bool NoneChosen);

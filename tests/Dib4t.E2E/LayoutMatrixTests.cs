@@ -162,6 +162,20 @@ public sealed class LayoutMatrixTests(E2EHarness harness) : E2ETest(harness)
             ("Observações", page.Locator("#job-comments")),
             ("Controlo de produto", page.Locator(".job-checks").First.Locator("input[type=checkbox]").First),
         ], Open: OpenJobDetailsAsync),
+        new("job-print-dialog", "/landing/budgets", SignedIn: true, Ready: ".budgets-table tbody tr td", page =>
+        [
+            ("Produção", page.Locator(".jobs-print-row").Filter(new() { HasTextString = "Produção" }).Locator("input[type=checkbox]")),
+            ("Maquinação", page.Locator(".jobs-print-row").Filter(new() { HasTextString = "Maquinação" }).Locator("input[type=checkbox]")),
+            ("Cancelar", page.Locator(".mud-dialog").GetByRole(AriaRole.Button, new() { Name = "Cancelar", Exact = true })),
+            ("Imprimir", page.Locator(".mud-dialog").GetByRole(AriaRole.Button, new() { Name = "Imprimir", Exact = true })),
+        ], Open: async page =>
+        {
+            await page.Locator(".budgets-table tbody tr").Filter(new() { Has = page.Locator(".budgets-has-job") }).First
+                .Locator("button[aria-label^='Opções de']").ClickAsync();
+            await page.GetByRole(AriaRole.Menuitem, new() { Name = "Imprimir" }).ClickAsync();
+            await page.Locator(".jobs-print-row").First.WaitForAsync();
+            await page.Mouse.MoveAsync(0, 0);
+        }, Scope: ".mud-dialog"),
         new("budget-details-import", "/landing/budgets", SignedIn: true, Ready: ".budgets-table tbody tr td", page =>
         [
             ("Nª Orçamento", page.Locator("#import-number")),

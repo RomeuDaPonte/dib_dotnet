@@ -1,0 +1,82 @@
+@inject IJobApi JobApi
+@inject ISnackbar Snackbar
+
+@* Legacy components/budgets/pintBudgetModel.jsx (from the budget row menu and the jobs board's options menu): "Imprimir
+   etiquetas", a checkbox per template (Produção, then Maquinação; both ticked), Cancelar / Imprimir. Imprimir sends
+   { maquinacao, producao } to POST /api/job/print/:budgetId; "A imprimir.." on success, the server's text otherwise,
+   and the dialog closes either way (legacy). *@
+<MudDialog Visible="@(BudgetId is not null)" VisibleChanged="VisibleChanged" Options="Options" Class="settings-dialog jobs-print-dialog"
+           AriaLabel="Imprimir etiquetas">
+    <TitleContent><h2 class="jobs-dialog-title">Imprimir etiquetas</h2></TitleContent>
+    <DialogContent>
+        <div class="jobs-print-row">
+            <span>@PrintTemplateLabels.Production</span>
+            <MudCheckBox T="bool" @bind-Value="_production" Color="Color.Primary" aria-label="@PrintTemplateLabels.Production" />
+        </div>
+        <div class="jobs-print-row">
+            <span>@PrintTemplateLabels.Machining</span>
+            <MudCheckBox T="bool" @bind-Value="_machining" Color="Color.Primary" aria-label="@PrintTemplateLabels.Machining" />
+        </div>
+    </DialogContent>
+    <DialogActions>
+        <MudButton Color="Color.Primary" OnClick="CloseAsync">Cancelar</MudButton>
+        <MudButton Color="Color.Primary" Disabled="_printing" OnClick="PrintAsync">Imprimir</MudButton>
+    </DialogActions>
+</MudDialog>
+
+@code {
+    private static readonly DialogOptions Options = new() { MaxWidth = MaxWidth.ExtraSmall, FullWidth = true, CloseOnEscapeKey = true };
+
+    private bool _production = true;
+    private bool _machining = true;
+    private bool _printing;
+    private string? _openFor;
+
+    /// <summary>The budget whose job's labels to print; <c>null</c> closes the dialog.</summary>
+    [Parameter]
+    public string? BudgetId { get; set; }
+
+    [Parameter]
+    public EventCallback OnClosed { get; set; }
+
+    protected override void OnParametersSet()
+    {
+        if (BudgetId != _openFor)
+        {
+            // each opening starts with both templates ticked (the legacy default)
+            (_openFor, _production, _machining) = (BudgetId, true, true);
+        }
+    }
+
+    private async Task PrintAsync()
+    {
+        if (BudgetId is not { } budgetId || _printing)
+        {
+            return;
+        }
+
+        _printing = true;
+        try
+        {
+            var printed = await JobApi.PrintLabelsAsync(budgetId, new PrintLabelsRequest(Maquinacao: _machining, Producao: _production));
+            if (printed.IsSuccess)
+            {
+                Snackbar.Add("A imprimir..", Severity.Success);
+            }
+            else if (!printed.IsUnexpected)
+            {
+                Snackbar.Add(printed.ErrorText!, Severity.Error);
+            }
+        }
+        finally
+        {
+            _printing = false;
+        }
+
+        await CloseAsync();
+    }
+
+    private Task VisibleChanged(bool visible) => visible ? Task.CompletedTask : CloseAsync();
+
+    private Task CloseAsync() => OnClosed.InvokeAsync();
+}

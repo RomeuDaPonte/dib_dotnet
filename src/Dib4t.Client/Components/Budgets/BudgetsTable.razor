@@ -122,6 +122,7 @@
 <BudgetDialog Form="_form" OnSaved="Saved" OnClosed="() => _form = null" />
 
 <NewJobDialog Form="_jobForm" OnCreated="JobCreated" OnClosed="() => _jobForm = null" />
+<PrintLabelsDialog BudgetId="@_printBudgetId" OnClosed="() => _printBudgetId = null" />
 
 @code {
     private static readonly IReadOnlyList<(int Value, string Text)> RowsPerPageOptions = [(5, "5"), (10, "10"), (25, "25")];
@@ -138,6 +139,7 @@
     private int _rowsPerPage = 25;
     private BudgetForm? _form;
     private JobForm? _jobForm;
+    private string? _printBudgetId;
 
     /// <summary>The browser's zone (legacy <c>toLocaleDateString</c>); tests set it.</summary>
     [Parameter]
@@ -272,6 +274,9 @@
                     Snackbar.Add(jobId.ErrorText!, Severity.Error);
                 }
 
+                break;
+            case BudgetMenuItem.Print:
+                _printBudgetId = row.Id;
                 break;
             case BudgetMenuItem.CreateJob:
                 _jobForm = JobForm.For(row.Id, row.Source.Total, row.Source.DaysNeededToDoTheWork, Time.GetUtcNow(), Zone);

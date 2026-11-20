@@ -67,9 +67,9 @@ public sealed partial class LegacyRunReplayTests(AppWithMongo app) : IClassFixtu
     /// <summary>
     /// The steps of <c>05-jobs.json</c> this version implements: job create (Phase 4 step 1), the budget/task routes on
     /// the budgets with a job, the jobs board's routes (step 2: statistics, due date, state, priority, the reads) and
-    /// the job details page's (step 3: statistics dates, registered values, single property, verifications); the
-    /// other job steps are routes of later steps (print, the dashboard counters): their recorded document changes are
-    /// written, so the following steps run on the legacy state.
+    /// the job details page's (step 3: statistics dates, registered values, single property, verifications) and the
+    /// label print (step 4: outside Production, the legacy 400); the other job steps are routes of later steps (the
+    /// dashboard counters): their recorded document changes are written, so the following steps run on the legacy state.
     /// </summary>
     private static bool IsImplementedJobStep(string id) =>
         id.StartsWith("budget-", StringComparison.Ordinal) || id.StartsWith("job-create", StringComparison.Ordinal)
@@ -77,7 +77,7 @@ public sealed partial class LegacyRunReplayTests(AppWithMongo app) : IClassFixtu
         || (id.StartsWith("job-", StringComparison.Ordinal) && !LaterJobSteps.Any(p => id.StartsWith(p, StringComparison.Ordinal)));
 
     private static readonly string[] LaterJobSteps =
-        ["job-print", "job-valid-try"];
+        ["job-valid-try"];
 
     private readonly Dictionary<string, string> _bound = new(StringComparer.Ordinal);
     private readonly Dictionary<string, string> _tokens = new(StringComparer.Ordinal);
@@ -115,8 +115,8 @@ public sealed partial class LegacyRunReplayTests(AppWithMongo app) : IClassFixtu
             }
         }
 
-        replayed.Should().HaveCount(191, "every recorded step of the six files but the allow-listed, the D24 ones, the verifier ones and the later job routes");
-        applied.Should().HaveCount(8, "the three D24 imports, the two verifications without a verifier and the 3 steps of later job routes (print, dashboard)");
+        replayed.Should().HaveCount(192, "every recorded step of the six files but the allow-listed, the D24 ones, the verifier ones and the later job routes");
+        applied.Should().HaveCount(7, "the three D24 imports, the two verifications without a verifier and the 2 steps of the dashboard counters");
     }
 
     private async Task ReplayAsync(JsonElement step, bool ordered)

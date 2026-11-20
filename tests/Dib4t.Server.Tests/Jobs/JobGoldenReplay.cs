@@ -24,7 +24,7 @@ public abstract partial class JobGoldenReplay
 
     private static readonly JsonWriterSettings Canonical = new() { OutputMode = JsonOutputMode.CanonicalExtendedJson };
 
-    private readonly AppWithGoldenClock _app;
+    private readonly AppWithMongo _app;
 
     private readonly Dictionary<string, string> _ids;
 
@@ -32,7 +32,7 @@ public abstract partial class JobGoldenReplay
 
     private readonly HttpClient _client;
 
-    protected JobGoldenReplay(AppWithGoldenClock app, JsonElement golden)
+    protected JobGoldenReplay(AppWithMongo app, JsonElement golden)
     {
         _app = app;
         Golden = golden;

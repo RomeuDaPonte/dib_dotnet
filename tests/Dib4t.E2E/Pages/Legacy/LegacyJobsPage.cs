@@ -33,6 +33,22 @@ public sealed class LegacyJobsPage(IPage page) : IJobsPage
             response => response.Url.Contains("/api/job/changeJobPriority/", StringComparison.OrdinalIgnoreCase));
     }
 
+    public async Task<PrintOutcome> PrintLabelsAsync(string budgetNumber, bool production, bool machining)
+    {
+        await RowOf(budgetNumber).GetByRole(AriaRole.Button, new() { Name = "more" }).Nth(1).ClickAsync();
+        await page.Locator("#long-menu:visible").GetByRole(AriaRole.Menuitem, new() { Name = "Imprimir", Exact = true }).ClickAsync();
+        var dialog = page.GetByRole(AriaRole.Dialog).Filter(new() { HasTextString = "Imprimir etiquetas" });
+        await dialog.WaitForAsync();
+        await dialog.Locator("input[name='Produção']").SetCheckedAsync(production);
+        await dialog.Locator("input[name='Maquinação']").SetCheckedAsync(machining);
+        var response = await page.RunAndWaitForResponseAsync(
+            () => dialog.GetByRole(AriaRole.Button, new() { Name = "Imprimir", Exact = true }).ClickAsync(),
+            r => r.Url.Contains("/api/job/print/", StringComparison.OrdinalIgnoreCase));
+        await dialog.WaitForAsync(new() { State = WaitForSelectorState.Hidden });
+        var toast = page.Locator(".Toastify__toast-body").Last; // without the close button's ✖
+        return new PrintOutcome(response.Request.PostData, response.Status, await response.TextAsync(), (await toast.InnerTextAsync()).Trim());
+    }
+
     private ILocator RowOf(string budgetNumber) =>
         page.Locator("[role=tabpanel]:not([hidden]) table tbody tr").Filter(new() { Has = page.GetByRole(AriaRole.Cell, new() { Name = budgetNumber, Exact = true }) });
 }

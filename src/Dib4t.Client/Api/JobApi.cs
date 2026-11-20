@@ -44,6 +44,9 @@ public interface IJobApi
     /// <summary><c>GET getByBudgetId/:budgetId</c>: the id of the budget's job ("Detalhes obra").</summary>
     Task<ApiResult<string>> FindIdByBudgetIdAsync(string budgetId);
 
+    /// <summary><c>POST print/:budgetId</c>: the labels of the budget's job ("Imprimir etiquetas"); the answer is the text "ok".</summary>
+    Task<ApiResult<string>> PrintLabelsAsync(string budgetId, PrintLabelsRequest templates);
+
     /// <summary><c>PATCH statisticsDates/:jobId</c> <c>{ forJobState, newDate }</c>: one state's end date (<c>yyyy-MM-dd</c>, or empty).</summary>
     Task<ApiResult<JobResponse<BudgetResponse>>> ChangeStatisticsDateAsync(string jobId, string forJobState, string newDate);
 
@@ -135,4 +138,7 @@ public sealed class JobApi(HttpClient http) : IJobApi
 
     private Task<ApiResult<JobResponse<BudgetResponse>>> Patch(string route, string jobId, IReadOnlyDictionary<string, object?> body) =>
         ApiCalls.SendAsync<JobResponse<BudgetResponse>>(http, HttpMethod.Patch, $"api/job/{route}/" + Uri.EscapeDataString(jobId), body);
+
+    public Task<ApiResult<string>> PrintLabelsAsync(string budgetId, PrintLabelsRequest templates) =>
+        ApiCalls.SendAsync<string>(http, HttpMethod.Post, "api/job/print/" + Uri.EscapeDataString(budgetId), templates, raw: true);
 }

@@ -11,11 +11,11 @@ namespace Dib4t.Server.Controllers;
 /// <c>/api/job</c> (legacy <c>routes/job.js</c>, PLAN.md §6), every route T (any signed-in user; legacy checks no role
 /// here). Create (with the production NAS move and labels, §5), the jobs board's routes (the statistics transition,
 /// due date, state (D1 fixed), priority, the reads) and the details page's (state dates (D17 fixed), registered values
-/// (D18 fixed), single property, verifications). Paths are case-insensitive, as in Express.
+/// (D18 fixed), single property, verifications) and the labels of the print dialog (Production only, §5). Paths are case-insensitive, as in Express.
 /// </summary>
 [Route("api/job")]
 [Authorize]
-public sealed class JobController(JobsService jobs) : LegacyControllerBase
+public sealed class JobController(JobsService jobs, IHostEnvironment environment) : LegacyControllerBase
 {
     private string? UserName => User.FindFirst(Dib4tClaims.Name)?.Value;
 
@@ -26,6 +26,23 @@ public sealed class JobController(JobsService jobs) : LegacyControllerBase
         var (body, error) = await ReadJsonBodyAsync();
         return error ?? Answer(await jobs.CreateAsync(body, UserName, cancellationToken),
             created => JobResponses.ToResponse(created.Job, BudgetResponses.ToResponse(created.Budget)));
+    }
+
+    /// <summary>
+    /// <c>POST print/:budgetId</c>: <c>"ok"</c> as text (legacy <c>res.send("ok")</c>). Outside the Production environment
+    /// it is the legacy 400 "Só funciona em produção!" (legacy <c>NODE_ENV !== "prod"</c>).
+    /// </summary>
+    [HttpPost("print/{budgetId}")]
+    public async Task<IActionResult> Print(string budgetId, CancellationToken cancellationToken)
+    {
+        var (body, error) = await ReadJsonBodyAsync();
+        if (error is not null)
+        {
+            return error;
+        }
+
+        var printed = await jobs.PrintLabelsAsync(budgetId, body, environment.IsProduction(), UserName, cancellationToken);
+        return printed.IsSuccess ? LegacyResults.Text(StatusCodes.Status200OK, printed.Value) : printed.Error.ToLegacyResult();
     }
 
     /// <summary>

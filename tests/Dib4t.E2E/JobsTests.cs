@@ -122,6 +122,47 @@ public sealed class JobsTests(E2EHarness harness) : E2ETest(harness)
     }
 
     /// <summary>
+    /// Label print (PLAN.md §5, §10 Phase 4 step 4): in both UIs, "Imprimir" in the options menu of the same seeded job,
+    /// "Produção" unticked, sends the same body to <c>POST /api/job/print/:budgetId</c> of the job's budget. Neither app
+    /// runs in Production, so both answer the legacy 400 "Só funciona em produção!", show it as the error toast, close
+    /// the dialog and change nothing (the printing itself is the golden replay in <c>Dib4t.Server.Tests</c>).
+    /// </summary>
+    [Fact]
+    public async Task Imprimir_in_both_uis_sends_the_same_request_and_shows_the_same_answer()
+    {
+        await Harness.LoadSeedAsync(Cancellation);
+        var seeded = Harness.Seed.ToSnapshot();
+        var target = BoardJob(seeded);
+        var number = seeded.Collections["budgets"].Single(b => b["_id"] == target["budget"])["budgetNumber"].AsString;
+        var outcomes = new List<PrintOutcome>();
+        var snapshots = new List<DbSnapshot>();
+        foreach (var app in Harness.Apps)
+        {
+            var session = await OpenAsync(app);
+            IJobsPage jobs = app == Harness.Legacy ? new LegacyJobsPage(session.Page) : new NewJobsPage(session.Page);
+            if (app == Harness.Legacy)
+            {
+                await new LegacyLoginPage(session.Page).GotoAsync();
+                await new LegacyLoginPage(session.Page).LoginAsync(FixtureUser, FixturePassword);
+            }
+            else
+            {
+                await new NewLoginPage(session.Page).GotoAsync();
+                await new NewLoginPage(session.Page).LoginAsync(FixtureUser, FixturePassword);
+            }
+
+            await jobs.GotoAsync("Desenvolvimento");
+            outcomes.Add(await jobs.PrintLabelsAsync(number, production: false, machining: true));
+            snapshots.Add(await app.SnapshotAsync(Cancellation));
+        }
+
+        outcomes[1].Should().Be(outcomes[0]);
+        outcomes[1].Should().Be(new PrintOutcome("""{"maquinacao":true,"producao":false}""", 400, "Só funciona em produção!", "Só funciona em produção!"));
+        snapshots[1].DiffFrom(seeded).Should().BeEmpty("nothing is written");
+        snapshots[0].DiffFrom(seeded).Should().BeEmpty();
+    }
+
+    /// <summary>
     /// A seeded development job on the first page of both tabs it is used in, whose budgeted development hours are its
     /// budget's (so the deviation the dialog computes is the one the server checks).
     /// </summary>

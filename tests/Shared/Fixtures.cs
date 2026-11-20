@@ -48,6 +48,12 @@ public static class Fixtures
 
     public static string JobDetailsGolden => Path.Combine(Root, "legacy", "jobs", "job-details-golden.json");
 
+    /// <summary>
+    /// The label print route of the legacy code (<c>POST print/:budgetId</c> and <c>PrinterSettings.print</c> run verbatim
+    /// with a telnet recorder; tools/legacy/job-print-golden.js).
+    /// </summary>
+    public static string JobPrintGolden => Path.Combine(Root, "legacy", "jobs", "job-print-golden.json");
+
     /// <summary>The job details page's cost summary and table by the legacy front-end code (tools/legacy/job-costs-golden.js).</summary>
     public static string JobCostsGolden => Path.Combine(Root, "legacy", "jobs", "job-costs-golden.json");
 

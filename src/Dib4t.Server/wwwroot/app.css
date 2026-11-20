@@ -1226,6 +1226,20 @@ body {
   font-weight: 500;
 }
 
+/* "Imprimir etiquetas" (legacy pintBudgetModel.jsx: a Grid row per template, the label at 10/12, the box at 2/12):
+   the label takes the room and wraps, the box stays at the end of the row. */
+.jobs-print-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.jobs-print-row > span {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
 .jobs-comments-toggle {
   display: flex;
   align-items: center;

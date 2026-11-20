@@ -125,6 +125,13 @@ internal sealed class MongoJobRepository(IMongoDatabase database) : IJobReposito
         return found is null ? null : (await PopulateAsync([found], JobPopulation.Budget, cancellationToken))[0];
     }
 
+    public async Task<JobForLabels?> FindForLabelsAsync(string budgetId, CancellationToken cancellationToken)
+    {
+        var found = await _raw.Find(new BsonDocument("budget", ObjectId.Parse(budgetId)))
+            .Project(Builders<BsonDocument>.Projection.Include("_id").Include("startDate")).Limit(1).FirstOrDefaultAsync(cancellationToken);
+        return found is null ? null : new JobForLabels(found["_id"].ToString()!, StoredDate(found, "startDate"));
+    }
+
     public async Task<string?> FindIdByBudgetIdAsync(string budgetId, CancellationToken cancellationToken)
     {
         var found = await _raw.Find(new BsonDocument("budget", ObjectId.Parse(budgetId)))

@@ -47,6 +47,9 @@ function stubModule(request, fromFile, exportsValue) {
 }
 
 const contacted = [];
+// A golden file that prints (job-print-golden.js) sets printerHook.record(kind, value) to record the printer calls;
+// unset, a printer contact is an error of the golden file (`contacted`).
+const printerHook = { record: null };
 class SshRecorder {
   exec(command) {
     contacted.push("ssh " + command);
@@ -55,9 +58,17 @@ class SshRecorder {
 }
 stubModule("ssh2-promise", path.join(BACKEND, "helpers/pathHlelper.js"), SshRecorder);
 class TelnetRecorder {
-  async connect() { contacted.push("telnet connect"); }
-  async send() { return ""; }
-  async end() {}
+  async connect(params) {
+    if (printerHook.record) return printerHook.record("connect", params);
+    contacted.push("telnet connect");
+  }
+  async send(data) {
+    if (printerHook.record) printerHook.record("send", data);
+    return "";
+  }
+  async end() {
+    if (printerHook.record) printerHook.record("end");
+  }
 }
 stubModule("telnet-client", path.join(BACKEND, "models/printerSettings.js"), TelnetRecorder);
 
@@ -501,8 +512,11 @@ function handlerOf(routePath, method) {
   return layer.route.stack[0].handle;
 }
 
-async function run({ method, route, params = {}, body, d1Fixed = false }) {
+async function run({ method, route, params = {}, body, d1Fixed = false, nodeEnv }) {
   resetStore();
+  const previousNodeEnv = process.env.NODE_ENV;
+  if (nodeEnv === undefined) delete process.env.NODE_ENV;
+  else process.env.NODE_ENV = nodeEnv; // read by the handler at run time (print: "prod" only)
   const res = {
     statusCode: 200,
     status(code) { this.statusCode = code; return this; },
@@ -525,6 +539,9 @@ async function run({ method, route, params = {}, body, d1Fixed = false }) {
   } catch (e) {
     // express-async-errors: next(err) → Express's default error handler (500, the D16 page)
     outcome = { status: 500, error: `${e.name}: ${e.message}` };
+  } finally {
+    if (previousNodeEnv === undefined) delete process.env.NODE_ENV;
+    else process.env.NODE_ENV = previousNodeEnv;
   }
   return { ...outcome, effects };
 }
@@ -546,4 +563,7 @@ function goldenHeader(generatedBy) {
   };
 }
 
-module.exports = { REPO_ROOT, BACKEND, NOW, RealDate, IDS, legacyRequire, contacted, j, answer, bsonValue, jobShapes, run, goldenHeader };
+module.exports = {
+  REPO_ROOT, BACKEND, NOW, RealDate, IDS, KNOWN_IDS, NAMES, legacyRequire, contacted, printerHook, j, answer, bsonValue, oid, castId,
+  jobShapes, budgetShapes, entityDoc, userDoc, populatedBudget, run, goldenHeader,
+};

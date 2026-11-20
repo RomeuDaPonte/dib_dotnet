@@ -178,3 +178,11 @@ public sealed record JobAssemblyStatisticResponse(
     string ValidTryOnFirstTest,
     [property: JsonPropertyName("_id")] string Id,
     [property: JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)] string? ValidatedBy);
+
+/// <summary>
+/// <c>POST /api/job/print/:budgetId</c> (the "Imprimir etiquetas" dialog, legacy <c>pintBudgetModel.jsx</c>): which
+/// label templates to print, in the legacy key order.
+/// </summary>
+/// <param name="Maquinacao">The <c>maquinacao</c> template ("Maquinação").</param>
+/// <param name="Producao">The <c>producao</c> template ("Produção").</param>
+public sealed record PrintLabelsRequest(bool Maquinacao, bool Producao);

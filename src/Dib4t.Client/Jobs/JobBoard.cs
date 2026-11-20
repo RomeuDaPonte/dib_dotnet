@@ -160,7 +160,10 @@ public static class JobBoard
         ];
     }
 
-    /// <summary>The priority menu (legacy <c>jobExtraOptions.jsx</c>): label, priority, icon; "Imprimir" comes with the print step.</summary>
+    /// <summary>
+    /// The priority menu (legacy <c>jobExtraOptions.jsx</c>): label, priority, icon; then (after the legacy empty item)
+    /// "Imprimir", which opens <c>PrintLabelsDialog</c> for the row's budget.
+    /// </summary>
     public static IReadOnlyList<(string Label, string Priority, string Icon)> PriorityMenu { get; } =
     [
         ("Prioritária", JobPriorities.High, JobIcons.PriorityHigh),
@@ -257,4 +260,14 @@ public static class JobIcons
         8 => MudBlazor.Icons.Material.Filled.Filter8,
         _ => MudBlazor.Icons.Material.Filled.Filter9,
     };
+}
+
+/// <summary>The template labels of the "Imprimir etiquetas" dialog (legacy <c>_constants/printLabelspt.js</c>).</summary>
+public static class PrintTemplateLabels
+{
+    /// <summary>The <c>producao</c> template.</summary>
+    public const string Production = "Produção";
+
+    /// <summary>The <c>maquinacao</c> template.</summary>
+    public const string Machining = "Maquinação";
 }

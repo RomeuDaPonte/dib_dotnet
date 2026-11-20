@@ -1,5 +1,6 @@
 using Dib4t.Application.Budgets;
 using Dib4t.Domain.Jobs;
+using Dib4t.SharedKernel;
 
 namespace Dib4t.Application.Jobs;
 
@@ -34,6 +35,12 @@ public interface IJobRepository
     /// with its budget (not its client or author); <c>null</c> when none.
     /// </summary>
     Task<PopulatedJob?> FindByBudgetNumberAsync(string budgetNumber, CancellationToken cancellationToken);
+
+    /// <summary>
+    /// Legacy <c>getByBudgetId</c> for the labels (<c>POST print/:budgetId</c>): the first job of the budget (natural
+    /// order) with its <c>startDate</c> as stored (missing, <c>null</c> or a date); <c>null</c> when it has none.
+    /// </summary>
+    Task<JobForLabels?> FindForLabelsAsync(string budgetId, CancellationToken cancellationToken);
 
     /// <summary>Legacy <c>getByBudgetId</c>: the id of the first job (natural order) made from <paramref name="budgetId"/>.</summary>
     Task<string?> FindIdByBudgetIdAsync(string budgetId, CancellationToken cancellationToken);
@@ -103,3 +110,6 @@ public sealed record NewJob(
     double DevelopmentHours,
     double MachiningHours,
     double AssemblyHours);
+
+/// <summary>What the labels need of a job: its id and <c>startDate</c> as stored (Mongoose fills a missing one with now).</summary>
+public sealed record JobForLabels(string Id, Stored<DateTime> StartDate);

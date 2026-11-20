@@ -23,6 +23,25 @@ public sealed class NewJobsPage(IPage page) : IJobsPage
         await page.Locator("#job-hours").WaitForAsync(new() { State = WaitForSelectorState.Detached });
     }
 
+    public async Task<PrintOutcome> PrintLabelsAsync(string budgetNumber, bool production, bool machining)
+    {
+        await page.GetByRole(AriaRole.Button, new() { Name = $"Opções de {budgetNumber}", Exact = true }).ClickAsync();
+        await page.GetByRole(AriaRole.Menuitem, new() { Name = "Imprimir", Exact = true }).ClickAsync();
+        var dialog = page.Locator(".jobs-print-dialog");
+        await dialog.GetByText("Imprimir etiquetas").WaitForAsync();
+        foreach (var (label, ticked) in new[] { ("Produção", production), ("Maquinação", machining) })
+        {
+            await dialog.Locator(".jobs-print-row").Filter(new() { HasTextString = label }).Locator("input[type=checkbox]").SetCheckedAsync(ticked);
+        }
+
+        var response = await page.RunAndWaitForResponseAsync(
+            () => dialog.GetByRole(AriaRole.Button, new() { Name = "Imprimir", Exact = true }).ClickAsync(),
+            r => r.Url.Contains("/api/job/print/", StringComparison.OrdinalIgnoreCase));
+        await dialog.WaitForAsync(new() { State = WaitForSelectorState.Detached });
+        var toast = page.Locator(".mud-snackbar").Last;
+        return new PrintOutcome(response.Request.PostData, response.Status, await response.TextAsync(), (await toast.InnerTextAsync()).Trim());
+    }
+
     public async Task ChangePriorityAsync(string budgetNumber, string priority)
     {
         await page.GetByRole(AriaRole.Button, new() { Name = $"Opções de {budgetNumber}", Exact = true }).ClickAsync();
@@ -32,9 +51,15 @@ public sealed class NewJobsPage(IPage page) : IJobsPage
     }
 }
 
+/// <summary>What "Imprimir etiquetas" sent and got: the request body, the answer and the toast shown.</summary>
+public sealed record PrintOutcome(string? RequestBody, int Status, string Answer, string Toast);
+
 /// <summary>The jobs board in either UI.</summary>
 public interface IJobsPage
 {
+    /// <summary>Options menu → "Imprimir" → the dialog: the templates (un)ticked, "Imprimir"; the dialog closes.</summary>
+    Task<PrintOutcome> PrintLabelsAsync(string budgetNumber, bool production, bool machining);
+
     /// <summary>Opens the board on the tab whose label contains <paramref name="tab"/>.</summary>
     Task GotoAsync(string tab);
 

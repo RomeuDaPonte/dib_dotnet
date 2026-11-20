@@ -108,7 +108,7 @@ public sealed partial class JobsService(
             return failed;
         }
 
-        await PrintLabelsAsync(budget, client!, job, cancellationToken);
+        await PrintCreateLabelsAsync(budget, client!, job, cancellationToken);
         return created;
     }
 
@@ -437,10 +437,9 @@ public sealed partial class JobsService(
     }
 
     /// <summary>Legacy order: every <c>producao</c> printer, then every <c>maquinacao</c> printer, one after the other.</summary>
-    private async Task PrintLabelsAsync(Budget budget, BusinessEntity client, Job job, CancellationToken cancellationToken)
+    private async Task PrintCreateLabelsAsync(Budget budget, BusinessEntity client, Job job, CancellationToken cancellationToken)
     {
-        var zone = options.Value.FindTimeZone() ?? TimeZoneInfo.Utc;
-        var start = DateOnly.FromDateTime(TimeZoneInfo.ConvertTimeFromUtc(DateTime.SpecifyKind(job.StartDate ?? Now(), DateTimeKind.Utc), zone));
+        var start = LabelDate(job.StartDate ?? Now());
         foreach (var template in PrintTemplates.All)
         {
             foreach (var printer in await printers.ListByTemplateAsync(template, cancellationToken))

@@ -54,6 +54,9 @@
 #   job-details-golden   write the job details contract golden file (job-details-golden.js): the unchanged legacy
 #                        statisticsDates, register, singleProperty and updateVerifications handlers (and with D17,
 #                        D18 and the verifier fix applied), offline → tests/fixtures/legacy/jobs/ (§7.3)
+#   job-print-golden     write the job label print contract golden file (job-print-golden.js): the unchanged legacy
+#                        POST print/:budgetId handler and PrinterSettings.print with a telnet recorder (and with D23
+#                        applied), offline → tests/fixtures/legacy/jobs/ (PLAN.md §5, §6)
 #   job-costs-golden     write the job cost table golden file (job-costs-golden.js): the unchanged legacy front-end
 #                        taskHelper.js and row hook run in Node on 135 scenarios, offline → tests/fixtures/legacy/jobs/
 #   pdf-samples          write reference budget PDFs (pdf-samples.js) by running the unchanged legacy
@@ -351,6 +354,12 @@ cmd_job_details_golden() {
   (cd "$REPO_ROOT" && DIB4T_LEGACY_ROOT="$LEGACY_ROOT" node "$SCRIPT_DIR/job-details-golden.js")
 }
 
+cmd_job_print_golden() {
+  ensure_node_modules "$BACKEND_DIR"
+  log "writing the job label print contract golden file from the legacy code (offline)"
+  (cd "$REPO_ROOT" && DIB4T_LEGACY_ROOT="$LEGACY_ROOT" node "$SCRIPT_DIR/job-print-golden.js")
+}
+
 cmd_job_costs_golden() {
   ensure_node_modules "$FRONTEND_DIR"
   log "writing the job cost table golden file from the legacy front-end code (offline)"
@@ -431,6 +440,7 @@ case "${1:-}" in
   job-golden) cmd_job_golden ;;
   job-board-golden) cmd_job_board_golden ;;
   job-details-golden) cmd_job_details_golden ;;
+  job-print-golden) cmd_job_print_golden ;;
   job-costs-golden) cmd_job_costs_golden ;;
   pdf-golden) cmd_pdf_golden ;;
   pdf-samples) cmd_pdf_samples ;;
