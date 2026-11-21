@@ -1497,3 +1497,33 @@ body {
     margin-left: 0;
   }
 }
+
+/* Readings (legacy leituras/index.css: 15rem, centered, red billedState / green isNotBilled). The text shrinks to the
+   dialog's width so the longest state ("Desenvolvimento") stays inside it on phones and at 200 % zoom (PLAN.md §8.4);
+   the white panel keeps legacy's red and green at a 3:1 contrast in both themes (on the dark paper: about 2:1). */
+.readings-field {
+  max-width: 20rem;
+}
+
+.readings-state-panel {
+  container-type: inline-size;
+  background: #ffffff;
+  border-radius: 4px;
+}
+
+.readings-state {
+  margin: 0;
+  min-height: 1.2em;
+  font-size: clamp(1rem, 10cqi, 15rem);
+  line-height: 1.2;
+  text-align: center;
+  overflow-wrap: anywhere;
+}
+
+.readings-state--billed {
+  color: red;
+}
+
+.readings-state--not-billed {
+  color: green;
+}

@@ -181,6 +181,30 @@ public sealed class LayoutMatrixTests(E2EHarness harness) : E2ETest(harness)
             ("Gráfico", page.Locator("[data-testid=dashboard-chart] svg").First),
             ("1º teste", page.Locator(".mud-chart-legend-item").Filter(new() { HasTextString = "1º teste" })),
         ]),
+        new("readings", "/landing/leituras", SignedIn: true, Ready: "#readings-budget-number", page =>
+        [
+            ("N Orçamento", page.Locator("#readings-budget-number")),
+        ]),
+        // The longest state ("Desenvolvimento", answered by the test) in the dialog, held open while it is measured: once
+        // shown, the page's pending timers are cleared, the .NET one that closes it after 3 s with them (a paused
+        // Playwright clock would also stop axe's timers). The next case loads the page again.
+        new("readings-dialog", "/landing/leituras", SignedIn: true, Ready: "#readings-budget-number", page =>
+        [
+            ("Estado", page.Locator("[data-testid=readings-state]")),
+            ("Sair", page.Locator(".mud-dialog").GetByRole(AriaRole.Button, new() { Name = "Sair", Exact = true })),
+        ], Open: async page =>
+        {
+            await page.RouteAsync("**/api/job/getByBudgetNumber/**", route => route.FulfillAsync(new()
+            {
+                Status = 200,
+                ContentType = "application/json; charset=utf-8",
+                Body = """{"finalPrice":100,"state":"Desenvolvimento","orderIdentification":"","commentType":[],"_id":"6a1f00000000000000000001"}""",
+            }));
+            await page.Locator("#readings-budget-number").FillAsync("26-0001");
+            await page.Locator("#readings-budget-number").PressAsync("Enter");
+            await page.Locator("[data-testid=readings-state]").Filter(new() { HasTextString = "Desenvolvimento" }).WaitForAsync();
+            await page.EvaluateAsync("() => { const last = setTimeout(() => {}, 0); for (let id = 0; id <= last; id++) clearTimeout(id); }");
+        }, Scope: ".mud-dialog", Reset: page => page.UnrouteAllAsync()),
         new("budget-details-import", "/landing/budgets", SignedIn: true, Ready: ".budgets-table tbody tr td", page =>
         [
             ("Nª Orçamento", page.Locator("#import-number")),
@@ -323,6 +347,13 @@ public sealed class LayoutMatrixTests(E2EHarness harness) : E2ETest(harness)
                     {
                         result.Error = ex.Message.Split('\n')[0];
                     }
+                    finally
+                    {
+                        if (layoutPage.Reset is not null)
+                        {
+                            await layoutPage.Reset(page);
+                        }
+                    }
 
                     results.Add(result);
                 }
@@ -400,9 +431,10 @@ public sealed class LayoutMatrixTests(E2EHarness harness) : E2ETest(harness)
     /// <summary>
     /// A page of the matrix. <c>Open</c> runs after <c>Ready</c> and brings it into the state to measure (a tab, a
     /// dialog); <c>Scope</c> limits the control/text checks to one element (an open modal dialog: what is under it
-    /// cannot be used); the page-scroll check and axe always cover the whole page.
+    /// cannot be used); the page-scroll check and axe always cover the whole page. <c>Reset</c> runs after the case,
+    /// failed or not (e.g. a paused clock or a route of <c>Open</c>).
     /// </summary>
     private sealed record LayoutPage(
         string Key, string Path, bool SignedIn, string Ready, Func<IPage, (string Name, ILocator Locator)[]> PrimaryActions,
-        Func<IPage, Task>? Open = null, string? Scope = null);
+        Func<IPage, Task>? Open = null, string? Scope = null, Func<IPage, Task>? Reset = null);
 }

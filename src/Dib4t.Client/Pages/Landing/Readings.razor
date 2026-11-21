@@ -1,0 +1,142 @@
+@page "/landing/leituras"
+@layout LandingLayout
+@implements IDisposable
+@inject AuthSession Session
+@inject IJobApi Jobs
+@inject ISnackbar Snackbar
+@inject TimeProvider Time
+
+<PageTitle>Dib4t</PageTitle>
+
+@* Legacy components/leituras/leiturasInex.jsx (PLAN.md §7.4): a barcode scanner types the budget number into the
+   autofocused "N Orçamento" field and ends with Enter. Enter opens the full-width dialog at once (empty state), asks
+   getByBudgetNumber with the typed text, then shows the job's state, red for "Faturada"/"Para faturação", green
+   otherwise, clears the field and closes the dialog after 3 s. A number without a job is legacy's empty 200: an empty
+   green state, closed after 3 s as well. A failure is the toast "Algo deu errado"; the dialog stays open, empty, and the
+   field keeps its text, until "Sair". Only "Sair" or the 3 s close it (no Escape, no backdrop click: legacy has no
+   onClose). Only for canSeeLeituras, like the menu entry (the API is open to every signed-in user, as legacy).
+   Fixed legacy defects: a scan restarts the 3 s (legacy's earlier timer could close the next scan's dialog early);
+   the field gets the focus back when the dialog closes, so the next scan lands in it (legacy: MUI's focus restore).
+   Layout (C9): the state's 15rem text shrinks to the dialog's width (a long state stays on screen on phones and at 200 %
+   zoom), and the state sits on a white panel in both themes so red and green keep a 3:1 contrast (WCAG 1.4.3; legacy:
+   the dark paper, about 2:1). *@
+@if (Session.User?.HasRole(RoleNames.CanSeeLeituras) != true)
+{
+    <p class="settings-denied">@AuthTexts.NoPermission</p>
+}
+else
+{
+    <MudTextField @ref="_input" T="string" @bind-Value="_budgetNumber" Immediate="true" OnKeyDown="OnKeyDownAsync" Label="N Orçamento"
+                  InputId="readings-budget-number" AutoFocus="true" Class="readings-field" />
+
+    <MudDialog Visible="_open" Options="Options" Class="readings-dialog" AriaLabel="Estado da obra">
+        <DialogContent>
+            <div class="readings-state-panel">
+                <h1 class="@StateClass(_state)" data-testid="readings-state">@_state</h1>
+            </div>
+        </DialogContent>
+        <DialogActions>
+            <MudButton Color="Color.Primary" OnClick="Close">Sair</MudButton>
+        </DialogActions>
+    </MudDialog>
+}
+
+@code {
+    /// <summary>Legacy toast of a failed read.</summary>
+    public const string FailedMessage = "Algo deu errado";
+
+    /// <summary>How long the state stays on screen (legacy <c>setTimeout(…, 3000)</c>).</summary>
+    public static readonly TimeSpan CloseAfter = TimeSpan.FromSeconds(3);
+
+    // Legacy <Dialog fullWidth maxWidth="xl"> without onClose: neither Escape nor the backdrop closes it.
+    private static readonly DialogOptions Options = new()
+    {
+        MaxWidth = MaxWidth.ExtraLarge, FullWidth = true, CloseOnEscapeKey = false, BackdropClick = false, NoHeader = true,
+        DefaultFocus = DefaultFocus.Element, // the dialog itself: a scanner's Enter must not press "Sair"
+    };
+
+    private MudTextField<string>? _input;
+    private string? _budgetNumber = string.Empty;
+    private bool _open;
+    private string? _state;
+    private CancellationTokenSource? _close;
+    private bool _refocus;
+
+    /// <summary>Legacy <c>showJobState</c>: <c>billedState</c> (red) for billed or for invoicing, else <c>isNotBilled</c> (green).</summary>
+    public static string StateClass(string? state) =>
+        state is JobStates.Billed or JobStates.ForInvoicing ? "readings-state readings-state--billed" : "readings-state readings-state--not-billed";
+
+    private async Task OnKeyDownAsync(KeyboardEventArgs e)
+    {
+        if (e.Key != "Enter")
+        {
+            return;
+        }
+
+        CancelClose();
+        _open = true;
+        _state = string.Empty; // rendered at the first await: the dialog opens before the answer
+
+        var answer = await Jobs.FindByBudgetNumberAsync(_budgetNumber ?? string.Empty);
+        if (!answer.IsSuccess)
+        {
+            Snackbar.Add(FailedMessage, Severity.Error); // legacy: also after the global error notification of a 5xx
+            return;
+        }
+
+        _state = answer.Value?.State; // legacy: an empty 200 shows no state
+        _budgetNumber = string.Empty;
+        _close = new CancellationTokenSource();
+        _ = CloseLaterAsync(_close.Token);
+    }
+
+    private async Task CloseLaterAsync(CancellationToken cancellation)
+    {
+        try
+        {
+            await Task.Delay(CloseAfter, Time, cancellation);
+        }
+        catch (OperationCanceledException)
+        {
+            return;
+        }
+
+        await InvokeAsync(() =>
+        {
+            if (cancellation.IsCancellationRequested)
+            {
+                return; // a scan or "Sair" came first
+            }
+
+            _state = string.Empty;
+            Close();
+            StateHasChanged(); // not an event of the page: render the closed dialog
+        });
+    }
+
+    private void CancelClose()
+    {
+        _close?.Cancel();
+        _close?.Dispose();
+        _close = null;
+    }
+
+    private void Close()
+    {
+        CancelClose();
+        _open = false;
+        _refocus = true;
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        // Once the dialog is gone (its focus trap with it): the next scan goes into the field.
+        if (_refocus && !_open && _input is not null)
+        {
+            _refocus = false;
+            await _input.FocusAsync();
+        }
+    }
+
+    public void Dispose() => CancelClose();
+}
