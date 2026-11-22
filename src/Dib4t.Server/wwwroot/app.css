@@ -545,6 +545,266 @@ body {
   overflow-wrap: anywhere;
 }
 
+/* ---------------------------------------------------------------- Base de Dados tab (legacy settings/databaseBackup.jsx, §7.6, §8.4) */
+.database {
+  padding: 1rem;
+}
+
+/* Legacy's deepOrange[900] on the dark paper is 1.8:1 (WCAG needs 4.5:1): deepOrange A100 (5.0:1) in the dark theme
+   only; the light theme keeps legacy's deepPurple (6.9:1). To confirm with the owner in UAT. */
+.database-restore--dark.mud-button-outlined:not(:disabled) {
+  color: #ff9e80;
+  border-color: rgba(255, 158, 128, 0.5);
+}
+
+.database-name {
+  overflow-wrap: anywhere;
+}
+
+/* Very narrow windows (in em: also large text / zoom): the panel's padding is enough, the cards take the full width,
+   the buttons stack. */
+@media (max-width: 30em) {
+  .database {
+    padding: 0;
+  }
+
+  .database-stats.mud-grid {
+    width: 100%;
+    margin: 0;
+  }
+
+  .database-stats.mud-grid > .mud-grid-item {
+    padding: 0.25rem 0;
+  }
+
+  .database-actions,
+  .database-actions .mud-button-root {
+    width: 100%;
+  }
+
+  .database-stat,
+  .database-table th,
+  .database-table td {
+    padding-inline: 0.5rem;
+  }
+}
+
+.database-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.database-title {
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: 400;
+}
+
+.database-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.database-file {
+  display: none;
+}
+
+.database-busy {
+  margin: 0 0 0.35em;
+  color: var(--mud-palette-error);
+  font-size: 0.875rem;
+}
+
+.database-info-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.database-subtitle {
+  flex-grow: 1;
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 500;
+}
+
+.database-fetched {
+  color: var(--mud-palette-text-secondary);
+  font-size: 0.75rem;
+}
+
+.database-loading {
+  margin-bottom: 0.5rem;
+}
+
+.database-stat {
+  height: 100%;
+  padding: 0.75rem 1rem;
+  border: 1px solid var(--mud-palette-divider);
+  border-radius: 4px;
+  background-color: var(--mud-palette-surface);
+}
+
+.database-stat-label {
+  color: var(--mud-palette-text-secondary);
+  font-size: 0.8rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.database-stat-value,
+.database-stat-detail,
+.database-fetched {
+  overflow-wrap: anywhere;
+}
+
+.database-stat-value {
+  font-size: 1.25rem;
+  font-weight: 500;
+  word-break: break-all;
+}
+
+.database-stat-detail {
+  color: var(--mud-palette-text-secondary);
+  font-size: 0.8rem;
+}
+
+/* The table scrolls inside its own box on narrow screens (§8.4 rule 5); the page never scrolls sideways. */
+.database-table-scroll:focus-visible {
+  outline: 2px solid var(--mud-palette-primary);
+  outline-offset: 2px;
+}
+
+.database-table-scroll {
+  margin-top: 1.5rem;
+  overflow-x: auto;
+  border: 1px solid var(--mud-palette-divider);
+  border-radius: 4px;
+}
+
+.database-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.875rem;
+}
+
+.database-table th,
+.database-table td {
+  padding: 0.375rem 1rem;
+  border-bottom: 1px solid var(--mud-palette-table-lines);
+  text-align: left;
+  overflow-wrap: normal;
+}
+
+.database-table th {
+  font-weight: 500;
+  line-height: 1.5rem;
+}
+
+.database-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.database-table tbody tr:hover {
+  background-color: var(--mud-palette-table-hover);
+}
+
+.database-table .database-numeric {
+  text-align: right;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+
+.database-table .database-empty {
+  text-align: center;
+}
+
+/* Legacy writes the whole warning in the error red, 2.7:1 on the dark paper and 3.7:1 on white (WCAG: 4.5:1): the
+   icon keeps the red, the text is the normal text color. */
+.database-warning {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+}
+
+.database-warning .mud-icon-root {
+  flex-shrink: 0;
+  color: var(--mud-palette-error);
+}
+
+.database-warning p,
+.database-file-box p {
+  margin: 0;
+}
+
+.database-file-box {
+  margin-top: 1rem;
+  padding: 0.75rem;
+  border: 1px solid var(--mud-palette-divider);
+  border-radius: 4px;
+  font-size: 0.875rem;
+  overflow-wrap: anywhere;
+}
+
+/* Legacy Backdrop above everything (dialogs included) while a backup or restore runs. */
+.database-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: calc(var(--mud-zindex-dialog) + 10);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  overflow-y: auto;
+  background-color: rgba(0, 0, 0, 0.5);
+  color: #fff;
+  text-align: center;
+}
+
+.database-progress {
+  position: relative;
+  display: inline-flex;
+}
+
+.database-progress .database-progress-circle {
+  width: 4.5rem;
+  height: 4.5rem;
+}
+
+.database-percent {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.9rem;
+}
+
+.database-overlay-title {
+  margin: 1.5rem 0 0;
+  font-size: 1.25rem;
+  font-weight: 500;
+}
+
+.database-overlay-message {
+  margin: 0;
+  font-size: 0.875rem;
+}
+
+.database-overlay-caption {
+  margin: 1rem 0 0;
+  font-size: 0.75rem;
+  opacity: 0.8;
+}
+
 /* ---------------------------------------------------------------- Registos tab (PLAN.md §3.3, §8.4) */
 .logs-filters-toggle.mud-button-root {
   display: none;

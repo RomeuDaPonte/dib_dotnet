@@ -1,5 +1,10 @@
+using System.Globalization;
+using System.IO.Compression;
 using Dib4t.Application.Common;
+using Dib4t.Application.Common.Validation;
 using Dib4t.Application.Database;
+using Dib4t.Infrastructure.Mongo;
+using Microsoft.Extensions.Options;
 using MongoDB.Bson;
 using MongoDB.Driver;
 
@@ -13,12 +18,19 @@ namespace Dib4t.Infrastructure.Backup;
 /// (no re-serialization, validation bypassed), then its indexes without <c>_id_</c>, <c>v</c> and <c>ns</c>.
 /// </summary>
 /// <remarks>
-/// Not yet here (PLAN.md §10 Phase 5): cleaning options/index specs that MongoDB 9.0 rejects, the automatic
-/// pre-restore backup and the built-in verification.
+/// Also the backup (legacy <c>writeBackup</c>) and the statistics (legacy <c>getInfo</c>). Not yet here (PLAN.md §10
+/// Phase 5 step 4): cleaning options/index specs that MongoDB 9.0 rejects, the automatic pre-restore backup and the
+/// built-in verification.
 /// </remarks>
-internal sealed class MongoDatabaseBackupService(IMongoDatabase database) : IDatabaseBackupService
+internal sealed class MongoDatabaseBackupService(IMongoDatabase database, IOptions<MongoOptions> options) : IDatabaseBackupService
 {
     public const int InsertBatchSize = 1000;
+
+    /// <summary>
+    /// Legacy <c>a.name.localeCompare(b.name)</c> (ICU root collation, as the invariant culture compares with ICU):
+    /// the order of the info table and of the collections in a backup.
+    /// </summary>
+    internal static readonly StringComparer CollectionOrder = StringComparer.Create(CultureInfo.InvariantCulture, CompareOptions.None);
 
     public async Task<Result<RestoreSummary>> RestoreAsync(Stream backup, CancellationToken cancellationToken)
     {
@@ -66,19 +78,159 @@ internal sealed class MongoDatabaseBackupService(IMongoDatabase database) : IDat
         }
     }
 
-    /// <summary>Legacy <c>listUserCollections</c>: collections (not views) whose name does not start with <c>system.</c>.</summary>
     private async Task DropUserCollectionsAsync(CancellationToken cancellationToken)
+    {
+        foreach (var collection in await ListUserCollectionsAsync(cancellationToken))
+        {
+            await database.DropCollectionAsync(collection.Name, cancellationToken);
+        }
+    }
+
+    /// <summary>
+    /// Legacy <c>listUserCollections</c>: collections (not views, not time series) whose name does not start with
+    /// <c>system.</c>, in <see cref="CollectionOrder"/>, each with its <c>listCollections</c> options.
+    /// </summary>
+    private async Task<List<(string Name, BsonDocument Options)>> ListUserCollectionsAsync(CancellationToken cancellationToken)
     {
         using var cursor = await database.ListCollectionsAsync(cancellationToken: cancellationToken);
         var collections = await cursor.ToListAsync(cancellationToken);
-        foreach (var collection in collections)
+        return [.. collections
+            .Where(c => c.GetValue("type", BsonNull.Value) is var type && (type.IsBsonNull || type == "collection")
+                        && !c["name"].AsString.StartsWith("system.", StringComparison.Ordinal))
+            .Select(c => (c["name"].AsString, c.GetValue("options", BsonNull.Value) is BsonDocument o ? o : []))
+            .OrderBy(c => c.Item1, CollectionOrder)];
+    }
+
+    public async Task<DatabaseInfo> GetInfoAsync(CancellationToken cancellationToken)
+    {
+        var stats = await database.RunCommandAsync<BsonDocument>(new BsonDocument("dbStats", 1), cancellationToken: cancellationToken);
+        var version = await ServerVersionAsync(cancellationToken);
+        var collections = await ListUserCollectionsAsync(cancellationToken);
+        var collectionsInfo = new List<CollectionInfo>(collections.Count);
+        foreach (var (name, _) in collections)
         {
-            var name = collection["name"].AsString;
-            var type = collection.GetValue("type", BsonNull.Value);
-            if ((type.IsBsonNull || type == "collection") && !name.StartsWith("system.", StringComparison.Ordinal))
+            collectionsInfo.Add(await CollectionStatsAsync(name, cancellationToken));
+        }
+
+        var server = MongoUrl.Create(options.Value.ConnectionString).Servers.First(); // Mongoose's connection.host/port: the first host
+        return new DatabaseInfo(
+            database.DatabaseNamespace.DatabaseName, server.Host, server.Port, version, collectionsInfo.Count,
+            Number(stats, "objects"), Number(stats, "avgObjSize"), Number(stats, "dataSize"), Number(stats, "storageSize"),
+            Number(stats, "indexes"), Number(stats, "indexSize"), collectionsInfo);
+    }
+
+    /// <summary>Legacy <c>getCollectionStats</c>: <c>collStats</c>, else the estimated count and the number of indexes.</summary>
+    private async Task<CollectionInfo> CollectionStatsAsync(string name, CancellationToken cancellationToken)
+    {
+        try
+        {
+            var s = await database.RunCommandAsync<BsonDocument>(new BsonDocument("collStats", name), cancellationToken: cancellationToken);
+            return new CollectionInfo(name, Number(s, "count"), Number(s, "size"), Number(s, "avgObjSize") ?? 0,
+                Number(s, "storageSize"), Number(s, "nindexes"), Number(s, "totalIndexSize"));
+        }
+        catch (MongoCommandException)
+        {
+            var collection = database.GetCollection<BsonDocument>(name);
+            var count = await collection.EstimatedDocumentCountAsync(cancellationToken: cancellationToken);
+            using var indexes = await collection.Indexes.ListAsync(cancellationToken);
+            return new CollectionInfo(name, count, null, null, null, (await indexes.ToListAsync(cancellationToken)).Count, null);
+        }
+    }
+
+    /// <summary>A numeric field as a JavaScript number; <see langword="null"/> (left out of the answer) when it is missing or not a number.</summary>
+    private static double? Number(BsonDocument document, string name) =>
+        document.TryGetValue(name, out var value) && value.IsNumeric ? value.ToDouble() : null;
+
+    private async Task<string?> ServerVersionAsync(CancellationToken cancellationToken)
+    {
+        var buildInfo = await database.RunCommandAsync<BsonDocument>(new BsonDocument("buildInfo", 1), cancellationToken: cancellationToken);
+        return buildInfo.TryGetValue("version", out var version) && version.IsString ? version.AsString : null;
+    }
+
+    public async Task<BackupSummary> WriteBackupAsync(Stream output, string? createdBy, DateTime createdAt, CancellationToken cancellationToken)
+    {
+        ArgumentNullException.ThrowIfNull(output);
+        var version = await ServerVersionAsync(cancellationToken);
+        var collections = await ListUserCollectionsAsync(cancellationToken);
+
+        var response = new CuttableStream(output);
+        var gzip = new GZipStream(response, CompressionLevel.Optimal, leaveOpen: true);
+        try
+        {
+            var writer = new DibbakWriter(gzip);
+            await writer.WriteMagicAsync(cancellationToken);
+            await writer.WriteJsonFrameAsync(DibbakFormat.HeaderFrame, json =>
             {
-                await database.DropCollectionAsync(name, cancellationToken);
+                json.WriteStartObject();
+                json.WriteString("format", DibbakFormat.FormatName);
+                json.WriteNumber("version", DibbakFormat.FormatVersion);
+                json.WriteString("createdAt", JsDate.ToIsoString(new DateTimeOffset(DateTime.SpecifyKind(createdAt, DateTimeKind.Utc)).ToUnixTimeMilliseconds()));
+                json.WriteString("createdBy", createdBy); // null when unknown (legacy `createdBy || null`)
+                json.WriteString("database", database.DatabaseNamespace.DatabaseName);
+                if (version is not null)
+                {
+                    json.WriteString("serverVersion", version);
+                }
+
+                json.WriteStartArray("collections");
+                collections.ForEach(c => json.WriteStringValue(c.Name));
+                json.WriteEndArray();
+                json.WriteEndObject();
+            }, cancellationToken);
+
+            long documents = 0;
+            foreach (var (name, collectionOptions) in collections)
+            {
+                var collection = database.GetCollection<RawBsonDocument>(name);
+                using var indexCursor = await collection.Indexes.ListAsync(cancellationToken);
+                var indexes = await indexCursor.ToListAsync(cancellationToken);
+                var count = await collection.EstimatedDocumentCountAsync(cancellationToken: cancellationToken);
+                await writer.WriteJsonFrameAsync(DibbakFormat.CollectionFrame, json =>
+                {
+                    json.WriteStartObject();
+                    json.WriteString("name", name);
+                    json.WritePropertyName("options");
+                    JsJson.Write(json, collectionOptions);
+                    json.WritePropertyName("indexes");
+                    JsJson.Write(json, new BsonArray(indexes));
+                    json.WritePropertyName("count");
+                    JsJson.WriteNumber(json, count);
+                    json.WriteEndObject();
+                }, cancellationToken);
+
+                using var cursor = await collection.FindAsync(FilterDefinition<RawBsonDocument>.Empty,
+                    new FindOptions<RawBsonDocument> { BatchSize = InsertBatchSize }, cancellationToken);
+                while (await cursor.MoveNextAsync(cancellationToken))
+                {
+                    foreach (var document in cursor.Current)
+                    {
+                        using (document)
+                        {
+                            await writer.WriteDocumentAsync(document, cancellationToken);
+                        }
+
+                        documents++;
+                    }
+                }
             }
+
+            await writer.WriteJsonFrameAsync(DibbakFormat.EndFrame, json =>
+            {
+                json.WriteStartObject();
+                json.WriteNumber("collections", collections.Count);
+                json.WriteNumber("documents", documents);
+                json.WriteEndObject();
+            }, cancellationToken);
+
+            await gzip.DisposeAsync(); // the final block and the gzip trailer
+            await response.FlushAsync(cancellationToken);
+            return new BackupSummary(collections.Count, documents);
+        }
+        catch
+        {
+            response.Cut();
+            await gzip.DisposeAsync();
+            throw;
         }
     }
 

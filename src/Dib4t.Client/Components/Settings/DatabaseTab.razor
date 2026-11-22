@@ -1,0 +1,328 @@
+@implements IAsyncDisposable
+@inject IDatabaseApi Database
+@inject IDatabaseTransfers Transfers
+@inject ISnackbar Snackbar
+@inject TimeProvider Time
+@inject Dib4t.Client.Theme.ThemeState Theme
+
+@* Legacy settings/databaseBackup.jsx (PLAN.md §7.6): "Transferir Backup", "Restaurar Backup" (a .dibbak, confirmed in
+   "Restaurar backup"), the server's running operation, the database statistics and one row per collection. While a
+   backup or restore runs, a full-page overlay shows its progress and leaving the page asks first. The file goes from
+   the browser to the server and back without passing through the app's memory (wwwroot/js/database.js). *@
+<div class="database">
+    <div class="database-header">
+        <h2 class="database-title">Base de Dados</h2>
+        <div class="database-actions">
+            <MudButton Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.CloudDownload"
+                       Disabled="Busy" OnClick="BackupAsync">Transferir Backup</MudButton>
+            <MudButton Variant="Variant.Outlined" Color="Color.Secondary" StartIcon="@Icons.Material.Filled.Restore"
+                       Disabled="Busy" OnClick="ChooseFileAsync" Class="@(Theme.IsDarkMode ? "database-restore database-restore--dark" : "database-restore")">Restaurar Backup</MudButton>
+            <input type="file" accept="@DatabaseFormat.BackupExtension" class="database-file" tabindex="-1" aria-hidden="true"
+                   @ref="_fileInput" @onchange="FileChangedAsync" />
+        </div>
+    </div>
+
+    @if (_info?.BusyWith is { } running)
+    {
+        <p class="database-busy" role="status">Existe uma operação em curso no servidor (@running).</p>
+    }
+
+    <div class="database-info-head">
+        <h3 class="database-subtitle">Informação</h3>
+        @if (_info is not null)
+        {
+            <span class="database-fetched">Atualizado @DatabaseFormat.Local(_info.FetchedAt, Time.LocalTimeZone, "dd/MM/yyyy HH:mm:ss")</span>
+        }
+        <MudTooltip Text="Atualizar">
+            <MudIconButton Icon="@Icons.Material.Filled.Refresh" Size="Size.Small" aria-label="Atualizar" Disabled="_loadingInfo" OnClick="LoadInfoAsync" />
+        </MudTooltip>
+    </div>
+    @if (_loadingInfo)
+    {
+        <MudProgressLinear Indeterminate="true" Color="Color.Primary" Class="database-loading" aria-label="A carregar" />
+    }
+
+    @if (_info is { } info)
+    {
+        <MudGrid Spacing="2" Class="database-stats">
+            <MudItem xs="12" sm="6" md="3">@Stat("Base de dados", info.Name, $"{info.Host}:{info.Port}")</MudItem>
+            <MudItem xs="12" sm="6" md="3">@Stat("Versão MongoDB", info.ServerVersion ?? string.Empty)</MudItem>
+            <MudItem xs="12" sm="6" md="3">@Stat("Coleções", DatabaseFormat.Number(info.Collections))</MudItem>
+            <MudItem xs="12" sm="6" md="3">@Stat("Documentos", DatabaseFormat.Number(info.Documents), $"Tamanho médio {DatabaseFormat.Bytes(info.AvgObjSize)}")</MudItem>
+            <MudItem xs="12" sm="6" md="4">@Stat("Tamanho dos dados", DatabaseFormat.Bytes(info.DataSize))</MudItem>
+            <MudItem xs="12" sm="6" md="4">@Stat("Armazenamento em disco", DatabaseFormat.Bytes(info.StorageSize))</MudItem>
+            <MudItem xs="12" sm="12" md="4">@Stat("Índices", DatabaseFormat.Number(info.Indexes), DatabaseFormat.Bytes(info.IndexSize))</MudItem>
+        </MudGrid>
+
+        <div class="database-table-scroll" tabindex="0" role="region" aria-label="Tabela de coleções">
+            <table class="database-table" aria-label="Coleções">
+                <thead>
+                    <tr>
+                        <th scope="col">Coleção</th>
+                        <th scope="col" class="database-numeric">Documentos</th>
+                        <th scope="col" class="database-numeric">Tamanho</th>
+                        <th scope="col" class="database-numeric">Tamanho médio</th>
+                        <th scope="col" class="database-numeric">Armazenamento</th>
+                        <th scope="col" class="database-numeric">Índices</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var collection in info.CollectionsInfo)
+                    {
+                        <tr @key="collection.Name">
+                            <td class="database-name">@collection.Name</td>
+                            <td class="database-numeric">@DatabaseFormat.Number(collection.Count)</td>
+                            <td class="database-numeric">@DatabaseFormat.Bytes(collection.Size)</td>
+                            <td class="database-numeric">@DatabaseFormat.Bytes(collection.AvgObjSize)</td>
+                            <td class="database-numeric">@DatabaseFormat.Bytes(collection.StorageSize)</td>
+                            <td class="database-numeric">@IndexesText(collection)</td>
+                        </tr>
+                    }
+                    @if (info.CollectionsInfo.Count == 0)
+                    {
+                        <tr><td colspan="6" class="database-empty">A base de dados não tem coleções.</td></tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+</div>
+
+<MudDialog Visible="@(_fileToRestore is not null)" VisibleChanged="DialogVisibleChanged" Options="DialogOptions" Class="settings-dialog database-dialog"
+           AriaLabel="Restaurar backup">
+    <TitleContent><h2 class="settings-dialog-title">Restaurar backup</h2></TitleContent>
+    <DialogContent>
+        <div class="database-warning">
+            <MudIcon Icon="@Icons.Material.Filled.WarningAmber" />
+            <p>
+                Todos os dados atuais da base de dados serão <b>apagados</b> e substituídos pelo conteúdo do backup. Esta ação
+                não pode ser desfeita. Recomenda-se transferir um backup antes de continuar.
+            </p>
+        </div>
+        @if (_fileToRestore is { } file)
+        {
+            <div class="database-file-box">
+                <p><b>Ficheiro:</b> @file.Name</p>
+                <p><b>Tamanho:</b> @DatabaseFormat.Bytes(file.Size)</p>
+                <p><b>Modificado:</b> @DatabaseFormat.Local(DateTimeOffset.FromUnixTimeMilliseconds((long)file.LastModified), Time.LocalTimeZone, "dd/MM/yyyy HH:mm")</p>
+            </div>
+        }
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="CancelRestoreAsync">Cancelar</MudButton>
+        <MudButton Variant="Variant.Filled" Color="Color.Secondary" OnClick="ConfirmRestoreAsync" Class="database-confirm">Restaurar</MudButton>
+    </DialogActions>
+</MudDialog>
+
+@if (_operation is { } operation)
+{
+    <div class="database-overlay" tabindex="0" role="alertdialog" aria-modal="true" aria-labelledby="database-overlay-title" aria-describedby="database-overlay-message" aria-busy="true">
+        <div class="database-progress">
+            @if (operation.Percent is { } percent)
+            {
+                <MudProgressCircular Color="Color.Inherit" Value="percent" Min="0" Max="100" Class="database-progress-circle" aria-label="@($"{percent}%")" />
+                <span class="database-percent">@($"{percent}%")</span>
+            }
+            else
+            {
+                <MudProgressCircular Color="Color.Inherit" Indeterminate="true" Class="database-progress-circle" aria-label="@operation.Title" />
+            }
+        </div>
+        <h2 id="database-overlay-title" class="database-overlay-title">@operation.Title</h2>
+        @if (operation.Message is not null)
+        {
+            <p id="database-overlay-message" class="database-overlay-message">@operation.Message</p>
+        }
+        <p class="database-overlay-caption">Não feche nem atualize esta página.</p>
+    </div>
+}
+
+@code {
+    public const string BackupTitle = "A criar backup da base de dados...";
+    public const string RestoreTitle = "A restaurar a base de dados...";
+    public const string ReplacingMessage = "A substituir os dados. Isto pode demorar alguns minutos.";
+
+    private static readonly DialogOptions DialogOptions = new() { MaxWidth = MaxWidth.Small, FullWidth = true, CloseOnEscapeKey = true };
+
+    private ElementReference _fileInput;
+    private DatabaseInfoResponse? _info;
+    private bool _loadingInfo;
+    private Operation? _operation;
+    private ChosenFile? _fileToRestore;
+
+    /// <summary>What the overlay shows: legacy <c>{ title, message, percent }</c> (no percent: an indeterminate circle).</summary>
+    public sealed record Operation(string Title, string? Message, int? Percent = null);
+
+    private bool Busy => _operation is not null || _info?.BusyWith is not null;
+
+    protected override Task OnInitializedAsync() => LoadInfoAsync();
+
+    private async Task LoadInfoAsync()
+    {
+        _loadingInfo = true;
+        try
+        {
+            var result = await Database.InfoAsync();
+            if (result.IsSuccess)
+            {
+                _info = result.Value;
+            }
+            else
+            {
+                Snackbar.Add(OrFallback(result.ErrorText, "Erro ao obter informação da base de dados"), Severity.Error);
+            }
+        }
+        finally
+        {
+            _loadingInfo = false;
+        }
+    }
+
+    private async Task BackupAsync()
+    {
+        await StartAsync(new Operation(BackupTitle, "A preparar o ficheiro"));
+        try
+        {
+            var result = await Transfers.DownloadBackupAsync(DatabaseFormat.BackupFileName(Time.GetLocalNow()), loaded =>
+                ShowAsync(new Operation(BackupTitle, $"{DatabaseFormat.Bytes(loaded)} transferidos")));
+            if (result.IsSuccess)
+            {
+                Snackbar.Add($"Backup criado com sucesso ({DatabaseFormat.Bytes(result.Size)})", Severity.Success);
+            }
+            else
+            {
+                Snackbar.Add(OrFallback(result.Text, "Erro ao criar o backup"), Severity.Error);
+            }
+        }
+        finally
+        {
+            await StopAsync();
+        }
+    }
+
+    private Task ChooseFileAsync() => Transfers.ChooseAsync(_fileInput);
+
+    private async Task FileChangedAsync()
+    {
+        var file = await Transfers.TakeFileAsync(_fileInput);
+        if (file is null)
+        {
+            return;
+        }
+
+        if (!DatabaseFormat.IsBackupFile(file.Name))
+        {
+            await Transfers.ForgetFileAsync();
+            Snackbar.Add($"Selecione um ficheiro de backup ({DatabaseFormat.BackupExtension}).", Severity.Error);
+            return;
+        }
+
+        _fileToRestore = file;
+    }
+
+    private async Task DialogVisibleChanged(bool visible)
+    {
+        if (!visible)
+        {
+            await CancelRestoreAsync();
+        }
+    }
+
+    private async Task CancelRestoreAsync()
+    {
+        _fileToRestore = null;
+        await Transfers.ForgetFileAsync();
+    }
+
+    private async Task ConfirmRestoreAsync()
+    {
+        if (_fileToRestore is null)
+        {
+            return;
+        }
+
+        _fileToRestore = null;
+        await StartAsync(new Operation(RestoreTitle, "A enviar o ficheiro", 0));
+        try
+        {
+            var result = await Transfers.RestoreAsync((loaded, total) => ShowAsync(UploadProgress(loaded, total)));
+            if (result.IsSuccess && Restored(result.Text) is { } restored)
+            {
+                Snackbar.Add($"Base de dados restaurada: {DatabaseFormat.Number(restored.Collections)} coleções, {DatabaseFormat.Number(restored.Documents)} documentos.", Severity.Success);
+                await LoadInfoAsync();
+            }
+            else
+            {
+                Snackbar.Add(OrFallback(result.IsSuccess ? null : result.Text, "Erro ao restaurar o backup"), Severity.Error);
+            }
+        }
+        finally
+        {
+            await StopAsync();
+        }
+    }
+
+    /// <summary>Legacy <c>onUploadProgress</c>: the percent sent; at 100 % the server replaces the data (no percent).</summary>
+    public static Operation UploadProgress(double loaded, double total)
+    {
+        var percent = total > 0 ? (int)Math.Floor((loaded / total * 100) + 0.5) : 0; // Math.round
+        return percent >= 100
+            ? new Operation(RestoreTitle, ReplacingMessage)
+            : new Operation(RestoreTitle, $"A enviar o ficheiro ({DatabaseFormat.Bytes(loaded)} de {DatabaseFormat.Bytes(total)})", percent);
+    }
+
+    private static RestoreResponse? Restored(string json)
+    {
+        try
+        {
+            return System.Text.Json.JsonSerializer.Deserialize<RestoreResponse>(json, System.Text.Json.JsonSerializerOptions.Web);
+        }
+        catch (System.Text.Json.JsonException)
+        {
+            return null;
+        }
+    }
+
+    private static string IndexesText(CollectionInfoResponse collection) =>
+        collection.IndexSize is null
+            ? DatabaseFormat.Number(collection.Indexes)
+            : $"{DatabaseFormat.Number(collection.Indexes)} ({DatabaseFormat.Bytes(collection.IndexSize)})";
+
+    /// <summary>Legacy <c>readErrorMessage</c>: the answer's text, or the fallback when there is none.</summary>
+    private static string OrFallback(string? text, string fallback) => string.IsNullOrEmpty(text) ? fallback : text;
+
+    private async Task StartAsync(Operation operation)
+    {
+        _operation = operation;
+        await Transfers.GuardUnloadAsync(true);
+    }
+
+    private Task ShowAsync(Operation operation) => InvokeAsync(() =>
+    {
+        _operation = operation;
+        StateHasChanged();
+    });
+
+    private async Task StopAsync()
+    {
+        _operation = null;
+        await Transfers.GuardUnloadAsync(false);
+    }
+
+    private static RenderFragment Stat(string label, string value, string? detail = null) => @<div class="database-stat">
+        <div class="database-stat-label">@label</div>
+        <div class="database-stat-value">@value</div>
+        @if (detail is not null)
+        {
+            <div class="database-stat-detail">@detail</div>
+        }
+    </div>;
+
+    public async ValueTask DisposeAsync()
+    {
+        if (_operation is not null)
+        {
+            await Transfers.GuardUnloadAsync(false);
+        }
+    }
+}

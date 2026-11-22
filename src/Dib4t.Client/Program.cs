@@ -43,6 +43,8 @@ builder.Services.AddTransient<Dib4t.Client.Jobs.JobDetailsState>();
 builder.Services.AddScoped<Dib4t.Client.Budgets.IClipboard, Dib4t.Client.Budgets.Clipboard>();
 builder.Services.AddScoped<Dib4t.Client.Budgets.IFileDownload, Dib4t.Client.Budgets.FileDownload>();
 builder.Services.AddScoped<ILogsApi, LogsApi>();
+builder.Services.AddScoped<IDatabaseApi, DatabaseApi>();
+builder.Services.AddScoped<Dib4t.Client.Settings.IDatabaseTransfers, Dib4t.Client.Settings.DatabaseTransfers>();
 builder.Services.AddSingleton(TimeProvider.System);
 builder.Services.AddScoped<AuthSession>();
 builder.Services.AddScoped<AuthenticationStateProvider>(provider => provider.GetRequiredService<AuthSession>());

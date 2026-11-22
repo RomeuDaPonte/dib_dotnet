@@ -23,6 +23,7 @@ public static class BackupMessages
     public const string UnknownFrame = "Ficheiro de backup corrompido.";
     public const string CountsMismatch = "O ficheiro de backup está corrompido (contagens não coincidem).";
     public const string RestoreFailed = "Erro ao restaurar o backup.";
+    public const string BackupFailed = "Erro ao criar o backup.";
 
     /// <summary>The 409 text while another backup or restore runs; <paramref name="operation"/> is "backup" or "restauro".</summary>
     public static string Busy(string operation) => $"Já existe uma operação em curso ({operation}). Tente mais tarde.";

@@ -85,6 +85,47 @@ public sealed class LayoutMatrixTests(E2EHarness harness) : E2ETest(harness)
             await page.Locator(".logs-expand").First.ClickAsync();
             await page.Locator(".logs-detail .logs-request").First.WaitForAsync();
         }),
+        new("settings-database", "/landing/settings", SignedIn: true, Ready: ".settings-table tbody tr", page =>
+        [
+            ("Transferir Backup", page.GetByRole(AriaRole.Button, new() { Name = "Transferir Backup" })),
+            ("Restaurar Backup", page.GetByRole(AriaRole.Button, new() { Name = "Restaurar Backup" })),
+            ("Atualizar", page.GetByRole(AriaRole.Button, new() { Name = "Atualizar" })),
+            ("budgets", page.Locator(".database-table tbody td").First),
+        ], Open: page => OpenTabAsync(page, "Base de Dados", ".database-table tbody tr")),
+        new("settings-database-dialog", "/landing/settings", SignedIn: true, Ready: ".settings-table tbody tr", page =>
+        [
+            ("Ficheiro", page.Locator(".database-file-box")),
+            ("Cancelar", page.Locator(".mud-dialog").GetByRole(AriaRole.Button, new() { Name = "Cancelar" })),
+            ("Restaurar", page.Locator(".mud-dialog").GetByRole(AriaRole.Button, new() { Name = "Restaurar", Exact = true })),
+        ], Open: async page =>
+        {
+            await OpenTabAsync(page, "Base de Dados", ".database-table tbody tr");
+            var chooser = await page.RunAndWaitForFileChooserAsync(() => page.GetByRole(AriaRole.Button, new() { Name = "Restaurar Backup" }).ClickAsync());
+            await chooser.SetFilesAsync(new FilePayload
+            {
+                // The longest name a downloaded backup has, plus a copy suffix.
+                Name = "dib4t-backup-2026-11-11_16-15-31 (1).dibbak",
+                MimeType = "application/octet-stream",
+                Buffer = [1, 2, 3],
+            });
+            await page.Locator(".database-file-box").WaitForAsync();
+            await page.Mouse.MoveAsync(0, 0);
+        }, Scope: ".mud-dialog"),
+        // The overlay of a running backup, held open: the download is never answered (the next case loads the page again).
+        new("settings-database-overlay", "/landing/settings", SignedIn: true, Ready: ".settings-table tbody tr", page =>
+        [
+            ("A criar backup", page.Locator(".database-overlay-title")),
+            ("Não feche", page.Locator(".database-overlay-caption")),
+        ], Open: async page =>
+        {
+            await OpenTabAsync(page, "Base de Dados", ".database-table tbody tr");
+            await page.RouteAsync("**/api/database/backup", _ => Task.CompletedTask);
+            // The page asks before it is left while a backup runs (legacy beforeunload): the next case's navigation answers yes.
+            page.Dialog -= AcceptLeave;
+            page.Dialog += AcceptLeave;
+            await page.GetByRole(AriaRole.Button, new() { Name = "Transferir Backup" }).ClickAsync();
+            await page.Locator(".database-overlay-title").WaitForAsync();
+        }, Scope: ".database-overlay", Reset: page => page.UnrouteAllAsync(new() { Behavior = UnrouteBehavior.IgnoreErrors })),
         new("settings-info", "/landing/settings", SignedIn: true, Ready: ".settings-table tbody tr", page =>
         [
             ("Utilizadores", Tab(page, "Utilizadores")),
@@ -248,6 +289,18 @@ public sealed class LayoutMatrixTests(E2EHarness harness) : E2ETest(harness)
         Environment.GetEnvironmentVariable("DIB4T_LAYOUT_PAGES") is { Length: > 0 } keys
             ? [.. Pages.Where(p => keys.Split(',', StringSplitOptions.TrimEntries).Contains(p.Key, StringComparer.Ordinal))]
             : Pages;
+
+    private static async void AcceptLeave(object? sender, IDialog dialog)
+    {
+        try
+        {
+            await dialog.AcceptAsync();
+        }
+        catch (PlaywrightException)
+        {
+            // already answered, or the page is closing
+        }
+    }
 
     private static ILocator Tab(IPage page, string name) => page.GetByRole(AriaRole.Tab, new() { Name = name });
 

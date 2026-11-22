@@ -93,10 +93,14 @@ public sealed class MongoDatabaseBackupServiceTests(MongoFixture mongo) : IClass
         (await CollectionNamesAsync(database)).Should().Contain("budgetsView").And.Contain("jobs").And.NotContain("budgets");
     }
 
+    /// <summary>The adapter on <paramref name="database"/>; the connection string only gives the info's host and port.</summary>
+    internal static MongoDatabaseBackupService Service(IMongoDatabase database, string connectionString = "mongodb://localhost:27017/dib4t") =>
+        new(database, Microsoft.Extensions.Options.Options.Create(new Dib4t.Infrastructure.Mongo.MongoOptions { ConnectionString = connectionString }));
+
     private static async Task<Result<RestoreSummary>> RestoreAsync(IMongoDatabase database, byte[] file)
     {
         using var stream = new MemoryStream(file);
-        return await new MongoDatabaseBackupService(database).RestoreAsync(stream, Cancellation);
+        return await Service(database).RestoreAsync(stream, Cancellation);
     }
 
     private static async Task<List<string>> CollectionNamesAsync(IMongoDatabase database) =>

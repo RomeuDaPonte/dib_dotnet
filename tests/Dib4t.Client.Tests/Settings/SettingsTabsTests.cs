@@ -171,15 +171,15 @@ public sealed class SettingsTabsTests : IAsyncDisposable
     }
 
     [Fact]
-    public async Task The_tab_bar_shows_the_legacy_tabs_plus_Registos_and_switches_by_click_and_arrow_keys()
+    public async Task The_tab_bar_shows_the_legacy_tabs_with_Base_de_Dados_plus_Registos_and_switches_by_click_and_arrow_keys()
     {
         _context.StorageModule.Setup<string?>("getToken").SetResult(ClientTestContext.Token("Ana", "canSeeDefinicoes"));
         await _context.Session.GetAuthenticationStateAsync();
         var page = Render<Dib4t.Client.Pages.Landing.Settings>();
 
-        page.FindAll("[role=tab]").Select(t => t.TextContent.Trim()).Should().Equal("Utilizadores", "Preços", "M/Pagamento", "Impressoras", "Registos", "Info");
+        page.FindAll("[role=tab]").Select(t => t.TextContent.Trim()).Should().Equal("Utilizadores", "Preços", "M/Pagamento", "Impressoras", "Base de Dados", "Registos", "Info");
         page.Find("[role=tab][aria-selected=true]").TextContent.Trim().Should().Be("Utilizadores");
-        await page.FindAll("[role=tab]")[5].ClickAsync(new MouseEventArgs());
+        await page.FindAll("[role=tab]")[6].ClickAsync(new MouseEventArgs());
         page.Find("[role=tabpanel]").TextContent.Should().Contain("Versão: 1.0.0");
         await page.Find("[role=tab][aria-selected=true]").KeyDownAsync(new KeyboardEventArgs { Key = "ArrowRight" });
         page.Find("[role=tab][aria-selected=true]").TextContent.Trim().Should().Be("Utilizadores", "the arrow keys wrap around");
