@@ -20,7 +20,7 @@ public sealed class DibbakReaderTests
     {
         await using var file = File.OpenRead(Fixtures.ProductionBackup);
 
-        var summary = await MongoDatabaseBackupService.ValidateAsync(file, Cancellation);
+        var summary = await MongoDatabaseBackupService.CheckAsync(file, Cancellation);
 
         summary.Collections.Should().Be(8);
         summary.Documents.Should().Be(30_754);
@@ -335,8 +335,9 @@ public sealed class DibbakReaderTests
             // JSON 1.0 is the JS number 1 (Int32); outside the Int32 range the legacy driver writes a Double.
             { "key", new BsonDocument { { "name", 1 }, { "big", 3000000000d } } },
             { "name", "name_1" },
-            { "background", true },
         }));
+        // background: ignored since MongoDB 4.2, left out for 9.0 (MongoCompatibility) and reported.
+        collection.Adjustments.Should().BeEquivalentTo(new[] { new RestoreAdjustment("a", "name_1", ["background"]) }, o => o.WithStrictOrdering());
     }
 
     [Fact]
@@ -356,7 +357,7 @@ public sealed class DibbakReaderTests
     private static async Task<DibbakSummary> ValidateAsync(byte[] file)
     {
         using var stream = new MemoryStream(file);
-        return await MongoDatabaseBackupService.ValidateAsync(stream, Cancellation);
+        return await MongoDatabaseBackupService.CheckAsync(stream, Cancellation);
     }
 
     private static async Task ReadAsync(byte[] file, IDibbakVisitor visitor)

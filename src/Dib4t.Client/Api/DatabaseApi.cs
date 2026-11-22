@@ -14,6 +14,12 @@ public interface IDatabaseApi
     /// the server's text, 5xx included; the global notification has been shown for those already).
     /// </summary>
     Task<ApiResult<DatabaseInfoResponse>> InfoAsync();
+
+    /// <summary>
+    /// <c>GET /api/database/restore/status</c>: the running or the last restore since the server started, or a success
+    /// with <see langword="null"/> when there was none (204).
+    /// </summary>
+    Task<ApiResult<RestoreStatusResponse?>> RestoreStatusAsync();
 }
 
 /// <inheritdoc cref="IDatabaseApi"/>
@@ -37,6 +43,32 @@ public sealed class DatabaseApi(HttpClient http) : IDatabaseApi
         catch (Exception ex) when (ex is HttpRequestException or System.Text.Json.JsonException or NotSupportedException)
         {
             return ApiResult.Failure<DatabaseInfoResponse>(null, string.Empty);
+        }
+    }
+
+    public async Task<ApiResult<RestoreStatusResponse?>> RestoreStatusAsync()
+    {
+        try
+        {
+            using var response = await http.GetAsync(new Uri("api/database/restore/status", UriKind.Relative));
+            if (response.StatusCode == System.Net.HttpStatusCode.NoContent)
+            {
+                return ApiResult.Success<RestoreStatusResponse?>(null, response.StatusCode);
+            }
+
+            if (response.IsSuccessStatusCode)
+            {
+                var status = await response.Content.ReadFromJsonAsync<RestoreStatusResponse>(ApiCalls.Json);
+                return status is null
+                    ? ApiResult.Failure<RestoreStatusResponse?>(response.StatusCode, string.Empty)
+                    : ApiResult.Success<RestoreStatusResponse?>(status, response.StatusCode);
+            }
+
+            return ApiResult.Failure<RestoreStatusResponse?>(response.StatusCode, await response.Content.ReadAsStringAsync());
+        }
+        catch (Exception ex) when (ex is HttpRequestException or System.Text.Json.JsonException or NotSupportedException)
+        {
+            return ApiResult.Failure<RestoreStatusResponse?>(null, string.Empty);
         }
     }
 }

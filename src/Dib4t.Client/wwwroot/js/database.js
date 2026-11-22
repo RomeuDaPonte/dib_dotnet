@@ -81,8 +81,10 @@ export async function downloadBackup(url, token, fileName, dotnet) {
   return { status: response.status, text: "", size: blob.size };
 }
 
-// POST the chosen file as application/octet-stream. Returns { status, text }; status 0 = no answer.
-export function restoreBackup(url, token, dotnet) {
+// POST the chosen file as application/octet-stream, with the page's id for this restore (the server's status names
+// it, so a page that lost the connection can follow the restore to its end). Returns { status, text }; status 0 = no
+// answer.
+export function restoreBackup(url, token, restoreId, dotnet) {
   const file = chosenFile;
   chosenFile = null;
   return new Promise((resolve) => {
@@ -96,6 +98,7 @@ export function restoreBackup(url, token, dotnet) {
     xhr.open("POST", url);
     xhr.setRequestHeader("Content-Type", "application/octet-stream");
     if (token) xhr.setRequestHeader(tokenHeader, token);
+    if (restoreId) xhr.setRequestHeader("x-restore-id", restoreId);
     xhr.upload.onprogress = (e) => {
       const now = Date.now();
       if (e.loaded >= e.total || now - last >= progressInterval) {

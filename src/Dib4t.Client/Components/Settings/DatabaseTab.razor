@@ -8,7 +8,10 @@
 @* Legacy settings/databaseBackup.jsx (PLAN.md §7.6): "Transferir Backup", "Restaurar Backup" (a .dibbak, confirmed in
    "Restaurar backup"), the server's running operation, the database statistics and one row per collection. While a
    backup or restore runs, a full-page overlay shows its progress and leaving the page asks first. The file goes from
-   the browser to the server and back without passing through the app's memory (wwwroot/js/database.js). *@
+   the browser to the server and back without passing through the app's memory (wwwroot/js/database.js).
+   New app (PLAN.md §7.6): once uploaded, the restore runs on the server; the overlay shows its stage (read from
+   GET restore/status), a page opened or reloaded during a restore follows it, and the result dialog shows the built-in
+   verification, the adjustments for MongoDB 9.0 and the automatic copy of the previous database. *@
 <div class="database">
     <div class="database-header">
         <h2 class="database-title">Base de Dados</h2>
@@ -99,6 +102,7 @@
                 não pode ser desfeita. Recomenda-se transferir um backup antes de continuar.
             </p>
         </div>
+        <p class="database-safety">@RestoreTexts.SafetyNote</p>
         @if (_fileToRestore is { } file)
         {
             <div class="database-file-box">
@@ -111,6 +115,65 @@
     <DialogActions>
         <MudButton OnClick="CancelRestoreAsync">Cancelar</MudButton>
         <MudButton Variant="Variant.Filled" Color="Color.Secondary" OnClick="ConfirmRestoreAsync" Class="database-confirm">Restaurar</MudButton>
+    </DialogActions>
+</MudDialog>
+
+<MudDialog Visible="@(_result is not null)" VisibleChanged="ResultVisibleChanged" Options="DialogOptions" Class="settings-dialog database-result"
+           AriaLabel="Resultado do restauro">
+    <TitleContent><h2 class="settings-dialog-title">@(_result is { } titled ? RestoreTexts.Title(titled) : string.Empty)</h2></TitleContent>
+    <DialogContent>
+        @if (_result is { } result)
+        {
+            @if (result.Stage == RestoreStatusResponse.Completed)
+            {
+                <p class="database-result-summary">@RestoreTexts.Summary(result)</p>
+                @if (result.Verification is { } verification)
+                {
+                    <div class="@(verification.HasDifferences ? "database-verification database-verification--differences" : "database-verification")" role="status">
+                        <MudIcon Icon="@(verification.HasDifferences ? Icons.Material.Filled.WarningAmber : Icons.Material.Filled.CheckCircle)" />
+                        <div>
+                            <p>@(verification.HasDifferences ? RestoreTexts.Differences : RestoreTexts.NoDifferences)</p>
+                            @if (verification.HasDifferences)
+                            {
+                                <ul class="database-result-list">
+                                    @foreach (var line in RestoreTexts.DifferenceLines(verification))
+                                    {
+                                        <li>@line</li>
+                                    }
+                                </ul>
+                            }
+                        </div>
+                    </div>
+                }
+            }
+            else
+            {
+                <p class="database-result-error">@(result.Error ?? "Erro ao restaurar o backup")</p>
+                @if (!result.DatabaseChanged)
+                {
+                    <p>@RestoreTexts.Unchanged</p>
+                }
+            }
+
+            @if (result.Adjustments.Count > 0)
+            {
+                <p class="database-result-heading">@RestoreTexts.AdjustmentsTitle</p>
+                <ul class="database-result-list database-adjustments">
+                    @foreach (var adjustment in result.Adjustments)
+                    {
+                        <li>@RestoreTexts.Adjustment(adjustment)</li>
+                    }
+                </ul>
+            }
+
+            @if (RestoreTexts.PreRestoreBackupLine(result) is { } safety)
+            {
+                <p class="database-result-backup">@safety</p>
+            }
+        }
+    </DialogContent>
+    <DialogActions>
+        <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="CloseResult">Fechar</MudButton>
     </DialogActions>
 </MudDialog>
 
@@ -140,7 +203,13 @@
 @code {
     public const string BackupTitle = "A criar backup da base de dados...";
     public const string RestoreTitle = "A restaurar a base de dados...";
-    public const string ReplacingMessage = "A substituir os dados. Isto pode demorar alguns minutos.";
+    public const string ReplacingMessage = DatabaseTabMessages.Replacing;
+
+    /// <summary>How often the page asks the server where its restore is.</summary>
+    public static readonly TimeSpan StatusInterval = TimeSpan.FromSeconds(1);
+
+    /// <summary>Failed status reads in a row after which the page stops following a restore (the server is gone).</summary>
+    public const int StatusAttempts = 30;
 
     private static readonly DialogOptions DialogOptions = new() { MaxWidth = MaxWidth.Small, FullWidth = true, CloseOnEscapeKey = true };
 
@@ -149,13 +218,40 @@
     private bool _loadingInfo;
     private Operation? _operation;
     private ChosenFile? _fileToRestore;
+    private RestoreStatusResponse? _result;
+    private readonly CancellationTokenSource _disposed = new();
 
     /// <summary>What the overlay shows: legacy <c>{ title, message, percent }</c> (no percent: an indeterminate circle).</summary>
     public sealed record Operation(string Title, string? Message, int? Percent = null);
 
     private bool Busy => _operation is not null || _info?.BusyWith is not null;
 
-    protected override Task OnInitializedAsync() => LoadInfoAsync();
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadInfoAsync();
+        // A restore that is still running (this page was reloaded, or opened elsewhere): follow it to the end.
+        if (_operation is null && await StatusAsync() is { Running: true } running)
+        {
+            _ = FollowRunningAsync(running);
+        }
+    }
+
+    private async Task FollowRunningAsync(RestoreStatusResponse running)
+    {
+        await StartAsync(StageOperation(running));
+        try
+        {
+            if (await FollowAsync(running.Id) is { } finished)
+            {
+                await ShowFinishedAsync(finished);
+            }
+        }
+        finally
+        {
+            await StopAsync();
+            await InvokeAsync(StateHasChanged);
+        }
+    }
 
     private async Task LoadInfoAsync()
     {
@@ -242,18 +338,47 @@
         }
 
         _fileToRestore = null;
+        var id = Guid.NewGuid().ToString("N");
         await StartAsync(new Operation(RestoreTitle, "A enviar o ficheiro", 0));
+        using var uploaded = CancellationTokenSource.CreateLinkedTokenSource(_disposed.Token);
+        Task? watching = null;
         try
         {
-            var result = await Transfers.RestoreAsync((loaded, total) => ShowAsync(UploadProgress(loaded, total)));
+            var result = await Transfers.RestoreAsync(id, (loaded, total) =>
+            {
+                var progress = UploadProgress(loaded, total);
+                if (progress.Percent is null)
+                {
+                    // The upload is complete: the server works on it now, ask it where it is.
+                    watching ??= WatchAsync(id, uploaded.Token);
+                }
+
+                return ShowAsync(progress);
+            });
+            await uploaded.CancelAsync();
+            if (watching is not null)
+            {
+                await watching;
+            }
+
             if (result.IsSuccess && Restored(result.Text) is { } restored)
             {
                 Snackbar.Add($"Base de dados restaurada: {DatabaseFormat.Number(restored.Collections)} coleções, {DatabaseFormat.Number(restored.Documents)} documentos.", Severity.Success);
+                _result = await StatusAsync() is { Id: var statusId } status && statusId == id ? status : null;
                 await LoadInfoAsync();
+            }
+            else if (result.Status == 0 && await FollowAsync(id) is { } finished)
+            {
+                // The answer was lost (connection, proxy), but the server had the file and restored it.
+                await ShowFinishedAsync(finished);
             }
             else
             {
                 Snackbar.Add(OrFallback(result.IsSuccess ? null : result.Text, "Erro ao restaurar o backup"), Severity.Error);
+                if (result.Status >= 500 && await StatusAsync() is { DatabaseChanged: true } failed && failed.Id == id)
+                {
+                    _result = failed; // the database is incomplete: say where the previous one is
+                }
             }
         }
         finally
@@ -261,6 +386,111 @@
             await StopAsync();
         }
     }
+
+    /// <summary>While the upload's answer is pending: the server's stage in the overlay, every <see cref="StatusInterval"/>.</summary>
+    private async Task WatchAsync(string id, CancellationToken cancellationToken)
+    {
+        try
+        {
+            while (!cancellationToken.IsCancellationRequested)
+            {
+                await Task.Delay(StatusInterval, Time, cancellationToken);
+                if (await StatusAsync() is { Running: true } status && status.Id == id && !cancellationToken.IsCancellationRequested)
+                {
+                    await ShowAsync(StageOperation(status));
+                }
+            }
+        }
+        catch (OperationCanceledException)
+        {
+            // the answer came (or the page is gone)
+        }
+    }
+
+    /// <summary>
+    /// Follows the restore <paramref name="id"/> on the server until it ends: its status when it ended, or
+    /// <see langword="null"/> when the server has another restore or none, or does not answer any more.
+    /// </summary>
+    private async Task<RestoreStatusResponse?> FollowAsync(string id)
+    {
+        var failures = 0;
+        while (!_disposed.IsCancellationRequested)
+        {
+            var answer = await Database.RestoreStatusAsync();
+            if (answer.IsSuccess)
+            {
+                failures = 0;
+                if (answer.Value is not { } status || status.Id != id)
+                {
+                    return null;
+                }
+
+                if (!status.Running)
+                {
+                    return status;
+                }
+
+                await ShowAsync(StageOperation(status));
+            }
+            else if (++failures >= StatusAttempts)
+            {
+                return null;
+            }
+
+            try
+            {
+                await Task.Delay(StatusInterval, Time, _disposed.Token);
+            }
+            catch (OperationCanceledException)
+            {
+                return null;
+            }
+        }
+
+        return null;
+    }
+
+    /// <summary>A followed restore ended: the legacy notification, then the result dialog.</summary>
+    private async Task ShowFinishedAsync(RestoreStatusResponse finished)
+    {
+        if (finished.Stage == RestoreStatusResponse.Completed)
+        {
+            Snackbar.Add($"Base de dados restaurada: {DatabaseFormat.Number(finished.Collections ?? 0)} coleções, {DatabaseFormat.Number(finished.Documents ?? 0)} documentos.", Severity.Success);
+            _result = finished;
+        }
+        else
+        {
+            Snackbar.Add(OrFallback(finished.Error, "Erro ao restaurar o backup"), Severity.Error);
+            _result = finished.Stage == RestoreStatusResponse.Failed ? finished : null;
+        }
+
+        await LoadInfoAsync();
+    }
+
+    private async Task<RestoreStatusResponse?> StatusAsync()
+    {
+        var answer = await Database.RestoreStatusAsync();
+        return answer.IsSuccess ? answer.Value : null;
+    }
+
+    /// <summary>The overlay for a restore the server is working on.</summary>
+    public static Operation StageOperation(RestoreStatusResponse status)
+    {
+        var (message, percent) = RestoreTexts.Stage(status);
+        return new Operation(RestoreTitle, message, percent);
+    }
+
+    private Task ResultVisibleChanged(bool visible)
+    {
+        if (!visible)
+        {
+            _result = null;
+        }
+
+        return Task.CompletedTask;
+    }
+
+    private void CloseResult() => _result = null;
 
     /// <summary>Legacy <c>onUploadProgress</c>: the percent sent; at 100 % the server replaces the data (no percent).</summary>
     public static Operation UploadProgress(double loaded, double total)
@@ -320,6 +550,8 @@
 
     public async ValueTask DisposeAsync()
     {
+        await _disposed.CancelAsync();
+        _disposed.Dispose();
         if (_operation is not null)
         {
             await Transfers.GuardUnloadAsync(false);

@@ -97,7 +97,7 @@ public sealed class MongoBackupWriterTests(MongoFixture mongo) : IClassFixture<M
 
         await backup.Should().ThrowAsync<OperationCanceledException>();
         output.Written.Should().BeGreaterThan(1_000, "part of the file was sent");
-        var validate = () => MongoDatabaseBackupService.ValidateAsync(new MemoryStream(output.ToArray()), Cancellation);
+        var validate = () => MongoDatabaseBackupService.CheckAsync(new MemoryStream(output.ToArray()), Cancellation);
         (await validate.Should().ThrowAsync<BackupFormatException>("no gzip trailer (and no end frame): never a complete-looking file"))
             .Which.Message.Should().Be("O ficheiro não é um backup válido da Dib4t.");
     }
@@ -129,7 +129,7 @@ public sealed class MongoBackupWriterTests(MongoFixture mongo) : IClassFixture<M
 
     /// <summary>The app's own reader accepts the file (the format check of the restore).</summary>
     private static async Task<long> DibbakFormatShouldReadAsync(byte[] file) =>
-        (await MongoDatabaseBackupService.ValidateAsync(new MemoryStream(file), Cancellation)).Documents;
+        (await MongoDatabaseBackupService.CheckAsync(new MemoryStream(file), Cancellation)).Documents;
 
     /// <summary>Cancels the backup once more than <c>bytes</c> reached it (a browser that goes away mid-download).</summary>
     private sealed class FailAfterStream(CancellationTokenSource aborted, int bytes) : MemoryStream

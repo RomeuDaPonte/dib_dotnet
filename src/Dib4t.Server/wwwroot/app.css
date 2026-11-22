@@ -753,6 +753,53 @@ body {
   overflow-wrap: anywhere;
 }
 
+/* New app (PLAN.md §7.6): the automatic pre-restore backup, and the result dialog of a restore. Long collection and
+   index names, file names and server messages wrap instead of widening the dialog (C9). */
+.database-safety {
+  margin: 0.75rem 0 0;
+  font-size: 0.875rem;
+}
+
+.database-result p {
+  margin: 0 0 0.75rem;
+  overflow-wrap: anywhere;
+}
+
+.database-verification {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.database-verification .mud-icon-root {
+  flex-shrink: 0;
+  color: var(--mud-palette-success);
+}
+
+.database-verification--differences .mud-icon-root {
+  color: var(--mud-palette-warning);
+}
+
+.database-verification p {
+  margin: 0;
+}
+
+.database-result-heading {
+  font-weight: 500;
+}
+
+.database-result-list {
+  margin: 0.25rem 0 0.75rem;
+  padding-left: 1.25rem;
+  font-size: 0.875rem;
+  overflow-wrap: anywhere;
+}
+
+.database-result-backup {
+  font-size: 0.875rem;
+}
+
 /* Legacy Backdrop above everything (dialogs included) while a backup or restore runs. */
 .database-overlay {
   position: fixed;

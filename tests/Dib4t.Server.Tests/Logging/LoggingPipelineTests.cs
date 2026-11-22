@@ -45,12 +45,16 @@ public sealed class LoggingPipelineTests(LoggingApp app) : IClassFixture<Logging
         database.Select(row => row.Message).Should().Contain(message => message.StartsWith("Database restore started", StringComparison.Ordinal))
             .And.Contain("Database restored: 1 collections, 1 documents");
         var commands = database.Where(row => row.SourceContext == "Dib4t.Infrastructure.Mongo.MongoCommandLogger").ToList();
-        // The token check reads the signed-in user first ("find" on users), unless it is still cached (PLAN.md §4.6);
-        // Two "drop"s: "users" (the test client's user, TestUserHandler) and "prices" (the startup seed). Only the
-        // _id_ index: no createIndexes.
+        // The token check reads the signed-in user first ("find" on users), unless it is still cached (PLAN.md §4.6).
+        // The restore runs on the server, outside the request, and its commands still carry the request id (§7.6):
+        // the pre-restore backup of "prices" (the startup seed) and "users" (the test client's user, TestUserHandler),
+        // then two "drop"s, "create" and "insert" (only the _id_ index: no createIndexes), then the verification.
         commands.Select(row => JsonElement.Parse(row.PropertiesJson!).GetProperty("CommandName").GetString())
             .SkipWhile(name => name == "find")
-            .Should().Equal("listCollections", "drop", "drop", "create", "insert");
+            .Should().Equal(
+                "buildInfo", "listCollections", "listIndexes", "count", "find", "listIndexes", "count", "find",
+                "listCollections", "drop", "drop", "create", "insert",
+                "listCollections", "find", "listIndexes");
         commands.Should().AllSatisfy(row =>
         {
             var command = JsonElement.Parse(row.PropertiesJson!);

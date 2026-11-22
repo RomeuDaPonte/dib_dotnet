@@ -29,3 +29,4 @@ tools/legacy/.run/
 
 # Local log store of development runs (PLAN.md §3.3)
 src/Dib4t.Server/logs/
+src/Dib4t.Server/backups/

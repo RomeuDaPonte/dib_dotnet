@@ -33,7 +33,8 @@ public static class DependencyInjection
         services.AddScoped<JobsService>();
         services.AddScoped<DefaultDataSeeder>();
         services.AddSingleton<DatabaseOperationLock>();
-        services.AddScoped<DatabaseRestoreService>();
+        services.AddSingleton<RestoreTracker>();
+        services.AddSingleton<DatabaseRestoreService>();
         services.AddScoped<DatabaseBackupService>();
         services.AddScoped<LogsService>();
         return services;

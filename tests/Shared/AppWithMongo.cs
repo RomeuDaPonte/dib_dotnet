@@ -19,6 +19,9 @@ public class AppWithMongo : IAsyncLifetime
     /// <summary>The app's log store (PLAN.md §3.3), deleted with the fixture.</summary>
     public string LogStorePath { get; } = Path.Combine(Path.GetTempPath(), $"dib4t-test-logs-{Guid.NewGuid():N}.db");
 
+    /// <summary>The app's backup folder (<c>Backup:Directory</c>: the automatic pre-restore backups), deleted with the fixture.</summary>
+    public string BackupDirectory { get; } = Path.Combine(Path.GetTempPath(), $"dib4t-test-backups-{Guid.NewGuid():N}");
+
     public async ValueTask InitializeAsync()
     {
         await _mongo.InitializeAsync();
@@ -29,7 +32,8 @@ public class AppWithMongo : IAsyncLifetime
             builder
                 .UseEnvironment("Development")
                 .UseSetting("Mongo:ConnectionString", _mongo.ConnectionString(name))
-                .UseSetting("Logs:Path", LogStorePath);
+                .UseSetting("Logs:Path", LogStorePath)
+                .UseSetting("Backup:Directory", BackupDirectory);
             ConfigureWebHost(builder);
         });
     }
@@ -45,6 +49,11 @@ public class AppWithMongo : IAsyncLifetime
         foreach (var file in new[] { LogStorePath, LogStorePath + "-wal", LogStorePath + "-shm" })
         {
             File.Delete(file);
+        }
+
+        if (Directory.Exists(BackupDirectory))
+        {
+            Directory.Delete(BackupDirectory, recursive: true);
         }
 
         GC.SuppressFinalize(this);

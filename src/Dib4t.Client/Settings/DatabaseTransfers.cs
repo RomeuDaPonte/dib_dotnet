@@ -39,8 +39,12 @@ public interface IDatabaseTransfers
     /// <summary><c>GET /api/database/backup</c>, saved as <paramref name="fileName"/>; <paramref name="onProgress"/> gets the bytes received.</summary>
     Task<TransferResult> DownloadBackupAsync(string fileName, Func<double, Task> onProgress);
 
-    /// <summary><c>POST /api/database/restore</c> with the chosen file; <paramref name="onProgress"/> gets (sent, total) bytes.</summary>
-    Task<TransferResult> RestoreAsync(Func<double, double, Task> onProgress);
+    /// <summary>
+    /// <c>POST /api/database/restore</c> with the chosen file and <paramref name="restoreId"/> (header
+    /// <c>x-restore-id</c>, to find this restore again in the server's status); <paramref name="onProgress"/> gets
+    /// (sent, total) bytes.
+    /// </summary>
+    Task<TransferResult> RestoreAsync(string restoreId, Func<double, double, Task> onProgress);
 
     /// <summary>Legacy <c>beforeunload</c> warning while an operation runs.</summary>
     Task GuardUnloadAsync(bool enabled);
@@ -66,11 +70,11 @@ public sealed class DatabaseTransfers(IJSRuntime js, TokenStore tokens, ISnackba
         return await AfterAsync(await CallAsync("downloadBackup", NoAnswer, Url("api/database/backup"), tokens.Current, fileName, sink));
     }
 
-    public async Task<TransferResult> RestoreAsync(Func<double, double, Task> onProgress)
+    public async Task<TransferResult> RestoreAsync(string restoreId, Func<double, double, Task> onProgress)
     {
         using var sink = DotNetObjectReference.Create(new ProgressSink { Upload = onProgress });
         await tokens.InitializeAsync();
-        return await AfterAsync(await CallAsync("restoreBackup", NoAnswer, Url("api/database/restore"), tokens.Current, sink));
+        return await AfterAsync(await CallAsync("restoreBackup", NoAnswer, Url("api/database/restore"), tokens.Current, restoreId, sink));
     }
 
     public Task GuardUnloadAsync(bool enabled) => CallVoidAsync("guardUnload", enabled);

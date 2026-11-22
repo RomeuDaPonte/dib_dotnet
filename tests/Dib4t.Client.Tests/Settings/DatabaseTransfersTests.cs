@@ -53,11 +53,14 @@ public sealed class DatabaseTransfersTests : IAsyncDisposable
     {
         _module.Setup<TransferResult>("restoreBackup", _ => true).SetResult(new TransferResult(status, "Erro ao restaurar o backup."));
 
-        var result = await Transfers.RestoreAsync((_, _) => Task.CompletedTask);
+        var result = await Transfers.RestoreAsync("3f2c", (_, _) => Task.CompletedTask);
 
         result.Status.Should().Be(status);
         Snackbar.ShownSnackbars.Select(s => (s.Message, s.Severity)).Should().Equal((ErrorNotificationHandler.UnexpectedError, Severity.Error));
-        _module.Invocations.Single(i => i.Identifier == "restoreBackup").Arguments[0].Should().Be("http://localhost/api/database/restore");
+        var call = _module.Invocations.Single(i => i.Identifier == "restoreBackup");
+        call.Arguments[0].Should().Be("http://localhost/api/database/restore");
+        call.Arguments[2].Should().Be("3f2c", "the restore's id, sent as x-restore-id");
+        call.Arguments[3].Should().BeOfType<DotNetObjectReference<DatabaseTransfers.ProgressSink>>();
     }
 
     [Theory]
@@ -68,7 +71,7 @@ public sealed class DatabaseTransfersTests : IAsyncDisposable
     {
         _module.Setup<TransferResult>("restoreBackup", _ => true).SetResult(new TransferResult(status, text));
 
-        (await Transfers.RestoreAsync((_, _) => Task.CompletedTask)).Should().Be(new TransferResult(status, text));
+        (await Transfers.RestoreAsync("3f2c", (_, _) => Task.CompletedTask)).Should().Be(new TransferResult(status, text));
 
         Snackbar.ShownSnackbars.Should().BeEmpty();
         _context.Invocations("removeToken").Should().Be(0);

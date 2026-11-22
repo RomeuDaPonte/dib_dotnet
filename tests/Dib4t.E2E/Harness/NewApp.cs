@@ -44,6 +44,9 @@ public sealed class NewApp : IAppUnderTest, IAsyncDisposable
     /// <summary>The new app's log store (PLAN.md §3.3): a temp file per run, deleted on dispose.</summary>
     public string LogStorePath { get; } = Path.Combine(Path.GetTempPath(), $"dib4t-e2e-logs-{Guid.NewGuid():N}.db");
 
+    /// <summary>The app's backup folder (<c>Backup:Directory</c>: the automatic pre-restore backups), deleted with the harness.</summary>
+    public string BackupDirectory { get; } = Path.Combine(Path.GetTempPath(), $"dib4t-e2e-backups-{Guid.NewGuid():N}");
+
     public async Task StartAsync(CancellationToken cancellationToken)
     {
         await _mongo.StartAsync(cancellationToken);
@@ -74,6 +77,7 @@ public sealed class NewApp : IAppUnderTest, IAsyncDisposable
             .UseEnvironment("Development")
             .UseSetting("Mongo:ConnectionString", ConnectionString)
             .UseSetting("Logs:Path", LogStorePath)
+            .UseSetting("Backup:Directory", BackupDirectory)
             .UseSetting("Auth:UserCacheDuration", UserCacheDuration.ToString()));
         // A free port on the loopback interface the first time (UseKestrel(0) falls back to the fixed port 5000).
         _factory.UseKestrel(kestrel => kestrel.Listen(IPAddress.Loopback, port));
@@ -112,6 +116,20 @@ public sealed class NewApp : IAppUnderTest, IAsyncDisposable
         }
     }
 
+    /// <summary><c>GET /api/database/restore/status</c> as the harness user (new app only, PLAN.md §7.6), or <see langword="null"/> (204).</summary>
+    public async Task<Dib4t.Contracts.Database.RestoreStatusResponse?> RestoreStatusAsync(CancellationToken cancellationToken)
+    {
+        await HarnessUser.SaveAsync(Database, cancellationToken);
+        using var api = new HttpClient { BaseAddress = ApiBaseUrl };
+        api.DefaultRequestHeaders.Add(AuthTexts.TokenHeader, HarnessUser.TokenFrom(_factory!.Services));
+        using var response = await api.GetAsync(new Uri("database/restore/status", UriKind.Relative), cancellationToken);
+        response.EnsureSuccessStatusCode();
+        return response.StatusCode == System.Net.HttpStatusCode.NoContent
+            ? null
+            : await System.Net.Http.Json.HttpContentJsonExtensions.ReadFromJsonAsync<Dib4t.Contracts.Database.RestoreStatusResponse>(
+                response.Content, System.Text.Json.JsonSerializerOptions.Web, cancellationToken);
+    }
+
     private static TestUser HarnessUser { get; } = TestUser.Admin with { Name = "E2E harness", Email = "e2e.harness@dib4t.local" };
 
     public async Task<DbSnapshot> SnapshotAsync(CancellationToken cancellationToken)
@@ -138,6 +156,11 @@ public sealed class NewApp : IAppUnderTest, IAsyncDisposable
         foreach (var file in new[] { LogStorePath, LogStorePath + "-wal", LogStorePath + "-shm" })
         {
             File.Delete(file);
+        }
+
+        if (Directory.Exists(BackupDirectory))
+        {
+            Directory.Delete(BackupDirectory, recursive: true);
         }
     }
 }

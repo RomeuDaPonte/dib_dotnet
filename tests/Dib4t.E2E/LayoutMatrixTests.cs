@@ -126,6 +126,61 @@ public sealed class LayoutMatrixTests(E2EHarness harness) : E2ETest(harness)
             await page.GetByRole(AriaRole.Button, new() { Name = "Transferir Backup" }).ClickAsync();
             await page.Locator(".database-overlay-title").WaitForAsync();
         }, Scope: ".database-overlay", Reset: page => page.UnrouteAllAsync(new() { Behavior = UnrouteBehavior.IgnoreErrors })),
+        // A restore running on the server (PLAN.md §7.6), seen by a page opened meanwhile: the stage with the longest
+        // message (a long collection name, the counts). The status is answered by the test for as long as the case runs.
+        new("settings-database-restore-overlay", "/landing/settings", SignedIn: true, Ready: ".settings-table tbody tr", page =>
+        [
+            ("A restaurar", page.Locator(".database-overlay-title")),
+            ("Etapa", page.Locator(".database-overlay-message")),
+            ("Não feche", page.Locator(".database-overlay-caption")),
+        ], Open: async page =>
+        {
+            await page.RouteAsync("**/api/database/restore/status", route => route.FulfillAsync(new()
+            {
+                Status = 200,
+                ContentType = "application/json; charset=utf-8",
+                Body = RestoreStatusJson("replacing", running: true),
+            }));
+            page.Dialog -= AcceptLeave;
+            page.Dialog += AcceptLeave;
+            await OpenTabAsync(page, "Base de Dados", ".database-table tbody tr");
+            await page.Locator(".database-overlay-message").Filter(new() { HasTextString = "A substituir os dados:" }).WaitForAsync();
+        }, Scope: ".database-overlay", Reset: page => page.UnrouteAllAsync(new() { Behavior = UnrouteBehavior.IgnoreErrors })),
+        // The result dialog with everything it can list: differences, adjustments with a server message, the
+        // pre-restore backup (long names wrap). The restore and its status are answered by the test.
+        new("settings-database-result", "/landing/settings", SignedIn: true, Ready: ".settings-table tbody tr", page =>
+        [
+            ("Título", page.Locator(".database-result .settings-dialog-title")),
+            ("Verificação", page.Locator(".database-verification")),
+            ("Fechar", page.Locator(".database-result").GetByRole(AriaRole.Button, new() { Name = "Fechar" })),
+        ], Open: async page =>
+        {
+            var id = "none";
+            await page.RouteAsync("**/api/database/restore/status", route => route.FulfillAsync(new()
+            {
+                Status = 200,
+                ContentType = "application/json; charset=utf-8",
+                Body = RestoreStatusJson("completed", running: false, id),
+            }));
+            await page.RouteAsync("**/api/database/restore", route =>
+            {
+                id = route.Request.Headers.TryGetValue("x-restore-id", out var sent) ? sent : id;
+                return route.FulfillAsync(new()
+                {
+                    Status = 200,
+                    ContentType = "application/json; charset=utf-8",
+                    Body = """{"backupCreatedAt":"2026-11-11T16:15:31.123Z","backupDatabase":"dib4t","collections":8,"documents":30754}""",
+                });
+            });
+            await OpenTabAsync(page, "Base de Dados", ".database-table tbody tr");
+            var chooser = await page.RunAndWaitForFileChooserAsync(() => page.GetByRole(AriaRole.Button, new() { Name = "Restaurar Backup" }).ClickAsync());
+            await chooser.SetFilesAsync(new FilePayload { Name = "dib4t-backup-2026-11-11_16-15-31.dibbak", MimeType = "application/octet-stream", Buffer = [1, 2, 3] });
+            await page.Locator(".mud-dialog").GetByRole(AriaRole.Button, new() { Name = "Restaurar", Exact = true }).ClickAsync();
+            await page.Locator(".database-result .database-adjustments").WaitForAsync();
+            // The legacy toast comes first and goes after a few seconds (MudBlazor's default); the case measures the dialog.
+            await page.Locator(".mud-snackbar").WaitForAsync(new() { State = WaitForSelectorState.Detached, Timeout = 20_000 });
+            await page.Mouse.MoveAsync(0, 0);
+        }, Scope: ".mud-dialog", Reset: page => page.UnrouteAllAsync(new() { Behavior = UnrouteBehavior.IgnoreErrors })),
         new("settings-info", "/landing/settings", SignedIn: true, Ready: ".settings-table tbody tr", page =>
         [
             ("Utilizadores", Tab(page, "Utilizadores")),
@@ -289,6 +344,18 @@ public sealed class LayoutMatrixTests(E2EHarness harness) : E2ETest(harness)
         Environment.GetEnvironmentVariable("DIB4T_LAYOUT_PAGES") is { Length: > 0 } keys
             ? [.. Pages.Where(p => keys.Split(',', StringSplitOptions.TrimEntries).Contains(p.Key, StringComparer.Ordinal))]
             : Pages;
+
+    /// <summary>A restore status as the server writes it (the result dialog takes it only with the id the page sent).</summary>
+    private static string RestoreStatusJson(string stage, bool running, string id = "layout") =>
+        $$"""
+        {"id":"{{id}}","stage":"{{stage}}","running":{{(running ? "true" : "false")}},"startedAt":"2026-11-22T10:15:30Z","finishedAt":null,"bytes":1960437,
+         "collections":8,"documents":30754,"currentCollection":"printersettings_historico_de_impressoras_2026","collectionsDone":7,"documentsDone":15377,
+         "preRestoreBackup":"dib4t-pre-restore-2026-11-22T10-15-30-123Z.dibbak",
+         "adjustments":[{"collection":"printersettings_historico_de_impressoras_2026","index":"printerName_1_createdAt_-1","removed":["background","dropDups"],"indexRemoved":false,"serverMessage":null},
+                        {"collection":"jobs","index":"position_geoHaystack_type_1","removed":[],"indexRemoved":true,"serverMessage":"Error in specification { key: { a: 0 }, name: 'a_0' } :: caused by :: Values in the index key pattern cannot be 0."}],
+         "verification":{"hasDifferences":true,"collections":[{"name":"printersettings_historico_de_impressoras_2026","matches":false,"exists":true,"expectedDocuments":30754,"documents":30753,"documentsMatch":false,"missingIndexes":["printerName_1_createdAt_-1"]}],"unexpectedCollections":[]},
+         "error":null,"databaseChanged":false}
+        """;
 
     private static async void AcceptLeave(object? sender, IDialog dialog)
     {

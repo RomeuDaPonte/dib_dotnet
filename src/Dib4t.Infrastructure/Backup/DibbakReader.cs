@@ -13,7 +13,9 @@ namespace Dib4t.Infrastructure.Backup;
 /// <param name="Name">Collection name.</param>
 /// <param name="CreateOptions">Fields added to the <c>create</c> command (legacy <c>createCollection(name, options)</c>).</param>
 /// <param name="IndexSpecs">Index specs for <c>createIndexes</c>, without <c>_id_</c>, <c>v</c> and <c>ns</c>.</param>
-internal sealed record DibbakCollection(string Name, BsonDocument CreateOptions, IReadOnlyList<BsonDocument> IndexSpecs);
+/// <param name="Adjustments">What <see cref="MongoCompatibility"/> left out of the options and index specs for MongoDB 9.0.</param>
+internal sealed record DibbakCollection(
+    string Name, BsonDocument CreateOptions, IReadOnlyList<BsonDocument> IndexSpecs, IReadOnlyList<RestoreAdjustment> Adjustments);
 
 /// <summary>Header values and totals of a backup that passed every check.</summary>
 internal sealed record DibbakSummary(JsonElement? CreatedAt, JsonElement? Database, int Collections, long Documents);
@@ -250,6 +252,8 @@ internal static class DibbakReader
                     throw new BackupFormatException(BackupMessages.InvalidCollection);
             }
 
+            var adjustments = new List<RestoreAdjustment>();
+            options = MongoCompatibility.CleanOptions(name, options, adjustments);
             var indexes = new List<BsonDocument>();
             if (LastProperty(info, "indexes") is { ValueKind: JsonValueKind.Array } indexArray)
             {
@@ -271,11 +275,14 @@ internal static class DibbakReader
                     var spec = ToBsonDocument(index);
                     spec.Remove("v");
                     spec.Remove("ns");
-                    indexes.Add(spec);
+                    if (MongoCompatibility.CleanIndex(name, spec, adjustments, options.Contains("collation")) is { } cleaned)
+                    {
+                        indexes.Add(cleaned);
+                    }
                 }
             }
 
-            return new DibbakCollection(name, options, indexes);
+            return new DibbakCollection(name, options, indexes, adjustments);
         }
         catch (ArgumentException)
         {

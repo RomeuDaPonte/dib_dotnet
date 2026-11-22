@@ -17,6 +17,7 @@ public sealed class DependencyInjectionTests
     {
         var services = new ServiceCollection().AddApplication();
         services.AddSingleton(Substitute.For<IDatabaseBackupService>());
+        services.AddSingleton(Substitute.For<IPreRestoreBackupStore>());
         services.AddSingleton(Substitute.For<IUserRepository>());
         services.AddSingleton(Substitute.For<IPasswordHasher>());
         services.AddSingleton(Substitute.For<ITokenService>());
@@ -51,6 +52,9 @@ public sealed class DependencyInjectionTests
         }
 
         provider.GetRequiredService<DatabaseOperationLock>().Should().BeSameAs(provider.GetRequiredService<DatabaseOperationLock>());
+        // The restore outlives its request (PLAN.md §7.6): one service and one progress per process.
+        provider.GetRequiredService<DatabaseRestoreService>().Should().BeSameAs(provider.GetRequiredService<DatabaseRestoreService>());
+        provider.GetRequiredService<RestoreTracker>().Should().BeSameAs(provider.GetRequiredService<RestoreTracker>());
         // One numbering lock per process (PLAN.md §4.7).
         provider.GetRequiredService<BudgetNumbering>().Should().BeSameAs(provider.GetRequiredService<BudgetNumbering>());
         // One cache per process: the 30 s window is shared by every request (PLAN.md §4.6).

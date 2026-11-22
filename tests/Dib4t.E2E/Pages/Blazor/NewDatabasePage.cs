@@ -37,6 +37,12 @@ public sealed class NewDatabasePage(IPage page) : IDatabasePage
 
     public ILocator Dialog => page.Locator(".mud-dialog.database-dialog");
 
+    /// <summary>New app only (PLAN.md §7.6): the result dialog of a restore (verification, adjustments, pre-restore backup).</summary>
+    public ILocator Result => page.Locator(".mud-dialog.database-result");
+
+    /// <summary>The full-page overlay of a running backup or restore.</summary>
+    public ILocator Overlay => page.Locator(".database-overlay");
+
     public async Task GotoAsync()
     {
         await page.GotoAsync("/landing/settings");

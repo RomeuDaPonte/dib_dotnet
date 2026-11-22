@@ -27,6 +27,8 @@ public static class DependencyInjection
         services.AddLogStore(configuration);
         services.AddMongo(configuration);
         services.AddScoped<IDatabaseBackupService, MongoDatabaseBackupService>();
+        services.AddOptions<BackupOptions>().Bind(configuration.GetSection(BackupOptions.SectionName)).ValidateDataAnnotations().ValidateOnStart();
+        services.AddSingleton<IPreRestoreBackupStore, FilePreRestoreBackupStore>();
         services.AddScoped<IUserRepository, MongoUserRepository>();
         services.AddScoped<IPricesRepository, MongoPricesRepository>();
         services.AddScoped<IPaymentMethodRepository, MongoPaymentMethodRepository>();

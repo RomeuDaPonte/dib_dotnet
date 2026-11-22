@@ -31,6 +31,7 @@ public sealed class DatabaseTabTests : IAsyncDisposable
         _context.Services.AddSingleton(_transfers);
         _context.Services.AddSingleton<TimeProvider>(_time);
         _api.InfoAsync().Returns(ApiResult.Success(Info()));
+        _api.RestoreStatusAsync().Returns(ApiResult.Success<RestoreStatusResponse?>(null, HttpStatusCode.NoContent));
         _transfers.TakeFileAsync(Arg.Any<ElementReference>()).Returns(new ChosenFile("dib4t-backup-2026-11-11_16-15-31.DIBBAK", 1_960_437, 1_794_650_400_123));
     }
 
@@ -194,6 +195,7 @@ public sealed class DatabaseTabTests : IAsyncDisposable
         _dialogs.Find(".settings-dialog-title").TextContent.Should().Be("Restaurar backup");
         _dialogs.Find(".database-warning").TextContent.Should().Contain("Todos os dados atuais da base de dados serão apagados e substituídos pelo conteúdo do backup. Esta ação")
             .And.Contain("Recomenda-se transferir um backup antes de continuar.");
+        _dialogs.Find(".database-safety").TextContent.Should().Be("Antes de substituir os dados, o servidor guarda automaticamente uma cópia da base de dados atual.");
         _dialogs.FindAll(".database-file-box p").Select(p => p.TextContent).Should().Equal(
             "Ficheiro: dib4t-backup-2026-11-11_16-15-31.DIBBAK", "Tamanho: 1.87 MB", "Modificado: 14/11/2026 10:00");
         _dialogs.FindAll(".mud-dialog-actions button").Select(b => b.TextContent.Trim()).Should().Equal("Cancelar", "Restaurar");
@@ -201,7 +203,7 @@ public sealed class DatabaseTabTests : IAsyncDisposable
         await _dialogs.FindAll(".mud-dialog-actions button")[0].ClickAsync(new MouseEventArgs());
         _dialogs.WaitForAssertion(() => _dialogs.FindAll(".database-dialog").Should().BeEmpty());
         await _transfers.Received(1).ForgetFileAsync();
-        await _transfers.DidNotReceive().RestoreAsync(Arg.Any<Func<double, double, Task>>());
+        await _transfers.DidNotReceive().RestoreAsync(Arg.Any<string>(), Arg.Any<Func<double, double, Task>>());
     }
 
     [Fact]
@@ -234,7 +236,7 @@ public sealed class DatabaseTabTests : IAsyncDisposable
     {
         var upload = new TaskCompletionSource<TransferResult>();
         Func<double, double, Task>? progress = null;
-        _transfers.RestoreAsync(Arg.Do<Func<double, double, Task>>(p => progress = p)).Returns(upload.Task);
+        _transfers.RestoreAsync(Arg.Any<string>(), Arg.Do<Func<double, double, Task>>(p => progress = p)).Returns(upload.Task);
         var tab = Render();
         await OpenConfirmationAsync(tab);
 
@@ -266,7 +268,7 @@ public sealed class DatabaseTabTests : IAsyncDisposable
     [InlineData(0, "", "Erro ao restaurar o backup")]
     public async Task A_restore_failure_shows_the_server_text_or_the_legacy_fallback(int status, string text, string shown)
     {
-        _transfers.RestoreAsync(Arg.Any<Func<double, double, Task>>()).Returns(new TransferResult(status, text));
+        _transfers.RestoreAsync(Arg.Any<string>(), Arg.Any<Func<double, double, Task>>()).Returns(new TransferResult(status, text));
         var tab = Render();
         await OpenConfirmationAsync(tab);
 
@@ -285,6 +287,230 @@ public sealed class DatabaseTabTests : IAsyncDisposable
     [InlineData(995, 1000, DatabaseTab.ReplacingMessage, null)]
     public void Upload_progress_is_the_legacy_Math_round_percent(double loaded, double total, string message, int? percent) =>
         DatabaseTab.UploadProgress(loaded, total).Should().Be(new DatabaseTab.Operation(DatabaseTab.RestoreTitle, message, percent));
+
+    [Fact]
+    public async Task After_the_upload_the_overlay_shows_where_the_server_is_and_the_result_dialog_its_verification()
+    {
+        var upload = new TaskCompletionSource<TransferResult>();
+        Func<double, double, Task>? progress = null;
+        string? id = null;
+        _transfers.RestoreAsync(Arg.Do<string>(i => id = i), Arg.Do<Func<double, double, Task>>(p => progress = p)).Returns(upload.Task);
+        _api.RestoreStatusAsync().Returns(_ => ApiResult.Success<RestoreStatusResponse?>(Status(id!, "replacing") with
+        {
+            CurrentCollection = "tasks",
+            CollectionsDone = 7,
+            DocumentsDone = 15_377,
+        }));
+        var tab = Render();
+        await OpenConfirmationAsync(tab);
+        var confirm = _dialogs.FindAll(".mud-dialog-actions button")[1].ClickAsync(new MouseEventArgs());
+        tab.WaitForAssertion(() => progress.Should().NotBeNull());
+
+        await tab.InvokeAsync(() => progress!(1_960_437, 1_960_437));
+        Overlay(tab).Should().Contain(DatabaseTab.ReplacingMessage);
+
+        AdvanceUntil(() => Overlay(tab).Should().Be(
+            "A restaurar a base de dados...|A substituir os dados: tasks (7 de 8 coleções, 15\u00A0377 de 30\u00A0754 documentos).|Não feche nem atualize esta página."));
+        tab.Find(".database-percent").TextContent.Should().Be("50%");
+        id.Should().MatchRegex("^[0-9a-f]{32}$");
+
+        _api.RestoreStatusAsync().Returns(ApiResult.Success<RestoreStatusResponse?>(Status(id!, "completed")));
+        upload.SetResult(new TransferResult(200, """{"backupCreatedAt":"2026-11-11T16:15:31.123Z","backupDatabase":"dib4t","collections":8,"documents":30754}"""));
+        await confirm;
+
+        Snackbar.ShownSnackbars.Select(s => s.Message).Should().Equal("Base de dados restaurada: 8 coleções, 30\u00A0754 documentos.");
+        _dialogs.WaitForAssertion(() => _dialogs.Find(".database-result .settings-dialog-title").TextContent.Should().Be("Restauro concluído"));
+        Result().Should().Equal(
+            "8 coleções, 30\u00A0754 documentos.",
+            "Verificação: a base de dados é igual ao ficheiro (coleções, documentos e índices).",
+            "Cópia automática da base de dados anterior: dib4t-pre-restore-2026-11-22T10-15-30-123Z.dibbak (pasta de backups do servidor).");
+        tab.FindAll(".database-overlay").Should().BeEmpty();
+
+        await _dialogs.Find(".database-result .mud-dialog-actions button").ClickAsync(new MouseEventArgs());
+        _dialogs.WaitForAssertion(() => _dialogs.FindAll(".database-result").Should().BeEmpty());
+    }
+
+    [Fact]
+    public async Task The_result_dialog_lists_the_differences_and_the_adjustments_for_MongoDB_9_0()
+    {
+        string? id = null;
+        _transfers.RestoreAsync(Arg.Do<string>(i => id = i), Arg.Any<Func<double, double, Task>>())
+            .Returns(new TransferResult(200, """{"collections":8,"documents":30754}"""));
+        _api.RestoreStatusAsync().Returns(_ => ApiResult.Success<RestoreStatusResponse?>(Status(id!, "completed") with
+        {
+            Adjustments = [new("users", null, ["flags", "temp"], false, null), new("users", "email_1", ["background"], false, null),
+                           new("places", "pos_haystack", [], true, null), new("jobs", "a_0", [], true, "Values in the index key pattern cannot be 0.")],
+            Verification = new(true,
+            [
+                new("budgets", false, false, 3, 0, false, []),
+                new("jobs", false, true, 10, 9, false, ["a_0"]),
+                new("tasks", false, true, 5, 5, false, []),
+                new("users", true, true, 4, 4, true, []),
+            ], ["extra"]),
+        }));
+        var tab = Render();
+        await OpenConfirmationAsync(tab);
+
+        await _dialogs.FindAll(".mud-dialog-actions button")[1].ClickAsync(new MouseEventArgs());
+
+        _dialogs.WaitForAssertion(() => _dialogs.Find(".database-result .settings-dialog-title").TextContent.Should().Be("Restauro concluído com diferenças"));
+        Result().Should().Equal(
+            "8 coleções, 30\u00A0754 documentos.",
+            "Verificação: foram encontradas diferenças entre a base de dados e o ficheiro:",
+            "budgets: a coleção não existe",
+            "jobs: 9 de 10 documentos",
+            "jobs: índices em falta: a_0",
+            "tasks: o conteúdo dos documentos é diferente",
+            "extra: coleção que não está no ficheiro",
+            "Ajustes para o MongoDB 9.0 (os documentos não foram alterados):",
+            "users: opções não usadas: flags, temp",
+            "users, índice email_1: campos não usados: background",
+            "places: índice pos_haystack não criado",
+            "jobs: índice a_0 não criado (recusado pelo servidor: Values in the index key pattern cannot be 0.)",
+            "Cópia automática da base de dados anterior: dib4t-pre-restore-2026-11-22T10-15-30-123Z.dibbak (pasta de backups do servidor).");
+        _dialogs.Find(".database-verification--differences").Should().NotBeNull();
+    }
+
+    [Fact]
+    public async Task A_lost_answer_follows_the_restore_on_the_server_to_its_end()
+    {
+        string? id = null;
+        _transfers.RestoreAsync(Arg.Do<string>(i => id = i), Arg.Any<Func<double, double, Task>>()).Returns(new TransferResult(0, ""));
+        var answers = 0;
+        _api.RestoreStatusAsync().Returns(_ => ++answers switch
+        {
+            1 => ApiResult.Success<RestoreStatusResponse?>(null, HttpStatusCode.NoContent), // the page opens: no restore yet
+            2 => ApiResult.Failure<RestoreStatusResponse?>(null, ""), // the server is busy: try again
+            3 => ApiResult.Success<RestoreStatusResponse?>(Status(id!, "verifying")),
+            _ => ApiResult.Success<RestoreStatusResponse?>(Status(id!, "completed")),
+        });
+        var tab = Render();
+        await OpenConfirmationAsync(tab);
+
+        var confirm = _dialogs.FindAll(".mud-dialog-actions button")[1].ClickAsync(new MouseEventArgs());
+        AdvanceUntil(() => Overlay(tab).Should().Contain("A verificar os dados restaurados..."));
+        AdvanceUntil(() => confirm.IsCompleted.Should().BeTrue());
+        await confirm;
+
+        Snackbar.ShownSnackbars.Select(s => s.Message).Should().Equal("Base de dados restaurada: 8 coleções, 30\u00A0754 documentos.");
+        _dialogs.WaitForAssertion(() => _dialogs.Find(".database-result .settings-dialog-title").TextContent.Should().Be("Restauro concluído"));
+        await _api.Received(2).InfoAsync();
+    }
+
+    [Fact]
+    public async Task A_lost_answer_without_this_restore_on_the_server_is_the_legacy_failure()
+    {
+        _transfers.RestoreAsync(Arg.Any<string>(), Arg.Any<Func<double, double, Task>>()).Returns(new TransferResult(0, ""));
+        _api.RestoreStatusAsync().Returns(ApiResult.Success<RestoreStatusResponse?>(Status("another-one", "completed")));
+        var tab = Render();
+        await OpenConfirmationAsync(tab);
+
+        await _dialogs.FindAll(".mud-dialog-actions button")[1].ClickAsync(new MouseEventArgs());
+
+        tab.WaitForAssertion(() => Snackbar.ShownSnackbars.Select(s => (s.Message, s.Severity)).Should().Equal(("Erro ao restaurar o backup", Severity.Error)));
+        _dialogs.FindAll(".database-result").Should().BeEmpty();
+    }
+
+    [Fact]
+    public async Task A_failure_after_the_data_was_dropped_says_where_the_previous_database_is()
+    {
+        string? id = null;
+        _transfers.RestoreAsync(Arg.Do<string>(i => id = i), Arg.Any<Func<double, double, Task>>()).Returns(new TransferResult(500, "Erro ao restaurar o backup."));
+        _api.RestoreStatusAsync().Returns(_ => ApiResult.Success<RestoreStatusResponse?>(Status(id!, "failed") with
+        {
+            Error = "Erro ao restaurar o backup.",
+            DatabaseChanged = true,
+            Verification = null,
+        }));
+        var tab = Render();
+        await OpenConfirmationAsync(tab);
+
+        await _dialogs.FindAll(".mud-dialog-actions button")[1].ClickAsync(new MouseEventArgs());
+
+        tab.WaitForAssertion(() => Snackbar.ShownSnackbars.Select(s => s.Message).Should().Equal("Erro ao restaurar o backup."));
+        _dialogs.WaitForAssertion(() => _dialogs.Find(".database-result .settings-dialog-title").TextContent.Should().Be("O restauro falhou"));
+        Result().Should().Equal(
+            "Erro ao restaurar o backup.",
+            "A base de dados ficou incompleta. A cópia automática da base de dados anterior é dib4t-pre-restore-2026-11-22T10-15-30-123Z.dibbak (pasta de backups do servidor).");
+    }
+
+    [Fact]
+    public void A_page_opened_during_a_restore_follows_it_and_shows_its_result()
+    {
+        var answers = 0;
+        _api.RestoreStatusAsync().Returns(_ => ++answers <= 2
+            ? ApiResult.Success<RestoreStatusResponse?>(Status("elsewhere", "preRestoreBackup"))
+            : ApiResult.Success<RestoreStatusResponse?>(Status("elsewhere", "completed")));
+        _api.InfoAsync().Returns(ApiResult.Success(Info(busyWith: "restauro")));
+
+        var tab = Render();
+
+        tab.WaitForAssertion(() => Overlay(tab).Should().Be("A restaurar a base de dados...|A guardar uma cópia da base de dados atual...|Não feche nem atualize esta página."));
+        _transfers.Received().GuardUnloadAsync(true);
+        _api.InfoAsync().Returns(ApiResult.Success(Info()));
+
+        AdvanceUntil(() => _dialogs.Find(".database-result .settings-dialog-title").TextContent.Should().Be("Restauro concluído"));
+        tab.WaitForAssertion(() => tab.FindAll(".database-overlay").Should().BeEmpty());
+        tab.FindAll(".database-busy").Should().BeEmpty("the info is read again");
+        Snackbar.ShownSnackbars.Select(s => s.Message).Should().Equal("Base de dados restaurada: 8 coleções, 30\u00A0754 documentos.");
+    }
+
+    [Fact]
+    public void A_finished_restore_on_the_server_is_not_shown_again_when_the_page_opens()
+    {
+        _api.RestoreStatusAsync().Returns(ApiResult.Success<RestoreStatusResponse?>(Status("earlier", "completed")));
+
+        var tab = Render();
+
+        tab.FindAll(".database-overlay").Should().BeEmpty();
+        _dialogs.FindAll(".database-result").Should().BeEmpty();
+    }
+
+    [Theory]
+    [InlineData("validating", "A verificar o ficheiro de backup...", null)]
+    [InlineData("preRestoreBackup", "A guardar uma cópia da base de dados atual...", null)]
+    [InlineData("verifying", "A verificar os dados restaurados...", null)]
+    [InlineData("replacing", "A substituir os dados: jobs (3 de 8 coleções, 4 de 30\u00A0754 documentos).", 0)]
+    public void Each_server_stage_has_its_overlay(string stage, string message, int? percent) =>
+        DatabaseTab.StageOperation(Status("x", stage) with { CurrentCollection = stage == "replacing" ? "jobs" : null, CollectionsDone = 3, DocumentsDone = 4 })
+            .Should().Be(new DatabaseTab.Operation(DatabaseTab.RestoreTitle, message, percent));
+
+    [Fact]
+    public void Replacing_before_the_first_collection_or_without_documents()
+    {
+        DatabaseTab.StageOperation(Status("x", "replacing")).Should().Be(new DatabaseTab.Operation(DatabaseTab.RestoreTitle, DatabaseTab.ReplacingMessage, 0));
+        DatabaseTab.StageOperation(Status("x", "replacing") with { Documents = 0 }).Percent.Should().BeNull();
+        DatabaseTab.StageOperation(Status("x", "replacing") with { DocumentsDone = 30_754 }).Percent.Should().Be(100);
+    }
+
+    private static RestoreStatusResponse Status(string id, string stage) => new(
+        id, stage, stage is "validating" or "preRestoreBackup" or "replacing" or "verifying",
+        new DateTime(2026, 11, 22, 10, 15, 30, DateTimeKind.Utc), stage is "completed" or "failed" ? new DateTime(2026, 11, 22, 10, 15, 40, DateTimeKind.Utc) : null,
+        1_960_437, 8, 30_754, null, 0, 0, stage == "validating" ? null : "dib4t-pre-restore-2026-11-22T10-15-30-123Z.dibbak",
+        [], stage == "completed" ? new RestoreVerificationResponse(false, [new("users", true, true, 4, 4, true, [])], []) : null, null, false);
+
+    /// <summary>Moves the fake clock one status interval at a time until <paramref name="assertion"/> holds (the page's delay may not be waiting yet).</summary>
+    private void AdvanceUntil(Action assertion)
+    {
+        for (var i = 0; i < 100; i++)
+        {
+            try
+            {
+                assertion();
+                return;
+            }
+            catch (Exception ex) when (ex is not OutOfMemoryException)
+            {
+                _time.Advance(DatabaseTab.StatusInterval);
+                Thread.Sleep(10);
+            }
+        }
+
+        assertion();
+    }
+
+    private List<string> Result() =>
+        [.. _dialogs.FindAll(".database-result .mud-dialog-content p, .database-result .mud-dialog-content li").Select(e => e.TextContent.Trim())];
 
     private async Task OpenConfirmationAsync(IRenderedComponent<DatabaseTab> tab)
     {

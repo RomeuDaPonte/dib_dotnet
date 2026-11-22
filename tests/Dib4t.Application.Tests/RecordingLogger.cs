@@ -15,6 +15,9 @@ public sealed class RecordingLogger<T> : ILogger<T>
     public void Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception? exception, Func<TState, Exception?, string> formatter)
     {
         ArgumentNullException.ThrowIfNull(formatter);
-        Entries.Add((logLevel, eventId.Id, formatter(state, exception), exception));
+        lock (Entries) // a use case may log from a background task (the restore)
+        {
+            Entries.Add((logLevel, eventId.Id, formatter(state, exception), exception));
+        }
     }
 }

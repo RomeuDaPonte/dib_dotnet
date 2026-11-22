@@ -29,6 +29,11 @@ http://localhost:3010/api/database/restore` (open outside Production until the a
 
 The import compatibility suite (`tests/Dib4t.ImportCompatibility.Tests`) also restores a full, real production
 backup byte for byte when `DIB4T_FULL_BACKUP=<path to .dibbak>` is set (never commit that file); skipped otherwise.
+Its synthetic large backup is 32 MB; before a release run it at the legacy 1 GB limit with `DIB4T_LARGE_BACKUP_MB=1000`
+(about 20 s for the restore).
+
+Every restore first saves the current database to `Backup:Directory` (`dib4t-pre-restore-<UTC time>.dibbak`, the
+last `Backup:PreRestoreKeep` = 5 kept): `/app/backups` in the container, `src/Dib4t.Server/backups/` with `dotnet run`.
 
 ## Docker
 

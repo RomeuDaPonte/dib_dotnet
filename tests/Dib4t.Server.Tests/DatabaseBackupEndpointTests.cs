@@ -330,7 +330,11 @@ public sealed partial class DatabaseBackupEndpointTests(AppWithMongo app) : ICla
     /// <summary>Writes <c>bytesBeforeFailure</c> bytes (flushed: the response has started when there are any), then throws.</summary>
     private sealed class FailingBackups(int bytesBeforeFailure) : IDatabaseBackupService
     {
-        public Task<Result<RestoreSummary>> RestoreAsync(Stream backup, CancellationToken cancellationToken) => throw new NotSupportedException();
+        public Task<Result<BackupContents>> ValidateAsync(Stream backup, CancellationToken cancellationToken) => throw new NotSupportedException();
+
+        public Task<IReadOnlyList<RestoreAdjustment>> ReplaceAsync(Stream backup, IRestoreProgress progress) => throw new NotSupportedException();
+
+        public Task<RestoreVerification> VerifyAsync(BackupContents contents, CancellationToken cancellationToken) => throw new NotSupportedException();
 
         public Task<DatabaseInfo> GetInfoAsync(CancellationToken cancellationToken) => throw new NotSupportedException();
 

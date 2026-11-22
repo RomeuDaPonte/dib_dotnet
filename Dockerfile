@@ -24,7 +24,7 @@ RUN dotnet publish src/Dib4t.Server/Dib4t.Server.csproj -c Release -a $TARGETARC
 
 FROM mcr.microsoft.com/dotnet/aspnet:11.0 AS final
 WORKDIR /app
-# /app/logs: SQLite log store (dib4t-logs volume, §3.3). /app/backups: scheduled backups (§12).
+# /app/logs: SQLite log store (dib4t-logs volume, §3.3). /app/backups: the automatic pre-restore backups (§7.6) and scheduled backups (§12).
 RUN mkdir -p /app/logs /app/backups && chown "$APP_UID" /app/logs /app/backups
 COPY --from=build /app/publish .
 USER $APP_UID

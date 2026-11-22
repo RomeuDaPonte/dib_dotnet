@@ -76,6 +76,8 @@ public sealed partial class DatabaseBackupTests(E2EHarness harness) : E2ETest(ha
     public async Task Restoring_the_seed_file_through_either_ui_asks_and_says_the_same_and_leaves_exactly_the_seed()
     {
         var results = new List<(string App, IReadOnlyList<string> Dialog, string Message)>();
+        IReadOnlyList<string> resultDialog = [];
+        DbSnapshot? beforeRestore = null;
         try
         {
             foreach (var app in Harness.Apps)
@@ -93,8 +95,18 @@ public sealed partial class DatabaseBackupTests(E2EHarness harness) : E2ETest(ha
                 await database.Dialog.WaitForAsync();
                 var dialog = Lines(await database.Dialog.InnerTextAsync());
                 var before = await database.Notification.CountAsync();
+                if (app == Harness.New)
+                {
+                    beforeRestore = await app.SnapshotAsync(Cancellation);
+                }
+
                 await database.ConfirmAsync();
                 var message = await NotificationAsync(database, before, TimeSpan.FromMinutes(2));
+                if (database is NewDatabasePage newPage)
+                {
+                    await newPage.Result.WaitForAsync();
+                    resultDialog = Lines(await newPage.Result.InnerTextAsync());
+                }
 
                 results.Add((app.Name, dialog, message));
                 (await app.SnapshotAsync(Cancellation)).DiffFrom(Harness.Seed.ToSnapshot()).Should().BeEmpty($"{app.Name}: the database is the restored file");
@@ -108,7 +120,8 @@ public sealed partial class DatabaseBackupTests(E2EHarness harness) : E2ETest(ha
 
         var (legacy, created) = (results[0], results[1]);
         var modified = File.GetLastWriteTime(Harness.Options.SeedBackup).ToString("dd/MM/yyyy HH:mm", CultureInfo.InvariantCulture);
-        created.Dialog.Should().Equal(legacy.Dialog);
+        // The one line the new app adds (PLAN.md §7.6: the automatic pre-restore backup), after the legacy warning.
+        created.Dialog.Should().Equal(legacy.Dialog.Take(2).Append(Dib4t.Client.Settings.RestoreTexts.SafetyNote).Concat(legacy.Dialog.Skip(2)));
         created.Dialog.Should().Contain("Restaurar backup").And.Contain($"Ficheiro: {Path.GetFileName(Harness.Options.SeedBackup)}")
             .And.Contain($"Tamanho: {Bytes(new FileInfo(Harness.Options.SeedBackup).Length)}");
         created.Dialog.Should().Contain(l => l.StartsWith("Modificado: ", StringComparison.Ordinal) && (TimeZoneInfo.Local.Id != "Europe/Lisbon" || l == $"Modificado: {modified}"));

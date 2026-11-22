@@ -1,5 +1,7 @@
 using System.Net;
 using System.Net.Http.Headers;
+using System.Text.Json;
+using Dib4t.Contracts.Database;
 using Dib4t.Tests.Common;
 using MongoDB.Bson;
 using MongoDB.Driver;
@@ -16,6 +18,9 @@ public sealed class LegacyBackupImportTests(AppWithMongo app) : IClassFixture<Ap
 {
     /// <summary>Path of a full, real production backup (kept outside the repo); the size test is skipped without it.</summary>
     public const string FullBackupVariable = "DIB4T_FULL_BACKUP";
+
+    /// <summary>Size in MB of the synthetic backup (default 32; <c>1000</c> before a release: the legacy 1 GB limit).</summary>
+    public const string LargeBackupVariable = "DIB4T_LARGE_BACKUP_MB";
 
     private readonly HttpClient _client = app.CreateClient(TestUser.Admin); // restore needs the settings role
 
@@ -72,6 +77,55 @@ public sealed class LegacyBackupImportTests(AppWithMongo app) : IClassFixture<Ap
         await ShouldImportByteForByteAsync(DibbakTestWriter.Valid(("second", [new BsonDocument("_id", 2)])).ToFile());
     }
 
+    /// <summary>
+    /// A backup as large as asked (incompressible document content, so the file itself has that size) restores
+    /// streamed: the file never in memory, the built-in verification finds no difference, every document is there.
+    /// </summary>
+    [Fact]
+    public async Task A_large_backup_restores_streamed_with_no_difference()
+    {
+        var megabytes = int.TryParse(Environment.GetEnvironmentVariable(LargeBackupVariable), out var mb) ? mb : 32;
+        var path = Path.Combine(Path.GetTempPath(), $"dib4t-large-{Guid.NewGuid():N}.dibbak");
+        try
+        {
+            var (documents, payload) = await LargeBackup.WriteAsync(path, megabytes * 1024L * 1024, Cancellation);
+            new FileInfo(path).Length.Should().BeGreaterThanOrEqualTo(megabytes * 1024L * 1024);
+            var baseline = Heap();
+            long peak = 0;
+            using var sampling = new CancellationTokenSource();
+            var sampler = Task.Run(async () =>
+            {
+                while (!sampling.IsCancellationRequested)
+                {
+                    peak = Math.Max(peak, Heap() - baseline);
+                    await Task.Delay(50, CancellationToken.None);
+                }
+            }, CancellationToken.None);
+
+            await using (var upload = File.OpenRead(path))
+            {
+                using var content = new StreamContent(upload, 81920);
+                content.Headers.ContentType = new MediaTypeHeaderValue("application/octet-stream");
+                using var response = await _client.PostAsync(new Uri("/api/database/restore", UriKind.Relative), content, Cancellation);
+                response.StatusCode.Should().Be(HttpStatusCode.OK, await response.Content.ReadAsStringAsync(Cancellation));
+            }
+
+            await sampling.CancelAsync();
+            await sampler;
+
+            var status = await StatusAsync();
+            (status.Stage, status.Documents, status.Verification!.HasDifferences).Should().Be(("completed", documents, false));
+            (await app.Database.GetCollection<BsonDocument>("tasks").EstimatedDocumentCountAsync(cancellationToken: Cancellation)).Should().Be(documents);
+            peak.Should().BeLessThan(Math.Max(256L << 20, payload / 4), "the backup is streamed, never held in memory");
+        }
+        finally
+        {
+            File.Delete(path);
+        }
+
+        static long Heap() => GC.GetTotalMemory(forceFullCollection: false);
+    }
+
     private async Task ShouldImportByteForByteAsync(byte[] file)
     {
         var expected = DibbakFile.Parse(file);
@@ -106,7 +160,16 @@ public sealed class LegacyBackupImportTests(AppWithMongo app) : IClassFixture<Ap
                 stored.ForEach(d => d.Dispose());
             }
         }
+
+        // The built-in verification (PLAN.md §2.2 step 3) agrees with the independent oracle above. Read last: the
+        // test client saves its signed-in user before each request.
+        var status = await StatusAsync();
+        (status.Stage, status.Verification!.HasDifferences).Should().Be(("completed", false),
+            string.Join("; ", status.Verification.Collections.Where(c => !c.Matches).Select(c => c.Name)));
     }
+
+    private async Task<RestoreStatusResponse> StatusAsync() =>
+        (await _client.GetFromJsonAsync<RestoreStatusResponse>(new Uri("/api/database/restore/status", UriKind.Relative), JsonSerializerOptions.Web, Cancellation))!;
 
     private static byte[] Bytes(RawBsonDocument document)
     {
