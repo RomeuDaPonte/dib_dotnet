@@ -389,8 +389,20 @@ body {
   margin-top: 2em;
 }
 
-.settings-wrap {
+/* Table cells break between words only (the page's overflow-wrap: anywhere let the browser squeeze headers, dates
+   and states to one letter per line on laptops, e.g. the jobs board at 1366×768); what no longer fits scrolls
+   inside the table's own container (§8.4 rule 5). Free-text columns may still break a long word, never below 7em. */
+.settings-table .mud-table-cell {
+  overflow-wrap: normal;
+}
+
+.settings-wrap,
+.settings-table .mud-table-cell.settings-wrap {
   overflow-wrap: anywhere;
+}
+
+.settings-table .mud-table-cell.settings-wrap {
+  min-width: 7em;
 }
 
 .settings-dense {
@@ -542,6 +554,18 @@ body {
 .settings .mud-button-label,
 .settings-dialog .mud-button-label {
   min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+/* The same for a tab label (e.g. "DESENVOLVIMENTO" on the jobs board at 180 CSS px with a 24 px font): the label is a
+   flex item, whose minimum width would otherwise be its longest word. */
+.settings-tab {
+  max-width: 100%;
+}
+
+.settings-tab > span {
+  min-width: 0;
+  max-width: 100%;
   overflow-wrap: anywhere;
 }
 

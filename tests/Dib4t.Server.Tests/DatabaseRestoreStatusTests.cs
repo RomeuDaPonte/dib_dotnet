@@ -129,9 +129,12 @@ public sealed class DatabaseRestoreStatusTests(AppWithMongo app) : IClassFixture
             services.AddSingleton<IPreRestoreBackupStore>(provider =>
                 gate.Wrapping((IPreRestoreBackupStore)ActivatorUtilities.CreateInstance(provider, real.ImplementationType!)));
         }));
-        using var client = Client(host);
+        // Signed in without saving the user on each request: a poll during the replace would recreate users (the
+        // verification would then report it). The user is in the file, and stays signed in meanwhile (§7.6).
+        await TestUser.Admin.SaveAsync(app.Database, Cancellation);
+        using var client = host.CreateDefaultClient(new TestUserHandler(TestUser.Admin, app.Database, TestUser.Admin.TokenFrom(host.Services), save: false));
         var document = new BsonDocument { { "_id", ObjectId.GenerateNewId() }, { "total", 10.5 } };
-        var file = DibbakTestWriter.Valid(("budgets", [document])).ToFile();
+        var file = DibbakTestWriter.Valid(("budgets", [document]), ("users", [TestUser.Admin.ToDocument()])).ToFile();
         using var leaving = CancellationTokenSource.CreateLinkedTokenSource(Cancellation);
 
         var waiting = PostAsync(client, file, "gone", leaving.Token);

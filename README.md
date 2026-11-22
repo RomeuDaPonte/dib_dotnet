@@ -27,6 +27,9 @@ traces of failed tests go to `TestResults/e2e-artifacts/`.
 legacy backup into it with `curl -H 'Content-Type: application/octet-stream' --data-binary @<file>.dibbak
 http://localhost:3010/api/database/restore` (open outside Production until the auth step).
 
+Screenshots for the UAT review, both apps on the same seed side by side: `DIB4T_UAT_GALLERY=1 dotnet test --project
+tests/Dib4t.E2E --filter-class '*UatGalleryTests'` → `TestResults/uat-gallery/index.html` (about 5 min).
+
 The import compatibility suite (`tests/Dib4t.ImportCompatibility.Tests`) also restores a full, real production
 backup byte for byte when `DIB4T_FULL_BACKUP=<path to .dibbak>` is set (never commit that file); skipped otherwise.
 Its synthetic large backup is 32 MB; before a release run it at the legacy 1 GB limit with `DIB4T_LARGE_BACKUP_MB=1000`

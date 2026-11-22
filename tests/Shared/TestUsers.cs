@@ -53,12 +53,19 @@ public sealed record TestUser(ObjectId Id, string Name, string Email, string[] R
         services.GetRequiredService<ITokenService>().CreateToken(new User(Id.ToString(), Name, Email, PasswordHash, Roles, FieldOfCompetencies));
 }
 
-/// <summary>Signs every request as <paramref name="user"/>, saving the user first so it exists even after a restore.</summary>
-public sealed class TestUserHandler(TestUser user, IMongoDatabase database, string token) : DelegatingHandler
+/// <summary>
+/// Signs every request as <paramref name="user"/>, saving the user first so it exists even after a restore
+/// (<paramref name="save"/> = false: only signs, for requests sent while a restore replaces the collections).
+/// </summary>
+public sealed class TestUserHandler(TestUser user, IMongoDatabase database, string token, bool save = true) : DelegatingHandler
 {
     protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
     {
-        await user.SaveAsync(database, cancellationToken);
+        if (save)
+        {
+            await user.SaveAsync(database, cancellationToken);
+        }
+
         request.Headers.Remove(AuthTexts.TokenHeader);
         request.Headers.Add(AuthTexts.TokenHeader, token);
         return await base.SendAsync(request, cancellationToken);

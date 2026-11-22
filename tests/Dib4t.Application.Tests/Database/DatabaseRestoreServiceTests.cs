@@ -159,6 +159,45 @@ public sealed class DatabaseRestoreServiceTests : IDisposable
     }
 
     [Fact]
+    public async Task During_the_replace_a_signed_in_user_stays_signed_in_and_is_read_again_afterwards()
+    {
+        var user = new User("5f1e9a2b3c4d5e6f70819203", "Ana", "ana@dib4t.local", "hash", [], "");
+        User? stored = user;
+        var loads = 0;
+        Task<User?> Load(CancellationToken _) { loads++; return Task.FromResult(stored); }
+        await _sessions.GetOrLoadAsync(user.Id, Load, Cancellation);
+        User? seen = null;
+        _backups.ReplaceAsync(Arg.Any<Stream>(), Arg.Any<IRestoreProgress>()).Returns(async _ =>
+        {
+            stored = null; // the collections are dropped
+            seen = await _sessions.GetOrLoadAsync(user.Id, Load, Cancellation);
+            return (IReadOnlyList<RestoreAdjustment>)[];
+        });
+
+        await _service.RestoreAsync(OneByte(), null, null, Cancellation);
+
+        seen.Should().Be(user);
+        loads.Should().Be(1, "the cached user was used during the replace");
+        stored = user;
+        await _sessions.GetOrLoadAsync(user.Id, Load, Cancellation);
+        loads.Should().Be(2, "the cache was cleared after the replace");
+    }
+
+    [Fact]
+    public async Task A_failed_replace_also_forgets_the_cached_users()
+    {
+        var loads = 0;
+        Task<User?> Load(CancellationToken _) { loads++; return Task.FromResult<User?>(null); }
+        await _sessions.GetOrLoadAsync("5f1e9a2b3c4d5e6f70819203", Load, Cancellation);
+        _backups.ReplaceAsync(Arg.Any<Stream>(), Arg.Any<IRestoreProgress>()).ThrowsAsync(new InvalidOperationException("insert failed"));
+
+        await _service.RestoreAsync(OneByte(), null, null, Cancellation);
+        await _sessions.GetOrLoadAsync("5f1e9a2b3c4d5e6f70819203", Load, Cancellation);
+
+        loads.Should().Be(2);
+    }
+
+    [Fact]
     public async Task Empty_file_is_rejected_without_taking_the_lock()
     {
         using var busy = _lock.TryAcquire(DatabaseOperationLock.Backup);

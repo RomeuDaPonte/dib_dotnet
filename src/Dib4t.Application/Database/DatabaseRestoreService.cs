@@ -99,8 +99,16 @@ public sealed partial class DatabaseRestoreService(
             tracker.PreRestoreBackupSaved(saved);
 
             stage = RestoreStage.Replacing;
-            var refused = await backups.ReplaceAsync(backup, tracker);
-            sessions.Clear(); // the users were replaced: a token's user is read again on its next request (§4.6)
+            IReadOnlyList<RestoreAdjustment> refused;
+            try
+            {
+                using var frozen = sessions.Freeze(); // users is empty meanwhile: the signed-in users stay signed in
+                refused = await backups.ReplaceAsync(backup, tracker);
+            }
+            finally
+            {
+                sessions.Clear(); // the users were replaced (or partly, on a failure): read again on the next request (§4.6)
+            }
             refused.ToList().ForEach(LogAdjustment);
 
             stage = RestoreStage.Verifying;

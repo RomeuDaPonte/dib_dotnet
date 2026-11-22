@@ -61,15 +61,18 @@ E2E layout matrix (§11). "Rule" points to the §8.4 rule that fixes it.
 
 ## Jobs board (`/landing/job`): 39/45 cases
 
-- [ ] **LB-09 State tabs cut off and unreachable.** The 8 state tabs don't scroll and don't wrap: tabs
+- [x] **LB-09 State tabs cut off and unreachable.** The 8 state tabs don't scroll and don't wrap: tabs
   are cut (C6–C21) or completely outside the card (O1–O7, mostly "Faturadas", "Para faturação",
   "Todas"), already at 1366×768 100 % and at 1920×1080 from 150 % zoom. Evidence:
   `jobs/1920x1080_z150_f20.jpg` (first tab cut, "Faturadas" missing). Rule 5 (scrollable tabs) / 3.
-- [ ] **LB-10 Row action column cut off** on the right; the table card is cut at the bottom (pagination
+- [x] **LB-10 Row action column cut off** on the right; the table card is cut at the bottom (pagination
   half visible) because of fixed heights. Same evidence. Cause: `tableStyles.js` `minWidth: 750`,
   `jobStyle.js` fixed `48px` icon columns. Rules 2, 5.
-- [ ] **LB-11 "More" menu buttons overlap** each other at 24 px font (X2 in 15 cases). Cause: fixed
+- [x] **LB-11 "More" menu buttons overlap** each other at 24 px font (X2 in 15 cases). Cause: fixed
   48 px icon columns. Rule 1.
+  *Fixed (Phase 6 regression run, 2026-11-22):* the tabs wrap (a word too long for its tab breaks), the table
+  scrolls inside its own container with whole-word cells, the icon columns are `3rem`; `jobs`, `jobs-invoicing` and
+  both board dialogs pass all 45 matrix cases each in `tests/Dib4t.E2E/LayoutMatrixTests` (LB-09 to LB-11).
 
 ## Settings (`/landing/settings`): 29/45 cases
 

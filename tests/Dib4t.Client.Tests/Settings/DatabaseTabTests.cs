@@ -377,11 +377,12 @@ public sealed class DatabaseTabTests : IAsyncDisposable
         string? id = null;
         _transfers.RestoreAsync(Arg.Do<string>(i => id = i), Arg.Any<Func<double, double, Task>>()).Returns(new TransferResult(0, ""));
         var answers = 0;
+        var verifyingSeen = false; // "verifying" until the test saw it (a loaded machine may poll several times meanwhile)
         _api.RestoreStatusAsync().Returns(_ => ++answers switch
         {
             1 => ApiResult.Success<RestoreStatusResponse?>(null, HttpStatusCode.NoContent), // the page opens: no restore yet
             2 => ApiResult.Failure<RestoreStatusResponse?>(null, ""), // the server is busy: try again
-            3 => ApiResult.Success<RestoreStatusResponse?>(Status(id!, "verifying")),
+            _ when !Volatile.Read(ref verifyingSeen) => ApiResult.Success<RestoreStatusResponse?>(Status(id!, "verifying")),
             _ => ApiResult.Success<RestoreStatusResponse?>(Status(id!, "completed")),
         });
         var tab = Render();
@@ -389,6 +390,7 @@ public sealed class DatabaseTabTests : IAsyncDisposable
 
         var confirm = _dialogs.FindAll(".mud-dialog-actions button")[1].ClickAsync(new MouseEventArgs());
         AdvanceUntil(() => Overlay(tab).Should().Contain("A verificar os dados restaurados..."));
+        Volatile.Write(ref verifyingSeen, true);
         AdvanceUntil(() => confirm.IsCompleted.Should().BeTrue());
         await confirm;
 

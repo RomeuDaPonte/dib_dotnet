@@ -126,6 +126,19 @@ public sealed class LoginAndLandingTests
         landing.WaitForAssertion(() => navigation.Uri.Should().Be("http://localhost/"));
     }
 
+    [Fact]
+    public async Task Adjudicacoes_opens_the_legacy_placeholder_page()
+    {
+        await using var context = new ClientTestContext(ClientTestContext.Token("Ana"));
+
+        var page = context.Render<JobReceivings>();
+
+        page.Markup.Should().Contain("Recebimentos");
+        var route = typeof(JobReceivings).GetCustomAttributes(typeof(RouteAttribute), inherit: false).Cast<RouteAttribute>().Single().Template;
+        Dib4t.Client.Navigation.MenuItems.All.Should().ContainSingle(i => i.Label == "Adjudicações")
+            .Which.Path.Should().Be(route.TrimStart('/'), "the menu entry opens this page (PLAN.md §7.5)");
+    }
+
     private static IRenderedComponent<IComponent> RenderLogin(ClientTestContext context) =>
         context.Render(builder =>
         {

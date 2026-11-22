@@ -272,6 +272,57 @@ public sealed class LayoutMatrixTests(E2EHarness harness) : E2ETest(harness)
             await page.Locator(".jobs-print-row").First.WaitForAsync();
             await page.Mouse.MoveAsync(0, 0);
         }, Scope: ".mud-dialog"),
+        // The jobs board on the user's first tab (the fixture user's: "Montagem", every icon column), then on
+        // "Para faturação" (the "Ft %" column).
+        new("jobs", "/landing/job", SignedIn: true, Ready: ".jobs-table tbody tr td", page =>
+        [
+            ("Para faturação", Tab(page, "Para faturação")),
+            ("Finalizar até", page.Locator(".jobs-table tbody tr").First.Locator(".jobs-due-input")),
+            ("Alterar estado", page.Locator(".jobs-table tbody tr").First.Locator("button[aria-label^='Alterar estado de']")),
+            ("Tabela densa", page.Locator(".settings-dense input")),
+        ]),
+        new("jobs-invoicing", "/landing/job", SignedIn: true, Ready: ".jobs-table tbody tr td", page =>
+        [
+            ("Finalizar até", page.Locator(".jobs-table tbody tr").First.Locator(".jobs-due-input")),
+            ("Alterar estado", page.Locator(".jobs-table tbody tr").First.Locator("button[aria-label^='Alterar estado de']")),
+            // No options menu for jobs being billed (legacy); the "Ft %" column is text, covered by the overlap checks.
+            ("Tabela densa", page.Locator(".settings-dense input")),
+            ("Rows per page", page.Locator("#jobs-rows-per-page")),
+        ], Open: page => OpenJobsTabAsync(page, "Para faturação", "Para faturação")),
+        // The largest statistics form: an assembly job moved on (hours, components, automation, delivery date, billed %,
+        // budgeted/deviation, the comments opened, the six questions, "Ensaio válido").
+        new("jobs-statistics-dialog", "/landing/job", SignedIn: true, Ready: ".jobs-table tbody tr td", page =>
+        [
+            ("Nº de horas", page.Locator("#job-hours")),
+            ("Comentários", page.Locator("#job-comments")),
+            ("Ensaio válido", page.Locator("#job-first-test")),
+            ("Concluir", page.Locator(".mud-dialog").GetByRole(AriaRole.Button, new() { Name = "Concluir", Exact = true })),
+        ], Open: async page =>
+        {
+            await OpenJobsTabAsync(page, "Montagem", "Montagem");
+            await page.Locator(".jobs-table tbody tr").First.Locator("button[aria-label^='Alterar estado de']").ClickAsync();
+            await page.GetByRole(AriaRole.Menuitem, new() { Name = "Para faturação", Exact = true }).ClickAsync();
+            await page.Locator("#job-hours").WaitForAsync();
+            await page.Locator(".mud-dialog").GetByRole(AriaRole.Button, new() { Name = "Comentários" }).ClickAsync();
+            await page.Locator("#job-comments").WaitForAsync();
+            await page.Mouse.MoveAsync(0, 0);
+        }, Scope: ".mud-dialog"),
+        new("jobs-comments-dialog", "/landing/job", SignedIn: true, Ready: ".jobs-table tbody tr td", page =>
+        [
+            ("Comentários", page.Locator("#job-comments-text")),
+            ("Fechar", page.Locator(".mud-dialog").GetByRole(AriaRole.Button, new() { Name = "Fechar", Exact = true })),
+            ("Guardar", page.Locator(".mud-dialog").GetByRole(AriaRole.Button, new() { Name = "Guardar", Exact = true })),
+        ], Open: async page =>
+        {
+            await OpenJobsTabAsync(page, "Todas", null);
+            await page.Locator(".jobs-table .jobs-comments").First.ClickAsync();
+            await page.Locator("#job-comments-text").WaitForAsync();
+            await page.Mouse.MoveAsync(0, 0);
+        }, Scope: ".mud-dialog"),
+        new("job-receivings", "/landing/jobReceivings", SignedIn: true, Ready: "header h1", page =>
+        [
+            ("Recebimentos", page.GetByText("Recebimentos", new() { Exact = true })),
+        ]),
         new("dashboard", "/landing/dashboard", SignedIn: true, Ready: ".mud-chart-legend-item", page =>
         [
             ("Gráfico", page.Locator("[data-testid=dashboard-chart] svg").First),
@@ -387,6 +438,23 @@ public sealed class LayoutMatrixTests(E2EHarness harness) : E2ETest(harness)
                 await Tab(page, "Info").ClickAsync();
             }
         }
+    }
+
+    /// <summary>
+    /// A jobs board tab with its rows: <paramref name="state"/> = the state every row of that tab shows (the rows of
+    /// the tab before stay until the new ones arrive), <c>null</c> for "Todas".
+    /// </summary>
+    private static async Task OpenJobsTabAsync(IPage page, string tab, string? state)
+    {
+        var button = page.GetByRole(AriaRole.Tab).Filter(new() { HasTextString = tab });
+        if (await button.GetAttributeAsync("aria-selected") != "true")
+        {
+            await page.RunAndWaitForResponseAsync(() => button.ClickAsync(),
+                r => r.Url.Contains("/api/job/", StringComparison.OrdinalIgnoreCase) && !r.Url.Contains("getCounts", StringComparison.OrdinalIgnoreCase));
+        }
+
+        var rows = page.Locator(".jobs-table tbody tr");
+        await (state is null ? rows : rows.Filter(new() { HasTextString = state })).First.WaitForAsync();
     }
 
     private static async Task OpenTabAsync(IPage page, string tab, string ready)
